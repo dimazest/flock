@@ -8,7 +8,6 @@ Data collections
 
 ### Brexit
 
-
 Bbrexit tweets about brexit. Fitering criteria: everything that contains the string "brexit".
 
 Possible hypotheses:
@@ -36,11 +35,11 @@ The tweets collected from Latvia should contrast the Latvian majority with the R
 
 #### Hypotheses
 
-  * Two distinc users. The distinction is based on the ethnical backgound.
-  * Various/similar interests? Do the groups listen to same artists, watch same movies, etc.
-  * What are the most discussed topics and are they percieved differently? E.g. brexit might have been percieved equally along the groups, but the attitute to Ukrain might vary.
-  * **TODO** process large cultural events: festivals or concerts of the famous bands. This might be only done in the summer 2017.
-  * **TODO** compare the tweets in December versus the ones in January. We should capture tweets related to the Christmas, the Latvian part of the community should 
+* Two distinc users. The distinction is based on the ethnical backgound.
+* Various/similar interests? Do the groups listen to same artists, watch same movies, etc.
+* What are the most discussed topics and are they percieved differently? E.g. brexit might have been percieved equally along the groups, but the attitute to Ukrain might vary.
+* **TODO** process large cultural events: festivals or concerts of the famous bands. This might be only done in the summer 2017.
+* **TODO** compare the tweets in December versus the ones in January. We should capture tweets related to the Christmas, the Latvian part of the community should 
 
 #### Data collection
 
@@ -101,6 +100,8 @@ The (visual) reports
 
 Let say we want to map the hastags. We can show different clusters and see whether they make sense. In the case of #brexit, there shoule be a cloud of the #leave tweets and a cloud of the #remain tweets. Moreover, since we now hashtag counts, we could estimate density function in the space. This estimation should show us how important a cluster is. For example, there might be a very distinctive cluster, that, however appears in a very small number of tweets. This also should help us to visually show wether there are more #leave or #remain tweets.
 
+Plot dates, for example, of the weeks before and after the referendum, show the closest hashtags around them.
+
 Technical details
 -----------------
 
@@ -108,6 +109,19 @@ A tweet collection is stored in a `.gz` archive that contain tweet encoded with 
 
 The metadata that does not come from Twitter, for example named entities, or sentiment can be stored in another fiels either as JSON or in separate columns.
 
+### Some performance data
+
+4.9M Brexit tweets from 24-25 of July are sampled by taking every 40th tweet making a selection of 122K tweets:
+
+``` bash
+
+zcat /homes/dm303/poultry/data/brexit/2016-06-2{4,5}-* | sed -n '1p;0~40p' | gzip > data/brexit.sample.122K/brexit.sample.gz
+
+```
+
+Reading of the collection inserting them into sqlalchemy session took 2 minutes and 21 seconds. Session commit took 3 mitutes and 37 seconds. Note that the database is stored on a network share.
+
+81456 of tweets are in English, 3601 are in Italian and 2641 are in German, according to Twitter.
 
 Initial experiment
 ------------------
