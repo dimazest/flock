@@ -72,9 +72,9 @@ The first idea is to apply doc2vec to a collection. The main goal is to get dist
 
 doc2vec takes labeled documents as in input. In our case, documents are tweets and labels are any metadata we could come up with. The labels could be:
 
-* tweet id, because the documents need to have a unique identifier
-* hashtags
-* user name of the author
+* ✓ tweet id, however it's not unique!
+* ✓ hashtags
+* ✓ the screen name of the author
 * user mentions
 * URLs that are in the tweet
   It ight be a good idea to split an url to several parts, so https://www.theguardian.com/travel/2016/aug/03/10-best-outdoor-swimming-holidays-around-world-italy-france-greece becomes:
@@ -130,7 +130,7 @@ Initial experiment
 ------------------
 
 Take a ~4M sample of #brexit tweets during 23-24 July. See:
-* how long it is to pump data to the database (1h 40m?),
+* how long it is to pump data to the database (1h 40m?) ✓,
 * how long it takes to analyse the data with the CoreNLP tools.
 
 **TODO:** Have a look to the making sense of twitter tutorial at ACL.
