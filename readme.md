@@ -119,15 +119,18 @@ zcat /homes/dm303/poultry/data/brexit/2016-06-2{4,5}-* | sed -n '1p;0~40p' | gzi
 
 ```
 
-Reading of the collection inserting them into sqlalchemy session took 2 minutes and 21 seconds. Session commit took 3 mitutes and 37 seconds. Note that the database is stored on a network share.
+Reading of the collection inserting 122K tweets into sqlalchemy session took 2 minutes and 21 seconds. Session commit took 3 mitutes and 37 seconds. Note that the database is stored on a network share.
 
 81456 of tweets are in English, 3601 are in Italian and 2641 are in German, according to Twitter.
+
+Useful links:
+* http://docs.sqlalchemy.org/en/rel_1_0/orm/query.html?highlight=yield_per#sqlalchemy.orm.query.Query.yield_per
 
 Initial experiment
 ------------------
 
-Take a 1M sample of #brexit tweets. See:
-* how long it is to pump data to the database,
+Take a ~4M sample of #brexit tweets during 23-24 July. See:
+* how long it is to pump data to the database (1h 40m?),
 * how long it takes to analyse the data with the CoreNLP tools.
 
 **TODO:** Have a look to the making sense of twitter tutorial at ACL.
