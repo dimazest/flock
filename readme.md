@@ -130,7 +130,7 @@ Initial experiment
 ------------------
 
 Take a ~4M sample of #brexit tweets during 23-24 July. See:
-* how long it is to pump data to the database (1h 40m?) ✓,
+* how long it is to pump data to the database (1h 40m?),
 * how long it takes to analyse the data with the CoreNLP tools.
 
 **TODO:** Have a look to the making sense of twitter tutorial at ACL.
