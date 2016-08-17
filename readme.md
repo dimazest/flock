@@ -76,10 +76,12 @@ doc2vec takes labeled documents as in input. In our case, documents are tweets a
 * ✓ hashtags
 * ✓ the screen name of the author
 * user mentions
-* URLs that are in the tweet
-  It ight be a good idea to split an url to several parts, so https://www.theguardian.com/travel/2016/aug/03/10-best-outdoor-swimming-holidays-around-world-italy-france-greece becomes:
-  * the domain (www.theguardian.com)
-  * the rest of the url, but split by / (travel, 2016, aug, 03, 10-best...)
+* ✓ URLs that are in the tweet
+  * expand urls, so https://t.co/IQGSj1V3pU becomes http://www.wsj.com/articles/boris-johnson-emerges-as-big-winner-in-brexit-vote-1466740369?mod=e2tw
+  * It ight be a good idea to split an url to several parts, so https://www.theguardian.com/travel/2016/aug/03/10-best-outdoor-swimming-holidays-around-world-italy-france-greece becomes:
+    * the domain (www.theguardian.com)
+    * the rest of the url, but split by / (travel, 2016, aug, 03, 10-best...)
+    * maybe also split the parts by '-'.
 * geo information, pobably as a sring (e.g. Berlin, Germany).
 * creation time
   Possible formats are (we should have all of them):
