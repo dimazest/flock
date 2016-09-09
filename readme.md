@@ -65,6 +65,11 @@ The challenge is to map data in two, or maybe even more languages. To link the t
 
 Hashtags might do their job!
 
+### Relevant materials
+
+* http://www.diena.lv/dienas-zurnali/sestdiena/loliga-valoda-14149966
+* http://liva.online/dr-sc-comm/publikacijas/
+
 The model
 ---------
 
