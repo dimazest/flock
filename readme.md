@@ -8,9 +8,9 @@ Data collections
 
 ### Brexit
 
-Bbrexit tweets about brexit. Fitering criteria: everything that contains the string "brexit".
+Brexit tweets about brexit. Fitering criteria: everything that contains the string "brexit".
 
-Possible hypotheses:
+#### Hypotheses
 
 * We should be able to see two groups of tweets: the ones that agains leaving the EU and the ones that are for.
 * There should be corresponding hashtags.
