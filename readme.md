@@ -8,7 +8,7 @@ Data collections
 
 ### Brexit
 
-Brexit tweets about brexit. Fitering criteria: everything that contains the string "brexit".
+Fitering criteria: everything that contains the string "brexit".
 
 #### Hypotheses
 
