@@ -69,6 +69,7 @@ Hashtags might do their job!
 
 * http://www.diena.lv/dienas-zurnali/sestdiena/loliga-valoda-14149966
 * http://liva.online/dr-sc-comm/publikacijas/
+* http://www.la.lv/latvijas-politiskais-tviteris-mazs-bet-nikns-la-lv-tvitertops/
 
 The model
 ---------
