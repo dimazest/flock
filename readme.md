@@ -133,6 +133,7 @@ Reading of the collection inserting 122K tweets into sqlalchemy session took 2 m
 
 Useful links:
 * http://docs.sqlalchemy.org/en/rel_1_0/orm/query.html?highlight=yield_per#sqlalchemy.orm.query.Query.yield_per
+* http://bedquiltdb.github.io/v2.html
 
 Initial experiment
 ------------------
