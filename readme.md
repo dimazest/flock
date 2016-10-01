@@ -127,7 +127,7 @@ zcat /homes/dm303/poultry/data/brexit/2016-06-2{4,5}-* | sed -n '1p;0~40p' | gzi
 
 ```
 
-Reading of the collection inserting 122K tweets into sqlalchemy session took 2 minutes and 21 seconds. Session commit took 3 mitutes and 37 seconds. Note that the database is stored on a network share.
+Reading the collection of 122K tweets and inserting it into an sqlalchemy session took 2 minutes and 21 seconds. Session commit took 3 mitutes and 37 seconds. Note that the database is stored on a network share.
 
 81456 of tweets are in English, 3601 are in Italian and 2641 are in German, according to Twitter.
 
