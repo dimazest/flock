@@ -1,0 +1,22 @@
+# Buildout
+.mr.developer.cfg
+.installed.cfg
+bin/
+develop-eggs/
+eggs/
+parts/
+src/
+
+# Twarc
+twarc.log
+
+# Flock
+flock.log
+
+# Tweeets
+tweets/select
+tweets/filter
+tweets/hydrate
+
+# Juupyter
+.ipynb_checkpoints/
