@@ -39,7 +39,7 @@ The tweets collected from Latvia should contrast the Latvian majority with the R
 * Various/similar interests? Do the groups listen to same artists, watch same movies, etc.
 * What are the most discussed topics and are they percieved differently? E.g. brexit might have been percieved equally along the groups, but the attitute to Ukrain might vary.
 * **TODO** process large cultural events: festivals or concerts of the famous bands. This might be only done in the summer 2017.
-* **TODO** compare the tweets in December versus the ones in January. We should capture tweets related to the Christmas, the Latvian part of the community should 
+* **TODO** compare the tweets in December versus the ones in January. We should capture tweets related to the Christmas, the Latvian part of the community should
 
 #### Data collection
 
@@ -134,6 +134,9 @@ Reading the collection of 122K tweets and inserting it into an sqlalchemy sessio
 Useful links:
 * http://docs.sqlalchemy.org/en/rel_1_0/orm/query.html?highlight=yield_per#sqlalchemy.orm.query.Query.yield_per
 * http://bedquiltdb.github.io/v2.html
+* https://www.postgresql.org/message-id/20160930185801.38654a1c%40e754
+* http://grafana.org/
+* http://alembic.zzzcomputing.com/en/latest/
 
 Initial experiment
 ------------------
@@ -143,3 +146,10 @@ Take a ~4M sample of #brexit tweets during 23-24 July. See:
 * how long it takes to analyse the data with the CoreNLP tools.
 
 **TODO:** Have a look to the making sense of twitter tutorial at ACL.
+# Relevant materials
+* http://www.journals.elsevier.com/computers-and-electrical-engineering/call-for-papers/special-section-on-new-trends-in-humanistic-informatics
+* https://medium.com/@swainjo/us-presidential-election-2016-twitter-analysis-7596606853e5#.u71p5nuk3
+
+## Corpus construction
+* https://hal.archives-ouvertes.fr/hal-01323274/document
+* http://ifarm.nl/erikt/papers/clin2013.pdf
