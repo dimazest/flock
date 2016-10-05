@@ -13,24 +13,97 @@ order by created_at, lang;
 -- Count tweets written by users.
 select
 tweet#>>'{user,screen_name}' as screen_name,
+tweet->>'lang' as lang,
 count(*) as count
 from tweet
-group by screen_name
+group by screen_name, lang
 order by count desc;
+
+-- The used apps
+select tweet->>'source', count(*) count
+from tweet
+group by tweet->>'source'
+order by count desc;
+
+-- Crosstab the query above
+select *,
+COALESCE(lv, 0) + COALESCE(ru, 0) as total,
+round (
+        1 - 2 * abs(
+        (
+            (COALESCE(lv, 0) + 0.0) /
+            (
+                COALESCE(lv, 0) +
+                COALESCE(ru, 0)
+            )
+        )
+            - 0.5
+    ),
+    2
+) as score
+from crosstab(
+    $$
+    select
+    tweet#>>'{user,screen_name}' as screen_name,
+    tweet->>'lang' as lang,
+    count(*) as count
+    from tweet
+    group by screen_name, lang
+    order by 1
+    $$,
+    $$
+    select distinct tweet->>'lang' from tweet order by 1
+    $$
+)
+as final_result(screen_name text, lv bigint, ru bigint)
+order by score desc, total desc
 
 -- Count how many times users were mentioned.
 select
-tweet->>'lang' as lang,
 mentions->>'screen_name' as mention,
+tweet->>'lang' as lang,
 count(*) as count
 from tweet, jsonb_array_elements(tweet#>'{entities,user_mentions}') mentions
-group by lang, mention
+group by mention, lang
 order by count desc;
+
+-- Crosstab the query above
+select *,
+COALESCE(lv, 0) + COALESCE(ru, 0) as total,
+round (
+        1 - 2 * abs(
+        (
+            (COALESCE(lv, 0) + 0.0) /
+            (
+                COALESCE(lv, 0) +
+                COALESCE(ru, 0)
+            )
+        )
+            - 0.5
+    ),
+    2
+) as score
+from crosstab(
+    $$
+	select
+	mentions->>'screen_name' as mention,
+	tweet->>'lang' as lang,
+	count(*) as count
+	from tweet, jsonb_array_elements(tweet#>'{entities,user_mentions}') mentions
+	group by mention, lang
+    order by 1
+    $$,
+    $$
+    select distinct tweet->>'lang' from tweet order by 1
+    $$
+)
+as final_result(mention text, lv bigint, ru bigint)
+order by score desc, total desc;
 
 -- Count how many times hashtags were mentioned.
 select
-tweet->>'lang' as lang,
 hashtags->>'text' as hashtag,
+tweet->>'lang' as lang,
 count(*) as count
 from tweet, jsonb_array_elements(tweet#>'{entities,hashtags}') hashtags
 group by lang, hashtag
