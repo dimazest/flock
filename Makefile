@@ -4,3 +4,10 @@ filter:
 clean:
 	rm tweets/filter/*/*
 	rm tweets/hydrate/*
+
+pginit:
+	initdb -D 'parts/postgres/data'
+
+# Start DB
+createdb:
+	createdb tweets
