@@ -20,3 +20,5 @@ tweets/hydrate
 
 # Juupyter
 .ipynb_checkpoints/
+
+__pycache__/
