@@ -1,5 +1,5 @@
 filter:
-	bin/python src/produce/produce $$(for name in `ls tweets/select`; do echo tweets/filter/{riga,media,грипп,дождь,lv,ru}/$$name; done)
+	bin/python src/produce/produce $$(for name in `ls tweets/select`; do echo tweets/filter/{riga,media,users,грипп,дождь,lv,ru}/$$name; done)
 
 clean:
 	rm tweets/filter/*/*
