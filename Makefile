@@ -1,9 +1,13 @@
-filter:
-	bin/python src/produce/produce $$(for name in `ls tweets/select`; do echo tweets/filter/{riga,media,users,грипп,дождь,lv,ru}/$$name; done)
+PRODUCE = bin/python src/produce/produce
+
+insert:
+	 ${PRODUCE} $(patsubst tweets/share/%.txt,tweets/db/%.inserted,$(wildcard tweets/share/*))
+
+share:
+	${PRODUCE} $(patsubst tweets/select/%.gz,tweets/share/%.txt,$(wildcard tweets/select/*))
 
 clean:
-	rm tweets/filter/*/*
-	rm tweets/hydrate/*
+	rm tweets/{hydrate,db}/*
 
 pginit:
 	initdb -D 'parts/postgres/data'

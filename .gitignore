@@ -6,6 +6,7 @@ develop-eggs/
 eggs/
 parts/
 src/
+flock.egg-info/
 
 # Twarc
 twarc.log
@@ -17,6 +18,7 @@ flock.log
 tweets/select
 tweets/filter
 tweets/hydrate
+tweets/db
 
 # Juupyter
 .ipynb_checkpoints/
