@@ -1,12 +1,21 @@
-from sqlalchemy import Column, BigInteger
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Table, Column, BigInteger, MetaData
 from sqlalchemy.dialects import postgresql as pg
+from sqlalchemy.orm import mapper
 
-Base = declarative_base()
+from poultry.tweet import Tweet
+
+metadata = MetaData()
 
 
-class Tweet(Base):
-    __tablename__ = 'tweet'
+tweet_table = Table(
+    'tweet', metadata,
 
-    id = Column(BigInteger, primary_key=True)
-    tweet = Column(pg.JSONB)
+    Column('_id', BigInteger, primary_key=True),
+    Column('tweet', pg.JSONB, nullable=False),
+
+)
+
+
+mapper(
+    Tweet, tweet_table
+)
