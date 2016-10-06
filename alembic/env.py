@@ -11,8 +11,8 @@ config = context.config
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
 
-from flock.model import Base
-target_metadata = Base.metadata
+from flock.model import metadata
+target_metadata = metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
