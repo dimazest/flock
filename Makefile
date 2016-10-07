@@ -9,6 +9,9 @@ share:
 clean:
 	rm tweets/{hydrate,db}/*
 
+cleandb:
+	rm tweets/db/*
+
 pginit:
 	initdb -D 'parts/postgres/data'
 
