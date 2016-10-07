@@ -51,9 +51,7 @@ def insert(source, session):
             logger.debug('Processed %s tweets, it\'s time to flush.', i)
             session.flush()
 
-        stmt = pg.insert(
-            tweet_table
-        ).values(
+        stmt = pg.insert(tweet_table).values(
             _id=t.id,
             tweet=t.parsed,
         ).on_conflict_do_nothing(index_elements=['_id'])
