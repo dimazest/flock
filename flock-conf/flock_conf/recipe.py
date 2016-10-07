@@ -2,27 +2,8 @@ import logging
 import os
 
 from configparser import ConfigParser
-import zc.buildout
 
-
-class X:
-    def __init__(self, config):
-        self.config = config
-
-    def get_distinct_users(self):
-        users = dict()
-
-        for section in self.config.sections():
-            users.update(
-                {
-                    k: v
-                    for k, v in self.config[section].items()
-                    if k.startswith('@')
-                }
-            )
-
-        return users
-
+from .expander import Expander
 
 class Config:
 
@@ -40,13 +21,13 @@ class Config:
         config = ConfigParser()
         config.read(self.clusters_conf)
 
-        x = X(config)
-        self.options.update(x.get_distinct_users())
+        ex = Expander(config)
+        self.options.update(ex.get_distinct_users())
 
         self.options['all_user_ids'] = (
             '\n'.join(
                 '    # {}\n    {}'.format(k, v)
-                for k, v in sorted(x.get_distinct_users().items())
+                for k, v in sorted(ex.get_distinct_users().items())
             )
         )
 
