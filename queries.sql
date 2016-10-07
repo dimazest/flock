@@ -10,6 +10,12 @@ from tweet
 group by lang, created_at
 order by created_at, lang;
 
+-- The used apps
+select tweet->>'source', count(*) count
+from tweet
+group by tweet->>'source'
+order by count desc;
+
 -- Count tweets written by users.
 select
 tweet#>>'{user,screen_name}' as screen_name,
@@ -19,17 +25,11 @@ from tweet
 group by screen_name, lang
 order by count desc;
 
--- The used apps
-select tweet->>'source', count(*) count
-from tweet
-group by tweet->>'source'
-order by count desc;
-
 -- Crosstab the query above
 select *,
 COALESCE(lv, 0) + COALESCE(ru, 0) as total,
 round (
-        1 - 2 * abs(
+        0.5 - abs(
         (
             (COALESCE(lv, 0) + 0.0) /
             (
@@ -71,17 +71,17 @@ order by count desc;
 select *,
 COALESCE(lv, 0) + COALESCE(ru, 0) as total,
 round (
-        1 - 2 * abs(
-        (
-            (COALESCE(lv, 0) + 0.0) /
-            (
-                COALESCE(lv, 0) +
-                COALESCE(ru, 0)
-            )
-        )
+        0.5 - abs(
+	        (
+	            (COALESCE(ru, 0) + 0.0) /
+	            (
+	                COALESCE(lv, 0) +
+	                COALESCE(ru, 0)
+	            )
+	        )
             - 0.5
     ),
-    2
+    4
 ) as score
 from crosstab(
     $$
