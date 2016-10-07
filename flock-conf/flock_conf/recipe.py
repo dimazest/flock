@@ -2,8 +2,8 @@ import logging
 import os
 
 from configparser import ConfigParser
-
 from .expander import Expander
+
 
 class Config:
 
@@ -31,13 +31,8 @@ class Config:
             )
         )
 
-        self.logger.info(self.options)
-
-        # self.logger.info(self.config.sections())
-
     def install(self):
-
         return ()
 
     def update(self):
-        self.logger.info('Update')
+        pass
