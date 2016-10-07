@@ -1,5 +1,9 @@
 PRODUCE = bin/python src/produce/produce
 
+report: insert
+	psql -d twitter < user_names.sql > user_names.sql.txt
+	psql -d twitter < mentions.sql > mentions.sql.txt
+
 insert:
 	 ${PRODUCE} $(patsubst tweets/share/%.txt,tweets/db/%.inserted,$(wildcard tweets/share/*))
 
