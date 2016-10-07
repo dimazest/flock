@@ -1,3 +1,8 @@
+-- Number of tweets by language
+select tweet->>'lang' as language, count(*)
+from tweet
+group by language;
+
 -- Group tweets by hour and language.
 select
 tweet->>'lang' as lang,
