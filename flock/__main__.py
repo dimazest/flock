@@ -78,6 +78,12 @@ def insert(source, session, clusters):
             )
         )
 
+        features['from_riga'] = (
+            t.coordinates and
+            23.9325829 <= t.coordinates.lon <= 56.8570671 and
+            24.3247299 <= t.coordinates.lat <= 57.0859184
+        )
+
         stmt = pg.insert(tweet_table).values(
             _id=t.id,
             tweet=t.parsed,
