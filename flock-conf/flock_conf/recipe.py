@@ -1,7 +1,6 @@
 import logging
 import os
 
-from configparser import ConfigParser
 from .expander import Expander
 
 
@@ -18,10 +17,7 @@ class Config:
             options['clusters_conf'],
         )
 
-        config = ConfigParser()
-        config.read(self.clusters_conf)
-
-        ex = Expander(config)
+        ex = Expander.from_file(self.clusters_conf)
         self.options.update(ex.get_distinct_users())
 
         self.options['all_user_ids'] = (

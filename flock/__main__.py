@@ -69,5 +69,49 @@ def insert(source, session):
         else:
             logger.info('Processed %s tweets.', i)
 
+
+@cli.group()
+def config():
+    pass
+
+
+def read_poultry_config(ctx, param, value):
+    from poultry.config import Config as PoultryConfig
+
+    return PoultryConfig(value)
+
+
+def create_expander(ctx, param, value):
+    from flock_conf.expander import Expander
+
+    return Expander.from_file(value)
+
+
+@config.command()
+@click.option('--poultry-config', default='poultry.cfg', callback=read_poultry_config)
+@click.option('--clusters', default='clusters.cfg', callback=create_expander)
+def query_user_ids(poultry_config, clusters):
+    from poultry.stream import create_client
+
+    screen_names = list(
+        u[1:] for u in clusters.users_without_ids()
+        if u.startswith('@')
+        )
+
+    if screen_names:
+        client = create_client(
+            twitter_credentials=dict(poultry_config.items('twitter'))
+        )
+
+        response = client.get(
+            'https://api.twitter.com/1.1/users/lookup.json',
+            params={'screen_name': ','.join(screen_names)}
+        )
+        response.raise_for_status()
+
+        for user in response.json():
+            click.echo('@{screen_name} = {id}'.format(**user))
+
+
 if __name__ == '__main__':
     cli()

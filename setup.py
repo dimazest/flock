@@ -31,6 +31,7 @@ setup(
         'poultry',
         'psycopg2',
         'sqlalchemy',
+        'flock-conf',
     ],
     entry_points={
         'console_scripts': [

@@ -18,3 +18,6 @@ pginit:
 # Start DB
 createdb:
 	createdb tweets
+
+get_user_ids:
+	bin/flock config query_user_ids --poultry-config parts/etc/poultry.cfg
