@@ -23,10 +23,10 @@ order by count desc;
 
 -- Count tweets written by users.
 select
-tweet#>>'{user,screen_name}' as screen_name,
+screen_name,
 tweet->>'lang' as lang,
 count(*) as count
-from tweet
+from tweet, jsonb_array_elements(features->'screen_names') screen_name
 group by screen_name, lang
 order by count desc;
 
@@ -48,13 +48,13 @@ round (
 ) as score
 from crosstab(
     $$
-    select
-    tweet#>>'{user,screen_name}' as screen_name,
-    tweet->>'lang' as lang,
-    count(*) as count
-    from tweet
-    group by screen_name, lang
-    order by 1
+	select
+	screen_name,
+	tweet->>'lang' as lang,
+	count(*) as count
+	from tweet, jsonb_array_elements(features->'screen_names') screen_name
+	group by screen_name, lang
+	order by 1;
     $$,
     $$
     select distinct tweet->>'lang' from tweet order by 1
@@ -65,11 +65,11 @@ order by score desc, total desc
 
 -- Count how many times users were mentioned.
 select
-mentions->>'screen_name' as mention,
+user_mention,
 tweet->>'lang' as lang,
 count(*) as count
-from tweet, jsonb_array_elements(tweet#>'{entities,user_mentions}') mentions
-group by mention, lang
+from tweet, jsonb_array_elements(features->'user_mentions') user_mention
+group by user_mention, lang
 order by count desc;
 
 -- Crosstab the query above
@@ -91,11 +91,11 @@ round (
 from crosstab(
     $$
 	select
-	mentions->>'screen_name' as mention,
+	user_mention,
 	tweet->>'lang' as lang,
 	count(*) as count
-	from tweet, jsonb_array_elements(tweet#>'{entities,user_mentions}') mentions
-	group by mention, lang
+	from tweet, jsonb_array_elements(features->'user_mentions') user_mention
+	group by user_mention, lang
     order by 1
     $$,
     $$

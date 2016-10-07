@@ -1,4 +1,7 @@
+import json
 import logging
+
+from itertools import chain
 
 import click
 import click_log
@@ -42,19 +45,47 @@ def dropdb(session):
         metadata.drop_all()
 
 
+def create_expander(ctx, param, value):
+    from flock_conf.expander import Expander
+
+    return Expander.from_file(value)
+
+
 @cli.command()
 @click.option('--source', default=None, help='Tweet source.')
 @click.option('--session', default='postgresql://localhost/twitter', callback=create_session)
-def insert(source, session):
+@click.option('--clusters', default='clusters.cfg', callback=create_expander)
+def insert(source, session, clusters):
+
+    user_labels = clusters.user_labels()
+
     for i, t in enumerate(readline_dir(source), start=1):
         if (i % 100000) == 0:
             logger.debug('Processed %s tweets, it\'s time to flush.', i)
             session.flush()
 
+        features = dict()
+
+        # As a side effect, the users whose ids are not in user label don't have an @ infront.
+        features['screen_names'] = list(
+            user_labels.get(t.parsed['user']['id'], [t.screen_name])
+        )
+
+        features['user_mentions'] = sorted(
+            chain.from_iterable(
+                user_labels.get(mention['id'], [mention['screen_name']])
+                for mention in t.parsed['entities']['user_mentions']
+            )
+        )
+
         stmt = pg.insert(tweet_table).values(
             _id=t.id,
             tweet=t.parsed,
-        ).on_conflict_do_nothing(index_elements=['_id'])
+            features=features,
+        ).on_conflict_do_update(
+            index_elements=['_id'],
+            set_={'features': json.dumps(features)}
+        )
 
         session.execute(stmt)
     else:
@@ -79,12 +110,6 @@ def read_poultry_config(ctx, param, value):
     from poultry.config import Config as PoultryConfig
 
     return PoultryConfig(value)
-
-
-def create_expander(ctx, param, value):
-    from flock_conf.expander import Expander
-
-    return Expander.from_file(value)
 
 
 @config.command()

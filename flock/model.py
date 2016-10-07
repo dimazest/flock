@@ -12,6 +12,7 @@ tweet_table = Table(
 
     Column('_id', BigInteger, primary_key=True),
     Column('tweet', pg.JSONB, nullable=False),
+    Column('features', pg.JSONB),
 
 )
 
