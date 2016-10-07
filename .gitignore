@@ -8,6 +8,8 @@ parts/
 src/
 flock.egg-info/
 
+flock-conf/flock_conf.egg-info/
+
 # Twarc
 twarc.log
 
