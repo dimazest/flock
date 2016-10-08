@@ -146,6 +146,15 @@ Take a ~4M sample of #brexit tweets during 23-24 July. See:
 * how long it takes to analyse the data with the CoreNLP tools.
 
 **TODO:** Have a look to the making sense of twitter tutorial at ACL.
+
+# Getting up and running
+
+## Data setup
+
+* `tweets/select` the tweets that are collected from the streaming api. This step *creates* the corpus. These files are not supposed to be shared. `poultry.cfg` is the config file.
+* `tweets/share` the IDs of the tweets. They are meant to be shared.
+* `tweets/hydrate` the hydrated tweets.
+
 # Relevant materials
 * http://www.journals.elsevier.com/computers-and-electrical-engineering/call-for-papers/special-section-on-new-trends-in-humanistic-informatics
 * https://medium.com/@swainjo/us-presidential-election-2016-twitter-analysis-7596606853e5#.u71p5nuk3
