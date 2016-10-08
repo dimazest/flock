@@ -6,13 +6,13 @@ round (
 	        (
 	            (COALESCE(ru, 0) + 0.0) /
 	            (
-	                COALESCE(lv, 0) +
-	                COALESCE(ru, 0)
+	                COALESCE(lv, 0.00001) +
+	                COALESCE(ru, 0.00001)
 	            )
 	        )
             - 0.5
     ),
-    4
+    2
 ) as score
 from crosstab(
     $$
@@ -28,5 +28,5 @@ from crosstab(
     select distinct tweet->>'lang' from tweet order by 1
     $$
 )
-as final_result(user_mention text, lv bigint, ru bigint)
+as final_result(user_mention text, en bigint, lv bigint, ru bigint)
 order by score desc, total desc, user_mention;

@@ -1,1054 +1,1058 @@
 Output format is wrapped.
 Line style is unicode.
-   user_mention   │ lv  │ ru │ total │ score  
-──────────────────┼─────┼────┼───────┼────────
- @@MIXNEWS💬       │   3 │  5 │     8 │ 0.3750
- @jurmalalv       │   2 │  1 │     3 │ 0.3333
- @latgalescb      │   2 │  1 │     3 │ 0.3333
- @@DELFI💬         │ 164 │ 71 │   235 │ 0.3021
- @ltv7rus         │   2 │  5 │     7 │ 0.2857
- @dienalv         │   4 │  1 │     5 │ 0.2000
- @@LIB            │   5 │  1 │     6 │ 0.1667
- @hcdinamoriga    │   6 │  1 │     7 │ 0.1429
- @@MEDIA          │ 550 │ 82 │   632 │ 0.1297
- @@DIENA          │   9 │  1 │    10 │ 0.1000
- @@NILSUSAKOVS💬   │  19 │  2 │    21 │ 0.0952
- @@TVNET💬         │  11 │  1 │    12 │ 0.0833
- @delfilv         │ 163 │ 10 │   173 │ 0.0578
- @nilsusakovs     │  19 │  1 │    20 │ 0.0500
- @rigassatiksme_  │  23 │  1 │    24 │ 0.0417
- @csdd_lv         │  24 │  1 │    25 │ 0.0400
- @@LSM-TV         │ 144 │  5 │   149 │ 0.0336
- @@CITY           │  59 │  2 │    61 │ 0.0328
- @@SPORT          │  31 │  1 │    32 │ 0.0313
- @@GOV            │ 202 │  5 │   207 │ 0.0242
- @@RIGA           │  51 │  1 │    52 │ 0.0192
- @@LSM            │ 310 │  5 │   315 │ 0.0159
- @@LSM-WEB        │ 121 │    │   121 │ 0.0000
- @@LSM.LV💬        │  93 │    │    93 │ 0.0000
- @lsmlv           │  93 │    │    93 │ 0.0000
- @rusdelfi_lv     │     │ 61 │    61 │ 0.0000
- @@COMM           │  57 │    │    57 │ 0.0000
- semkalis         │     │ 54 │    54 │ 0.0000
- @ltvzinas        │  53 │    │    53 │ 0.0000
- @@LSM-RADIO      │  45 │    │    45 │ 0.0000
- clone_me_tender  │     │ 37 │    37 │ 0.0000
- @lattelecom      │  36 │    │    36 │ 0.0000
- @latvijastv      │  32 │    │    32 │ 0.0000
- salick27         │     │ 32 │    32 │ 0.0000
- @ltvsports       │  30 │    │    30 │ 0.0000
- @@RETAIL         │  28 │    │    28 │ 0.0000
- ArvisKolmanis    │  27 │    │    27 │ 0.0000
- @@SHOPPING       │  25 │    │    25 │ 0.0000
- SummersWarming   │     │ 25 │    25 │ 0.0000
- @rigasdome       │  20 │    │    20 │ 0.0000
- Best4SportTV     │  19 │    │    19 │ 0.0000
- ainarsbr11       │  19 │    │    19 │ 0.0000
- @@RADIO          │  17 │    │    17 │ 0.0000
- @lsmkultura      │  17 │    │    17 │ 0.0000
- @manslmt         │  17 │    │    17 │ 0.0000
- @@CULTURE        │  15 │    │    15 │ 0.0000
- @ltvpanorama     │  15 │    │    15 │ 0.0000
- Ainaronkuls      │  15 │    │    15 │ 0.0000
- RedWhiteRedLV    │  15 │    │    15 │ 0.0000
- MartasTante      │  14 │    │    14 │ 0.0000
- asuhacky         │  14 │    │    14 │ 0.0000
- @vas_ldz         │  13 │    │    13 │ 0.0000
- halbienxoto      │     │ 13 │    13 │ 0.0000
- pArt07           │  13 │    │    13 │ 0.0000
- @lsmdzivesstils  │  11 │    │    11 │ 0.0000
- @neplpadome      │  11 │    │    11 │ 0.0000
- @tvnet_portals   │  11 │    │    11 │ 0.0000
- Gataguk          │     │ 11 │    11 │ 0.0000
- @@EDU            │  10 │    │    10 │ 0.0000
- @la_lv           │  10 │    │    10 │ 0.0000
- @ltrk_info       │  10 │    │    10 │ 0.0000
- @mansrimi        │  10 │    │    10 │ 0.0000
- AdvokateKrista   │  10 │    │    10 │ 0.0000
- Janis_Rozkalns   │  10 │    │    10 │ 0.0000
- ValdisValters    │  10 │    │    10 │ 0.0000
- nuit_polair      │     │ 10 │    10 │ 0.0000
- rudaakaija       │  10 │    │    10 │ 0.0000
- @bkventspils     │   9 │    │     9 │ 0.0000
- @krustpunkta     │   9 │    │     9 │ 0.0000
- @latvijasradio1  │   9 │    │     9 │ 0.0000
- @rnparvaldnieks  │   9 │    │     9 │ 0.0000
- GMeluskans       │   9 │    │     9 │ 0.0000
- IlzeJaunberga    │   9 │    │     9 │ 0.0000
- JanaSima         │   9 │    │     9 │ 0.0000
- Mayskolpino      │     │  9 │     9 │ 0.0000
- laacz            │   9 │    │     9 │ 0.0000
- rutenbergsdaini  │   9 │    │     9 │ 0.0000
- @edgarsrinkevics │   8 │    │     8 │ 0.0000
- @gimenes_studija │   8 │    │     8 │ 0.0000
- @lrzinas         │   8 │    │     8 │ 0.0000
- @rdsvc           │   8 │    │     8 │ 0.0000
- @tc_origo        │   8 │    │     8 │ 0.0000
- @tkspice         │   8 │    │     8 │ 0.0000
- @vkontrole       │   8 │    │     8 │ 0.0000
- BoredofBorders   │   8 │    │     8 │ 0.0000
- ivetarouge       │   8 │    │     8 │ 0.0000
- 05etonerazmer    │     │  7 │     7 │ 0.0000
- 0h_hai           │     │  7 │     7 │ 0.0000
- @@FIN            │   7 │    │     7 │ 0.0000
- @@FOOD           │   7 │    │     7 │ 0.0000
- @lhf_lv          │   7 │    │     7 │ 0.0000
- @radiotev        │   7 │    │     7 │ 0.0000
- @swedbanklatvia  │   7 │    │     7 │ 0.0000
- AnnaUlla         │   7 │    │     7 │ 0.0000
- Elizabeth__00    │     │  7 │     7 │ 0.0000
- Elly_Veta        │     │  7 │     7 │ 0.0000
- IngaStirna       │   7 │    │     7 │ 0.0000
- LiepajaTriobet   │   7 │    │     7 │ 0.0000
- Nepareizais      │   7 │    │     7 │ 0.0000
- OlyBetLBL        │   7 │    │     7 │ 0.0000
- alkomaar         │     │  7 │     7 │ 0.0000
- bluaty           │     │  7 │     7 │ 0.0000
- cashalottt       │     │  7 │     7 │ 0.0000
- cepumiarpienu    │   7 │    │     7 │ 0.0000
- kocizum          │     │  7 │     7 │ 0.0000
- @@APOLLO💬        │   6 │    │     6 │ 0.0000
- @@LEISURE        │   6 │    │     6 │ 0.0000
- @@NGO            │   6 │    │     6 │ 0.0000
- @@PETROL         │   6 │    │     6 │ 0.0000
- @@UNI            │   6 │    │     6 │ 0.0000
- @apollo_lv       │   6 │    │     6 │ 0.0000
- @latvijasradio   │   6 │    │     6 │ 0.0000
- @nralv           │   6 │    │     6 │ 0.0000
- @radioswhrock    │   6 │    │     6 │ 0.0000
- @rigaszoodarzs   │   6 │    │     6 │ 0.0000
- @vid_gov_lv      │   6 │    │     6 │ 0.0000
- Eriks_the_Great  │   6 │    │     6 │ 0.0000
- HunnyTunny       │     │  6 │     6 │ 0.0000
- LaukuSpamere     │   6 │    │     6 │ 0.0000
- Nodusgordius     │   6 │    │     6 │ 0.0000
- alinaz_          │     │  6 │     6 │ 0.0000
- f1latvija        │   6 │    │     6 │ 0.0000
- hopeforthepizza  │     │  6 │     6 │ 0.0000
- robertomeloni    │   6 │    │     6 │ 0.0000
- torquemada_hell  │     │  6 │     6 │ 0.0000
- @100gkulturas    │   5 │    │     5 │ 0.0000
- @@TV3            │   5 │    │     5 │ 0.0000
- @jekaba11        │   5 │    │     5 │ 0.0000
- @kulturasdiena   │   5 │    │     5 │ 0.0000
- @latvijastatoil  │   5 │    │     5 │ 0.0000
- @lnso            │   5 │    │     5 │ 0.0000
- @mixnews_lv      │     │  5 │     5 │ 0.0000
- @pvilciens       │   5 │    │     5 │ 0.0000
- ArtisCalitis     │   5 │    │     5 │ 0.0000
- BaibaStrautmane  │   5 │    │     5 │ 0.0000
- EriksBelinsky    │   5 │    │     5 │ 0.0000
- Lastovskis       │   5 │    │     5 │ 0.0000
- Maira4ka         │   5 │    │     5 │ 0.0000
- Snapy99          │     │  5 │     5 │ 0.0000
- StepanenkoJulij  │   5 │    │     5 │ 0.0000
- Talis_L          │   5 │    │     5 │ 0.0000
- Vinetav          │   5 │    │     5 │ 0.0000
- aiga_balode      │   5 │    │     5 │ 0.0000
- domuskapis       │   5 │    │     5 │ 0.0000
- errnews          │   5 │    │     5 │ 0.0000
- fullnessfilings  │     │  5 │     5 │ 0.0000
- gints_a          │   5 │    │     5 │ 0.0000
- jemberga         │   5 │    │     5 │ 0.0000
- kajbumba         │   5 │    │     5 │ 0.0000
- nicole_an_moroz  │     │  5 │     5 │ 0.0000
- nnailgun         │     │  5 │     5 │ 0.0000
- sabynaBS         │     │  5 │     5 │ 0.0000
- zhanett          │   5 │    │     5 │ 0.0000
- @@DB.LV💬         │   4 │    │     4 │ 0.0000
- @@SCHOOL         │   4 │    │     4 │ 0.0000
- @breakinglv      │   4 │    │     4 │ 0.0000
- @brivibas36      │   4 │    │     4 │ 0.0000
- @dblv            │   4 │    │     4 │ 0.0000
- @fbklielvarde    │   4 │    │     4 │ 0.0000
- @iespejamamisija │   4 │    │     4 │ 0.0000
- @kasjauns        │   4 │    │     4 │ 0.0000
- @lnt_lv          │   4 │    │     4 │ 0.0000
- @lv_portals      │   4 │    │     4 │ 0.0000
- @lvceli          │   4 │    │     4 │ 0.0000
- @marupesvsk      │   4 │    │     4 │ 0.0000
- @rigas_pils      │   4 │    │     4 │ 0.0000
- @rtu_lv          │   4 │    │     4 │ 0.0000
- @sporta_skola    │   4 │    │     4 │ 0.0000
- @tieslietas      │   4 │    │     4 │ 0.0000
- @zinamaislr1     │   4 │    │     4 │ 0.0000
- AnnaFomina       │     │  4 │     4 │ 0.0000
- DzintarsRasnacs  │   4 │    │     4 │ 0.0000
- EvijaUnama       │   4 │    │     4 │ 0.0000
- GaumigsJoks      │   4 │    │     4 │ 0.0000
- HesburgerFIN     │   4 │    │     4 │ 0.0000
- JanisIesalnieks  │   4 │    │     4 │ 0.0000
- Krista_Baumane   │   4 │    │     4 │ 0.0000
- MjawLinda        │   4 │    │     4 │ 0.0000
- Prusis           │   4 │    │     4 │ 0.0000
- RainVera         │     │  4 │     4 │ 0.0000
- Sadurskis        │   4 │    │     4 │ 0.0000
- Sarmite_Kolate   │   4 │    │     4 │ 0.0000
- Skepse           │   4 │    │     4 │ 0.0000
- WizyWizy         │   4 │    │     4 │ 0.0000
- apinis99         │   4 │    │     4 │ 0.0000
- asocgimene       │   4 │    │     4 │ 0.0000
- atjaunotiesisku  │   4 │    │     4 │ 0.0000
- bezvestslv       │   4 │    │     4 │ 0.0000
- glamur821        │     │  4 │     4 │ 0.0000
- hkzemgale        │   4 │    │     4 │ 0.0000
- kazhaes          │   4 │    │     4 │ 0.0000
- kbuss            │   4 │    │     4 │ 0.0000
- knaaabis         │   4 │    │     4 │ 0.0000
- krizdabz         │   4 │    │     4 │ 0.0000
- maza_dudina      │   4 │    │     4 │ 0.0000
- raudseps         │   4 │    │     4 │ 0.0000
- vaivarei         │   4 │    │     4 │ 0.0000
- vkovancova       │     │  4 │     4 │ 0.0000
- zemene103        │   4 │    │     4 │ 0.0000
- @@MUSEUM         │   3 │    │     3 │ 0.0000
- @@PARTY          │   3 │    │     3 │ 0.0000
- @cesis_lv        │   3 │    │     3 │ 0.0000
- @galleriariga    │   3 │    │     3 │ 0.0000
- @kekavas_novads  │   3 │    │     3 │ 0.0000
- @latmixnews      │   3 │    │     3 │ 0.0000
- @lido_lv         │   3 │    │     3 │ 0.0000
- @lnb_lv          │   3 │    │     3 │ 0.0000
- @opera_balets    │   3 │    │     3 │ 0.0000
- @r_centraltirgus │   3 │    │     3 │ 0.0000
- @ritapanorama    │   3 │    │     3 │ 0.0000
- @teatris         │   3 │    │     3 │ 0.0000
- @tv3zinas        │   3 │    │     3 │ 0.0000
- Alika1808        │     │  3 │     3 │ 0.0000
- BluForster       │   3 │    │     3 │ 0.0000
- DikembeSakamoto  │   3 │    │     3 │ 0.0000
- EGoizane         │   3 │    │     3 │ 0.0000
- ELisovskis       │   3 │    │     3 │ 0.0000
- EvaCaune1        │   3 │    │     3 │ 0.0000
- Horstsyo         │   3 │    │     3 │ 0.0000
- IevaSniedze      │   3 │    │     3 │ 0.0000
- IgorjKjv         │     │  3 │     3 │ 0.0000
- IlzeAww          │   3 │    │     3 │ 0.0000
- Inga_Gorbunova   │   3 │    │     3 │ 0.0000
- InraRubene       │   3 │    │     3 │ 0.0000
- IvarsNeiders     │   3 │    │     3 │ 0.0000
- JurisLi          │   3 │    │     3 │ 0.0000
- KBlumberga       │   3 │    │     3 │ 0.0000
- KristineGarina   │   3 │    │     3 │ 0.0000
- KristineOpolais  │   3 │    │     3 │ 0.0000
- KsenyaVekshina   │     │  3 │     3 │ 0.0000
- L_bss            │   3 │    │     3 │ 0.0000
- MaraKrontale     │   3 │    │     3 │ 0.0000
- Nataliya_Yanush  │     │  3 │     3 │ 0.0000
- NigasfromTk      │   3 │    │     3 │ 0.0000
- NikiArtpop       │     │  3 │     3 │ 0.0000
- OptibeTips       │   3 │    │     3 │ 0.0000
- OskarsMucenieks  │   3 │    │     3 │ 0.0000
- SlavaVK          │   3 │    │     3 │ 0.0000
- TE_Karaliste     │   3 │    │     3 │ 0.0000
- Vinkele          │   3 │    │     3 │ 0.0000
- absolut_ilze     │   3 │    │     3 │ 0.0000
- ainarstam        │   3 │    │     3 │ 0.0000
- alisejoste       │   3 │    │     3 │ 0.0000
- anetebabenko     │   3 │    │     3 │ 0.0000
- cepum_s          │   3 │    │     3 │ 0.0000
- cryomancerka     │     │  3 │     3 │ 0.0000
- demonhog63       │   3 │    │     3 │ 0.0000
- dianagorodylina  │     │  3 │     3 │ 0.0000
- foto_enik        │     │  3 │     3 │ 0.0000
- gudrsvelgudraks  │   3 │    │     3 │ 0.0000
- ints_goze        │   3 │    │     3 │ 0.0000
- jaarinak5        │     │  3 │     3 │ 0.0000
- jtaurens         │   3 │    │     3 │ 0.0000
- jurino123t       │   3 │    │     3 │ 0.0000
- koleegjis        │   3 │    │     3 │ 0.0000
- ladyalena96      │     │  3 │     3 │ 0.0000
- marruciic        │   3 │    │     3 │ 0.0000
- minka221         │   3 │    │     3 │ 0.0000
- murmurmjauuu     │   3 │    │     3 │ 0.0000
- originalLNO      │   3 │    │     3 │ 0.0000
- ravrrrrr         │   3 │    │     3 │ 0.0000
- sandzhs          │   3 │    │     3 │ 0.0000
- scarletfoxdamn   │     │  3 │     3 │ 0.0000
- shohinur94       │     │  3 │     3 │ 0.0000
- skatieslatvija   │   3 │    │     3 │ 0.0000
- tenor_van_love   │     │  3 │     3 │ 0.0000
- tolstovs1        │   3 │    │     3 │ 0.0000
- valtersb         │   3 │    │     3 │ 0.0000
- vefriga          │   3 │    │     3 │ 0.0000
- zarinstoms       │   3 │    │     3 │ 0.0000
- zdazz            │     │  3 │     3 │ 0.0000
- 00E93            │   2 │    │     2 │ 0.0000
- @@LETA💬          │   2 │    │     2 │ 0.0000
- @cili_pica       │   2 │    │     2 │ 0.0000
- @galerijacentrs  │   2 │    │     2 │ 0.0000
- @irlv            │   2 │    │     2 │ 0.0000
- @izm_gov_lv      │   2 │    │     2 │ 0.0000
- @knabinforme     │   2 │    │     2 │ 0.0000
- @latvijas_pasts  │   2 │    │     2 │ 0.0000
- @letanewslv      │   2 │    │     2 │ 0.0000
- @lv_vest_muzejs  │   2 │    │     2 │ 0.0000
- @maximaveikals   │   2 │    │     2 │ 0.0000
- @picalulu        │   2 │    │     2 │ 0.0000
- @radioswh        │   2 │    │     2 │ 0.0000
- @railbaltica     │   2 │    │     2 │ 0.0000
- @tele2latvia     │   2 │    │     2 │ 0.0000
- @turiba          │   2 │    │     2 │ 0.0000
- @tv3lv           │   2 │    │     2 │ 0.0000
- @valsts_policija │   2 │    │     2 │ 0.0000
- @vecriga         │   2 │    │     2 │ 0.0000
- @vl_tblnnk       │   2 │    │     2 │ 0.0000
- APolunocheva     │     │  2 │     2 │ 0.0000
- AndrAuz          │   2 │    │     2 │ 0.0000
- AnsisEgle        │   2 │    │     2 │ 0.0000
- Arlietas         │   2 │    │     2 │ 0.0000
- ArtjomKiselev    │     │  2 │     2 │ 0.0000
- Atl_Aztecs       │     │  2 │     2 │ 0.0000
- BK_OGRE          │   2 │    │     2 │ 0.0000
- Butkevics        │   2 │    │     2 │ 0.0000
- Caune_           │   2 │    │     2 │ 0.0000
- CerinsAivis      │   2 │    │     2 │ 0.0000
- DanielaMeilekh   │     │  2 │     2 │ 0.0000
- DeNiByy          │     │  2 │     2 │ 0.0000
- Dzintris         │   2 │    │     2 │ 0.0000
- EduardsSarkans   │   2 │    │     2 │ 0.0000
- Eleonooraa       │     │  2 │     2 │ 0.0000
- EmilsBuikis      │   2 │    │     2 │ 0.0000
- EmilyGasparyan   │     │  2 │     2 │ 0.0000
- Enkurss          │   2 │    │     2 │ 0.0000
- EsEsmuTuEsmuEs   │   2 │    │     2 │ 0.0000
- FestivalBILDES   │   2 │    │     2 │ 0.0000
- Fiskalapadome    │   2 │    │     2 │ 0.0000
- Gircha           │   2 │    │     2 │ 0.0000
- GuntarsRacs      │   2 │    │     2 │ 0.0000
- GuntisBojars     │   2 │    │     2 │ 0.0000
- Gvi79            │   2 │    │     2 │ 0.0000
- GwensRare        │     │  2 │     2 │ 0.0000
- IgorGusev85      │     │  2 │     2 │ 0.0000
- IlgvarsImsa      │   2 │    │     2 │ 0.0000
- IngaBit          │   2 │    │     2 │ 0.0000
- Ivan_Kostyaev    │     │  2 │     2 │ 0.0000
- IvarsForands     │   2 │    │     2 │ 0.0000
- Ivars_Motivans   │   2 │    │     2 │ 0.0000
- JankaPipars      │   2 │    │     2 │ 0.0000
- JurisMillers     │   2 │    │     2 │ 0.0000
- K_97J            │   2 │    │     2 │ 0.0000
- Kilkuts          │   2 │    │     2 │ 0.0000
- LabakDzivot      │   2 │    │     2 │ 0.0000
- LaivinieksJanis  │   2 │    │     2 │ 0.0000
- LatRex_          │   2 │    │     2 │ 0.0000
- LaurisReiniks    │   2 │    │     2 │ 0.0000
- LielaisKristaps  │   2 │    │     2 │ 0.0000
- LimasovaKatya    │     │  2 │     2 │ 0.0000
- MC_Perekis       │     │  2 │     2 │ 0.0000
- MazaisJuniors    │   2 │    │     2 │ 0.0000
- Mednisfoto       │   2 │    │     2 │ 0.0000
- MyFitnessLatvia  │   2 │    │     2 │ 0.0000
- Nika_Kromane     │     │  2 │     2 │ 0.0000
- Nikita_Bakhurov  │     │  2 │     2 │ 0.0000
- PTimrots         │   2 │    │     2 │ 0.0000
- P_Snejersons     │   2 │    │     2 │ 0.0000
- Riga24           │   2 │    │     2 │ 0.0000
- RigasBrivosta    │   2 │    │     2 │ 0.0000
- RobertsLunte     │   2 │    │     2 │ 0.0000
- SaldusRadio      │   2 │    │     2 │ 0.0000
- Sportacentrs     │   2 │    │     2 │ 0.0000
- Sugaryok         │     │  2 │     2 │ 0.0000
- SwarmApp         │     │  2 │     2 │ 0.0000
- THUNDERFROST1    │     │  2 │     2 │ 0.0000
- Terzens          │   2 │    │     2 │ 0.0000
- V_Alyona91       │     │  2 │     2 │ 0.0000
- ZakDios          │     │  2 │     2 │ 0.0000
- Zalton           │     │  2 │     2 │ 0.0000
- Zn_Portnova      │     │  2 │     2 │ 0.0000
- ___________DV17  │     │  2 │     2 │ 0.0000
- _elinka98_       │     │  2 │     2 │ 0.0000
- _jagris_         │   2 │    │     2 │ 0.0000
- adrija6          │   2 │    │     2 │ 0.0000
- agnese_zee       │   2 │    │     2 │ 0.0000
- agucis110        │   2 │    │     2 │ 0.0000
- akmens           │   2 │    │     2 │ 0.0000
- anechka159       │     │  2 │     2 │ 0.0000
- behmanis         │   2 │    │     2 │ 0.0000
- blanks86         │   2 │    │     2 │ 0.0000
- boms_tricis      │   2 │    │     2 │ 0.0000
- cehslv           │   2 │    │     2 │ 0.0000
- conor_ks         │     │  2 │     2 │ 0.0000
- dacebluke        │   2 │    │     2 │ 0.0000
- dstrautniece1    │   2 │    │     2 │ 0.0000
- dzavada          │     │  2 │     2 │ 0.0000
- eedgars          │   2 │    │     2 │ 0.0000
- exerica          │   2 │    │     2 │ 0.0000
- freidace         │   2 │    │     2 │ 0.0000
- gestins          │   2 │    │     2 │ 0.0000
- greatamberlv     │   2 │    │     2 │ 0.0000
- guntisbelevics   │   2 │    │     2 │ 0.0000
- gvaldmanis       │   2 │    │     2 │ 0.0000
- hclokomotiv      │   2 │    │     2 │ 0.0000
- iegriezies360    │   2 │    │     2 │ 0.0000
- illusory_me      │     │  2 │     2 │ 0.0000
- ilz              │   2 │    │     2 │ 0.0000
- ilze_krii        │   2 │    │     2 │ 0.0000
- ilzekalninaa     │   2 │    │     2 │ 0.0000
- io7246           │   2 │    │     2 │ 0.0000
- irinaShupegina   │     │  2 │     2 │ 0.0000
- jaaniszelgis     │   2 │    │     2 │ 0.0000
- janissipkevics   │   2 │    │     2 │ 0.0000
- kasparszellis    │   2 │    │     2 │ 0.0000
- katerynamyau     │     │  2 │     2 │ 0.0000
- kbushaa          │   2 │    │     2 │ 0.0000
- kristsdarzins    │   2 │    │     2 │ 0.0000
- kulturaskoledza  │   2 │    │     2 │ 0.0000
- latgalesgors     │   2 │    │     2 │ 0.0000
- licitiz_         │     │  2 │     2 │ 0.0000
- marym0607        │     │  2 │     2 │ 0.0000
- meteozinas       │   2 │    │     2 │ 0.0000
- mrserge          │   2 │    │     2 │ 0.0000
- ms_Dyonamite     │     │  2 │     2 │ 0.0000
- nikabuka_        │     │  2 │     2 │ 0.0000
- njaa_wild        │   2 │    │     2 │ 0.0000
- nk8500           │     │  2 │     2 │ 0.0000
- normis           │   2 │    │     2 │ 0.0000
- olshanskajaa     │     │  2 │     2 │ 0.0000
- panncis          │   2 │    │     2 │ 0.0000
- redhead_jules    │     │  2 │     2 │ 0.0000
- rihardsebastian  │     │  2 │     2 │ 0.0000
- rpp              │   2 │    │     2 │ 0.0000
- rudites          │   2 │    │     2 │ 0.0000
- skirsts          │   2 │    │     2 │ 0.0000
- sklarevich       │     │  2 │     2 │ 0.0000
- starexinho       │     │  2 │     2 │ 0.0000
- stepanova_ka61   │     │  2 │     2 │ 0.0000
- valtszvaigzne    │   2 │    │     2 │ 0.0000
- vasiliy_terkin   │     │  2 │     2 │ 0.0000
- veloriga         │   2 │    │     2 │ 0.0000
- vitaamiins       │   2 │    │     2 │ 0.0000
- xoxoAgy          │   2 │    │     2 │ 0.0000
- ykvlvbeats       │     │  2 │     2 │ 0.0000
- zimolutops       │   2 │    │     2 │ 0.0000
- 2kikii           │   1 │    │     1 │ 0.0000
- 32augusts        │   1 │    │     1 │ 0.0000
- 32nd_            │   1 │    │     1 │ 0.0000
- 9menesi          │   1 │    │     1 │ 0.0000
- @@BAND           │   1 │    │     1 │ 0.0000
- @@CINEMA         │   1 │    │     1 │ 0.0000
- @@FEST           │   1 │    │     1 │ 0.0000
- @baltcom         │   1 │    │     1 │ 0.0000
- @dailesteatris   │   1 │    │     1 │ 0.0000
- @delfikultura    │   1 │    │     1 │ 0.0000
- @dienaszurnali   │   1 │    │     1 │ 0.0000
- @finmin          │   1 │    │     1 │ 0.0000
- @forumcinemaslv  │   1 │    │     1 │ 0.0000
- @hsrigahockey    │   1 │    │     1 │ 0.0000
- @jrt_lv          │   1 │    │     1 │ 0.0000
- @kanepeskc       │   1 │    │     1 │ 0.0000
- @klasika_lr3     │   1 │    │     1 │ 0.0000
- @latvijas_armija │   1 │    │     1 │ 0.0000
- @lnmm_muzejs     │   1 │    │     1 │ 0.0000
- @nesteruna       │   1 │    │     1 │ 0.0000
- @nilushakov      │     │  1 │     1 │ 0.0000
- @pietiekportals  │   1 │    │     1 │ 0.0000
- @radioskonto     │   1 │    │     1 │ 0.0000
- @rigaslaiks      │   1 │    │     1 │ 0.0000
- @rigaspp         │   1 │    │     1 │ 0.0000
- @rigatv24        │   1 │    │     1 │ 0.0000
- @sinfoniettariga │   1 │    │     1 │ 0.0000
- @skanumezs       │   1 │    │     1 │ 0.0000
- @starfmlv        │   1 │    │     1 │ 0.0000
- @tcmols          │   1 │    │     1 │ 0.0000
- @tvnet_rus       │     │  1 │     1 │ 0.0000
- @ugunsdzeseji    │   1 │    │     1 │ 0.0000
- @uznemumureg     │   1 │    │     1 │ 0.0000
- @zeltazivtina    │   1 │    │     1 │ 0.0000
- @zzs_            │   1 │    │     1 │ 0.0000
- ABertule         │   1 │    │     1 │ 0.0000
- ABrauna          │   1 │    │     1 │ 0.0000
- AKMshooter       │   1 │    │     1 │ 0.0000
- AValdbergs       │   1 │    │     1 │ 0.0000
- Aanastasija_tr   │     │  1 │     1 │ 0.0000
- AgneseMargevica  │   1 │    │     1 │ 0.0000
- Agnesssssh       │   1 │    │     1 │ 0.0000
- AigarsX          │   1 │    │     1 │ 0.0000
- AijaV            │   1 │    │     1 │ 0.0000
- AinarsZabers     │   1 │    │     1 │ 0.0000
- AlAhmediya       │     │  1 │     1 │ 0.0000
- AlcoHistory      │     │  1 │     1 │ 0.0000
- AleksejsZ        │   1 │    │     1 │ 0.0000
- AlexStomas       │     │  1 │     1 │ 0.0000
- AlinaKolina      │     │  1 │     1 │ 0.0000
- AlinaLoveLee     │     │  1 │     1 │ 0.0000
- Aljaa_1808       │     │  1 │     1 │ 0.0000
- AlksneR          │   1 │    │     1 │ 0.0000
- Alus_Bralis      │   1 │    │     1 │ 0.0000
- Amandiinjaa      │   1 │    │     1 │ 0.0000
- AminataSavadogo  │     │  1 │     1 │ 0.0000
- AndrejsB_        │   1 │    │     1 │ 0.0000
- AndrejsJudins    │   1 │    │     1 │ 0.0000
- Andrey_Roch      │   1 │    │     1 │ 0.0000
- AndrisSkride     │   1 │    │     1 │ 0.0000
- AndrisTaurins    │   1 │    │     1 │ 0.0000
- AndritoCoffee    │   1 │    │     1 │ 0.0000
- AndzejMic        │   1 │    │     1 │ 0.0000
- Andzhikss        │   1 │    │     1 │ 0.0000
- AnitraTooma      │   1 │    │     1 │ 0.0000
- AnnaAmalis       │   1 │    │     1 │ 0.0000
- AnnaKarabesko    │   1 │    │     1 │ 0.0000
- AnnijaGreka      │   1 │    │     1 │ 0.0000
- AntipovOn        │     │  1 │     1 │ 0.0000
- AntonRudnev      │     │  1 │     1 │ 0.0000
- AntonsMaris      │   1 │    │     1 │ 0.0000
- ApgadsJumava     │   1 │    │     1 │ 0.0000
- Archijs          │   1 │    │     1 │ 0.0000
- ArmandsArm       │   1 │    │     1 │ 0.0000
- ArnisRukis       │   1 │    │     1 │ 0.0000
- ArtursKruzkops   │   1 │    │     1 │ 0.0000
- AskoldsRampa     │   1 │    │     1 │ 0.0000
- AstrologiLv      │   1 │    │     1 │ 0.0000
- Atecina_         │   1 │    │     1 │ 0.0000
- B0dzu            │     │  1 │     1 │ 0.0000
- BC_BARONS        │   1 │    │     1 │ 0.0000
- BENUaptiekas     │   1 │    │     1 │ 0.0000
- Baicis           │   1 │    │     1 │ 0.0000
- Balitis          │   1 │    │     1 │ 0.0000
- Baltvilla        │   1 │    │     1 │ 0.0000
- BarsLimonade     │   1 │    │     1 │ 0.0000
- BelovaSheila     │     │  1 │     1 │ 0.0000
- Bender_LV        │   1 │    │     1 │ 0.0000
- BensLatkovskis   │   1 │    │     1 │ 0.0000
- Berga_Bazars     │   1 │    │     1 │ 0.0000
- Bircenko         │     │  1 │     1 │ 0.0000
- Bisektrise       │   1 │    │     1 │ 0.0000
- Borovkovs        │   1 │    │     1 │ 0.0000
- BriedisM         │   1 │    │     1 │ 0.0000
- BriedisMairis    │   1 │    │     1 │ 0.0000
- BrituPutni       │   1 │    │     1 │ 0.0000
- Brivosta         │   1 │    │     1 │ 0.0000
- BuzzFeedRU       │     │  1 │     1 │ 0.0000
- Cietnis          │   1 │    │     1 │ 0.0000
- ComedyLatvia     │   1 │    │     1 │ 0.0000
- Copaclia         │     │  1 │     1 │ 0.0000
- CoyoteFly        │   1 │    │     1 │ 0.0000
- Crimsonfuckit    │     │  1 │     1 │ 0.0000
- DELNA_LV         │   1 │    │     1 │ 0.0000
- DaceKalnina      │   1 │    │     1 │ 0.0000
- Dagne_Relina     │   1 │    │     1 │ 0.0000
- DailyLV          │   1 │    │     1 │ 0.0000
- DanaReiznieceOz  │   1 │    │     1 │ 0.0000
- DaunisAuers      │   1 │    │     1 │ 0.0000
- DaysHotelRiga    │   1 │    │     1 │ 0.0000
- Dejass           │   1 │    │     1 │ 0.0000
- DenissPashkevic  │   1 │    │     1 │ 0.0000
- DenysSSka        │     │  1 │     1 │ 0.0000
- Diana_Bruvere    │   1 │    │     1 │ 0.0000
- DitaE_           │   1 │    │     1 │ 0.0000
- Divritenis       │   1 │    │     1 │ 0.0000
- DmtrVinogradov   │     │  1 │     1 │ 0.0000
- EagleAndSkym     │   1 │    │     1 │ 0.0000
- EdgarsKaljva     │   1 │    │     1 │ 0.0000
- EduardsPurins    │   1 │    │     1 │ 0.0000
- Eglajs           │   1 │    │     1 │ 0.0000
- Egoistelv        │   1 │    │     1 │ 0.0000
- Elipsics         │   1 │    │     1 │ 0.0000
- ElizabeteSnore   │   1 │    │     1 │ 0.0000
- Elkor_LV         │   1 │    │     1 │ 0.0000
- EmilsJakrins     │   1 │    │     1 │ 0.0000
- EmilsLatkovskis  │   1 │    │     1 │ 0.0000
- Eusis_           │   1 │    │     1 │ 0.0000
- Evelinaa___      │   1 │    │     1 │ 0.0000
- F1               │   1 │    │     1 │ 0.0000
- F1LV             │   1 │    │     1 │ 0.0000
- FIAformulaE      │   1 │    │     1 │ 0.0000
- FIFAWorldCup     │   1 │    │     1 │ 0.0000
- FK_SALA          │   1 │    │     1 │ 0.0000
- FOLKKLUBS        │   1 │    │     1 │ 0.0000
- FSMETTA          │   1 │    │     1 │ 0.0000
- FantasyParkRiga  │   1 │    │     1 │ 0.0000
- Feofan_27        │     │  1 │     1 │ 0.0000
- Fillalimona      │     │  1 │     1 │ 0.0000
- FoodUnion        │   1 │    │     1 │ 0.0000
- FreeSantana_     │     │  1 │     1 │ 0.0000
- FutbolaVirsliga  │   1 │    │     1 │ 0.0000
- GACHO            │   1 │    │     1 │ 0.0000
- GJankovskis      │   1 │    │     1 │ 0.0000
- GanbeiLV         │   1 │    │     1 │ 0.0000
- GatisStrods      │   1 │    │     1 │ 0.0000
- GatissK          │   1 │    │     1 │ 0.0000
- GeilordsFakers   │   1 │    │     1 │ 0.0000
- GintersOzols     │   1 │    │     1 │ 0.0000
- Grafikaskola     │   1 │    │     1 │ 0.0000
- GraniTweet       │     │  1 │     1 │ 0.0000
- Gxldberga_Maya   │   1 │    │     1 │ 0.0000
- Hereford_gala    │   1 │    │     1 │ 0.0000
- HolywoodW        │     │  1 │     1 │ 0.0000
- Homo_SimplyJANE  │   1 │    │     1 │ 0.0000
- Homo_ignobilis   │     │  1 │     1 │ 0.0000
- IDzelme          │   1 │    │     1 │ 0.0000
- IKRamava         │   1 │    │     1 │ 0.0000
- Ian_Goding       │   1 │    │     1 │ 0.0000
- IevaIlves        │   1 │    │     1 │ 0.0000
- IevaPreimane     │   1 │    │     1 │ 0.0000
- Ilja_Polakovs    │   1 │    │     1 │ 0.0000
- Ilustr_Zinatne   │   1 │    │     1 │ 0.0000
- IlvaPratina      │   1 │    │     1 │ 0.0000
- ImarsK           │   1 │    │     1 │ 0.0000
- InPearly         │     │  1 │     1 │ 0.0000
- Inboxledushalle  │   1 │    │     1 │ 0.0000
- IngaPriedeV      │   1 │    │     1 │ 0.0000
- Ingridaa_S       │   1 │    │     1 │ 0.0000
- InsolentSpock    │     │  1 │     1 │ 0.0000
- IrkaIriska       │     │  1 │     1 │ 0.0000
- IvetaKazoka      │   1 │    │     1 │ 0.0000
- IvetaPudane      │   1 │    │     1 │ 0.0000
- JAMikdiena       │   1 │    │     1 │ 0.0000
- JanisVingris     │   1 │    │     1 │ 0.0000
- JanisZilde       │   1 │    │     1 │ 0.0000
- Jaunsardze       │   1 │    │     1 │ 0.0000
- JelgavaLV        │   1 │    │     1 │ 0.0000
- JurgisLiepnieks  │   1 │    │     1 │ 0.0000
- JurisGulbis      │   1 │    │     1 │ 0.0000
- JurisRubenis     │   1 │    │     1 │ 0.0000
- Just_Bar         │   1 │    │     1 │ 0.0000
- Juurnieks        │   1 │    │     1 │ 0.0000
- KBreidaks        │   1 │    │     1 │ 0.0000
- KDachux          │   1 │    │     1 │ 0.0000
- KERNES_PIDORAS   │     │  1 │     1 │ 0.0000
- K_Darznieks      │   1 │    │     1 │ 0.0000
- KarelPaki        │     │  1 │     1 │ 0.0000
- Karinararr       │   1 │    │     1 │ 0.0000
- Karsavas_MMS     │   1 │    │     1 │ 0.0000
- KasparsUpaciers  │   1 │    │     1 │ 0.0000
- KateInfiniti     │     │  1 │     1 │ 0.0000
- KatrinaBindere   │   1 │    │     1 │ 0.0000
- KepaUzSirds      │   1 │    │     1 │ 0.0000
- Kjomnijs         │   1 │    │     1 │ 0.0000
- KobaJashi90      │   1 │    │     1 │ 0.0000
- KressEduards     │   1 │    │     1 │ 0.0000
- KristapsCaune_   │   1 │    │     1 │ 0.0000
- KristapsMors     │   1 │    │     1 │ 0.0000
- KseniaN73        │     │  1 │     1 │ 0.0000
- KsjuhaM          │     │  1 │     1 │ 0.0000
- LArstu_Biedriba  │   1 │    │     1 │ 0.0000
- LLKC_lv          │   1 │    │     1 │ 0.0000
- LRKultura        │   1 │    │     1 │ 0.0000
- LUbasketbols     │   1 │    │     1 │ 0.0000
- LVRTC_TVtornis   │   1 │    │     1 │ 0.0000
- LaceZane         │   1 │    │     1 │ 0.0000
- LatvijasRadio2   │   1 │    │     1 │ 0.0000
- Laumaryn         │   1 │    │     1 │ 0.0000
- Lekrings_Damas   │   1 │    │     1 │ 0.0000
- LindaMiscenkova  │   1 │    │     1 │ 0.0000
- LindaTreige2     │   1 │    │     1 │ 0.0000
- Linda_Novicka    │   1 │    │     1 │ 0.0000
- LindasVirtuve    │   1 │    │     1 │ 0.0000
- Lindexofficial   │   1 │    │     1 │ 0.0000
- LindosPolska     │     │  1 │     1 │ 0.0000
- LiveLiva         │   1 │    │     1 │ 0.0000
- LizaStrazdinya   │     │  1 │     1 │ 0.0000
- LizumsLV         │   1 │    │     1 │ 0.0000
- Ljipa            │   1 │    │     1 │ 0.0000
- Lorklinika       │   1 │    │     1 │ 0.0000
- Loskutovs        │   1 │    │     1 │ 0.0000
- MFF_lv           │   1 │    │     1 │ 0.0000
- MLuste           │   1 │    │     1 │ 0.0000
- M_Rutkevica      │   1 │    │     1 │ 0.0000
- Maarcis_S        │   1 │    │     1 │ 0.0000
- MadaraKreslina   │   1 │    │     1 │ 0.0000
- Madzins          │   1 │    │     1 │ 0.0000
- MairaDzelzkalej  │   1 │    │     1 │ 0.0000
- Manasgarsas      │   1 │    │     1 │ 0.0000
- MaraDarguze      │     │  1 │     1 │ 0.0000
- Marchellito      │   1 │    │     1 │ 0.0000
- MarisKucinskis   │   1 │    │     1 │ 0.0000
- Maris_Zanders    │   1 │    │     1 │ 0.0000
- MartinsBondars   │   1 │    │     1 │ 0.0000
- MazaGilde        │   1 │    │     1 │ 0.0000
- McDonalds        │   1 │    │     1 │ 0.0000
- MekijsNazis      │   1 │    │     1 │ 0.0000
- MelnaPiektdiena  │   1 │    │     1 │ 0.0000
- MenessAptieka    │   1 │    │     1 │ 0.0000
- MercedesAMGF1    │   1 │    │     1 │ 0.0000
- MetOpera         │   1 │    │     1 │ 0.0000
- Mevigym          │   1 │    │     1 │ 0.0000
- Mierini          │   1 │    │     1 │ 0.0000
- MihailZeludehko  │     │  1 │     1 │ 0.0000
- MikelisO         │   1 │    │     1 │ 0.0000
- MintosPlatform   │   1 │    │     1 │ 0.0000
- Movemote         │     │  1 │     1 │ 0.0000
- MrBalins         │   1 │    │     1 │ 0.0000
- MrMusha          │   1 │    │     1 │ 0.0000
- Mr_Raimis        │   1 │    │     1 │ 0.0000
- Msirajeva        │     │  1 │     1 │ 0.0000
- MumfordAndSons   │   1 │    │     1 │ 0.0000
- MuteFood         │   1 │    │     1 │ 0.0000
- MuzejsRigaBirza  │   1 │    │     1 │ 0.0000
- MyMiuma          │   1 │    │     1 │ 0.0000
- NBALatvija       │   1 │    │     1 │ 0.0000
- Nash_East        │     │  1 │     1 │ 0.0000
- Nauris_L         │   1 │    │     1 │ 0.0000
- NikitkaMc        │     │  1 │     1 │ 0.0000
- NiklavsN         │   1 │    │     1 │ 0.0000
- OMNYKIDS         │     │  1 │     1 │ 0.0000
- ONuzhnenko       │     │  1 │     1 │ 0.0000
- OlavsCers        │   1 │    │     1 │ 0.0000
- Olj4ikk          │     │  1 │     1 │ 0.0000
- OptibetLatvija   │   1 │    │     1 │ 0.0000
- Orlach           │   1 │    │     1 │ 0.0000
- Oskars_Kaulens   │   1 │    │     1 │ 0.0000
- OstapsBenders    │   1 │    │     1 │ 0.0000
- OtoGrinbergs     │   1 │    │     1 │ 0.0000
- OttoOzols        │   1 │    │     1 │ 0.0000
- OzolaBalode      │   1 │    │     1 │ 0.0000
- PacaPatrcija     │   1 │    │     1 │ 0.0000
- Pasaulescentrs   │   1 │    │     1 │ 0.0000
- Patriicija_V     │   1 │    │     1 │ 0.0000
- PatverumsDM      │   1 │    │     1 │ 0.0000
- Pavel_XII        │     │  1 │     1 │ 0.0000
- Pecpusdiena      │   1 │    │     1 │ 0.0000
- PhanAtDeDisco    │   1 │    │     1 │ 0.0000
- Pilsetasdzive    │   1 │    │     1 │ 0.0000
- Pink_Floydov     │     │  1 │     1 │ 0.0000
- PreiluFutbols    │   1 │    │     1 │ 0.0000
- PuuchuksJ        │   1 │    │     1 │ 0.0000
- RAsaris          │   1 │    │     1 │ 0.0000
- REALITYsc        │     │  1 │     1 │ 0.0000
- RLB_lv           │   1 │    │     1 │ 0.0000
- RTUIZV           │   1 │    │     1 │ 0.0000
- RaivisSh         │   1 │    │     1 │ 0.0000
- Ramona21122      │   1 │    │     1 │ 0.0000
- ReinisNitissRX   │   1 │    │     1 │ 0.0000
- Reinis_Me        │   1 │    │     1 │ 0.0000
- Riga_Lara        │     │  1 │     1 │ 0.0000
- RigasModes       │   1 │    │     1 │ 0.0000
- RigasSatiksme    │   1 │    │     1 │ 0.0000
- RitaEvaNa        │   1 │    │     1 │ 0.0000
- RitaSvita        │   1 │    │     1 │ 0.0000
- Rizhiks_Pizhiks  │   1 │    │     1 │ 0.0000
- RobertsKarklins  │   1 │    │     1 │ 0.0000
- RockSandis112    │   1 │    │     1 │ 0.0000
- Rokkafejnica     │   1 │    │     1 │ 0.0000
- RuPaul           │     │  1 │     1 │ 0.0000
- Ruksane          │   1 │    │     1 │ 0.0000
- SPKCentrs        │   1 │    │     1 │ 0.0000
- Sat_Min          │   1 │    │     1 │ 0.0000
- SaulesAptieka    │   1 │    │     1 │ 0.0000
- SavickyD         │     │  1 │     1 │ 0.0000
- SestoQuatrini    │   1 │    │     1 │ 0.0000
- SigmaLS8361      │   1 │    │     1 │ 0.0000
- SilRa_A          │   1 │    │     1 │ 0.0000
- Sildniks         │   1 │    │     1 │ 0.0000
- Skontostadions   │   1 │    │     1 │ 0.0000
- SkrienLatvija    │   1 │    │     1 │ 0.0000
- Snowtales        │   1 │    │     1 │ 0.0000
- So_Sue_Me_       │   1 │    │     1 │ 0.0000
- Spice_Mountain   │   1 │    │     1 │ 0.0000
- StalinGulag      │     │  1 │     1 │ 0.0000
- SynotTipLV       │   1 │    │     1 │ 0.0000
- THEMaksimko      │   1 │    │     1 │ 0.0000
- TaaPatiGerda     │   1 │    │     1 │ 0.0000
- TheNakuName      │     │  1 │     1 │ 0.0000
- TheZirnis        │   1 │    │     1 │ 0.0000
- Toms_Polakens    │   1 │    │     1 │ 0.0000
- Tyomster         │     │  1 │     1 │ 0.0000
- UzrakstiMan_     │   1 │    │     1 │ 0.0000
- VC4_LV           │   1 │    │     1 │ 0.0000
- VOCsports        │   1 │    │     1 │ 0.0000
- VRudzitis        │   1 │    │     1 │ 0.0000
- ValmieraORDO     │   1 │    │     1 │ 0.0000
- ValstsPolicija   │   1 │    │     1 │ 0.0000
- Vasili_ili       │     │  1 │     1 │ 0.0000
- Vasilisa_Dark    │     │  1 │     1 │ 0.0000
- VentsAKrauklis   │   1 │    │     1 │ 0.0000
- Vents_Zvaigzne   │   1 │    │     1 │ 0.0000
- VeronikaKolosov  │     │  1 │     1 │ 0.0000
- VilisKolka       │   1 │    │     1 │ 0.0000
- Vinotava         │   1 │    │     1 │ 0.0000
- Vita_Lombards    │   1 │    │     1 │ 0.0000
- Vitalijs_S       │   1 │    │     1 │ 0.0000
- Vivita_Braslina  │   1 │    │     1 │ 0.0000
- VjDombrovskis    │   1 │    │     1 │ 0.0000
- Winnijs1Winnijs  │   1 │    │     1 │ 0.0000
- XbyDrones        │     │  1 │     1 │ 0.0000
- YouTube          │   1 │    │     1 │ 0.0000
- Zavileiskis      │   1 │    │     1 │ 0.0000
- ZeltaMikrofons   │   1 │    │     1 │ 0.0000
- ZemGun           │   1 │    │     1 │ 0.0000
- ZemesDienests    │   1 │    │     1 │ 0.0000
- ZerkaaHD         │   1 │    │     1 │ 0.0000
- Zimejumuteatris  │   1 │    │     1 │ 0.0000
- Zmeycharauski    │   1 │    │     1 │ 0.0000
- Zondz010         │     │  1 │     1 │ 0.0000
- _affair          │   1 │    │     1 │ 0.0000
- a_iljina         │     │  1 │     1 │ 0.0000
- a_latkovskis     │   1 │    │     1 │ 0.0000
- adeniins         │   1 │    │     1 │ 0.0000
- adorabledemon    │     │  1 │     1 │ 0.0000
- agnesesiktare    │   1 │    │     1 │ 0.0000
- agsidenko        │     │  1 │     1 │ 0.0000
- aiisatsan        │     │  1 │     1 │ 0.0000
- airavs           │   1 │    │     1 │ 0.0000
- aizmirstiba      │   1 │    │     1 │ 0.0000
- ajbuke           │   1 │    │     1 │ 0.0000
- akirstei         │   1 │    │     1 │ 0.0000
- alisasurkova7    │     │  1 │     1 │ 0.0000
- alpaqa           │   1 │    │     1 │ 0.0000
- and_kse          │   1 │    │     1 │ 0.0000
- andelemandele    │   1 │    │     1 │ 0.0000
- andrei_kaa       │     │  1 │     1 │ 0.0000
- andrispp         │   1 │    │     1 │ 0.0000
- anjaaustrina     │     │  1 │     1 │ 0.0000
- annarage_        │     │  1 │     1 │ 0.0000
- annwurst_        │     │  1 │     1 │ 0.0000
- anthon_gandon    │     │  1 │     1 │ 0.0000
- arikalinaa       │     │  1 │     1 │ 0.0000
- arinuwka4        │   1 │    │     1 │ 0.0000
- arniskrauze      │   1 │    │     1 │ 0.0000
- artuss           │   1 │    │     1 │ 0.0000
- artuukx          │   1 │    │     1 │ 0.0000
- atevi2           │   1 │    │     1 │ 0.0000
- atisbille        │   1 │    │     1 │ 0.0000
- baidekalna       │   1 │    │     1 │ 0.0000
- balticmarathons  │   1 │    │     1 │ 0.0000
- bankovskis       │   1 │    │     1 │ 0.0000
- bauskasbiblio    │   1 │    │     1 │ 0.0000
- beekirik         │     │  1 │     1 │ 0.0000
- belka_shi        │     │  1 │     1 │ 0.0000
- bilberry_am      │     │  1 │     1 │ 0.0000
- birojnica        │   1 │    │     1 │ 0.0000
- burbon_monster   │   1 │    │     1 │ 0.0000
- cactus_is_love   │   1 │    │     1 │ 0.0000
- cantab3          │   1 │    │     1 │ 0.0000
- chaukis          │   1 │    │     1 │ 0.0000
- cheepatunTM      │     │  1 │     1 │ 0.0000
- chilyandlime     │     │  1 │     1 │ 0.0000
- cibric           │   1 │    │     1 │ 0.0000
- coksiks          │     │  1 │     1 │ 0.0000
- copypointlv      │   1 │    │     1 │ 0.0000
- crapfucku        │     │  1 │     1 │ 0.0000
- crystalldaisy    │     │  1 │     1 │ 0.0000
- dANILIWE         │     │  1 │     1 │ 0.0000
- d_dtm            │     │  1 │     1 │ 0.0000
- dagnijaaaa       │   1 │    │     1 │ 0.0000
- daigidaigi       │   1 │    │     1 │ 0.0000
- dailesnams       │   1 │    │     1 │ 0.0000
- danik_marsely    │     │  1 │     1 │ 0.0000
- daokyo           │     │  1 │     1 │ 0.0000
- davnch           │     │  1 │     1 │ 0.0000
- dianabangg       │   1 │    │     1 │ 0.0000
- dianapayton      │   1 │    │     1 │ 0.0000
- diflatout        │     │  1 │     1 │ 0.0000
- dirtyserpent     │     │  1 │     1 │ 0.0000
- divtukstosviens  │   1 │    │     1 │ 0.0000
- donis777         │   1 │    │     1 │ 0.0000
- draugiem         │   1 │    │     1 │ 0.0000
- e_radzins        │   1 │    │     1 │ 0.0000
- edeliite         │   1 │    │     1 │ 0.0000
- edgarskupcs      │   1 │    │     1 │ 0.0000
- edinorogyo       │     │  1 │     1 │ 0.0000
- eeriikiiss       │     │  1 │     1 │ 0.0000
- el_nekit         │     │  1 │     1 │ 0.0000
- elina2455        │     │  1 │     1 │ 0.0000
- elvi_veikali     │   1 │    │     1 │ 0.0000
- energodata       │   1 │    │     1 │ 0.0000
- es_jau_neko      │   1 │    │     1 │ 0.0000
- esabinee         │   1 │    │     1 │ 0.0000
- eugenelandin     │     │  1 │     1 │ 0.0000
- evita_purina     │   1 │    │     1 │ 0.0000
- ewq666N          │     │  1 │     1 │ 0.0000
- fauxforever      │   1 │    │     1 │ 0.0000
- fd00ch           │     │  1 │     1 │ 0.0000
- felicitaosvalde  │   1 │    │     1 │ 0.0000
- fjodorovs91      │   1 │    │     1 │ 0.0000
- fkventspils_     │     │  1 │     1 │ 0.0000
- flamieCS         │     │  1 │     1 │ 0.0000
- food_blood       │   1 │    │     1 │ 0.0000
- garamgajejs      │   1 │    │     1 │ 0.0000
- gay_gerard2      │     │  1 │     1 │ 0.0000
- gezgin3435       │   1 │    │     1 │ 0.0000
- giphy            │     │  1 │     1 │ 0.0000
- girlontrainfilm  │   1 │    │     1 │ 0.0000
- glavnijaponojed  │     │  1 │     1 │ 0.0000
- graudaspeks      │   1 │    │     1 │ 0.0000
- gundarsreders    │   1 │    │     1 │ 0.0000
- happycat1290     │     │  1 │     1 │ 0.0000
- hellpasso        │     │  1 │     1 │ 0.0000
- hkprizma         │   1 │    │     1 │ 0.0000
- hotetmalo        │     │  1 │     1 │ 0.0000
- hremenkina       │   1 │    │     1 │ 0.0000
- iTrITon          │     │  1 │     1 │ 0.0000
- i_nartish        │   1 │    │     1 │ 0.0000
- ilmarmors        │   1 │    │     1 │ 0.0000
- impro_celo       │   1 │    │     1 │ 0.0000
- incaustum        │   1 │    │     1 │ 0.0000
- indygo_band      │   1 │    │     1 │ 0.0000
- inesevoika       │   1 │    │     1 │ 0.0000
- irliepaja        │   1 │    │     1 │ 0.0000
- ivanhilov00      │     │  1 │     1 │ 0.0000
- ivarssvilans     │   1 │    │     1 │ 0.0000
- janisburba       │   1 │    │     1 │ 0.0000
- jegursjuniors    │   1 │    │     1 │ 0.0000
- jurisriekstins   │   1 │    │     1 │ 0.0000
- jurmalafenikss   │   1 │    │     1 │ 0.0000
- jurmalaslimnica  │   1 │    │     1 │ 0.0000
- kalvanelinda     │   1 │    │     1 │ 0.0000
- kapociino        │   1 │    │     1 │ 0.0000
- karin4ik170599   │     │  1 │     1 │ 0.0000
- karlisauzans     │   1 │    │     1 │ 0.0000
- karsupavelnieks  │   1 │    │     1 │ 0.0000
- kasparsgrvis     │   1 │    │     1 │ 0.0000
- kasprs           │   1 │    │     1 │ 0.0000
- keksinjs         │   1 │    │     1 │ 0.0000
- kennijski        │     │  1 │     1 │ 0.0000
- kinasts          │   1 │    │     1 │ 0.0000
- kisakisa95       │     │  1 │     1 │ 0.0000
- klavsse          │   1 │    │     1 │ 0.0000
- kotik_by         │     │  1 │     1 │ 0.0000
- kovalivan96      │     │  1 │     1 │ 0.0000
- kporzee          │   1 │    │     1 │ 0.0000
- kristapsDFK      │   1 │    │     1 │ 0.0000
- ksykorolj        │     │  1 │     1 │ 0.0000
- ksywai           │     │  1 │     1 │ 0.0000
- kulakovaak       │     │  1 │     1 │ 0.0000
- kurzemnieks_K    │   1 │    │     1 │ 0.0000
- lYuliaZ          │     │  1 │     1 │ 0.0000
- lavenir_net      │   1 │    │     1 │ 0.0000
- lawrr__          │     │  1 │     1 │ 0.0000
- leenkasmolina11  │     │  1 │     1 │ 0.0000
- liene_b          │   1 │    │     1 │ 0.0000
- liepajalv        │   1 │    │     1 │ 0.0000
- liepajasosta     │   1 │    │     1 │ 0.0000
- lindahaka        │   1 │    │     1 │ 0.0000
- lizda_lv         │   1 │    │     1 │ 0.0000
- ljubljuorbit     │     │  1 │     1 │ 0.0000
- llopsikk         │     │  1 │     1 │ 0.0000
- lolifish         │   1 │    │     1 │ 0.0000
- ltv              │   1 │    │     1 │ 0.0000
- m_levinskaya     │     │  1 │     1 │ 0.0000
- m_petrakova      │     │  1 │     1 │ 0.0000
- maddriverdies    │     │  1 │     1 │ 0.0000
- makeuparevelinu  │   1 │    │     1 │ 0.0000
- maksuna99        │     │  1 │     1 │ 0.0000
- mamba2k_         │     │  1 │     1 │ 0.0000
- mapuckaa         │     │  1 │     1 │ 0.0000
- mariskalejs      │   1 │    │     1 │ 0.0000
- marislogins      │   1 │    │     1 │ 0.0000
- martakrivade     │   1 │    │     1 │ 0.0000
- matiss_z         │   1 │    │     1 │ 0.0000
- mazaaevijaa      │   1 │    │     1 │ 0.0000
- mejreneee        │   1 │    │     1 │ 0.0000
- meownauts        │     │  1 │     1 │ 0.0000
- miculis          │   1 │    │     1 │ 0.0000
- modestcookie     │     │  1 │     1 │ 0.0000
- monttaaa         │   1 │    │     1 │ 0.0000
- mpieskariens     │   1 │    │     1 │ 0.0000
- naduha1          │     │  1 │     1 │ 0.0000
- naivists         │   1 │    │     1 │ 0.0000
- narakupaya       │     │  1 │     1 │ 0.0000
- nashley_21       │   1 │    │     1 │ 0.0000
- nastjabogdanov1  │     │  1 │     1 │ 0.0000
- nebiletnieks     │   1 │    │     1 │ 0.0000
- neo_los          │     │  1 │     1 │ 0.0000
- neresident       │     │  1 │     1 │ 0.0000
- nextjoke         │     │  1 │     1 │ 0.0000
- nikitabolsakov7  │     │  1 │     1 │ 0.0000
- nikitinamarine   │     │  1 │     1 │ 0.0000
- nikolajevaA      │     │  1 │     1 │ 0.0000
- oeskaa           │     │  1 │     1 │ 0.0000
- okeirussia       │     │  1 │     1 │ 0.0000
- oksanaque        │     │  1 │     1 │ 0.0000
- olchik991        │     │  1 │     1 │ 0.0000
- oldyellowtshirt  │   1 │    │     1 │ 0.0000
- onediorussia     │     │  1 │     1 │ 0.0000
- osish87          │   1 │    │     1 │ 0.0000
- oskarspo         │   1 │    │     1 │ 0.0000
- otto_kumm        │     │  1 │     1 │ 0.0000
- owlyowl1         │     │  1 │     1 │ 0.0000
- paula43181775    │   1 │    │     1 │ 0.0000
- paulaelinapaula  │   1 │    │     1 │ 0.0000
- peintbols        │   1 │    │     1 │ 0.0000
- pildegovics      │   1 │    │     1 │ 0.0000
- pimpin_is_hard   │     │  1 │     1 │ 0.0000
- pink_putninya    │     │  1 │     1 │ 0.0000
- pitonych         │     │  1 │     1 │ 0.0000
- planet_anka      │     │  1 │     1 │ 0.0000
- polesik98        │     │  1 │     1 │ 0.0000
- prayforwhatsy    │     │  1 │     1 │ 0.0000
- prusux           │   1 │    │     1 │ 0.0000
- pucej            │   1 │    │     1 │ 0.0000
- pujina2          │   1 │    │     1 │ 0.0000
- pvxlv_lp         │   1 │    │     1 │ 0.0000
- ragamuffin_d     │     │  1 │     1 │ 0.0000
- raivistrelnieks  │   1 │    │     1 │ 0.0000
- raivospoks       │   1 │    │     1 │ 0.0000
- rauls_m          │   1 │    │     1 │ 0.0000
- rebaltica        │   1 │    │     1 │ 0.0000
- rennattee        │   1 │    │     1 │ 0.0000
- riga_plaza       │   1 │    │     1 │ 0.0000
- ritishhh         │   1 │    │     1 │ 0.0000
- roberts_putnis   │   1 │    │     1 │ 0.0000
- robertszile      │   1 │    │     1 │ 0.0000
- robrtins         │   1 │    │     1 │ 0.0000
- romans_melniks   │   1 │    │     1 │ 0.0000
- rotinnss         │   1 │    │     1 │ 0.0000
- rotkocentre      │   1 │    │     1 │ 0.0000
- rumiantseva_     │     │  1 │     1 │ 0.0000
- rusalka2810      │     │  1 │     1 │ 0.0000
- samulis12        │   1 │    │     1 │ 0.0000
- sandradiezina    │   1 │    │     1 │ 0.0000
- sapniunkokteili  │   1 │    │     1 │ 0.0000
- satisfaction777  │     │  1 │     1 │ 0.0000
- screamcherry     │     │  1 │     1 │ 0.0000
- sdagnere         │     │  1 │     1 │ 0.0000
- sdelalrukami     │     │  1 │     1 │ 0.0000
- seksiludi        │     │  1 │     1 │ 0.0000
- sendika_org      │   1 │    │     1 │ 0.0000
- sex_Dombas       │     │  1 │     1 │ 0.0000
- sexsecrethood    │     │  1 │     1 │ 0.0000
- sidzhinj         │   1 │    │     1 │ 0.0000
- siltinam         │   1 │    │     1 │ 0.0000
- sjordzis         │   1 │    │     1 │ 0.0000
- skaidramigla     │   1 │    │     1 │ 0.0000
- skraipsts        │   1 │    │     1 │ 0.0000
- sku_dra          │   1 │    │     1 │ 0.0000
- slashovych       │     │  1 │     1 │ 0.0000
- so_many_bitches  │     │  1 │     1 │ 0.0000
- sp_un_de         │   1 │    │     1 │ 0.0000
- spacetag         │     │  1 │     1 │ 0.0000
- sprugevica       │   1 │    │     1 │ 0.0000
- stirane          │   1 │    │     1 │ 0.0000
- sudakovaanda     │   1 │    │     1 │ 0.0000
- svensk_viking    │   1 │    │     1 │ 0.0000
- taisiared        │     │  1 │     1 │ 0.0000
- thearenariga     │   1 │    │     1 │ 0.0000
- tishkova         │     │  1 │     1 │ 0.0000
- tomokodes        │     │  1 │     1 │ 0.0000
- toriameow        │     │  1 │     1 │ 0.0000
- typographera     │     │  1 │     1 │ 0.0000
- ugisjekabsons    │   1 │    │     1 │ 0.0000
- uldisz           │   1 │    │     1 │ 0.0000
- unaelvaa         │   1 │    │     1 │ 0.0000
- uzzini           │   1 │    │     1 │ 0.0000
- vanillawithcoke  │     │  1 │     1 │ 0.0000
- varlamov         │     │  1 │     1 │ 0.0000
- vb3000           │     │  1 │     1 │ 0.0000
- veronikalobinja  │     │  1 │     1 │ 0.0000
- veselibasinspek  │   1 │    │     1 │ 0.0000
- vibane_paula     │   1 │    │     1 │ 0.0000
- vigants          │   1 │    │     1 │ 0.0000
- vikmanis         │   1 │    │     1 │ 0.0000
- vinabarsGARAGE   │   1 │    │     1 │ 0.0000
- vinnijs13        │   1 │    │     1 │ 0.0000
- vit_arno         │   1 │    │     1 │ 0.0000
- vitalijsiva      │   1 │    │     1 │ 0.0000
- vkoralis         │   1 │    │     1 │ 0.0000
- vladileb         │     │  1 │     1 │ 0.0000
- vlmxs            │   1 │    │     1 │ 0.0000
- wafellee         │   1 │    │     1 │ 0.0000
- wetatwo          │   1 │    │     1 │ 0.0000
- whoozle          │     │  1 │     1 │ 0.0000
- xenafobia        │     │  1 │     1 │ 0.0000
- xjki             │   1 │    │     1 │ 0.0000
- yanina19981      │     │  1 │     1 │ 0.0000
- zaiga_p          │   1 │    │     1 │ 0.0000
- zandarts         │   1 │    │     1 │ 0.0000
- zelchss          │   1 │    │     1 │ 0.0000
- zhankins         │     │  1 │     1 │ 0.0000
- zhozesedanova20  │     │  1 │     1 │ 0.0000
- zuzan4iks        │   1 │    │     1 │ 0.0000
- zweiteiliger     │     │  1 │     1 │ 0.0000
-(1048 rows)
+   user_mention   │ en │ lv  │ ru │ total │ score 
+──────────────────┼────┼─────┼────┼───────┼───────
+ @@MIXNEWS💬       │    │   3 │  5 │     8 │  0.38
+ @jurmalalv       │    │   2 │  1 │     3 │  0.33
+ @latgalescb      │    │   2 │  1 │     3 │  0.33
+ @@DELFI💬         │    │ 165 │ 72 │   237 │  0.30
+ @ltv7rus         │    │   2 │  5 │     7 │  0.29
+ @dienalv         │    │   4 │  1 │     5 │  0.20
+ @@LIB            │    │   5 │  1 │     6 │  0.17
+ @hcdinamoriga    │    │   6 │  1 │     7 │  0.14
+ @@MEDIA          │    │ 556 │ 83 │   639 │  0.13
+ @@DIENA          │    │   9 │  1 │    10 │  0.10
+ @@NILSUSAKOVS💬   │    │  21 │  2 │    23 │  0.09
+ @@TVNET💬         │    │  13 │  1 │    14 │  0.07
+ @delfilv         │    │ 164 │ 10 │   174 │  0.06
+ @nilsusakovs     │    │  21 │  1 │    22 │  0.05
+ @csdd_lv         │    │  24 │  1 │    25 │  0.04
+ @rigassatiksme_  │    │  23 │  1 │    24 │  0.04
+ @@LSM-TV         │    │ 145 │  5 │   150 │  0.03
+ @@CITY           │    │  60 │  2 │    62 │  0.03
+ @@SPORT          │    │  33 │  1 │    34 │  0.03
+ @@LSM            │    │ 313 │  5 │   318 │  0.02
+ @@GOV            │    │ 208 │  5 │   213 │  0.02
+ @@RIGA           │    │  51 │  1 │    52 │  0.02
+ @@LSM-WEB        │    │ 122 │    │   122 │  0.00
+ @@LSM.LV💬        │    │  94 │    │    94 │  0.00
+ @lsmlv           │    │  94 │    │    94 │  0.00
+ @rusdelfi_lv     │    │     │ 62 │    62 │  0.00
+ @@COMM           │    │  59 │    │    59 │  0.00
+ @ltvzinas        │    │  54 │    │    54 │  0.00
+ semkalis         │    │     │ 54 │    54 │  0.00
+ @@LSM-RADIO      │    │  46 │    │    46 │  0.00
+ @lattelecom      │    │  38 │    │    38 │  0.00
+ clone_me_tender  │    │     │ 37 │    37 │  0.00
+ @latvijastv      │    │  32 │    │    32 │  0.00
+ salick27         │    │     │ 32 │    32 │  0.00
+ @ltvsports       │    │  30 │    │    30 │  0.00
+ @@RETAIL         │    │  28 │    │    28 │  0.00
+ ArvisKolmanis    │    │  27 │    │    27 │  0.00
+ @@SHOPPING       │    │  25 │    │    25 │  0.00
+ SummersWarming   │    │     │ 25 │    25 │  0.00
+ @rigasdome       │    │  20 │    │    20 │  0.00
+ Best4SportTV     │    │  20 │    │    20 │  0.00
+ ainarsbr11       │    │  19 │    │    19 │  0.00
+ @@RADIO          │    │  18 │    │    18 │  0.00
+ @lsmkultura      │    │  17 │    │    17 │  0.00
+ @manslmt         │    │  17 │    │    17 │  0.00
+ @@CULTURE        │    │  16 │    │    16 │  0.00
+ @ltvpanorama     │    │  15 │    │    15 │  0.00
+ Ainaronkuls      │    │  15 │    │    15 │  0.00
+ RedWhiteRedLV    │    │  15 │    │    15 │  0.00
+ MartasTante      │    │  14 │    │    14 │  0.00
+ asuhacky         │    │  14 │    │    14 │  0.00
+ @tvnet_portals   │    │  13 │    │    13 │  0.00
+ @vas_ldz         │    │  13 │    │    13 │  0.00
+ halbienxoto      │    │     │ 13 │    13 │  0.00
+ pArt07           │    │  13 │    │    13 │  0.00
+ @bkventspils     │    │  11 │    │    11 │  0.00
+ @la_lv           │    │  11 │    │    11 │  0.00
+ @lsmdzivesstils  │    │  11 │    │    11 │  0.00
+ @neplpadome      │    │  11 │    │    11 │  0.00
+ Gataguk          │    │     │ 11 │    11 │  0.00
+ @@EDU            │    │  10 │    │    10 │  0.00
+ @latvijasradio1  │    │  10 │    │    10 │  0.00
+ @ltrk_info       │    │  10 │    │    10 │  0.00
+ @mansrimi        │    │  10 │    │    10 │  0.00
+ @rnparvaldnieks  │    │  10 │    │    10 │  0.00
+ AdvokateKrista   │    │  10 │    │    10 │  0.00
+ JanaSima         │    │  10 │    │    10 │  0.00
+ Janis_Rozkalns   │    │  10 │    │    10 │  0.00
+ ValdisValters    │    │  10 │    │    10 │  0.00
+ nuit_polair      │    │     │ 10 │    10 │  0.00
+ rudaakaija       │    │  10 │    │    10 │  0.00
+ @krustpunkta     │    │   9 │    │     9 │  0.00
+ GMeluskans       │    │   9 │    │     9 │  0.00
+ IlzeJaunberga    │    │   9 │    │     9 │  0.00
+ LiepajaTriobet   │    │   9 │    │     9 │  0.00
+ Mayskolpino      │    │     │  9 │     9 │  0.00
+ OlyBetLBL        │    │   9 │    │     9 │  0.00
+ laacz            │    │   9 │    │     9 │  0.00
+ rutenbergsdaini  │    │   9 │    │     9 │  0.00
+ @edgarsrinkevics │    │   8 │    │     8 │  0.00
+ @gimenes_studija │    │   8 │    │     8 │  0.00
+ @lrzinas         │    │   8 │    │     8 │  0.00
+ @rdsvc           │    │   8 │    │     8 │  0.00
+ @tc_origo        │    │   8 │    │     8 │  0.00
+ @tkspice         │    │   8 │    │     8 │  0.00
+ @vkontrole       │    │   8 │    │     8 │  0.00
+ BoredofBorders   │    │   8 │    │     8 │  0.00
+ ivetarouge       │    │   8 │    │     8 │  0.00
+ 05etonerazmer    │    │     │  7 │     7 │  0.00
+ 0h_hai           │    │     │  7 │     7 │  0.00
+ @@FIN            │    │   7 │    │     7 │  0.00
+ @@FOOD           │    │   7 │    │     7 │  0.00
+ @lhf_lv          │    │   7 │    │     7 │  0.00
+ @radiotev        │    │   7 │    │     7 │  0.00
+ @swedbanklatvia  │    │   7 │    │     7 │  0.00
+ AnnaUlla         │    │   7 │    │     7 │  0.00
+ Elizabeth__00    │    │     │  7 │     7 │  0.00
+ Elly_Veta        │    │     │  7 │     7 │  0.00
+ IngaStirna       │    │   7 │    │     7 │  0.00
+ Nepareizais      │    │   7 │    │     7 │  0.00
+ alkomaar         │    │     │  7 │     7 │  0.00
+ bluaty           │    │     │  7 │     7 │  0.00
+ cashalottt       │    │     │  7 │     7 │  0.00
+ cepumiarpienu    │    │   7 │    │     7 │  0.00
+ kocizum          │    │     │  7 │     7 │  0.00
+ @@APOLLO💬        │    │   6 │    │     6 │  0.00
+ @@LEISURE        │    │   6 │    │     6 │  0.00
+ @@NGO            │    │   6 │    │     6 │  0.00
+ @@PETROL         │    │   6 │    │     6 │  0.00
+ @@UNI            │    │   6 │    │     6 │  0.00
+ @apollo_lv       │    │   6 │    │     6 │  0.00
+ @latvijasradio   │    │   6 │    │     6 │  0.00
+ @nralv           │    │   6 │    │     6 │  0.00
+ @radioswhrock    │    │   6 │    │     6 │  0.00
+ @rigaszoodarzs   │    │   6 │    │     6 │  0.00
+ @vid_gov_lv      │    │   6 │    │     6 │  0.00
+ Eriks_the_Great  │    │   6 │    │     6 │  0.00
+ HunnyTunny       │    │     │  6 │     6 │  0.00
+ LaukuSpamere     │    │   6 │    │     6 │  0.00
+ Nodusgordius     │    │   6 │    │     6 │  0.00
+ alinaz_          │    │     │  6 │     6 │  0.00
+ f1latvija        │    │   6 │    │     6 │  0.00
+ hopeforthepizza  │    │     │  6 │     6 │  0.00
+ robertomeloni    │    │   6 │    │     6 │  0.00
+ torquemada_hell  │    │     │  6 │     6 │  0.00
+ @100gkulturas    │    │   5 │    │     5 │  0.00
+ @@TV3            │    │   5 │    │     5 │  0.00
+ @jekaba11        │    │   5 │    │     5 │  0.00
+ @kulturasdiena   │    │   5 │    │     5 │  0.00
+ @latvijastatoil  │    │   5 │    │     5 │  0.00
+ @lnso            │    │   5 │    │     5 │  0.00
+ @lv_portals      │    │   5 │    │     5 │  0.00
+ @mixnews_lv      │    │     │  5 │     5 │  0.00
+ @pvilciens       │    │   5 │    │     5 │  0.00
+ ArtisCalitis     │    │   5 │    │     5 │  0.00
+ BaibaStrautmane  │    │   5 │    │     5 │  0.00
+ EriksBelinsky    │    │   5 │    │     5 │  0.00
+ Lastovskis       │    │   5 │    │     5 │  0.00
+ Maira4ka         │    │   5 │    │     5 │  0.00
+ Snapy99          │    │     │  5 │     5 │  0.00
+ StepanenkoJulij  │    │   5 │    │     5 │  0.00
+ Talis_L          │    │   5 │    │     5 │  0.00
+ Vinetav          │    │   5 │    │     5 │  0.00
+ aiga_balode      │    │   5 │    │     5 │  0.00
+ domuskapis       │    │   5 │    │     5 │  0.00
+ errnews          │    │   5 │    │     5 │  0.00
+ fullnessfilings  │    │     │  5 │     5 │  0.00
+ gints_a          │    │   5 │    │     5 │  0.00
+ jemberga         │    │   5 │    │     5 │  0.00
+ kajbumba         │    │   5 │    │     5 │  0.00
+ nicole_an_moroz  │    │     │  5 │     5 │  0.00
+ nnailgun         │    │     │  5 │     5 │  0.00
+ sabynaBS         │    │     │  5 │     5 │  0.00
+ zhanett          │    │   5 │    │     5 │  0.00
+ @@DB.LV💬         │    │   4 │    │     4 │  0.00
+ @@SCHOOL         │    │   4 │    │     4 │  0.00
+ @breakinglv      │    │   4 │    │     4 │  0.00
+ @brivibas36      │    │   4 │    │     4 │  0.00
+ @cesis_lv        │    │   4 │    │     4 │  0.00
+ @dblv            │    │   4 │    │     4 │  0.00
+ @fbklielvarde    │    │   4 │    │     4 │  0.00
+ @iespejamamisija │    │   4 │    │     4 │  0.00
+ @kasjauns        │    │   4 │    │     4 │  0.00
+ @lnt_lv          │    │   4 │    │     4 │  0.00
+ @lvceli          │    │   4 │    │     4 │  0.00
+ @marupesvsk      │    │   4 │    │     4 │  0.00
+ @rigas_pils      │    │   4 │    │     4 │  0.00
+ @rtu_lv          │    │   4 │    │     4 │  0.00
+ @sporta_skola    │    │   4 │    │     4 │  0.00
+ @tieslietas      │    │   4 │    │     4 │  0.00
+ @zinamaislr1     │    │   4 │    │     4 │  0.00
+ AnnaFomina       │    │     │  4 │     4 │  0.00
+ DzintarsRasnacs  │    │   4 │    │     4 │  0.00
+ EvijaUnama       │    │   4 │    │     4 │  0.00
+ GaumigsJoks      │    │   4 │    │     4 │  0.00
+ HesburgerFIN     │    │   4 │    │     4 │  0.00
+ JanisIesalnieks  │    │   4 │    │     4 │  0.00
+ Krista_Baumane   │    │   4 │    │     4 │  0.00
+ MjawLinda        │    │   4 │    │     4 │  0.00
+ Prusis           │    │   4 │    │     4 │  0.00
+ RainVera         │    │     │  4 │     4 │  0.00
+ Sadurskis        │    │   4 │    │     4 │  0.00
+ Sarmite_Kolate   │    │   4 │    │     4 │  0.00
+ Skepse           │    │   4 │    │     4 │  0.00
+ WizyWizy         │    │   4 │    │     4 │  0.00
+ apinis99         │    │   4 │    │     4 │  0.00
+ asocgimene       │    │   4 │    │     4 │  0.00
+ atjaunotiesisku  │    │   4 │    │     4 │  0.00
+ bezvestslv       │    │   4 │    │     4 │  0.00
+ glamur821        │    │     │  4 │     4 │  0.00
+ hkzemgale        │    │   4 │    │     4 │  0.00
+ kazhaes          │    │   4 │    │     4 │  0.00
+ kbuss            │    │   4 │    │     4 │  0.00
+ knaaabis         │    │   4 │    │     4 │  0.00
+ krizdabz         │    │   4 │    │     4 │  0.00
+ maza_dudina      │    │   4 │    │     4 │  0.00
+ raudseps         │    │   4 │    │     4 │  0.00
+ vaivarei         │    │   4 │    │     4 │  0.00
+ vkovancova       │    │     │  4 │     4 │  0.00
+ zemene103        │    │   4 │    │     4 │  0.00
+ @@MUSEUM         │    │   3 │    │     3 │  0.00
+ @@PARTY          │    │   3 │    │     3 │  0.00
+ @galleriariga    │    │   3 │    │     3 │  0.00
+ @kekavas_novads  │    │   3 │    │     3 │  0.00
+ @latmixnews      │    │   3 │    │     3 │  0.00
+ @lido_lv         │    │   3 │    │     3 │  0.00
+ @lnb_lv          │    │   3 │    │     3 │  0.00
+ @opera_balets    │    │   3 │    │     3 │  0.00
+ @r_centraltirgus │    │   3 │    │     3 │  0.00
+ @ritapanorama    │    │   3 │    │     3 │  0.00
+ @teatris         │    │   3 │    │     3 │  0.00
+ @tv3zinas        │    │   3 │    │     3 │  0.00
+ Alika1808        │    │     │  3 │     3 │  0.00
+ BluForster       │    │   3 │    │     3 │  0.00
+ DikembeSakamoto  │    │   3 │    │     3 │  0.00
+ EGoizane         │    │   3 │    │     3 │  0.00
+ ELisovskis       │    │   3 │    │     3 │  0.00
+ EvaCaune1        │    │   3 │    │     3 │  0.00
+ Horstsyo         │    │   3 │    │     3 │  0.00
+ IevaSniedze      │    │   3 │    │     3 │  0.00
+ IgorjKjv         │    │     │  3 │     3 │  0.00
+ IlzeAww          │    │   3 │    │     3 │  0.00
+ Inga_Gorbunova   │    │   3 │    │     3 │  0.00
+ InraRubene       │    │   3 │    │     3 │  0.00
+ IvarsNeiders     │    │   3 │    │     3 │  0.00
+ JurisLi          │    │   3 │    │     3 │  0.00
+ KBlumberga       │    │   3 │    │     3 │  0.00
+ KristineGarina   │    │   3 │    │     3 │  0.00
+ KristineOpolais  │    │   3 │    │     3 │  0.00
+ KsenyaVekshina   │    │     │  3 │     3 │  0.00
+ L_bss            │    │   3 │    │     3 │  0.00
+ MaraKrontale     │    │   3 │    │     3 │  0.00
+ Nataliya_Yanush  │    │     │  3 │     3 │  0.00
+ NigasfromTk      │    │   3 │    │     3 │  0.00
+ NikiArtpop       │    │     │  3 │     3 │  0.00
+ OptibeTips       │    │   3 │    │     3 │  0.00
+ OskarsMucenieks  │    │   3 │    │     3 │  0.00
+ SlavaVK          │    │   3 │    │     3 │  0.00
+ TE_Karaliste     │    │   3 │    │     3 │  0.00
+ Vinkele          │    │   3 │    │     3 │  0.00
+ absolut_ilze     │    │   3 │    │     3 │  0.00
+ ainarstam        │    │   3 │    │     3 │  0.00
+ alisejoste       │    │   3 │    │     3 │  0.00
+ anetebabenko     │    │   3 │    │     3 │  0.00
+ behmanis         │    │   3 │    │     3 │  0.00
+ cepum_s          │    │   3 │    │     3 │  0.00
+ cryomancerka     │    │     │  3 │     3 │  0.00
+ demonhog63       │    │   3 │    │     3 │  0.00
+ dianagorodylina  │    │     │  3 │     3 │  0.00
+ foto_enik        │    │     │  3 │     3 │  0.00
+ gudrsvelgudraks  │    │   3 │    │     3 │  0.00
+ ints_goze        │    │   3 │    │     3 │  0.00
+ jaarinak5        │    │     │  3 │     3 │  0.00
+ jtaurens         │    │   3 │    │     3 │  0.00
+ jurino123t       │    │   3 │    │     3 │  0.00
+ koleegjis        │    │   3 │    │     3 │  0.00
+ ladyalena96      │    │     │  3 │     3 │  0.00
+ marruciic        │    │   3 │    │     3 │  0.00
+ minka221         │    │   3 │    │     3 │  0.00
+ murmurmjauuu     │    │   3 │    │     3 │  0.00
+ originalLNO      │    │   3 │    │     3 │  0.00
+ ravrrrrr         │    │   3 │    │     3 │  0.00
+ sandzhs          │    │   3 │    │     3 │  0.00
+ scarletfoxdamn   │    │     │  3 │     3 │  0.00
+ shohinur94       │    │     │  3 │     3 │  0.00
+ skatieslatvija   │    │   3 │    │     3 │  0.00
+ tenor_van_love   │    │     │  3 │     3 │  0.00
+ tolstovs1        │    │   3 │    │     3 │  0.00
+ valtersb         │    │   3 │    │     3 │  0.00
+ vefriga          │    │   3 │    │     3 │  0.00
+ zarinstoms       │    │   3 │    │     3 │  0.00
+ zdazz            │    │     │  3 │     3 │  0.00
+ 00E93            │    │   2 │    │     2 │  0.00
+ @@CINEMA         │    │   2 │    │     2 │  0.00
+ @@LETA💬          │    │   2 │    │     2 │  0.00
+ @cili_pica       │    │   2 │    │     2 │  0.00
+ @dailesteatris   │    │   2 │    │     2 │  0.00
+ @finmin          │    │   2 │    │     2 │  0.00
+ @forumcinemaslv  │    │   2 │    │     2 │  0.00
+ @galerijacentrs  │    │   2 │    │     2 │  0.00
+ @irlv            │    │   2 │    │     2 │  0.00
+ @izm_gov_lv      │    │   2 │    │     2 │  0.00
+ @knabinforme     │    │   2 │    │     2 │  0.00
+ @latvijas_pasts  │    │   2 │    │     2 │  0.00
+ @letanewslv      │    │   2 │    │     2 │  0.00
+ @lv_vest_muzejs  │    │   2 │    │     2 │  0.00
+ @maximaveikals   │    │   2 │    │     2 │  0.00
+ @picalulu        │    │   2 │    │     2 │  0.00
+ @radioskonto     │    │   2 │    │     2 │  0.00
+ @radioswh        │    │   2 │    │     2 │  0.00
+ @railbaltica     │    │   2 │    │     2 │  0.00
+ @tele2latvia     │    │   2 │    │     2 │  0.00
+ @turiba          │    │   2 │    │     2 │  0.00
+ @tv3lv           │    │   2 │    │     2 │  0.00
+ @valsts_policija │    │   2 │    │     2 │  0.00
+ @vecriga         │    │   2 │    │     2 │  0.00
+ @vl_tblnnk       │    │   2 │    │     2 │  0.00
+ APolunocheva     │    │     │  2 │     2 │  0.00
+ AndrAuz          │    │   2 │    │     2 │  0.00
+ AnitraTooma      │    │   2 │    │     2 │  0.00
+ AnsisEgle        │    │   2 │    │     2 │  0.00
+ Arlietas         │    │   2 │    │     2 │  0.00
+ ArtjomKiselev    │    │     │  2 │     2 │  0.00
+ Atl_Aztecs       │    │     │  2 │     2 │  0.00
+ BK_OGRE          │    │   2 │    │     2 │  0.00
+ Butkevics        │    │   2 │    │     2 │  0.00
+ Caune_           │    │   2 │    │     2 │  0.00
+ CerinsAivis      │    │   2 │    │     2 │  0.00
+ DanielaMeilekh   │    │     │  2 │     2 │  0.00
+ DeNiByy          │    │     │  2 │     2 │  0.00
+ Dzintris         │    │   2 │    │     2 │  0.00
+ EduardsSarkans   │    │   2 │    │     2 │  0.00
+ Eleonooraa       │    │     │  2 │     2 │  0.00
+ EmilsBuikis      │    │   2 │    │     2 │  0.00
+ EmilyGasparyan   │    │     │  2 │     2 │  0.00
+ Enkurss          │    │   2 │    │     2 │  0.00
+ EsEsmuTuEsmuEs   │    │   2 │    │     2 │  0.00
+ FestivalBILDES   │    │   2 │    │     2 │  0.00
+ Fiskalapadome    │    │   2 │    │     2 │  0.00
+ Gircha           │    │   2 │    │     2 │  0.00
+ GuntarsRacs      │    │   2 │    │     2 │  0.00
+ GuntisBojars     │    │   2 │    │     2 │  0.00
+ Gvi79            │    │   2 │    │     2 │  0.00
+ GwensRare        │    │     │  2 │     2 │  0.00
+ IgorGusev85      │    │     │  2 │     2 │  0.00
+ IlgvarsImsa      │    │   2 │    │     2 │  0.00
+ IngaBit          │    │   2 │    │     2 │  0.00
+ Ivan_Kostyaev    │    │     │  2 │     2 │  0.00
+ IvarsForands     │    │   2 │    │     2 │  0.00
+ Ivars_Motivans   │    │   2 │    │     2 │  0.00
+ JankaPipars      │    │   2 │    │     2 │  0.00
+ JurisMillers     │    │   2 │    │     2 │  0.00
+ K_97J            │    │   2 │    │     2 │  0.00
+ Kilkuts          │    │   2 │    │     2 │  0.00
+ LabakDzivot      │    │   2 │    │     2 │  0.00
+ LaivinieksJanis  │    │   2 │    │     2 │  0.00
+ LatRex_          │    │   2 │    │     2 │  0.00
+ LaurisReiniks    │    │   2 │    │     2 │  0.00
+ LielaisKristaps  │    │   2 │    │     2 │  0.00
+ LimasovaKatya    │    │     │  2 │     2 │  0.00
+ MC_Perekis       │    │     │  2 │     2 │  0.00
+ MazaisJuniors    │    │   2 │    │     2 │  0.00
+ Mednisfoto       │    │   2 │    │     2 │  0.00
+ MetOpera         │    │   2 │    │     2 │  0.00
+ MyFitnessLatvia  │    │   2 │    │     2 │  0.00
+ Nika_Kromane     │    │     │  2 │     2 │  0.00
+ Nikita_Bakhurov  │    │     │  2 │     2 │  0.00
+ PTimrots         │    │   2 │    │     2 │  0.00
+ P_Snejersons     │    │   2 │    │     2 │  0.00
+ Riga24           │    │   2 │    │     2 │  0.00
+ RigasBrivosta    │    │   2 │    │     2 │  0.00
+ RobertsLunte     │    │   2 │    │     2 │  0.00
+ Ruksane          │    │   2 │    │     2 │  0.00
+ SaldusRadio      │    │   2 │    │     2 │  0.00
+ Sportacentrs     │    │   2 │    │     2 │  0.00
+ Sugaryok         │    │     │  2 │     2 │  0.00
+ SwarmApp         │    │     │  2 │     2 │  0.00
+ THUNDERFROST1    │    │     │  2 │     2 │  0.00
+ Terzens          │    │   2 │    │     2 │  0.00
+ V_Alyona91       │    │     │  2 │     2 │  0.00
+ Vents_Zvaigzne   │    │   2 │    │     2 │  0.00
+ ZakDios          │    │     │  2 │     2 │  0.00
+ Zalton           │    │     │  2 │     2 │  0.00
+ Zn_Portnova      │    │     │  2 │     2 │  0.00
+ ___________DV17  │    │     │  2 │     2 │  0.00
+ _elinka98_       │    │     │  2 │     2 │  0.00
+ _jagris_         │    │   2 │    │     2 │  0.00
+ adrija6          │    │   2 │    │     2 │  0.00
+ agnese_zee       │    │   2 │    │     2 │  0.00
+ agucis110        │    │   2 │    │     2 │  0.00
+ akmens           │    │   2 │    │     2 │  0.00
+ anechka159       │    │     │  2 │     2 │  0.00
+ blanks86         │    │   2 │    │     2 │  0.00
+ boms_tricis      │    │   2 │    │     2 │  0.00
+ cehslv           │    │   2 │    │     2 │  0.00
+ conor_ks         │    │     │  2 │     2 │  0.00
+ dacebluke        │    │   2 │    │     2 │  0.00
+ daigidaigi       │    │   2 │    │     2 │  0.00
+ dstrautniece1    │    │   2 │    │     2 │  0.00
+ dzavada          │    │     │  2 │     2 │  0.00
+ eedgars          │    │   2 │    │     2 │  0.00
+ exerica          │    │   2 │    │     2 │  0.00
+ freidace         │    │   2 │    │     2 │  0.00
+ gestins          │    │   2 │    │     2 │  0.00
+ greatamberlv     │    │   2 │    │     2 │  0.00
+ guntisbelevics   │    │   2 │    │     2 │  0.00
+ gvaldmanis       │    │   2 │    │     2 │  0.00
+ hclokomotiv      │    │   2 │    │     2 │  0.00
+ iegriezies360    │    │   2 │    │     2 │  0.00
+ illusory_me      │    │     │  2 │     2 │  0.00
+ ilz              │    │   2 │    │     2 │  0.00
+ ilze_krii        │    │   2 │    │     2 │  0.00
+ ilzekalninaa     │    │   2 │    │     2 │  0.00
+ io7246           │    │   2 │    │     2 │  0.00
+ irinaShupegina   │    │     │  2 │     2 │  0.00
+ jaaniszelgis     │    │   2 │    │     2 │  0.00
+ janissipkevics   │    │   2 │    │     2 │  0.00
+ kasparszellis    │    │   2 │    │     2 │  0.00
+ katerynamyau     │    │     │  2 │     2 │  0.00
+ kbushaa          │    │   2 │    │     2 │  0.00
+ kristsdarzins    │    │   2 │    │     2 │  0.00
+ kulturaskoledza  │    │   2 │    │     2 │  0.00
+ latgalesgors     │    │   2 │    │     2 │  0.00
+ licitiz_         │    │     │  2 │     2 │  0.00
+ marym0607        │    │     │  2 │     2 │  0.00
+ meteozinas       │    │   2 │    │     2 │  0.00
+ mrserge          │    │   2 │    │     2 │  0.00
+ ms_Dyonamite     │    │     │  2 │     2 │  0.00
+ nikabuka_        │    │     │  2 │     2 │  0.00
+ njaa_wild        │    │   2 │    │     2 │  0.00
+ nk8500           │    │     │  2 │     2 │  0.00
+ normis           │    │   2 │    │     2 │  0.00
+ olshanskajaa     │    │     │  2 │     2 │  0.00
+ panncis          │    │   2 │    │     2 │  0.00
+ redhead_jules    │    │     │  2 │     2 │  0.00
+ rihardsebastian  │    │     │  2 │     2 │  0.00
+ rpp              │    │   2 │    │     2 │  0.00
+ rudites          │    │   2 │    │     2 │  0.00
+ skirsts          │    │   2 │    │     2 │  0.00
+ sklarevich       │    │     │  2 │     2 │  0.00
+ starexinho       │    │     │  2 │     2 │  0.00
+ stepanova_ka61   │    │     │  2 │     2 │  0.00
+ valtszvaigzne    │    │   2 │    │     2 │  0.00
+ vasiliy_terkin   │    │     │  2 │     2 │  0.00
+ veloriga         │    │   2 │    │     2 │  0.00
+ vitaamiins       │    │   2 │    │     2 │  0.00
+ xoxoAgy          │    │   2 │    │     2 │  0.00
+ ykvlvbeats       │    │     │  2 │     2 │  0.00
+ zimolutops       │    │   2 │    │     2 │  0.00
+ 2kikii           │    │   1 │    │     1 │  0.00
+ 32augusts        │    │   1 │    │     1 │  0.00
+ 32nd_            │    │   1 │    │     1 │  0.00
+ 9menesi          │    │   1 │    │     1 │  0.00
+ @@BAND           │    │   1 │    │     1 │  0.00
+ @@FEST           │    │   1 │    │     1 │  0.00
+ @baltcom         │    │   1 │    │     1 │  0.00
+ @delfikultura    │    │   1 │    │     1 │  0.00
+ @dienaszurnali   │    │   1 │    │     1 │  0.00
+ @hsrigahockey    │    │   1 │    │     1 │  0.00
+ @jrt_lv          │    │   1 │    │     1 │  0.00
+ @kanepeskc       │    │   1 │    │     1 │  0.00
+ @klasika_lr3     │    │   1 │    │     1 │  0.00
+ @latvijas_armija │    │   1 │    │     1 │  0.00
+ @lnmm_muzejs     │    │   1 │    │     1 │  0.00
+ @nesteruna       │    │   1 │    │     1 │  0.00
+ @nilushakov      │    │     │  1 │     1 │  0.00
+ @pietiekportals  │    │   1 │    │     1 │  0.00
+ @rigaslaiks      │    │   1 │    │     1 │  0.00
+ @rigaspp         │    │   1 │    │     1 │  0.00
+ @rigatv24        │    │   1 │    │     1 │  0.00
+ @sinfoniettariga │    │   1 │    │     1 │  0.00
+ @skanumezs       │    │   1 │    │     1 │  0.00
+ @starfmlv        │    │   1 │    │     1 │  0.00
+ @tcmols          │    │   1 │    │     1 │  0.00
+ @tvnet_rus       │    │     │  1 │     1 │  0.00
+ @ugunsdzeseji    │    │   1 │    │     1 │  0.00
+ @uznemumureg     │    │   1 │    │     1 │  0.00
+ @zeltazivtina    │    │   1 │    │     1 │  0.00
+ @zzs_            │    │   1 │    │     1 │  0.00
+ ABertule         │    │   1 │    │     1 │  0.00
+ ABrauna          │    │   1 │    │     1 │  0.00
+ AKMshooter       │    │   1 │    │     1 │  0.00
+ AValdbergs       │    │   1 │    │     1 │  0.00
+ Aanastasija_tr   │    │     │  1 │     1 │  0.00
+ AgneseMargevica  │    │   1 │    │     1 │  0.00
+ Agnesssssh       │    │   1 │    │     1 │  0.00
+ AigarsX          │    │   1 │    │     1 │  0.00
+ AijaV            │    │   1 │    │     1 │  0.00
+ AinarsZabers     │    │   1 │    │     1 │  0.00
+ AlAhmediya       │    │     │  1 │     1 │  0.00
+ AlcoHistory      │    │     │  1 │     1 │  0.00
+ AleksejsZ        │    │   1 │    │     1 │  0.00
+ AlexStomas       │    │     │  1 │     1 │  0.00
+ AlinaKolina      │    │     │  1 │     1 │  0.00
+ AlinaLoveLee     │    │     │  1 │     1 │  0.00
+ Aljaa_1808       │    │     │  1 │     1 │  0.00
+ AlksneR          │    │   1 │    │     1 │  0.00
+ Alus_Bralis      │    │   1 │    │     1 │  0.00
+ Amandiinjaa      │    │   1 │    │     1 │  0.00
+ AminataSavadogo  │    │     │  1 │     1 │  0.00
+ AndrejsB_        │    │   1 │    │     1 │  0.00
+ AndrejsJudins    │    │   1 │    │     1 │  0.00
+ Andrey_Roch      │    │   1 │    │     1 │  0.00
+ AndrisSkride     │    │   1 │    │     1 │  0.00
+ AndrisTaurins    │    │   1 │    │     1 │  0.00
+ AndritoCoffee    │    │   1 │    │     1 │  0.00
+ AndzejMic        │    │   1 │    │     1 │  0.00
+ Andzhikss        │    │   1 │    │     1 │  0.00
+ AnnaAmalis       │    │   1 │    │     1 │  0.00
+ AnnaKarabesko    │    │   1 │    │     1 │  0.00
+ AnnijaGreka      │    │   1 │    │     1 │  0.00
+ AntipovOn        │    │     │  1 │     1 │  0.00
+ AntonRudnev      │    │     │  1 │     1 │  0.00
+ AntonsMaris      │    │   1 │    │     1 │  0.00
+ ApgadsJumava     │    │   1 │    │     1 │  0.00
+ Archijs          │    │   1 │    │     1 │  0.00
+ ArmandsArm       │    │   1 │    │     1 │  0.00
+ ArnisRukis       │    │   1 │    │     1 │  0.00
+ ArtursKruzkops   │    │   1 │    │     1 │  0.00
+ AskoldsRampa     │    │   1 │    │     1 │  0.00
+ AstrologiLv      │    │   1 │    │     1 │  0.00
+ Atecina_         │    │   1 │    │     1 │  0.00
+ B0dzu            │    │     │  1 │     1 │  0.00
+ BC_BARONS        │    │   1 │    │     1 │  0.00
+ BENUaptiekas     │    │   1 │    │     1 │  0.00
+ Baicis           │    │   1 │    │     1 │  0.00
+ Balitis          │    │   1 │    │     1 │  0.00
+ Baltvilla        │    │   1 │    │     1 │  0.00
+ BarsLimonade     │    │   1 │    │     1 │  0.00
+ BelovaSheila     │    │     │  1 │     1 │  0.00
+ Bender_LV        │    │   1 │    │     1 │  0.00
+ BensLatkovskis   │    │   1 │    │     1 │  0.00
+ Berga_Bazars     │    │   1 │    │     1 │  0.00
+ Bircenko         │    │     │  1 │     1 │  0.00
+ Bisektrise       │    │   1 │    │     1 │  0.00
+ Borovkovs        │    │   1 │    │     1 │  0.00
+ BriedisM         │    │   1 │    │     1 │  0.00
+ BriedisMairis    │    │   1 │    │     1 │  0.00
+ BrituPutni       │    │   1 │    │     1 │  0.00
+ Brivosta         │    │   1 │    │     1 │  0.00
+ BuzzFeedRU       │    │     │  1 │     1 │  0.00
+ Cietnis          │    │   1 │    │     1 │  0.00
+ ComedyLatvia     │    │   1 │    │     1 │  0.00
+ Copaclia         │    │     │  1 │     1 │  0.00
+ CoyoteFly        │    │   1 │    │     1 │  0.00
+ Crimsonfuckit    │    │     │  1 │     1 │  0.00
+ DELNA_LV         │    │   1 │    │     1 │  0.00
+ DaceKalnina      │    │   1 │    │     1 │  0.00
+ Dagne_Relina     │    │   1 │    │     1 │  0.00
+ DailyLV          │    │   1 │    │     1 │  0.00
+ DanaReiznieceOz  │    │   1 │    │     1 │  0.00
+ DaunisAuers      │    │   1 │    │     1 │  0.00
+ DaysHotelRiga    │    │   1 │    │     1 │  0.00
+ Dejass           │    │   1 │    │     1 │  0.00
+ DenissPashkevic  │    │   1 │    │     1 │  0.00
+ DenysSSka        │    │     │  1 │     1 │  0.00
+ Diana_Bruvere    │    │   1 │    │     1 │  0.00
+ DitaE_           │    │   1 │    │     1 │  0.00
+ Divritenis       │    │   1 │    │     1 │  0.00
+ DmtrVinogradov   │    │     │  1 │     1 │  0.00
+ EagleAndSkym     │    │   1 │    │     1 │  0.00
+ EdgarsKaljva     │    │   1 │    │     1 │  0.00
+ EduardsPurins    │    │   1 │    │     1 │  0.00
+ Eglajs           │    │   1 │    │     1 │  0.00
+ Egoistelv        │    │   1 │    │     1 │  0.00
+ Elipsics         │    │   1 │    │     1 │  0.00
+ ElizabeteSnore   │    │   1 │    │     1 │  0.00
+ Elkor_LV         │    │   1 │    │     1 │  0.00
+ EmilsJakrins     │    │   1 │    │     1 │  0.00
+ EmilsLatkovskis  │    │   1 │    │     1 │  0.00
+ Eusis_           │    │   1 │    │     1 │  0.00
+ Evelinaa___      │    │   1 │    │     1 │  0.00
+ F1               │    │   1 │    │     1 │  0.00
+ F1LV             │    │   1 │    │     1 │  0.00
+ FIAformulaE      │    │   1 │    │     1 │  0.00
+ FIFAWorldCup     │    │   1 │    │     1 │  0.00
+ FK_SALA          │    │   1 │    │     1 │  0.00
+ FOLKKLUBS        │    │   1 │    │     1 │  0.00
+ FSMETTA          │    │   1 │    │     1 │  0.00
+ FantasyParkRiga  │    │   1 │    │     1 │  0.00
+ Feofan_27        │    │     │  1 │     1 │  0.00
+ Fillalimona      │    │     │  1 │     1 │  0.00
+ FoodUnion        │    │   1 │    │     1 │  0.00
+ FreeSantana_     │    │     │  1 │     1 │  0.00
+ FutbolaVirsliga  │    │   1 │    │     1 │  0.00
+ GACHO            │    │   1 │    │     1 │  0.00
+ GJankovskis      │    │   1 │    │     1 │  0.00
+ GanbeiLV         │    │   1 │    │     1 │  0.00
+ GatisStrods      │    │   1 │    │     1 │  0.00
+ GatissK          │    │   1 │    │     1 │  0.00
+ GeilordsFakers   │    │   1 │    │     1 │  0.00
+ GintersOzols     │    │   1 │    │     1 │  0.00
+ Grafikaskola     │    │   1 │    │     1 │  0.00
+ GraniTweet       │    │     │  1 │     1 │  0.00
+ Gxldberga_Maya   │    │   1 │    │     1 │  0.00
+ Hereford_gala    │    │   1 │    │     1 │  0.00
+ HolywoodW        │    │     │  1 │     1 │  0.00
+ Homo_SimplyJANE  │    │   1 │    │     1 │  0.00
+ Homo_ignobilis   │    │     │  1 │     1 │  0.00
+ IDzelme          │    │   1 │    │     1 │  0.00
+ IKRamava         │    │   1 │    │     1 │  0.00
+ Ian_Goding       │    │   1 │    │     1 │  0.00
+ IevaIlves        │    │   1 │    │     1 │  0.00
+ IevaPreimane     │    │   1 │    │     1 │  0.00
+ Ilja_Polakovs    │    │   1 │    │     1 │  0.00
+ Ilustr_Zinatne   │    │   1 │    │     1 │  0.00
+ IlvaPratina      │    │   1 │    │     1 │  0.00
+ ImarsK           │    │   1 │    │     1 │  0.00
+ InPearly         │    │     │  1 │     1 │  0.00
+ Inboxledushalle  │    │   1 │    │     1 │  0.00
+ IngaPriedeV      │    │   1 │    │     1 │  0.00
+ Ingridaa_S       │    │   1 │    │     1 │  0.00
+ InsolentSpock    │    │     │  1 │     1 │  0.00
+ IrkaIriska       │    │     │  1 │     1 │  0.00
+ IvetaKazoka      │    │   1 │    │     1 │  0.00
+ IvetaPudane      │    │   1 │    │     1 │  0.00
+ JAMikdiena       │    │   1 │    │     1 │  0.00
+ JanisVingris     │    │   1 │    │     1 │  0.00
+ JanisZilde       │    │   1 │    │     1 │  0.00
+ Jaunsardze       │    │   1 │    │     1 │  0.00
+ JelgavaLV        │    │   1 │    │     1 │  0.00
+ JeteBurkanciema  │    │   1 │    │     1 │  0.00
+ JurgisLiepnieks  │    │   1 │    │     1 │  0.00
+ JurisGulbis      │    │   1 │    │     1 │  0.00
+ JurisRubenis     │    │   1 │    │     1 │  0.00
+ Just_Bar         │    │   1 │    │     1 │  0.00
+ Juurnieks        │    │   1 │    │     1 │  0.00
+ KBreidaks        │    │   1 │    │     1 │  0.00
+ KDachux          │    │   1 │    │     1 │  0.00
+ KERNES_PIDORAS   │    │     │  1 │     1 │  0.00
+ K_Darznieks      │    │   1 │    │     1 │  0.00
+ KarelPaki        │    │     │  1 │     1 │  0.00
+ Karinararr       │    │   1 │    │     1 │  0.00
+ Karsavas_MMS     │    │   1 │    │     1 │  0.00
+ KasparsUpaciers  │    │   1 │    │     1 │  0.00
+ KateInfiniti     │    │     │  1 │     1 │  0.00
+ KatrinaBindere   │    │   1 │    │     1 │  0.00
+ KepaUzSirds      │    │   1 │    │     1 │  0.00
+ Kjomnijs         │    │   1 │    │     1 │  0.00
+ KobaJashi90      │    │   1 │    │     1 │  0.00
+ KressEduards     │    │   1 │    │     1 │  0.00
+ KristapsCaune_   │    │   1 │    │     1 │  0.00
+ KristapsMors     │    │   1 │    │     1 │  0.00
+ KseniaN73        │    │     │  1 │     1 │  0.00
+ KsjuhaM          │    │     │  1 │     1 │  0.00
+ LArstu_Biedriba  │    │   1 │    │     1 │  0.00
+ LLKC_lv          │    │   1 │    │     1 │  0.00
+ LRKultura        │    │   1 │    │     1 │  0.00
+ LUbasketbols     │    │   1 │    │     1 │  0.00
+ LVRTC_TVtornis   │    │   1 │    │     1 │  0.00
+ LaceZane         │    │   1 │    │     1 │  0.00
+ LatvijasRadio2   │    │   1 │    │     1 │  0.00
+ Laumaryn         │    │   1 │    │     1 │  0.00
+ Lekrings_Damas   │    │   1 │    │     1 │  0.00
+ LindaMiscenkova  │    │   1 │    │     1 │  0.00
+ LindaTreige2     │    │   1 │    │     1 │  0.00
+ Linda_Novicka    │    │   1 │    │     1 │  0.00
+ LindasVirtuve    │    │   1 │    │     1 │  0.00
+ Lindexofficial   │    │   1 │    │     1 │  0.00
+ LindosPolska     │    │     │  1 │     1 │  0.00
+ LiveLiva         │    │   1 │    │     1 │  0.00
+ LizaStrazdinya   │    │     │  1 │     1 │  0.00
+ LizumsLV         │    │   1 │    │     1 │  0.00
+ Ljipa            │    │   1 │    │     1 │  0.00
+ Lorklinika       │    │   1 │    │     1 │  0.00
+ Loskutovs        │    │   1 │    │     1 │  0.00
+ MFF_lv           │    │   1 │    │     1 │  0.00
+ MLuste           │    │   1 │    │     1 │  0.00
+ M_Rutkevica      │    │   1 │    │     1 │  0.00
+ Maarcis_S        │    │   1 │    │     1 │  0.00
+ MadaraKreslina   │    │   1 │    │     1 │  0.00
+ Madzins          │    │   1 │    │     1 │  0.00
+ MairaDzelzkalej  │    │   1 │    │     1 │  0.00
+ Manasgarsas      │    │   1 │    │     1 │  0.00
+ MaraDarguze      │    │     │  1 │     1 │  0.00
+ Marchellito      │    │   1 │    │     1 │  0.00
+ MarisKucinskis   │    │   1 │    │     1 │  0.00
+ Maris_Zanders    │    │   1 │    │     1 │  0.00
+ MartinsBondars   │    │   1 │    │     1 │  0.00
+ MazaGilde        │    │   1 │    │     1 │  0.00
+ McDonalds        │    │   1 │    │     1 │  0.00
+ MekijsNazis      │    │   1 │    │     1 │  0.00
+ MelnaPiektdiena  │    │   1 │    │     1 │  0.00
+ MenessAptieka    │    │   1 │    │     1 │  0.00
+ MercedesAMGF1    │    │   1 │    │     1 │  0.00
+ Mevigym          │    │   1 │    │     1 │  0.00
+ Mierini          │    │   1 │    │     1 │  0.00
+ MihailZeludehko  │    │     │  1 │     1 │  0.00
+ MikelisO         │    │   1 │    │     1 │  0.00
+ MintosPlatform   │    │   1 │    │     1 │  0.00
+ Movemote         │    │     │  1 │     1 │  0.00
+ MrBalins         │    │   1 │    │     1 │  0.00
+ MrMusha          │    │   1 │    │     1 │  0.00
+ Mr_Raimis        │    │   1 │    │     1 │  0.00
+ Msirajeva        │    │     │  1 │     1 │  0.00
+ MumfordAndSons   │    │   1 │    │     1 │  0.00
+ MuteFood         │    │   1 │    │     1 │  0.00
+ MuzejsRigaBirza  │    │   1 │    │     1 │  0.00
+ MyMiuma          │    │   1 │    │     1 │  0.00
+ NBALatvija       │    │   1 │    │     1 │  0.00
+ Nash_East        │    │     │  1 │     1 │  0.00
+ Nauris_L         │    │   1 │    │     1 │  0.00
+ NikitkaMc        │    │     │  1 │     1 │  0.00
+ NiklavsN         │    │   1 │    │     1 │  0.00
+ OMNYKIDS         │    │     │  1 │     1 │  0.00
+ ONuzhnenko       │    │     │  1 │     1 │  0.00
+ OlavsCers        │    │   1 │    │     1 │  0.00
+ Olj4ikk          │    │     │  1 │     1 │  0.00
+ OptibetLatvija   │    │   1 │    │     1 │  0.00
+ Orlach           │    │   1 │    │     1 │  0.00
+ Oskars_Kaulens   │    │   1 │    │     1 │  0.00
+ OstapsBenders    │    │   1 │    │     1 │  0.00
+ OtoGrinbergs     │    │   1 │    │     1 │  0.00
+ OttoOzols        │    │   1 │    │     1 │  0.00
+ OzolaBalode      │    │   1 │    │     1 │  0.00
+ PacaPatrcija     │    │   1 │    │     1 │  0.00
+ Pasaulescentrs   │    │   1 │    │     1 │  0.00
+ Patriicija_V     │    │   1 │    │     1 │  0.00
+ PatverumsDM      │    │   1 │    │     1 │  0.00
+ Pavel_XII        │    │     │  1 │     1 │  0.00
+ Pecpusdiena      │    │   1 │    │     1 │  0.00
+ PhanAtDeDisco    │    │   1 │    │     1 │  0.00
+ Pilsetasdzive    │    │   1 │    │     1 │  0.00
+ Pink_Floydov     │    │     │  1 │     1 │  0.00
+ PreiluFutbols    │    │   1 │    │     1 │  0.00
+ PuuchuksJ        │    │   1 │    │     1 │  0.00
+ RAsaris          │    │   1 │    │     1 │  0.00
+ REALITYsc        │    │     │  1 │     1 │  0.00
+ RLB_lv           │    │   1 │    │     1 │  0.00
+ RTUIZV           │    │   1 │    │     1 │  0.00
+ RaivisSh         │    │   1 │    │     1 │  0.00
+ Ramona21122      │    │   1 │    │     1 │  0.00
+ ReinisNitissRX   │    │   1 │    │     1 │  0.00
+ Reinis_Me        │    │   1 │    │     1 │  0.00
+ Riga_Lara        │    │     │  1 │     1 │  0.00
+ RigasModes       │    │   1 │    │     1 │  0.00
+ RigasSatiksme    │    │   1 │    │     1 │  0.00
+ RitaEvaNa        │    │   1 │    │     1 │  0.00
+ RitaSvita        │    │   1 │    │     1 │  0.00
+ Rizhiks_Pizhiks  │    │   1 │    │     1 │  0.00
+ RobertsKarklins  │    │   1 │    │     1 │  0.00
+ RockSandis112    │    │   1 │    │     1 │  0.00
+ Rokkafejnica     │    │   1 │    │     1 │  0.00
+ RuPaul           │    │     │  1 │     1 │  0.00
+ SPKCentrs        │    │   1 │    │     1 │  0.00
+ Sat_Min          │    │   1 │    │     1 │  0.00
+ SaulesAptieka    │    │   1 │    │     1 │  0.00
+ SavickyD         │    │     │  1 │     1 │  0.00
+ SestoQuatrini    │    │   1 │    │     1 │  0.00
+ SigmaLS8361      │    │   1 │    │     1 │  0.00
+ SilRa_A          │    │   1 │    │     1 │  0.00
+ Sildniks         │    │   1 │    │     1 │  0.00
+ Skontostadions   │    │   1 │    │     1 │  0.00
+ SkrienLatvija    │    │   1 │    │     1 │  0.00
+ Snowtales        │    │   1 │    │     1 │  0.00
+ So_Sue_Me_       │    │   1 │    │     1 │  0.00
+ Spice_Mountain   │    │   1 │    │     1 │  0.00
+ StalinGulag      │    │     │  1 │     1 │  0.00
+ SynotTipLV       │    │   1 │    │     1 │  0.00
+ THEMaksimko      │    │   1 │    │     1 │  0.00
+ TaaPatiGerda     │    │   1 │    │     1 │  0.00
+ TheNakuName      │    │     │  1 │     1 │  0.00
+ TheZirnis        │    │   1 │    │     1 │  0.00
+ Toms_Polakens    │    │   1 │    │     1 │  0.00
+ Tyomster         │    │     │  1 │     1 │  0.00
+ UzrakstiMan_     │    │   1 │    │     1 │  0.00
+ VC4_LV           │    │   1 │    │     1 │  0.00
+ VOCsports        │    │   1 │    │     1 │  0.00
+ VRudzitis        │    │   1 │    │     1 │  0.00
+ ValmieraORDO     │    │   1 │    │     1 │  0.00
+ ValstsPolicija   │    │   1 │    │     1 │  0.00
+ Vasili_ili       │    │     │  1 │     1 │  0.00
+ Vasilisa_Dark    │    │     │  1 │     1 │  0.00
+ VentsAKrauklis   │    │   1 │    │     1 │  0.00
+ VeronikaKolosov  │    │     │  1 │     1 │  0.00
+ VilisKolka       │    │   1 │    │     1 │  0.00
+ Vinotava         │    │   1 │    │     1 │  0.00
+ Vita_Lombards    │    │   1 │    │     1 │  0.00
+ Vitalijs_S       │    │   1 │    │     1 │  0.00
+ Vivita_Braslina  │    │   1 │    │     1 │  0.00
+ VjDombrovskis    │    │   1 │    │     1 │  0.00
+ Winnijs1Winnijs  │    │   1 │    │     1 │  0.00
+ XbyDrones        │    │     │  1 │     1 │  0.00
+ XxPanda_Girl     │    │   1 │    │     1 │  0.00
+ YouTube          │    │   1 │    │     1 │  0.00
+ Zavileiskis      │    │   1 │    │     1 │  0.00
+ ZeltaMikrofons   │    │   1 │    │     1 │  0.00
+ ZemGun           │    │   1 │    │     1 │  0.00
+ ZemesDienests    │    │   1 │    │     1 │  0.00
+ ZerkaaHD         │    │   1 │    │     1 │  0.00
+ Zimejumuteatris  │    │   1 │    │     1 │  0.00
+ Zmeycharauski    │    │   1 │    │     1 │  0.00
+ Zondz010         │    │     │  1 │     1 │  0.00
+ _affair          │    │   1 │    │     1 │  0.00
+ a_iljina         │    │     │  1 │     1 │  0.00
+ a_latkovskis     │    │   1 │    │     1 │  0.00
+ adeniins         │    │   1 │    │     1 │  0.00
+ adorabledemon    │    │     │  1 │     1 │  0.00
+ agnesesiktare    │    │   1 │    │     1 │  0.00
+ agsidenko        │    │     │  1 │     1 │  0.00
+ aiisatsan        │    │     │  1 │     1 │  0.00
+ airavs           │    │   1 │    │     1 │  0.00
+ aizmirstiba      │    │   1 │    │     1 │  0.00
+ ajbuke           │    │   1 │    │     1 │  0.00
+ akirstei         │    │   1 │    │     1 │  0.00
+ alisasurkova7    │    │     │  1 │     1 │  0.00
+ alpaqa           │    │   1 │    │     1 │  0.00
+ and_kse          │    │   1 │    │     1 │  0.00
+ andelemandele    │    │   1 │    │     1 │  0.00
+ andrei_kaa       │    │     │  1 │     1 │  0.00
+ andrispp         │    │   1 │    │     1 │  0.00
+ anjaaustrina     │    │     │  1 │     1 │  0.00
+ annarage_        │    │     │  1 │     1 │  0.00
+ annwurst_        │    │     │  1 │     1 │  0.00
+ anthon_gandon    │    │     │  1 │     1 │  0.00
+ arikalinaa       │    │     │  1 │     1 │  0.00
+ arinuwka4        │    │   1 │    │     1 │  0.00
+ arniskrauze      │    │   1 │    │     1 │  0.00
+ artuss           │    │   1 │    │     1 │  0.00
+ artuukx          │    │   1 │    │     1 │  0.00
+ atevi2           │    │   1 │    │     1 │  0.00
+ atisbille        │    │   1 │    │     1 │  0.00
+ baidekalna       │    │   1 │    │     1 │  0.00
+ balticmarathons  │    │   1 │    │     1 │  0.00
+ bankovskis       │    │   1 │    │     1 │  0.00
+ bauskasbiblio    │    │   1 │    │     1 │  0.00
+ beekirik         │    │     │  1 │     1 │  0.00
+ belka_shi        │    │     │  1 │     1 │  0.00
+ bilberry_am      │    │     │  1 │     1 │  0.00
+ birojnica        │    │   1 │    │     1 │  0.00
+ burbon_monster   │    │   1 │    │     1 │  0.00
+ cactus_is_love   │    │   1 │    │     1 │  0.00
+ cantab3          │    │   1 │    │     1 │  0.00
+ chaukis          │    │   1 │    │     1 │  0.00
+ cheepatunTM      │    │     │  1 │     1 │  0.00
+ chilyandlime     │    │     │  1 │     1 │  0.00
+ cibric           │    │   1 │    │     1 │  0.00
+ coksiks          │    │     │  1 │     1 │  0.00
+ copypointlv      │    │   1 │    │     1 │  0.00
+ crapfucku        │    │     │  1 │     1 │  0.00
+ crystalldaisy    │    │     │  1 │     1 │  0.00
+ dANILIWE         │    │     │  1 │     1 │  0.00
+ d_dtm            │    │     │  1 │     1 │  0.00
+ dagnijaaaa       │    │   1 │    │     1 │  0.00
+ dailesnams       │    │   1 │    │     1 │  0.00
+ danik_marsely    │    │     │  1 │     1 │  0.00
+ daokyo           │    │     │  1 │     1 │  0.00
+ davnch           │    │     │  1 │     1 │  0.00
+ dianabangg       │    │   1 │    │     1 │  0.00
+ dianapayton      │    │   1 │    │     1 │  0.00
+ diflatout        │    │     │  1 │     1 │  0.00
+ dirtyserpent     │    │     │  1 │     1 │  0.00
+ divtukstosviens  │    │   1 │    │     1 │  0.00
+ donis777         │    │   1 │    │     1 │  0.00
+ draugiem         │    │   1 │    │     1 │  0.00
+ e_radzins        │    │   1 │    │     1 │  0.00
+ edeliite         │    │   1 │    │     1 │  0.00
+ edgarskupcs      │    │   1 │    │     1 │  0.00
+ edinorogyo       │    │     │  1 │     1 │  0.00
+ eeriikiiss       │    │     │  1 │     1 │  0.00
+ el_nekit         │    │     │  1 │     1 │  0.00
+ elina2455        │    │     │  1 │     1 │  0.00
+ elvi_veikali     │    │   1 │    │     1 │  0.00
+ energodata       │    │   1 │    │     1 │  0.00
+ es_jau_neko      │    │   1 │    │     1 │  0.00
+ esabinee         │    │   1 │    │     1 │  0.00
+ eugenelandin     │    │     │  1 │     1 │  0.00
+ evita_purina     │    │   1 │    │     1 │  0.00
+ ewq666N          │    │     │  1 │     1 │  0.00
+ fauxforever      │    │   1 │    │     1 │  0.00
+ fd00ch           │    │     │  1 │     1 │  0.00
+ felicitaosvalde  │    │   1 │    │     1 │  0.00
+ fjodorovs91      │    │   1 │    │     1 │  0.00
+ fkventspils_     │    │     │  1 │     1 │  0.00
+ flamieCS         │    │     │  1 │     1 │  0.00
+ food_blood       │    │   1 │    │     1 │  0.00
+ garamgajejs      │    │   1 │    │     1 │  0.00
+ gay_gerard2      │    │     │  1 │     1 │  0.00
+ gezgin3435       │    │   1 │    │     1 │  0.00
+ giphy            │    │     │  1 │     1 │  0.00
+ girlontrainfilm  │    │   1 │    │     1 │  0.00
+ glavnijaponojed  │    │     │  1 │     1 │  0.00
+ graudaspeks      │    │   1 │    │     1 │  0.00
+ gundarsreders    │    │   1 │    │     1 │  0.00
+ happycat1290     │    │     │  1 │     1 │  0.00
+ hellpasso        │    │     │  1 │     1 │  0.00
+ hkprizma         │    │   1 │    │     1 │  0.00
+ hotetmalo        │    │     │  1 │     1 │  0.00
+ hremenkina       │    │   1 │    │     1 │  0.00
+ iTrITon          │    │     │  1 │     1 │  0.00
+ i_nartish        │    │   1 │    │     1 │  0.00
+ ilmarmors        │    │   1 │    │     1 │  0.00
+ impro_celo       │    │   1 │    │     1 │  0.00
+ incaustum        │    │   1 │    │     1 │  0.00
+ indygo_band      │    │   1 │    │     1 │  0.00
+ inesevoika       │    │   1 │    │     1 │  0.00
+ irliepaja        │    │   1 │    │     1 │  0.00
+ ivanhilov00      │    │     │  1 │     1 │  0.00
+ ivarssvilans     │    │   1 │    │     1 │  0.00
+ janisburba       │    │   1 │    │     1 │  0.00
+ jegursjuniors    │    │   1 │    │     1 │  0.00
+ jurisriekstins   │    │   1 │    │     1 │  0.00
+ jurmalafenikss   │    │   1 │    │     1 │  0.00
+ jurmalaslimnica  │    │   1 │    │     1 │  0.00
+ kalvanelinda     │    │   1 │    │     1 │  0.00
+ kapociino        │    │   1 │    │     1 │  0.00
+ karin4ik170599   │    │     │  1 │     1 │  0.00
+ karlisauzans     │    │   1 │    │     1 │  0.00
+ karsupavelnieks  │    │   1 │    │     1 │  0.00
+ kaspars_gasuns   │    │   1 │    │     1 │  0.00
+ kasparsgrvis     │    │   1 │    │     1 │  0.00
+ kasprs           │    │   1 │    │     1 │  0.00
+ keksinjs         │    │   1 │    │     1 │  0.00
+ kennijski        │    │     │  1 │     1 │  0.00
+ kinasts          │    │   1 │    │     1 │  0.00
+ kisakisa95       │    │     │  1 │     1 │  0.00
+ kitenberga2013   │    │     │  1 │     1 │  0.00
+ klavsse          │    │   1 │    │     1 │  0.00
+ kotik_by         │    │     │  1 │     1 │  0.00
+ kovalivan96      │    │     │  1 │     1 │  0.00
+ kporzee          │    │   1 │    │     1 │  0.00
+ kristapsDFK      │    │   1 │    │     1 │  0.00
+ ksykorolj        │    │     │  1 │     1 │  0.00
+ ksywai           │    │     │  1 │     1 │  0.00
+ kulakovaak       │    │     │  1 │     1 │  0.00
+ kurzemnieks_K    │    │   1 │    │     1 │  0.00
+ lYuliaZ          │    │     │  1 │     1 │  0.00
+ lavenir_net      │    │   1 │    │     1 │  0.00
+ lawrr__          │    │     │  1 │     1 │  0.00
+ leenkasmolina11  │    │     │  1 │     1 │  0.00
+ liene_b          │    │   1 │    │     1 │  0.00
+ liepajalv        │    │   1 │    │     1 │  0.00
+ liepajasosta     │    │   1 │    │     1 │  0.00
+ lindahaka        │    │   1 │    │     1 │  0.00
+ lizda_lv         │    │   1 │    │     1 │  0.00
+ ljubljuorbit     │    │     │  1 │     1 │  0.00
+ llopsikk         │    │     │  1 │     1 │  0.00
+ lolifish         │    │   1 │    │     1 │  0.00
+ ltv              │    │   1 │    │     1 │  0.00
+ m_levinskaya     │    │     │  1 │     1 │  0.00
+ m_petrakova      │    │     │  1 │     1 │  0.00
+ maddriverdies    │    │     │  1 │     1 │  0.00
+ makeuparevelinu  │    │   1 │    │     1 │  0.00
+ maksuna99        │    │     │  1 │     1 │  0.00
+ mamba2k_         │    │     │  1 │     1 │  0.00
+ mapuckaa         │    │     │  1 │     1 │  0.00
+ mariskalejs      │    │   1 │    │     1 │  0.00
+ marislogins      │    │   1 │    │     1 │  0.00
+ martakrivade     │    │   1 │    │     1 │  0.00
+ matiss_z         │    │   1 │    │     1 │  0.00
+ mazaaevijaa      │    │   1 │    │     1 │  0.00
+ mejreneee        │    │   1 │    │     1 │  0.00
+ meownauts        │    │     │  1 │     1 │  0.00
+ miculis          │    │   1 │    │     1 │  0.00
+ modestcookie     │    │     │  1 │     1 │  0.00
+ monttaaa         │    │   1 │    │     1 │  0.00
+ mpieskariens     │    │   1 │    │     1 │  0.00
+ naduha1          │    │     │  1 │     1 │  0.00
+ naivists         │    │   1 │    │     1 │  0.00
+ narakupaya       │    │     │  1 │     1 │  0.00
+ nashley_21       │    │   1 │    │     1 │  0.00
+ nastjabogdanov1  │    │     │  1 │     1 │  0.00
+ nebiletnieks     │    │   1 │    │     1 │  0.00
+ neo_los          │    │     │  1 │     1 │  0.00
+ neresident       │    │     │  1 │     1 │  0.00
+ nextjoke         │    │     │  1 │     1 │  0.00
+ nikitabolsakov7  │    │     │  1 │     1 │  0.00
+ nikitinamarine   │    │     │  1 │     1 │  0.00
+ nikolajevaA      │    │     │  1 │     1 │  0.00
+ oeskaa           │    │     │  1 │     1 │  0.00
+ okeirussia       │    │     │  1 │     1 │  0.00
+ oksanaque        │    │     │  1 │     1 │  0.00
+ olchik991        │    │     │  1 │     1 │  0.00
+ oldyellowtshirt  │    │   1 │    │     1 │  0.00
+ onediorussia     │    │     │  1 │     1 │  0.00
+ osish87          │    │   1 │    │     1 │  0.00
+ oskarspo         │    │   1 │    │     1 │  0.00
+ otto_kumm        │    │     │  1 │     1 │  0.00
+ owlyowl1         │    │     │  1 │     1 │  0.00
+ paula43181775    │    │   1 │    │     1 │  0.00
+ paulaelinapaula  │    │   1 │    │     1 │  0.00
+ peintbols        │    │   1 │    │     1 │  0.00
+ pildegovics      │    │   1 │    │     1 │  0.00
+ pimpin_is_hard   │    │     │  1 │     1 │  0.00
+ pink_putninya    │    │     │  1 │     1 │  0.00
+ pitonych         │    │     │  1 │     1 │  0.00
+ planet_anka      │    │     │  1 │     1 │  0.00
+ polesik98        │    │     │  1 │     1 │  0.00
+ prayforwhatsy    │    │     │  1 │     1 │  0.00
+ prusux           │    │   1 │    │     1 │  0.00
+ pucej            │    │   1 │    │     1 │  0.00
+ pujina2          │    │   1 │    │     1 │  0.00
+ pvxlv_lp         │    │   1 │    │     1 │  0.00
+ ragamuffin_d     │    │     │  1 │     1 │  0.00
+ raivistrelnieks  │    │   1 │    │     1 │  0.00
+ raivospoks       │    │   1 │    │     1 │  0.00
+ rauls_m          │    │   1 │    │     1 │  0.00
+ rebaltica        │    │   1 │    │     1 │  0.00
+ rennattee        │    │   1 │    │     1 │  0.00
+ riga_plaza       │    │   1 │    │     1 │  0.00
+ ritishhh         │    │   1 │    │     1 │  0.00
+ roberts_putnis   │    │   1 │    │     1 │  0.00
+ robertszile      │    │   1 │    │     1 │  0.00
+ robrtins         │    │   1 │    │     1 │  0.00
+ romans_melniks   │    │   1 │    │     1 │  0.00
+ rotinnss         │    │   1 │    │     1 │  0.00
+ rotkocentre      │    │   1 │    │     1 │  0.00
+ rumiantseva_     │    │     │  1 │     1 │  0.00
+ rusalka2810      │    │     │  1 │     1 │  0.00
+ samulis12        │    │   1 │    │     1 │  0.00
+ sandradiezina    │    │   1 │    │     1 │  0.00
+ sapniunkokteili  │    │   1 │    │     1 │  0.00
+ satisfaction777  │    │     │  1 │     1 │  0.00
+ screamcherry     │    │     │  1 │     1 │  0.00
+ sdagnere         │    │     │  1 │     1 │  0.00
+ sdelalrukami     │    │     │  1 │     1 │  0.00
+ seksiludi        │    │     │  1 │     1 │  0.00
+ sendika_org      │    │   1 │    │     1 │  0.00
+ sex_Dombas       │    │     │  1 │     1 │  0.00
+ sexsecrethood    │    │     │  1 │     1 │  0.00
+ sidzhinj         │    │   1 │    │     1 │  0.00
+ siltinam         │    │   1 │    │     1 │  0.00
+ sjordzis         │    │   1 │    │     1 │  0.00
+ skaidramigla     │    │   1 │    │     1 │  0.00
+ skraipsts        │    │   1 │    │     1 │  0.00
+ sku_dra          │    │   1 │    │     1 │  0.00
+ slashovych       │    │     │  1 │     1 │  0.00
+ so_many_bitches  │    │     │  1 │     1 │  0.00
+ sp_un_de         │    │   1 │    │     1 │  0.00
+ spacetag         │    │     │  1 │     1 │  0.00
+ sprugevica       │    │   1 │    │     1 │  0.00
+ stirane          │    │   1 │    │     1 │  0.00
+ sudakovaanda     │    │   1 │    │     1 │  0.00
+ svensk_viking    │    │   1 │    │     1 │  0.00
+ taisiared        │    │     │  1 │     1 │  0.00
+ thearenariga     │    │   1 │    │     1 │  0.00
+ tishkova         │    │     │  1 │     1 │  0.00
+ tomokodes        │    │     │  1 │     1 │  0.00
+ toriameow        │    │     │  1 │     1 │  0.00
+ typographera     │    │     │  1 │     1 │  0.00
+ ugisjekabsons    │    │   1 │    │     1 │  0.00
+ uldisz           │    │   1 │    │     1 │  0.00
+ unaelvaa         │    │   1 │    │     1 │  0.00
+ uzzini           │    │   1 │    │     1 │  0.00
+ vanillawithcoke  │    │     │  1 │     1 │  0.00
+ varlamov         │    │     │  1 │     1 │  0.00
+ vb3000           │    │     │  1 │     1 │  0.00
+ veronikalobinja  │    │     │  1 │     1 │  0.00
+ veselibasinspek  │    │   1 │    │     1 │  0.00
+ vibane_paula     │    │   1 │    │     1 │  0.00
+ vigants          │    │   1 │    │     1 │  0.00
+ vikmanis         │    │   1 │    │     1 │  0.00
+ vinabarsGARAGE   │    │   1 │    │     1 │  0.00
+ vinnijs13        │    │   1 │    │     1 │  0.00
+ vit_arno         │    │   1 │    │     1 │  0.00
+ vitalijsiva      │    │   1 │    │     1 │  0.00
+ vkoralis         │    │   1 │    │     1 │  0.00
+ vladileb         │    │     │  1 │     1 │  0.00
+ vlmxs            │    │   1 │    │     1 │  0.00
+ wafellee         │    │   1 │    │     1 │  0.00
+ wetatwo          │    │   1 │    │     1 │  0.00
+ whoozle          │    │     │  1 │     1 │  0.00
+ xenafobia        │    │     │  1 │     1 │  0.00
+ xjki             │    │   1 │    │     1 │  0.00
+ yanina19981      │    │     │  1 │     1 │  0.00
+ zaiga_p          │    │   1 │    │     1 │  0.00
+ zandarts         │    │   1 │    │     1 │  0.00
+ zelchss          │    │   1 │    │     1 │  0.00
+ zhankins         │    │     │  1 │     1 │  0.00
+ zhozesedanova20  │    │     │  1 │     1 │  0.00
+ zuzan4iks        │    │   1 │    │     1 │  0.00
+ zweiteiliger     │    │     │  1 │     1 │  0.00
+(1052 rows)
 
