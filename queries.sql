@@ -2,7 +2,8 @@
 select tweet->>'lang' as language, count(*)
 from tweet
 where features->>'from_riga' like 'true'
-group by language;
+group by language
+order by count;
 
 -- Group tweets by hour and language.
 select
