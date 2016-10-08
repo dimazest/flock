@@ -1,7 +1,7 @@
 -- Count user mentions
 select *,
 COALESCE(lv, 0) + COALESCE(ru, 0) as total,
-round (
+round(
         0.5 - abs(
 	        (
 	            (COALESCE(ru, 0) + 0.0) /
