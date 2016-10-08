@@ -1,6 +1,6 @@
 -- Tweets written by users
 select *,
-COALESCE(lv, 0) + COALESCE(ru, 0) as total,
+COALESCE(en, 0) + COALESCE(lv, 0) + COALESCE(ru, 0) as total,
 round(
         0.5 - abs(
         (
