@@ -2,14 +2,14 @@
 ------------------+-----+-----+-------+-------
  AlferjevaJ       |   2 |   2 |     4 |  0.50
  sashasuhanov     |   2 |   2 |     4 |  0.50
- janccik          |   1 |   1 |     2 |  0.50
  _Yurochka_       |   1 |   1 |     2 |  0.50
+ janccik          |   1 |   1 |     2 |  0.50
  @@LIB            |  13 |  10 |    23 |  0.43
  @latgalescb      |  13 |  10 |    23 |  0.43
- @@DELFI          | 134 |  81 |   215 |  0.38
+ @@DELFI          | 136 |  81 |   217 |  0.37
  Arkadyeazyyolo   |   1 |   2 |     3 |  0.33
  Barerotic        |   2 |   1 |     3 |  0.33
- @@MEDIA          | 391 | 171 |   562 |  0.30
+ @@MEDIA          | 397 | 171 |   568 |  0.30
  AKMshooter       |   3 |   1 |     4 |  0.25
  nicole_an_moroz  |   9 |  38 |    47 |  0.19
  @@MIXNEWS        |  13 |  64 |    77 |  0.17
@@ -20,314 +20,318 @@
  @@LSM            | 241 |  26 |   267 |  0.10
  @@LSM-RADIO      |  29 |   3 |    32 |  0.09
  @@LSM-WEB        |  92 |   2 |    94 |  0.02
- @delfilv         | 134 |     |   134 |  0.00
+ @delfilv         | 136 |     |   136 |  0.00
  pimpin_is_hard   |     | 130 |   130 |  0.00
  @lsmlv           |  85 |     |    85 |  0.00
- LaukuSpamere     |  81 |     |    81 |  0.00
  @rusdelfi_lv     |     |  81 |    81 |  0.00
+ LaukuSpamere     |  81 |     |    81 |  0.00
  prayforwhatsy    |     |  68 |    68 |  0.00
  AlexanHawk       |     |  65 |    65 |  0.00
  @mixnews_lv      |     |  64 |    64 |  0.00
+ @@GOV            |  53 |     |    53 |  0.00
  @@COMM           |  52 |     |    52 |  0.00
- @@GOV            |  51 |     |    51 |  0.00
  @ltvzinas        |  49 |     |    49 |  0.00
  IlzeJaunberga    |  48 |     |    48 |  0.00
  gorskis_intars   |  44 |     |    44 |  0.00
- @latvijastv      |  41 |     |    41 |  0.00
  @lattelecom      |  41 |     |    41 |  0.00
- @@RIGA           |  34 |     |    34 |  0.00
+ @latvijastv      |  41 |     |    41 |  0.00
  @@CITY           |  34 |     |    34 |  0.00
+ @@RIGA           |  34 |     |    34 |  0.00
  BaibaStrautmane  |  32 |     |    32 |  0.00
- whyssorry        |     |  31 |    31 |  0.00
  ksenijahramova   |     |  31 |    31 |  0.00
- AValdbergs       |  25 |     |    25 |  0.00
+ whyssorry        |     |  31 |    31 |  0.00
  @rigasdome       |  25 |     |    25 |  0.00
+ AValdbergs       |  25 |     |    25 |  0.00
  RealJeyHoran     |  25 |     |    25 |  0.00
  TusinwRiga       |     |  24 |    24 |  0.00
  rutenbergsdaini  |  23 |     |    23 |  0.00
  PhanAtDeDisco    |  22 |     |    22 |  0.00
- Enkurss          |  21 |     |    21 |  0.00
  @ltv7rus         |     |  21 |    21 |  0.00
+ Enkurss          |  21 |     |    21 |  0.00
  SigmaLS8361      |  21 |     |    21 |  0.00
  Eleonooraa       |  20 |     |    20 |  0.00
  valerijasamanta  |  19 |     |    19 |  0.00
  viktorpavlov10   |     |  19 |    19 |  0.00
  GMeluskans       |  17 |     |    17 |  0.00
- jacky_spoki      |  16 |     |    16 |  0.00
  indig0Xsunrise   |     |  16 |    16 |  0.00
+ jacky_spoki      |  16 |     |    16 |  0.00
  mnimmum          |     |  16 |    16 |  0.00
- tmrshv           |     |  15 |    15 |  0.00
- dovjatinsh       |  15 |     |    15 |  0.00
  LaurisLiepa      |  15 |     |    15 |  0.00
+ dovjatinsh       |  15 |     |    15 |  0.00
+ tmrshv           |     |  15 |    15 |  0.00
  @lrzinas         |  14 |     |    14 |  0.00
  VDruse           |  14 |     |    14 |  0.00
- @latvijasradio1  |  13 |     |    13 |  0.00
  @latmixnews      |  13 |     |    13 |  0.00
+ @latvijasradio1  |  13 |     |    13 |  0.00
  @ltvsports       |  13 |     |    13 |  0.00
- io7246           |  12 |     |    12 |  0.00
- baidekalna       |  12 |     |    12 |  0.00
- summerrr212      |     |  12 |    12 |  0.00
- konkovochka      |     |  12 |    12 |  0.00
  SkaidriteKr      |  12 |     |    12 |  0.00
+ baidekalna       |  12 |     |    12 |  0.00
+ io7246           |  12 |     |    12 |  0.00
+ konkovochka      |     |  12 |    12 |  0.00
+ summerrr212      |     |  12 |    12 |  0.00
  anechka159       |     |  11 |    11 |  0.00
  belka_shi        |     |  11 |    11 |  0.00
  tomszvirbulis    |  11 |     |    11 |  0.00
  Badshinigami     |     |  10 |    10 |  0.00
  Nagla114         |  10 |     |    10 |  0.00
- koleegjis        |  10 |     |    10 |  0.00
- nikusja20002     |     |  10 |    10 |  0.00
  andrisgrafs      |  10 |     |    10 |  0.00
  dANILIWE         |     |  10 |    10 |  0.00
  dzimmijs13       |  10 |     |    10 |  0.00
+ koleegjis        |  10 |     |    10 |  0.00
+ nikusja20002     |     |  10 |    10 |  0.00
  tolstovs1        |  10 |     |    10 |  0.00
- TheDinamo777     |     |   9 |     9 |  0.00
  18_InCe          |   9 |     |     9 |  0.00
  @@FIN            |   9 |     |     9 |  0.00
- kalisa_d         |     |   9 |     9 |  0.00
- aaangelinaaa_    |     |   9 |     9 |  0.00
- Klasika_LR3      |   9 |     |     9 |  0.00
- Vinotava         |   9 |     |     9 |  0.00
- dimantinjs       |   9 |     |     9 |  0.00
- nostradamusboy   |   9 |     |     9 |  0.00
  @swedbanklatvia  |   9 |     |     9 |  0.00
+ Klasika_LR3      |   9 |     |     9 |  0.00
+ TheDinamo777     |     |   9 |     9 |  0.00
+ Vinotava         |   9 |     |     9 |  0.00
+ aaangelinaaa_    |     |   9 |     9 |  0.00
+ dimantinjs       |   9 |     |     9 |  0.00
  ernestsd         |   9 |     |     9 |  0.00
+ kalisa_d         |     |   9 |     9 |  0.00
+ nostradamusboy   |   9 |     |     9 |  0.00
  @manslmt         |   8 |     |     8 |  0.00
- vasilevskaaa     |     |   8 |     8 |  0.00
+ AndrisTaurins    |   8 |     |     8 |  0.00
+ Dzhaan420        |     |   8 |     8 |  0.00
+ HunnyTunny       |     |   8 |     8 |  0.00
+ Ilza4ka          |   8 |     |     8 |  0.00
+ Kagamiii         |     |   8 |     8 |  0.00
+ SaldusPB         |   8 |     |     8 |  0.00
+ akuna_banana     |     |   8 |     8 |  0.00
+ caramelllee      |   8 |     |     8 |  0.00
  joaigars1        |   8 |     |     8 |  0.00
  kajbumba         |   8 |     |     8 |  0.00
- akuna_banana     |     |   8 |     8 |  0.00
- Kagamiii         |     |   8 |     8 |  0.00
- AndrisTaurins    |   8 |     |     8 |  0.00
- HunnyTunny       |     |   8 |     8 |  0.00
  ksykorolj        |     |   8 |     8 |  0.00
- SaldusPB         |   8 |     |     8 |  0.00
- Ilza4ka          |   8 |     |     8 |  0.00
- caramelllee      |   8 |     |     8 |  0.00
- Dzhaan420        |     |   8 |     8 |  0.00
- Luize80          |     |   7 |     7 |  0.00
+ vasilevskaaa     |     |   8 |     8 |  0.00
  @100gkulturas    |   7 |     |     7 |  0.00
- naservere        |     |   7 |     7 |  0.00
+ @rigassatiksme_  |   7 |     |     7 |  0.00
  Edijs31          |   7 |     |     7 |  0.00
+ Inita14868431    |   7 |     |     7 |  0.00
+ Luize80          |     |   7 |     7 |  0.00
+ Lukstins88       |   7 |     |     7 |  0.00
+ SkujaVilnis      |   7 |     |     7 |  0.00
+ ViktoriyaLa      |     |   7 |     7 |  0.00
  Yuubaru01        |     |   7 |     7 |  0.00
  ainarsbr11       |   7 |     |     7 |  0.00
- gogodancerbi     |   7 |     |     7 |  0.00
- Inita14868431    |   7 |     |     7 |  0.00
- cathrine___b     |     |   7 |     7 |  0.00
- @rigassatiksme_  |   7 |     |     7 |  0.00
- andrejko_epta    |     |   7 |     7 |  0.00
- rozepodolska     |   7 |     |     7 |  0.00
- sikadaksa        |   7 |     |     7 |  0.00
- sikaanna         |   7 |     |     7 |  0.00
- oskudra          |   7 |     |     7 |  0.00
- Lukstins88       |   7 |     |     7 |  0.00
- ViktoriyaLa      |     |   7 |     7 |  0.00
  alinaamalinaa    |     |   7 |     7 |  0.00
- SkujaVilnis      |   7 |     |     7 |  0.00
- Ljipa            |   6 |     |     6 |  0.00
- Deivsaa          |   6 |     |     6 |  0.00
- polik2211        |     |   6 |     6 |  0.00
- alice_roudzite   |     |   6 |     6 |  0.00
- i_v_e_t_a        |   6 |     |     6 |  0.00
- GirtsS           |   6 |     |     6 |  0.00
- janisburba       |   6 |     |     6 |  0.00
- OLYV5            |     |   6 |     6 |  0.00
- DanaMusoyan      |     |   6 |     6 |  0.00
- skraipsts        |   6 |     |     6 |  0.00
- Inese_Z_         |   6 |     |     6 |  0.00
- kristtyaaa       |     |   6 |     6 |  0.00
- nicoleprofileee  |     |   6 |     6 |  0.00
- Nelaquetan       |     |   6 |     6 |  0.00
- snezhkyn         |     |   6 |     6 |  0.00
- Rimants4         |   6 |     |     6 |  0.00
- CelminsGints     |   6 |     |     6 |  0.00
- vitali_by        |     |   6 |     6 |  0.00
- pulks            |   6 |     |     6 |  0.00
- linduliite       |   6 |     |     6 |  0.00
- Maira4ka         |   6 |     |     6 |  0.00
- Toews_82         |     |   6 |     6 |  0.00
- edgarszeiza      |   6 |     |     6 |  0.00
- PakistAnnie_     |   6 |     |     6 |  0.00
+ andrejko_epta    |     |   7 |     7 |  0.00
+ cathrine___b     |     |   7 |     7 |  0.00
+ gogodancerbi     |   7 |     |     7 |  0.00
+ naservere        |     |   7 |     7 |  0.00
+ oskudra          |   7 |     |     7 |  0.00
+ rozepodolska     |   7 |     |     7 |  0.00
+ sikaanna         |   7 |     |     7 |  0.00
+ sikadaksa        |   7 |     |     7 |  0.00
  @@RETAIL         |   6 |     |     6 |  0.00
- ugriinis         |   6 |     |     6 |  0.00
- VicctoriaDm      |     |   6 |     6 |  0.00
+ CelminsGints     |   6 |     |     6 |  0.00
+ DanaMusoyan      |     |   6 |     6 |  0.00
+ Deivsaa          |   6 |     |     6 |  0.00
+ GirtsS           |   6 |     |     6 |  0.00
  Go4speedLV       |   6 |     |     6 |  0.00
+ Inese_Z_         |   6 |     |     6 |  0.00
  Joogr            |   6 |     |     6 |  0.00
+ Ljipa            |   6 |     |     6 |  0.00
+ Maira4ka         |   6 |     |     6 |  0.00
+ Nelaquetan       |     |   6 |     6 |  0.00
+ OLYV5            |     |   6 |     6 |  0.00
+ PakistAnnie_     |   6 |     |     6 |  0.00
+ Rimants4         |   6 |     |     6 |  0.00
+ Toews_82         |     |   6 |     6 |  0.00
+ VicctoriaDm      |     |   6 |     6 |  0.00
+ alice_roudzite   |     |   6 |     6 |  0.00
+ edgarszeiza      |   6 |     |     6 |  0.00
+ i_v_e_t_a        |   6 |     |     6 |  0.00
+ janisburba       |   6 |     |     6 |  0.00
+ kristtyaaa       |     |   6 |     6 |  0.00
+ linduliite       |   6 |     |     6 |  0.00
  mururrurrr       |     |   6 |     6 |  0.00
- katrina9902      |     |   5 |     5 |  0.00
- MAARELLIS        |   5 |     |     5 |  0.00
- vitaamiins       |   5 |     |     5 |  0.00
- dudiite123       |   5 |     |     5 |  0.00
- zaneolina        |   5 |     |     5 |  0.00
- gaitisg          |   5 |     |     5 |  0.00
- sapnisiem        |   5 |     |     5 |  0.00
+ nicoleprofileee  |     |   6 |     6 |  0.00
+ polik2211        |     |   6 |     6 |  0.00
+ pulks            |   6 |     |     6 |  0.00
+ skraipsts        |   6 |     |     6 |  0.00
+ snezhkyn         |     |   6 |     6 |  0.00
+ ugriinis         |   6 |     |     6 |  0.00
+ vitali_by        |     |   6 |     6 |  0.00
  @brivibas36      |   5 |     |     5 |  0.00
- THUNDERFROST1    |     |   5 |     5 |  0.00
- saliktenis       |   5 |     |     5 |  0.00
- Mojito41         |   5 |     |     5 |  0.00
+ @latvijas_pasts  |   5 |     |     5 |  0.00
+ @ltvpanorama     |   5 |     |     5 |  0.00
  AlisaSolovjova   |     |   5 |     5 |  0.00
- adeniins         |   5 |     |     5 |  0.00
- BeateSunaPlace   |   5 |     |     5 |  0.00
- bowskis          |   5 |     |     5 |  0.00
- jenss1983        |   5 |     |     5 |  0.00
  Baastina         |     |   5 |     5 |  0.00
- Zavileiskis      |   5 |     |     5 |  0.00
- impro_celo       |   5 |     |     5 |  0.00
- janissport       |   5 |     |     5 |  0.00
- _JusiY_          |   5 |     |     5 |  0.00
- IlgvarsImsa      |   5 |     |     5 |  0.00
- Kostik_LV        |   5 |     |     5 |  0.00
+ Babyroom_lv      |   5 |     |     5 |  0.00
+ BeateSunaPlace   |   5 |     |     5 |  0.00
+ BluForster       |   5 |     |     5 |  0.00
+ ChaulaTV         |   5 |     |     5 |  0.00
+ DavydovaMartha   |     |   5 |     5 |  0.00
  EOlekts          |   5 |     |     5 |  0.00
  IevaSniedze      |   5 |     |     5 |  0.00
+ IlgvarsImsa      |   5 |     |     5 |  0.00
+ Kostik_LV        |   5 |     |     5 |  0.00
  LLKC_lv          |   5 |     |     5 |  0.00
- ChaulaTV         |   5 |     |     5 |  0.00
- fidsja_sis       |   5 |     |     5 |  0.00
- BluForster       |   5 |     |     5 |  0.00
- zuzan4iks        |   5 |     |     5 |  0.00
- @latvijas_pasts  |   5 |     |     5 |  0.00
- VienradzisR      |   5 |     |     5 |  0.00
- Babyroom_lv      |   5 |     |     5 |  0.00
- DavydovaMartha   |     |   5 |     5 |  0.00
  LizaStrazdinya   |     |   5 |     5 |  0.00
- merigor777       |     |   5 |     5 |  0.00
- polesik98        |     |   5 |     5 |  0.00
- dianabangg       |     |   5 |     5 |  0.00
- VAKSJA_          |     |   5 |     5 |  0.00
- plushsnake       |     |   5 |     5 |  0.00
+ MAARELLIS        |   5 |     |     5 |  0.00
+ Mojito41         |   5 |     |     5 |  0.00
  StNicole1        |     |   5 |     5 |  0.00
- @ltvpanorama     |   5 |     |     5 |  0.00
- mehanikslabs     |   4 |     |     4 |  0.00
- BreakingLv       |   4 |     |     4 |  0.00
- tka4enkomilena   |     |   4 |     4 |  0.00
- arturalexeev     |     |   4 |     4 |  0.00
+ THUNDERFROST1    |     |   5 |     5 |  0.00
+ VAKSJA_          |     |   5 |     5 |  0.00
+ VienradzisR      |   5 |     |     5 |  0.00
+ Zavileiskis      |   5 |     |     5 |  0.00
+ _JusiY_          |   5 |     |     5 |  0.00
+ adeniins         |   5 |     |     5 |  0.00
+ bowskis          |   5 |     |     5 |  0.00
+ dianabangg       |     |   5 |     5 |  0.00
+ dudiite123       |   5 |     |     5 |  0.00
+ fidsja_sis       |   5 |     |     5 |  0.00
+ gaitisg          |   5 |     |     5 |  0.00
+ impro_celo       |   5 |     |     5 |  0.00
+ janissport       |   5 |     |     5 |  0.00
+ jenss1983        |   5 |     |     5 |  0.00
+ katrina9902      |     |   5 |     5 |  0.00
+ merigor777       |     |   5 |     5 |  0.00
+ plushsnake       |     |   5 |     5 |  0.00
+ polesik98        |     |   5 |     5 |  0.00
+ saliktenis       |   5 |     |     5 |  0.00
+ sapnisiem        |   5 |     |     5 |  0.00
+ vitaamiins       |   5 |     |     5 |  0.00
+ zaneolina        |   5 |     |     5 |  0.00
+ zuzan4iks        |   5 |     |     5 |  0.00
+ @breakinglv      |   4 |     |     4 |  0.00
+ @lsmdzivesstils  |   4 |     |     4 |  0.00
  @mansrimi        |   4 |     |     4 |  0.00
- atjaunotiesisku  |   4 |     |     4 |  0.00
- zhamalov_        |     |   4 |     4 |  0.00
- barbiegurlxx_    |   4 |     |     4 |  0.00
+ @ritapanorama    |   4 |     |     4 |  0.00
+ AdvokateKrista   |   4 |     |     4 |  0.00
+ AijaMelle        |   4 |     |     4 |  0.00
+ Aljaa_1808       |     |   4 |     4 |  0.00
+ AndrisGobins     |   4 |     |     4 |  0.00
+ ArtisCalitis     |   4 |     |     4 |  0.00
+ Danilevrinius    |     |   4 |     4 |  0.00
+ DariaaPetrova    |     |   4 |     4 |  0.00
+ DmitryMoran      |   4 |     |     4 |  0.00
+ Eizons           |   4 |     |     4 |  0.00
+ Freshinsh        |   4 |     |     4 |  0.00
+ INTERSTARS       |   4 |     |     4 |  0.00
+ IamMartyna       |   4 |     |     4 |  0.00
+ KSSLHH           |     |   4 |     4 |  0.00
  Kalvis_Egle      |   4 |     |     4 |  0.00
+ LaurisReiniks    |   4 |     |     4 |  0.00
+ MaartinsKa       |   4 |     |     4 |  0.00
+ Mazachiksee      |   4 |     |     4 |  0.00
+ Minciiicc        |   4 |     |     4 |  0.00
+ OptibeTips       |   4 |     |     4 |  0.00
+ RaitisNarme      |   4 |     |     4 |  0.00
+ Raivis_Spalvens  |   4 |     |     4 |  0.00
+ Runcis_Zabakos   |   4 |     |     4 |  0.00
+ SANDISGABRIELS2  |   4 |     |     4 |  0.00
+ TheLauma         |   4 |     |     4 |  0.00
+ UgisB            |   4 |     |     4 |  0.00
+ VioJankova       |   4 |     |     4 |  0.00
+ arturalexeev     |     |   4 |     4 |  0.00
+ atjaunotiesisku  |   4 |     |     4 |  0.00
+ barbiegurlxx_    |   4 |     |     4 |  0.00
  besyatina        |     |   4 |     4 |  0.00
  bitemytonguee    |   4 |     |     4 |  0.00
- SANDISGABRIELS2  |   4 |     |     4 |  0.00
- Runcis_Zabakos   |   4 |     |     4 |  0.00
  bondars          |   4 |     |     4 |  0.00
- zarinstoms       |   4 |     |     4 |  0.00
- sanitaribena     |   4 |     |     4 |  0.00
- UgisB            |   4 |     |     4 |  0.00
- LaurisReiniks    |   4 |     |     4 |  0.00
- rudaakaija       |   4 |     |     4 |  0.00
- Danilevrinius    |     |   4 |     4 |  0.00
  changingcollars  |     |   4 |     4 |  0.00
- romachier        |     |   4 |     4 |  0.00
- AdvokateKrista   |   4 |     |     4 |  0.00
- VioJankova       |   4 |     |     4 |  0.00
- KSSLHH           |     |   4 |     4 |  0.00
- IamMartyna       |   4 |     |     4 |  0.00
- @ritapanorama    |   4 |     |     4 |  0.00
- DariaaPetrova    |     |   4 |     4 |  0.00
- zilonmate        |   4 |     |     4 |  0.00
- INTERSTARS       |   4 |     |     4 |  0.00
- Minciiicc        |   4 |     |     4 |  0.00
- @lsmdzivesstils  |   4 |     |     4 |  0.00
- zybr_D           |     |   4 |     4 |  0.00
- optimist_ka_1    |     |   4 |     4 |  0.00
- AijaMelle        |   4 |     |     4 |  0.00
- DmitryMoran      |   4 |     |     4 |  0.00
- AndrisGobins     |   4 |     |     4 |  0.00
- Freshinsh        |   4 |     |     4 |  0.00
- wesservic        |     |   4 |     4 |  0.00
- lienishhh        |   4 |     |     4 |  0.00
- niikachkaa       |     |   4 |     4 |  0.00
- Raivis_Spalvens  |   4 |     |     4 |  0.00
- RaitisNarme      |   4 |     |     4 |  0.00
- MaartinsKa       |   4 |     |     4 |  0.00
- karsupavelnieks  |   4 |     |     4 |  0.00
- TheLauma         |   4 |     |     4 |  0.00
  getnaxui         |     |   4 |     4 |  0.00
- lastovskaya__    |     |   4 |     4 |  0.00
- Eizons           |   4 |     |     4 |  0.00
- ArtisCalitis     |   4 |     |     4 |  0.00
- marry_woods      |     |   4 |     4 |  0.00
- Mazachiksee      |   4 |     |     4 |  0.00
  janis_dreimanis  |   4 |     |     4 |  0.00
- Aljaa_1808       |     |   4 |     4 |  0.00
- OptibeTips       |   4 |     |     4 |  0.00
- bukucis          |   3 |     |     3 |  0.00
- ValdisMelderis   |   3 |     |     3 |  0.00
- JanisCelmins     |   3 |     |     3 |  0.00
+ karsupavelnieks  |   4 |     |     4 |  0.00
+ lastovskaya__    |     |   4 |     4 |  0.00
+ lienishhh        |   4 |     |     4 |  0.00
+ marry_woods      |     |   4 |     4 |  0.00
+ mehanikslabs     |   4 |     |     4 |  0.00
+ niikachkaa       |     |   4 |     4 |  0.00
+ optimist_ka_1    |     |   4 |     4 |  0.00
+ romachier        |     |   4 |     4 |  0.00
+ rudaakaija       |   4 |     |     4 |  0.00
+ sanitaribena     |   4 |     |     4 |  0.00
+ tka4enkomilena   |     |   4 |     4 |  0.00
+ wesservic        |     |   4 |     4 |  0.00
+ zarinstoms       |   4 |     |     4 |  0.00
+ zhamalov_        |     |   4 |     4 |  0.00
+ zilonmate        |   4 |     |     4 |  0.00
+ zybr_D           |     |   4 |     4 |  0.00
+ 1wSvens          |   3 |     |     3 |  0.00
+ 20006794         |     |   3 |     3 |  0.00
+ 5899339b0a334bf  |     |   3 |     3 |  0.00
  @latvijasradio4  |     |   3 |     3 |  0.00
+ @lsmkultura      |   3 |     |     3 |  0.00
+ APogodkina       |     |   3 |     3 |  0.00
+ AliseElephant    |   3 |     |     3 |  0.00
+ AndrejsSilins    |   3 |     |     3 |  0.00
+ Andzella_N       |   3 |     |     3 |  0.00
+ AngelinaBerzina  |     |   3 |     3 |  0.00
+ AnjaOni          |     |   3 |     3 |  0.00
+ AtisM37          |   3 |     |     3 |  0.00
  AxelssYO         |   3 |     |     3 |  0.00
- VeikoSpolitis    |   3 |     |     3 |  0.00
+ BeIoks           |     |   3 |     3 |  0.00
+ BubliksOoops     |   3 |     |     3 |  0.00
+ EriksBelinsky    |   3 |     |     3 |  0.00
+ Everita133       |   3 |     |     3 |  0.00
+ Gemoss_lv        |   3 |     |     3 |  0.00
+ Gintinns         |   3 |     |     3 |  0.00
+ Guntars11        |   3 |     |     3 |  0.00
+ Gvi79            |   3 |     |     3 |  0.00
+ JanisCelmins     |   3 |     |     3 |  0.00
  JanisPolis       |   3 |     |     3 |  0.00
  JansIkes         |   3 |     |     3 |  0.00
  JurisZvirbulis   |   3 |     |     3 |  0.00
- adri_iepur       |     |   3 |     3 |  0.00
- BeIoks           |     |   3 |     3 |  0.00
- @lsmkultura      |   3 |     |     3 |  0.00
- agnijajaja       |   3 |     |     3 |  0.00
- 5899339b0a334bf  |     |   3 |     3 |  0.00
- alisa_mayaa      |     |   3 |     3 |  0.00
  KasparsLuksis    |   3 |     |     3 |  0.00
  Kipsalasbaseins  |   3 |     |     3 |  0.00
- andrispp         |   3 |     |     3 |  0.00
- arsenijep        |   3 |     |     3 |  0.00
- BubliksOoops     |   3 |     |     3 |  0.00
- 20006794         |     |   3 |     3 |  0.00
  LatviesuCalis    |   3 |     |     3 |  0.00
- bonuks30         |   3 |     |     3 |  0.00
  Liepkalns        |   3 |     |     3 |  0.00
  LigaaaaaaD       |   3 |     |     3 |  0.00
  Liigens          |   3 |     |     3 |  0.00
  LittleCocainum   |     |   3 |     3 |  0.00
- demonhog63       |   3 |     |     3 |  0.00
  LucsNeuss        |   3 |     |     3 |  0.00
+ MaijaBadune      |   3 |     |     3 |  0.00
+ MonikaSarkane    |   3 |     |     3 |  0.00
+ Monstrinjshhh    |   3 |     |     3 |  0.00
+ Olj4ikk          |     |   3 |     3 |  0.00
+ OlyBetLBL        |   3 |     |     3 |  0.00
+ Olya1801         |     |   3 |     3 |  0.00
+ Paurs            |   3 |     |     3 |  0.00
+ RockSandis112    |   3 |     |     3 |  0.00
+ RocknBerriesLv   |   3 |     |     3 |  0.00
+ Rudzinrudis      |   3 |     |     3 |  0.00
+ SVILPE           |   3 |     |     3 |  0.00
+ SaldusRadio      |   3 |     |     3 |  0.00
+ Sandijabu        |   3 |     |     3 |  0.00
+ Sheins50         |   3 |     |     3 |  0.00
+ Skots_           |   3 |     |     3 |  0.00
+ Tiglillija       |   3 |     |     3 |  0.00
+ ValdisMelderis   |   3 |     |     3 |  0.00
+ VeikoSpolitis    |   3 |     |     3 |  0.00
+ adri_iepur       |     |   3 |     3 |  0.00
+ agnijajaja       |   3 |     |     3 |  0.00
+ alisa_mayaa      |     |   3 |     3 |  0.00
+ andrispp         |   3 |     |     3 |  0.00
+ arsenijep        |   3 |     |     3 |  0.00
+ bonuks30         |   3 |     |     3 |  0.00
+ bukucis          |   3 |     |     3 |  0.00
+ demonhog63       |   3 |     |     3 |  0.00
  egle_martins     |   3 |     |     3 |  0.00
  elina2455        |     |   3 |     3 |  0.00
- APogodkina       |     |   3 |     3 |  0.00
- MaijaBadune      |   3 |     |     3 |  0.00
  girtsgg          |   3 |     |     3 |  0.00
  hadesworld       |     |   3 |     3 |  0.00
  iivittis         |   3 |     |     3 |  0.00
  irifann12        |     |   3 |     3 |  0.00
  janauska         |   3 |     |     3 |  0.00
- EriksBelinsky    |   3 |     |     3 |  0.00
  juceklis         |   3 |     |     3 |  0.00
- MonikaSarkane    |   3 |     |     3 |  0.00
- Everita133       |   3 |     |     3 |  0.00
  lerocko_         |     |   3 |     3 |  0.00
- AliseElephant    |   3 |     |     3 |  0.00
- Olj4ikk          |     |   3 |     3 |  0.00
- OlyBetLBL        |   3 |     |     3 |  0.00
- Olya1801         |     |   3 |     3 |  0.00
  llauramu         |   3 |     |     3 |  0.00
- Gemoss_lv        |   3 |     |     3 |  0.00
- Gintinns         |   3 |     |     3 |  0.00
  margrieta333     |     |   3 |     3 |  0.00
  marisjonovs      |   3 |     |     3 |  0.00
- Paurs            |   3 |     |     3 |  0.00
  masha_sharapa    |     |   3 |     3 |  0.00
  mosja15          |     |   3 |     3 |  0.00
- 1wSvens          |   3 |     |     3 |  0.00
- AndrejsSilins    |   3 |     |     3 |  0.00
- Guntars11        |   3 |     |     3 |  0.00
- Gvi79            |   3 |     |     3 |  0.00
  njuta17          |     |   3 |     3 |  0.00
  patricijalv      |   3 |     |     3 |  0.00
- Andzella_N       |   3 |     |     3 |  0.00
- AngelinaBerzina  |     |   3 |     3 |  0.00
- RockSandis112    |   3 |     |     3 |  0.00
  roadragemonkey   |   3 |     |     3 |  0.00
- RocknBerriesLv   |   3 |     |     3 |  0.00
  rsmeltere        |     |   3 |     3 |  0.00
- Rudzinrudis      |   3 |     |     3 |  0.00
  sandragromova    |     |   3 |     3 |  0.00
- SVILPE           |   3 |     |     3 |  0.00
- SaldusRadio      |   3 |     |     3 |  0.00
- Sandijabu        |   3 |     |     3 |  0.00
  smss11           |   3 |     |     3 |  0.00
- Sheins50         |   3 |     |     3 |  0.00
  sofija1151       |     |   3 |     3 |  0.00
  tatiana4598      |     |   3 |     3 |  0.00
  tcLiiba          |   3 |     |     3 |  0.00
- Skots_           |   3 |     |     3 |  0.00
  uga20001         |   3 |     |     3 |  0.00
  valery_doz       |     |   3 |     3 |  0.00
  valmiermuiza     |   3 |     |     3 |  0.00
@@ -335,262 +339,219 @@
  vickyniclat      |     |   3 |     3 |  0.00
  vigants          |   3 |     |     3 |  0.00
  vitalijsiva      |   3 |     |     3 |  0.00
- Tiglillija       |   3 |     |     3 |  0.00
- AtisM37          |   3 |     |     3 |  0.00
- GatisZalitis     |   2 |     |     2 |  0.00
- Outbackt0ys      |   2 |     |     2 |  0.00
- GaumigsJoks      |   2 |     |     2 |  0.00
- MegyDana         |   2 |     |     2 |  0.00
- agrisofficial    |   2 |     |     2 |  0.00
- Abolits123       |   2 |     |     2 |  0.00
- JANISRIEKSTINSH  |   2 |     |     2 |  0.00
- Pandinja13       |   2 |     |     2 |  0.00
- marakanka_alex   |     |   2 |     2 |  0.00
- marchello411     |   2 |     |     2 |  0.00
- AlyLauveens      |   2 |     |     2 |  0.00
- TM_FightingTeam  |   2 |     |     2 |  0.00
- PatverumsDM      |   2 |     |     2 |  0.00
- agnesezeltina    |   2 |     |     2 |  0.00
- Talis_L          |   2 |     |     2 |  0.00
- MartinsBraslavs  |   2 |     |     2 |  0.00
- PavelsJurs       |   2 |     |     2 |  0.00
- martins_tilcens  |   2 |     |     2 |  0.00
- marupesuznemeji  |   2 |     |     2 |  0.00
- TarakanovaMc     |     |   2 |     2 |  0.00
- PensisLV         |   2 |     |     2 |  0.00
- Amanda_Pivarune  |   2 |     |     2 |  0.00
- ElvaBaltic       |   2 |     |     2 |  0.00
- Mariss09615914   |   2 |     |     2 |  0.00
- harisgaris       |   2 |     |     2 |  0.00
- Marionetta9      |     |   2 |     2 |  0.00
- miculis          |   2 |     |     2 |  0.00
+ 2kikii           |   2 |     |     2 |  0.00
+ 98Nata6a         |     |   2 |     2 |  0.00
+ @@CINEMA         |   2 |     |     2 |  0.00
+ @@CULTURE        |   2 |     |     2 |  0.00
+ @@LEISURE        |   2 |     |     2 |  0.00
  @@NILSUSAKOVS    |   2 |     |     2 |  0.00
  @@RADIO          |   2 |     |     2 |  0.00
- Pocins           |   2 |     |     2 |  0.00
- AVG_SP           |   2 |     |     2 |  0.00
- EduardsTaborski  |   2 |     |     2 |  0.00
- ManaBalss_rus    |     |   2 |     2 |  0.00
- a_valujevica     |   2 |     |     2 |  0.00
- @@CULTURE        |   2 |     |     2 |  0.00
- Anastasia_kxx    |     |   2 |     2 |  0.00
- JustinBrady__    |   2 |     |     2 |  0.00
  @@SHOPPING       |   2 |     |     2 |  0.00
- gintsfeders      |   2 |     |     2 |  0.00
- freidace         |   2 |     |     2 |  0.00
- VIPCAROLYSH      |     |   2 |     2 |  0.00
- _kalere          |   2 |     |     2 |  0.00
- fjodorovs91      |   2 |     |     2 |  0.00
- EdgarsTurlajs    |   2 |     |     2 |  0.00
- extazy1989       |   2 |     |     2 |  0.00
- @lsm_ru          |     |   2 |     2 |  0.00
- evita_purina     |   2 |     |     2 |  0.00
- @@CINEMA         |   2 |     |     2 |  0.00
- @tele2latvia     |   2 |     |     2 |  0.00
- empathedxpa      |   2 |     |     2 |  0.00
- nikuuusja1111    |     |   2 |     2 |  0.00
- nizivijs         |   2 |     |     2 |  0.00
- vlmxs            |   2 |     |     2 |  0.00
- elittesport      |   2 |     |     2 |  0.00
- RastafarI__Smok  |   2 |     |     2 |  0.00
- official_piztwi  |     |   2 |     2 |  0.00
- okertanov        |     |   2 |     2 |  0.00
- olegshindogins   |   2 |     |     2 |  0.00
- 98Nata6a         |     |   2 |     2 |  0.00
- Diaana_RR        |   2 |     |     2 |  0.00
- egliitis         |   2 |     |     2 |  0.00
- ReinisKa         |   2 |     |     2 |  0.00
- HenrietaVerho    |   2 |     |     2 |  0.00
- domuskapis       |   2 |     |     2 |  0.00
- Denchix_         |   2 |     |     2 |  0.00
- RenarsKrigers    |   2 |     |     2 |  0.00
- patkovskalaura   |   2 |     |     2 |  0.00
- _GAZDELIANI_     |     |   2 |     2 |  0.00
- Jurago_          |   2 |     |     2 |  0.00
- djedveto         |   2 |     |     2 |  0.00
- pavitola_dana    |   2 |     |     2 |  0.00
- personalatlase   |   2 |     |     2 |  0.00
- peterisprikulis  |   2 |     |     2 |  0.00
- Lorklinika       |   2 |     |     2 |  0.00
  @csdd_lv         |   2 |     |     2 |  0.00
- dinars_k         |   2 |     |     2 |  0.00
- podze            |   2 |     |     2 |  0.00
- pol1nkv          |     |   2 |     2 |  0.00
- diana11122       |   2 |     |     2 |  0.00
- Loritaahl        |   2 |     |     2 |  0.00
- polinas30410324  |     |   2 |     2 |  0.00
- Lisha__pooh__    |   2 |     |     2 |  0.00
- danielqino       |     |   2 |     2 |  0.00
- projektukoord    |   2 |     |     2 |  0.00
- dancedeets       |   2 |     |     2 |  0.00
- winnijpooh       |   2 |     |     2 |  0.00
- Riga_Lara        |     |   2 |     2 |  0.00
- dambrovskaya     |     |   2 |     2 |  0.00
- Rizhiks_Pizhiks  |   2 |     |     2 |  0.00
- I_hate_yourface  |   2 |     |     2 |  0.00
- comicdafak       |   2 |     |     2 |  0.00
- riakrisha        |     |   2 |     2 |  0.00
- ricinss1         |   2 |     |     2 |  0.00
- wtfisellie       |     |   2 |     2 |  0.00
- rizanka          |   2 |     |     2 |  0.00
- ZemniekuSaeima   |   2 |     |     2 |  0.00
- roberts_putnis   |   2 |     |     2 |  0.00
- rokijss          |   2 |     |     2 |  0.00
- chococatKS       |     |   2 |     2 |  0.00
- Tesmenjasmens    |   2 |     |     2 |  0.00
- Daniela_Pallo    |   2 |     |     2 |  0.00
- @rigaszoodarzs   |   2 |     |     2 |  0.00
- BangBangEzhik    |     |   2 |     2 |  0.00
- cenkurito        |   2 |     |     2 |  0.00
- buvservissa13lv  |   2 |     |     2 |  0.00
- Rolands_Pulins   |   2 |     |     2 |  0.00
- RozenbergsJ      |   2 |     |     2 |  0.00
- brevings         |   2 |     |     2 |  0.00
- yuyukinar        |     |   2 |     2 |  0.00
- zais_            |   2 |     |     2 |  0.00
- @rdsvc           |   2 |     |     2 |  0.00
- Laura_Stale      |   2 |     |     2 |  0.00
- boborotenj       |     |   2 |     2 |  0.00
- @radioswh        |   2 |     |     2 |  0.00
- @nilsusakovs     |   2 |     |     2 |  0.00
- scisorssss       |   2 |     |     2 |  0.00
- AnjaOni          |     |   2 |     2 |  0.00
- SMetuzals        |   2 |     |     2 |  0.00
- TheBodyShopLV    |   2 |     |     2 |  0.00
- 2kikii           |   2 |     |     2 |  0.00
- LatviaTangSooDo  |   2 |     |     2 |  0.00
- Count_Shu        |     |   2 |     2 |  0.00
- CiraCirsa        |   2 |     |     2 |  0.00
- LVhandball       |   2 |     |     2 |  0.00
- ZaneStulpina     |   2 |     |     2 |  0.00
- Samantaaa3       |   2 |     |     2 |  0.00
- Yefimova08       |     |   2 |     2 |  0.00
  @edgarsrinkevics |   2 |     |     2 |  0.00
  @forumcinemaslv  |   2 |     |     2 |  0.00
+ @galleriariga    |   2 |     |     2 |  0.00
+ @kalnciemaiela   |   2 |     |     2 |  0.00
+ @krustpunkta     |   2 |     |     2 |  0.00
+ @lsm_ru          |     |   2 |     2 |  0.00
+ @nilsusakovs     |   2 |     |     2 |  0.00
+ @radioswh        |   2 |     |     2 |  0.00
+ @rdsvc           |   2 |     |     2 |  0.00
+ @rigaszoodarzs   |   2 |     |     2 |  0.00
+ @tele2latvia     |   2 |     |     2 |  0.00
+ AVG_SP           |   2 |     |     2 |  0.00
+ Abolits123       |   2 |     |     2 |  0.00
+ AdidasMan1999    |   2 |     |     2 |  0.00
+ AgnijaF          |   2 |     |     2 |  0.00
+ AlyLauveens      |   2 |     |     2 |  0.00
+ Amanda_Pivarune  |   2 |     |     2 |  0.00
+ Anastasia_kxx    |     |   2 |     2 |  0.00
+ AnsisEgle        |   2 |     |     2 |  0.00
+ ApgadsJumava     |   2 |     |     2 |  0.00
+ Babjors          |   2 |     |     2 |  0.00
+ BangBangEzhik    |     |   2 |     2 |  0.00
+ Bird_Kxkxkx      |     |   2 |     2 |  0.00
+ Borovkovs        |   2 |     |     2 |  0.00
+ ButsLV           |   2 |     |     2 |  0.00
+ CherryAnnija     |   2 |     |     2 |  0.00
+ CiraCirsa        |   2 |     |     2 |  0.00
+ Count_Shu        |     |   2 |     2 |  0.00
+ Daniela_Pallo    |   2 |     |     2 |  0.00
+ Denchix_         |   2 |     |     2 |  0.00
+ Diaana_RR        |   2 |     |     2 |  0.00
+ EdgarsTurlajs    |   2 |     |     2 |  0.00
+ EduardsTaborski  |   2 |     |     2 |  0.00
+ ElvaBaltic       |   2 |     |     2 |  0.00
+ EmilsBuikis      |   2 |     |     2 |  0.00
+ ErikissE         |   2 |     |     2 |  0.00
+ Esmeraldddda     |   2 |     |     2 |  0.00
+ FreimanePaula    |   2 |     |     2 |  0.00
+ GRozenbergs      |   2 |     |     2 |  0.00
+ GatisZalitis     |   2 |     |     2 |  0.00
+ GaumigsJoks      |   2 |     |     2 |  0.00
+ HenrietaVerho    |   2 |     |     2 |  0.00
+ I_hate_yourface  |   2 |     |     2 |  0.00
+ JANISRIEKSTINSH  |   2 |     |     2 |  0.00
+ Jancuxs007       |   2 |     |     2 |  0.00
+ JanisIesalnieks  |   2 |     |     2 |  0.00
+ JansinaMonta     |   2 |     |     2 |  0.00
+ JasinskaSofija   |     |   2 |     2 |  0.00
+ Jurago_          |   2 |     |     2 |  0.00
+ JustinBrady__    |   2 |     |     2 |  0.00
+ KingRosenthal    |   2 |     |     2 |  0.00
+ Koknesesbibliot  |   2 |     |     2 |  0.00
+ KrisjanisValter  |   2 |     |     2 |  0.00
+ Krista_Baumane   |   2 |     |     2 |  0.00
+ Kuzminska17      |   2 |     |     2 |  0.00
+ LLBDup           |   2 |     |     2 |  0.00
+ LVhandball       |   2 |     |     2 |  0.00
+ LatviaTangSooDo  |   2 |     |     2 |  0.00
+ Laura_Stale      |   2 |     |     2 |  0.00
+ Lisha__pooh__    |   2 |     |     2 |  0.00
+ Loritaahl        |   2 |     |     2 |  0.00
+ Lorklinika       |   2 |     |     2 |  0.00
+ ManaBalss_rus    |     |   2 |     2 |  0.00
+ Marionetta9      |     |   2 |     2 |  0.00
+ Mariss09615914   |   2 |     |     2 |  0.00
+ MartinsBraslavs  |   2 |     |     2 |  0.00
+ MegyDana         |   2 |     |     2 |  0.00
+ MiksDukurs       |   2 |     |     2 |  0.00
+ Milana_Hreyman   |     |   2 |     2 |  0.00
+ Millumins        |   2 |     |     2 |  0.00
+ MrParva          |     |   2 |     2 |  0.00
+ Nadik99Nodja99   |     |   2 |     2 |  0.00
+ Nash_East        |     |   2 |     2 |  0.00
+ Nataliya_Yanush  |     |   2 |     2 |  0.00
+ Nodusgordius     |   2 |     |     2 |  0.00
+ Outbackt0ys      |   2 |     |     2 |  0.00
+ Pandinja13       |   2 |     |     2 |  0.00
+ PatverumsDM      |   2 |     |     2 |  0.00
+ PavelsJurs       |   2 |     |     2 |  0.00
+ PensisLV         |   2 |     |     2 |  0.00
+ Pocins           |   2 |     |     2 |  0.00
+ RastafarI__Smok  |   2 |     |     2 |  0.00
+ ReinisKa         |   2 |     |     2 |  0.00
+ RenarsKrigers    |   2 |     |     2 |  0.00
+ Riga_Lara        |     |   2 |     2 |  0.00
+ Rizhiks_Pizhiks  |   2 |     |     2 |  0.00
+ Rolands_Pulins   |   2 |     |     2 |  0.00
+ RozenbergsJ      |   2 |     |     2 |  0.00
+ SMetuzals        |   2 |     |     2 |  0.00
+ Samantaaa3       |   2 |     |     2 |  0.00
  Sandzja17        |   2 |     |     2 |  0.00
  Sarma_Freiberga  |   2 |     |     2 |  0.00
  Sergei26346075   |   2 |     |     2 |  0.00
- CherryAnnija     |   2 |     |     2 |  0.00
- azembassy_lv     |     |   2 |     2 |  0.00
- Xumlo27          |     |   2 |     2 |  0.00
- JasinskaSofija   |     |   2 |     2 |  0.00
- AnsisEgle        |   2 |     |     2 |  0.00
- LLBDup           |   2 |     |     2 |  0.00
- sofija103        |     |   2 |     2 |  0.00
- Jancuxs007       |   2 |     |     2 |  0.00
- Kuzminska17      |   2 |     |     2 |  0.00
- askrastins       |   2 |     |     2 |  0.00
- ButsLV           |   2 |     |     2 |  0.00
- arrrinx          |     |   2 |     2 |  0.00
- @galleriariga    |   2 |     |     2 |  0.00
- taapati_         |   2 |     |     2 |  0.00
- VilkiFolk        |   2 |     |     2 |  0.00
- JansinaMonta     |   2 |     |     2 |  0.00
- @kalnciemaiela   |   2 |     |     2 |  0.00
- arnisv           |   2 |     |     2 |  0.00
- Babjors          |   2 |     |     2 |  0.00
- armandsuks       |   2 |     |     2 |  0.00
- apinis99         |   2 |     |     2 |  0.00
- Krista_Baumane   |   2 |     |     2 |  0.00
- annie_brig       |     |   2 |     2 |  0.00
- KrisjanisValter  |   2 |     |     2 |  0.00
- trakaablondaa    |   2 |     |     2 |  0.00
- zhdanovss        |     |   2 |     2 |  0.00
- Koknesesbibliot  |   2 |     |     2 |  0.00
  Smurfins_        |   2 |     |     2 |  0.00
  Snafijs          |   2 |     |     2 |  0.00
  So_Sue_Me_       |   2 |     |     2 |  0.00
- KingRosenthal    |   2 |     |     2 |  0.00
- ApgadsJumava     |   2 |     |     2 |  0.00
  Sportacentrs     |   2 |     |     2 |  0.00
- alisonchiik      |     |   2 |     2 |  0.00
- @krustpunkta     |   2 |     |     2 |  0.00
- Borovkovs        |   2 |     |     2 |  0.00
- Tomashuuns       |   2 |     |     2 |  0.00
- kocis11          |   2 |     |     2 |  0.00
- kka_vienalga     |   2 |     |     2 |  0.00
- koroladominika2  |     |   2 |     2 |  0.00
- Nash_East        |     |   2 |     2 |  0.00
- kjuumanis        |   2 |     |     2 |  0.00
- Nadik99Nodja99   |     |   2 |     2 |  0.00
- Nataliya_Yanush  |     |   2 |     2 |  0.00
- kristinecakare   |   2 |     |     2 |  0.00
- @@LEISURE        |   2 |     |     2 |  0.00
- kazus130445      |   2 |     |     2 |  0.00
- kasprs           |   2 |     |     2 |  0.00
- MrParva          |     |   2 |     2 |  0.00
- ksenijaljvova    |     |   2 |     2 |  0.00
- AgnijaF          |   2 |     |     2 |  0.00
- Esmeraldddda     |   2 |     |     2 |  0.00
- l_pantelejeva    |     |   2 |     2 |  0.00
- Monstrinjshhh    |   2 |     |     2 |  0.00
- karliskarklinsh  |   2 |     |     2 |  0.00
- juliussour       |   2 |     |     2 |  0.00
- Nodusgordius     |   2 |     |     2 |  0.00
- jtaurens         |   2 |     |     2 |  0.00
- FreimanePaula    |   2 |     |     2 |  0.00
- leonids3211      |   2 |     |     2 |  0.00
- ErikissE         |   2 |     |     2 |  0.00
- JanisIesalnieks  |   2 |     |     2 |  0.00
- levushkan        |     |   2 |     2 |  0.00
- Millumins        |   2 |     |     2 |  0.00
- liene_b          |   2 |     |     2 |  0.00
- Bird_Kxkxkx      |     |   2 |     2 |  0.00
- Milana_Hreyman   |     |   2 |     2 |  0.00
- irts1            |   2 |     |     2 |  0.00
  TE_Karaliste     |   2 |     |     2 |  0.00
- lilucis_14       |   2 |     |     2 |  0.00
+ TM_FightingTeam  |   2 |     |     2 |  0.00
+ Talis_L          |   2 |     |     2 |  0.00
+ TarakanovaMc     |     |   2 |     2 |  0.00
+ Tesmenjasmens    |   2 |     |     2 |  0.00
+ TheBodyShopLV    |   2 |     |     2 |  0.00
+ Tomashuuns       |   2 |     |     2 |  0.00
+ VIPCAROLYSH      |     |   2 |     2 |  0.00
+ VilkiFolk        |   2 |     |     2 |  0.00
+ Xumlo27          |     |   2 |     2 |  0.00
+ Yefimova08       |     |   2 |     2 |  0.00
+ ZaneStulpina     |   2 |     |     2 |  0.00
+ ZemniekuSaeima   |   2 |     |     2 |  0.00
+ _GAZDELIANI_     |     |   2 |     2 |  0.00
+ _kalere          |   2 |     |     2 |  0.00
+ a_valujevica     |   2 |     |     2 |  0.00
+ agnesezeltina    |   2 |     |     2 |  0.00
+ agrisofficial    |   2 |     |     2 |  0.00
  akirstei         |   2 |     |     2 |  0.00
- zimuliiine       |   2 |     |     2 |  0.00
- irihamariha      |     |   2 |     2 |  0.00
- lisina_x         |     |   2 |     2 |  0.00
- MiksDukurs       |   2 |     |     2 |  0.00
- EmilsBuikis      |   2 |     |     2 |  0.00
- AdidasMan1999    |   2 |     |     2 |  0.00
+ alisonchiik      |     |   2 |     2 |  0.00
+ annie_brig       |     |   2 |     2 |  0.00
+ apinis99         |   2 |     |     2 |  0.00
+ armandsuks       |   2 |     |     2 |  0.00
+ arnisv           |   2 |     |     2 |  0.00
+ arrrinx          |     |   2 |     2 |  0.00
+ askrastins       |   2 |     |     2 |  0.00
+ azembassy_lv     |     |   2 |     2 |  0.00
+ boborotenj       |     |   2 |     2 |  0.00
+ brevings         |   2 |     |     2 |  0.00
+ buvservissa13lv  |   2 |     |     2 |  0.00
+ cenkurito        |   2 |     |     2 |  0.00
+ chococatKS       |     |   2 |     2 |  0.00
+ comicdafak       |   2 |     |     2 |  0.00
+ dambrovskaya     |     |   2 |     2 |  0.00
+ dancedeets       |   2 |     |     2 |  0.00
+ danielqino       |     |   2 |     2 |  0.00
+ diana11122       |   2 |     |     2 |  0.00
+ dinars_k         |   2 |     |     2 |  0.00
+ djedveto         |   2 |     |     2 |  0.00
+ domuskapis       |   2 |     |     2 |  0.00
+ egliitis         |   2 |     |     2 |  0.00
+ elittesport      |   2 |     |     2 |  0.00
+ empathedxpa      |   2 |     |     2 |  0.00
+ evita_purina     |   2 |     |     2 |  0.00
+ extazy1989       |   2 |     |     2 |  0.00
+ fjodorovs91      |   2 |     |     2 |  0.00
+ freidace         |   2 |     |     2 |  0.00
+ gintsfeders      |   2 |     |     2 |  0.00
+ harisgaris       |   2 |     |     2 |  0.00
  imusernameless   |   2 |     |     2 |  0.00
- zips123          |   2 |     |     2 |  0.00
+ irihamariha      |     |   2 |     2 |  0.00
+ irts1            |   2 |     |     2 |  0.00
+ jtaurens         |   2 |     |     2 |  0.00
+ juliussour       |   2 |     |     2 |  0.00
+ karliskarklinsh  |   2 |     |     2 |  0.00
+ kasprs           |   2 |     |     2 |  0.00
+ kazus130445      |   2 |     |     2 |  0.00
+ kjuumanis        |   2 |     |     2 |  0.00
+ kka_vienalga     |   2 |     |     2 |  0.00
+ kocis11          |   2 |     |     2 |  0.00
+ koroladominika2  |     |   2 |     2 |  0.00
+ kristinecakare   |   2 |     |     2 |  0.00
+ ksenijaljvova    |     |   2 |     2 |  0.00
+ l_pantelejeva    |     |   2 |     2 |  0.00
+ leonids3211      |   2 |     |     2 |  0.00
+ levushkan        |     |   2 |     2 |  0.00
+ liene_b          |   2 |     |     2 |  0.00
+ lilucis_14       |   2 |     |     2 |  0.00
+ lisina_x         |     |   2 |     2 |  0.00
  lolita_cigane    |   2 |     |     2 |  0.00
- GRozenbergs      |   2 |     |     2 |  0.00
  lounge33riga     |   2 |     |     2 |  0.00
- skatieslatvija   |   1 |     |     1 |  0.00
- smilsaraaja      |   1 |     |     1 |  0.00
- smuidreanna18    |   1 |     |     1 |  0.00
- smutkonn         |     |   1 |     1 |  0.00
- sprinterz        |     |   1 |     1 |  0.00
- startoursLV      |   1 |     |     1 |  0.00
- supemaris1       |   1 |     |     1 |  0.00
- superkauss       |   1 |     |     1 |  0.00
- tfjackj310       |   1 |     |     1 |  0.00
- theagnisb        |   1 |     |     1 |  0.00
- thisbitchwithme  |     |   1 |     1 |  0.00
- tmbvolk99        |     |   1 |     1 |  0.00
- ugunsdzeseji     |   1 |     |     1 |  0.00
- uldisaugulis     |   1 |     |     1 |  0.00
- uldzhs           |   1 |     |     1 |  0.00
- unreal_world_    |   1 |     |     1 |  0.00
- uuandersone      |   1 |     |     1 |  0.00
- uzhosnah         |   1 |     |     1 |  0.00
- uzliime          |   1 |     |     1 |  0.00
- v_pankratov      |     |   1 |     1 |  0.00
- valtersb         |   1 |     |     1 |  0.00
- valtersunrapa    |   1 |     |     1 |  0.00
- viedis           |   1 |     |     1 |  0.00
- viktori5000      |   1 |     |     1 |  0.00
- vilnisr          |   1 |     |     1 |  0.00
- vismortua        |   1 |     |     1 |  0.00
- vitocka3         |   1 |     |     1 |  0.00
- vladikom55       |     |   1 |     1 |  0.00
- xcomnospam1      |     |   1 |     1 |  0.00
- xeliihax         |   1 |     |     1 |  0.00
- zakainis         |   1 |     |     1 |  0.00
- zandarts         |   1 |     |     1 |  0.00
- zaneneilande     |   1 |     |     1 |  0.00
- zanuuxx          |   1 |     |     1 |  0.00
- zapilka          |   1 |     |     1 |  0.00
- zhanete          |   1 |     |     1 |  0.00
- zhozesedanova20  |     |   1 |     1 |  0.00
- zondaks          |   1 |     |     1 |  0.00
- zviedrs123       |   1 |     |     1 |  0.00
- Stafinjs         |   1 |     |     1 |  0.00
+ marakanka_alex   |     |   2 |     2 |  0.00
+ marchello411     |   2 |     |     2 |  0.00
+ martins_tilcens  |   2 |     |     2 |  0.00
+ marupesuznemeji  |   2 |     |     2 |  0.00
+ miculis          |   2 |     |     2 |  0.00
+ nikuuusja1111    |     |   2 |     2 |  0.00
+ nizivijs         |   2 |     |     2 |  0.00
+ official_piztwi  |     |   2 |     2 |  0.00
+ okertanov        |     |   2 |     2 |  0.00
+ olegshindogins   |   2 |     |     2 |  0.00
+ patkovskalaura   |   2 |     |     2 |  0.00
+ pavitola_dana    |   2 |     |     2 |  0.00
+ personalatlase   |   2 |     |     2 |  0.00
+ peterisprikulis  |   2 |     |     2 |  0.00
+ podze            |   2 |     |     2 |  0.00
+ pol1nkv          |     |   2 |     2 |  0.00
+ polinas30410324  |     |   2 |     2 |  0.00
+ projektukoord    |   2 |     |     2 |  0.00
+ riakrisha        |     |   2 |     2 |  0.00
+ ricinss1         |   2 |     |     2 |  0.00
+ rizanka          |   2 |     |     2 |  0.00
+ roberts_putnis   |   2 |     |     2 |  0.00
+ rokijss          |   2 |     |     2 |  0.00
+ scisorssss       |   2 |     |     2 |  0.00
+ sofija103        |     |   2 |     2 |  0.00
+ taapati_         |   2 |     |     2 |  0.00
+ trakaablondaa    |   2 |     |     2 |  0.00
+ vlmxs            |   2 |     |     2 |  0.00
+ winnijpooh       |   2 |     |     2 |  0.00
+ wtfisellie       |     |   2 |     2 |  0.00
+ yuyukinar        |     |   2 |     2 |  0.00
+ zais_            |   2 |     |     2 |  0.00
+ zhdanovss        |     |   2 |     2 |  0.00
+ zimuliiine       |   2 |     |     2 |  0.00
+ zips123          |   2 |     |     2 |  0.00
+ 00asket00        |     |   1 |     1 |  0.00
  05etonerazmer    |     |   1 |     1 |  0.00
  080364grs        |     |   1 |     1 |  0.00
  0_RAV_0          |   1 |     |     1 |  0.00
@@ -601,10 +562,12 @@
  987Igor          |   1 |     |     1 |  0.00
  @@EDU            |   1 |     |     1 |  0.00
  @@SCHOOL         |   1 |     |     1 |  0.00
+ @latvijas_armija |   1 |     |     1 |  0.00
  @ltrk_info       |   1 |     |     1 |  0.00
  @marupesvsk      |   1 |     |     1 |  0.00
  @maximaveikals   |   1 |     |     1 |  0.00
  @satorilv        |   1 |     |     1 |  0.00
+ @ugunsdzeseji    |   1 |     |     1 |  0.00
  @vas_ldz         |   1 |     |     1 |  0.00
  @zebra_tv        |   1 |     |     1 |  0.00
  @zeltazivtina    |   1 |     |     1 |  0.00
@@ -642,6 +605,7 @@
  Atrilrad         |   1 |     |     1 |  0.00
  Attist_sadarb    |   1 |     |     1 |  0.00
  Aviolv           |   1 |     |     1 |  0.00
+ Bahzers          |   1 |     |     1 |  0.00
  BarILoveYou      |   1 |     |     1 |  0.00
  BasicEngine      |   1 |     |     1 |  0.00
  BasicVikka       |   1 |     |     1 |  0.00
@@ -770,7 +734,6 @@
  LabakDzivot      |   1 |     |     1 |  0.00
  Lainiiitee       |   1 |     |     1 |  0.00
  LatvijasRadio2   |   1 |     |     1 |  0.00
- Latvijas_armija  |   1 |     |     1 |  0.00
  Laumaryn         |   1 |     |     1 |  0.00
  LauraValuta      |   1 |     |     1 |  0.00
  LaurisBriekman   |   1 |     |     1 |  0.00
@@ -875,6 +838,7 @@
  Sac0bJarver      |   1 |     |     1 |  0.00
  Sandis1997       |   1 |     |     1 |  0.00
  SandraSandrish   |   1 |     |     1 |  0.00
+ SendijaBurka     |   1 |     |     1 |  0.00
  SergeyMikhaelov  |     |   1 |     1 |  0.00
  Sievux           |   1 |     |     1 |  0.00
  Sigita133        |   1 |     |     1 |  0.00
@@ -883,7 +847,7 @@
  Sindija_meluska  |   1 |     |     1 |  0.00
  Space0Writer     |   1 |     |     1 |  0.00
  SpinFM90         |   1 |     |     1 |  0.00
- 00asket00        |     |   1 |     1 |  0.00
+ Stafinjs         |   1 |     |     1 |  0.00
  TBreazy__        |   1 |     |     1 |  0.00
  TautasnamsTalsi  |   1 |     |     1 |  0.00
  TeaPotInRiga     |     |   1 |     1 |  0.00
@@ -1141,5 +1105,43 @@
  sinka65          |   1 |     |     1 |  0.00
  sirloly          |   1 |     |     1 |  0.00
  sitjano          |   1 |     |     1 |  0.00
-(1141 rows)
+ skatieslatvija   |   1 |     |     1 |  0.00
+ smilsaraaja      |   1 |     |     1 |  0.00
+ smuidreanna18    |   1 |     |     1 |  0.00
+ smutkonn         |     |   1 |     1 |  0.00
+ sprinterz        |     |   1 |     1 |  0.00
+ startoursLV      |   1 |     |     1 |  0.00
+ supemaris1       |   1 |     |     1 |  0.00
+ superkauss       |   1 |     |     1 |  0.00
+ tfjackj310       |   1 |     |     1 |  0.00
+ theagnisb        |   1 |     |     1 |  0.00
+ thisbitchwithme  |     |   1 |     1 |  0.00
+ tmbvolk99        |     |   1 |     1 |  0.00
+ uldisaugulis     |   1 |     |     1 |  0.00
+ uldzhs           |   1 |     |     1 |  0.00
+ unreal_world_    |   1 |     |     1 |  0.00
+ uuandersone      |   1 |     |     1 |  0.00
+ uzhosnah         |   1 |     |     1 |  0.00
+ uzliime          |   1 |     |     1 |  0.00
+ v_pankratov      |     |   1 |     1 |  0.00
+ valtersb         |   1 |     |     1 |  0.00
+ valtersunrapa    |   1 |     |     1 |  0.00
+ viedis           |   1 |     |     1 |  0.00
+ viktori5000      |   1 |     |     1 |  0.00
+ vilnisr          |   1 |     |     1 |  0.00
+ vismortua        |   1 |     |     1 |  0.00
+ vitocka3         |   1 |     |     1 |  0.00
+ vladikom55       |     |   1 |     1 |  0.00
+ xcomnospam1      |     |   1 |     1 |  0.00
+ xeliihax         |   1 |     |     1 |  0.00
+ zakainis         |   1 |     |     1 |  0.00
+ zandarts         |   1 |     |     1 |  0.00
+ zaneneilande     |   1 |     |     1 |  0.00
+ zanuuxx          |   1 |     |     1 |  0.00
+ zapilka          |   1 |     |     1 |  0.00
+ zhanete          |   1 |     |     1 |  0.00
+ zhozesedanova20  |     |   1 |     1 |  0.00
+ zondaks          |   1 |     |     1 |  0.00
+ zviedrs123       |   1 |     |     1 |  0.00
+(1143 rows)
 

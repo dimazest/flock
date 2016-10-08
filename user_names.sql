@@ -29,4 +29,4 @@ from crosstab(
     $$
 )
 as final_result(screen_name text, lv bigint, ru bigint)
-order by score desc, total desc
+order by score desc, total desc, screen_name

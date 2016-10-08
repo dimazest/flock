@@ -28,5 +28,5 @@ from crosstab(
     select distinct tweet->>'lang' from tweet order by 1
     $$
 )
-as final_result(mention text, lv bigint, ru bigint)
-order by score desc, total desc;
+as final_result(user_mention text, lv bigint, ru bigint)
+order by score desc, total desc, user_mention;
