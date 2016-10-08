@@ -21,11 +21,12 @@ from crosstab(
 	tweet->>'lang' as lang,
 	count(*) as count
 	from tweet, jsonb_array_elements(features->'user_mentions') user_mention
+    where tweet->>'lang' in ('en', 'ru', 'lv')
 	group by user_mention, lang
     order by 1
     $$,
     $$
-    select distinct tweet->>'lang' from tweet order by 1
+    select distinct tweet->>'lang' from tweet where tweet->>'lang' in ('en', 'ru', 'lv') order by 1
     $$
 )
 as final_result(user_mention text, en bigint, lv bigint, ru bigint)

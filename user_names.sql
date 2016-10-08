@@ -25,7 +25,8 @@ from crosstab(
 	order by 1;
     $$,
     $$
-    select distinct tweet->>'lang' from tweet order by 1
+    select distinct tweet->>'lang' from tweet where tweet->>'lang' in ('en', 'ru', 'lv')
+ order by 1
     $$
 )
 as final_result(screen_name text, en bigint, lv bigint, ru bigint)
