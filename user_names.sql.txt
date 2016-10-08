@@ -4,34 +4,37 @@ Line style is unicode.
 ──────────────────┼─────┼─────┼───────┼───────
  AlferjevaJ       │   2 │   2 │     4 │  0.50
  sashasuhanov     │   2 │   2 │     4 │  0.50
+ JuljansK         │   1 │   1 │     2 │  0.50
  _Yurochka_       │   1 │   1 │     2 │  0.50
  janccik          │   1 │   1 │     2 │  0.50
+ @@TVNET💬         │   4 │   5 │     9 │  0.44
  @@LIB            │  13 │  10 │    23 │  0.43
  @latgalescb      │  13 │  10 │    23 │  0.43
- @@DELFI💬         │ 136 │  81 │   217 │  0.37
+ @@APOLLO💬        │   3 │   5 │     8 │  0.38
+ @@DELFI💬         │ 141 │  84 │   225 │  0.37
  Arkadyeazyyolo   │   1 │   2 │     3 │  0.33
  Barerotic        │   2 │   1 │     3 │  0.33
- @@MEDIA          │ 397 │ 171 │   568 │  0.30
+ @@MEDIA          │ 434 │ 184 │   618 │  0.30
  AKMshooter       │   3 │   1 │     4 │  0.25
  nicole_an_moroz  │   9 │  38 │    47 │  0.19
- @@MIXNEWS💬       │  13 │  64 │    77 │  0.17
- @@LSM-TV         │ 120 │  21 │   141 │  0.15
+ @@MIXNEWS💬       │  13 │  66 │    79 │  0.16
+ @@LSM-TV         │ 121 │  21 │   142 │  0.15
  WizyWizy         │  22 │   4 │    26 │  0.15
  yournichkaa      │   1 │   6 │     7 │  0.14
  arinuwka4        │   8 │   1 │     9 │  0.11
- @@LSM            │ 241 │  26 │   267 │  0.10
+ @@LSM            │ 242 │  26 │   268 │  0.10
  @@LSM-RADIO      │  29 │   3 │    32 │  0.09
  @@LSM-WEB        │  92 │   2 │    94 │  0.02
  @@LSM.LV💬        │  85 │   2 │    87 │  0.02
- @delfilv         │ 136 │     │   136 │  0.00
+ @delfilv         │ 141 │     │   141 │  0.00
  pimpin_is_hard   │     │ 130 │   130 │  0.00
  @lsmlv           │  85 │     │    85 │  0.00
- @rusdelfi_lv     │     │  81 │    81 │  0.00
- LaukuSpamere     │  81 │     │    81 │  0.00
+ @rusdelfi_lv     │     │  84 │    84 │  0.00
+ LaukuSpamere     │  84 │     │    84 │  0.00
  prayforwhatsy    │     │  68 │    68 │  0.00
+ @mixnews_lv      │     │  66 │    66 │  0.00
  AlexanHawk       │     │  65 │    65 │  0.00
- @mixnews_lv      │     │  64 │    64 │  0.00
- @@GOV            │  53 │     │    53 │  0.00
+ @@GOV            │  58 │     │    58 │  0.00
  @@COMM           │  52 │     │    52 │  0.00
  @ltvzinas        │  49 │     │    49 │  0.00
  IlzeJaunberga    │  48 │     │    48 │  0.00
@@ -48,11 +51,11 @@ Line style is unicode.
  RealJeyHoran     │  25 │     │    25 │  0.00
  TusinwRiga       │     │  24 │    24 │  0.00
  rutenbergsdaini  │  23 │     │    23 │  0.00
+ Eleonooraa       │  22 │     │    22 │  0.00
  PhanAtDeDisco    │  22 │     │    22 │  0.00
  @ltv7rus         │     │  21 │    21 │  0.00
  Enkurss          │  21 │     │    21 │  0.00
  SigmaLS8361      │  21 │     │    21 │  0.00
- Eleonooraa       │  20 │     │    20 │  0.00
  valerijasamanta  │  19 │     │    19 │  0.00
  viktorpavlov10   │     │  19 │    19 │  0.00
  GMeluskans       │  17 │     │    17 │  0.00
@@ -60,56 +63,64 @@ Line style is unicode.
  jacky_spoki      │  16 │     │    16 │  0.00
  mnimmum          │     │  16 │    16 │  0.00
  LaurisLiepa      │  15 │     │    15 │  0.00
+ VDruse           │  15 │     │    15 │  0.00
  dovjatinsh       │  15 │     │    15 │  0.00
  tmrshv           │     │  15 │    15 │  0.00
  @lrzinas         │  14 │     │    14 │  0.00
- VDruse           │  14 │     │    14 │  0.00
+ @ltvsports       │  14 │     │    14 │  0.00
  @latmixnews      │  13 │     │    13 │  0.00
  @latvijasradio1  │  13 │     │    13 │  0.00
- @ltvsports       │  13 │     │    13 │  0.00
  SkaidriteKr      │  12 │     │    12 │  0.00
+ anechka159       │     │  12 │    12 │  0.00
  baidekalna       │  12 │     │    12 │  0.00
  io7246           │  12 │     │    12 │  0.00
  konkovochka      │     │  12 │    12 │  0.00
  summerrr212      │     │  12 │    12 │  0.00
- anechka159       │     │  11 │    11 │  0.00
+ Vinotava         │  11 │     │    11 │  0.00
  belka_shi        │     │  11 │    11 │  0.00
  tomszvirbulis    │  11 │     │    11 │  0.00
  Badshinigami     │     │  10 │    10 │  0.00
+ Klasika_LR3      │  10 │     │    10 │  0.00
  Nagla114         │  10 │     │    10 │  0.00
  andrisgrafs      │  10 │     │    10 │  0.00
  dANILIWE         │     │  10 │    10 │  0.00
  dzimmijs13       │  10 │     │    10 │  0.00
+ janissport       │  10 │     │    10 │  0.00
+ joaigars1        │  10 │     │    10 │  0.00
  koleegjis        │  10 │     │    10 │  0.00
  nikusja20002     │     │  10 │    10 │  0.00
+ sikadaksa        │  10 │     │    10 │  0.00
  tolstovs1        │  10 │     │    10 │  0.00
  18_InCe          │   9 │     │     9 │  0.00
  @@FIN            │   9 │     │     9 │  0.00
  @swedbanklatvia  │   9 │     │     9 │  0.00
- Klasika_LR3      │   9 │     │     9 │  0.00
  TheDinamo777     │     │   9 │     9 │  0.00
- Vinotava         │   9 │     │     9 │  0.00
  aaangelinaaa_    │     │   9 │     9 │  0.00
  dimantinjs       │   9 │     │     9 │  0.00
  ernestsd         │   9 │     │     9 │  0.00
+ impro_celo       │   9 │     │     9 │  0.00
  kalisa_d         │     │   9 │     9 │  0.00
  nostradamusboy   │   9 │     │     9 │  0.00
  @manslmt         │   8 │     │     8 │  0.00
+ A3tris           │   8 │     │     8 │  0.00
  AndrisTaurins    │   8 │     │     8 │  0.00
  Dzhaan420        │     │   8 │     8 │  0.00
+ Edijs31          │   8 │     │     8 │  0.00
  HunnyTunny       │     │   8 │     8 │  0.00
  Ilza4ka          │   8 │     │     8 │  0.00
  Kagamiii         │     │   8 │     8 │  0.00
  SaldusPB         │   8 │     │     8 │  0.00
  akuna_banana     │     │   8 │     8 │  0.00
  caramelllee      │   8 │     │     8 │  0.00
- joaigars1        │   8 │     │     8 │  0.00
+ cathrine___b     │     │   8 │     8 │  0.00
  kajbumba         │   8 │     │     8 │  0.00
  ksykorolj        │     │   8 │     8 │  0.00
+ lenabelaja1      │   8 │     │     8 │  0.00
+ plushsnake       │     │   8 │     8 │  0.00
  vasilevskaaa     │     │   8 │     8 │  0.00
  @100gkulturas    │   7 │     │     7 │  0.00
+ @kasjauns        │   7 │     │     7 │  0.00
  @rigassatiksme_  │   7 │     │     7 │  0.00
- Edijs31          │   7 │     │     7 │  0.00
  Inita14868431    │   7 │     │     7 │  0.00
  Luize80          │     │   7 │     7 │  0.00
  Lukstins88       │   7 │     │     7 │  0.00
@@ -119,14 +130,17 @@ Line style is unicode.
  ainarsbr11       │   7 │     │     7 │  0.00
  alinaamalinaa    │     │   7 │     7 │  0.00
  andrejko_epta    │     │   7 │     7 │  0.00
- cathrine___b     │     │   7 │     7 │  0.00
  gogodancerbi     │   7 │     │     7 │  0.00
  naservere        │     │   7 │     7 │  0.00
+ nicoleprofileee  │     │   7 │     7 │  0.00
  oskudra          │   7 │     │     7 │  0.00
  rozepodolska     │   7 │     │     7 │  0.00
  sikaanna         │   7 │     │     7 │  0.00
- sikadaksa        │   7 │     │     7 │  0.00
+ @@RADIO          │   6 │     │     6 │  0.00
  @@RETAIL         │   6 │     │     6 │  0.00
+ @breakinglv      │   6 │     │     6 │  0.00
+ @la_lv           │   6 │     │     6 │  0.00
+ @latvijas_pasts  │   6 │     │     6 │  0.00
  CelminsGints     │   6 │     │     6 │  0.00
  DanaMusoyan      │     │   6 │     6 │  0.00
  Deivsaa          │   6 │     │     6 │  0.00
@@ -142,23 +156,26 @@ Line style is unicode.
  Rimants4         │   6 │     │     6 │  0.00
  Toews_82         │     │   6 │     6 │  0.00
  VicctoriaDm      │     │   6 │     6 │  0.00
+ VienradzisR      │   6 │     │     6 │  0.00
  alice_roudzite   │     │   6 │     6 │  0.00
+ bonuks30         │   6 │     │     6 │  0.00
  edgarszeiza      │   6 │     │     6 │  0.00
  i_v_e_t_a        │   6 │     │     6 │  0.00
  janisburba       │   6 │     │     6 │  0.00
  kristtyaaa       │     │   6 │     6 │  0.00
  linduliite       │   6 │     │     6 │  0.00
  mururrurrr       │     │   6 │     6 │  0.00
- nicoleprofileee  │     │   6 │     6 │  0.00
  polik2211        │     │   6 │     6 │  0.00
  pulks            │   6 │     │     6 │  0.00
  skraipsts        │   6 │     │     6 │  0.00
  snezhkyn         │     │   6 │     6 │  0.00
  ugriinis         │   6 │     │     6 │  0.00
  vitali_by        │     │   6 │     6 │  0.00
+ @@TV3            │   5 │     │     5 │  0.00
  @brivibas36      │   5 │     │     5 │  0.00
- @latvijas_pasts  │   5 │     │     5 │  0.00
  @ltvpanorama     │   5 │     │     5 │  0.00
+ @rusapollo       │     │   5 │     5 │  0.00
+ @tvnet_rus       │     │   5 │     5 │  0.00
  AlisaSolovjova   │     │   5 │     5 │  0.00
  Baastina         │     │   5 │     5 │  0.00
  Babyroom_lv      │   5 │     │     5 │  0.00
@@ -177,7 +194,6 @@ Line style is unicode.
  StNicole1        │     │   5 │     5 │  0.00
  THUNDERFROST1    │     │   5 │     5 │  0.00
  VAKSJA_          │     │   5 │     5 │  0.00
- VienradzisR      │   5 │     │     5 │  0.00
  Zavileiskis      │   5 │     │     5 │  0.00
  _JusiY_          │   5 │     │     5 │  0.00
  adeniins         │   5 │     │     5 │  0.00
@@ -186,22 +202,25 @@ Line style is unicode.
  dudiite123       │   5 │     │     5 │  0.00
  fidsja_sis       │   5 │     │     5 │  0.00
  gaitisg          │   5 │     │     5 │  0.00
- impro_celo       │   5 │     │     5 │  0.00
- janissport       │   5 │     │     5 │  0.00
+ irifann12        │     │   5 │     5 │  0.00
  jenss1983        │   5 │     │     5 │  0.00
  katrina9902      │     │   5 │     5 │  0.00
  merigor777       │     │   5 │     5 │  0.00
- plushsnake       │     │   5 │     5 │  0.00
  polesik98        │     │   5 │     5 │  0.00
  saliktenis       │   5 │     │     5 │  0.00
  sapnisiem        │   5 │     │     5 │  0.00
  vitaamiins       │   5 │     │     5 │  0.00
  zaneolina        │   5 │     │     5 │  0.00
+ zilonmate        │   5 │     │     5 │  0.00
  zuzan4iks        │   5 │     │     5 │  0.00
- @breakinglv      │   4 │     │     4 │  0.00
+ 1wSvens          │   4 │     │     4 │  0.00
+ @@CULTURE        │   4 │     │     4 │  0.00
  @lsmdzivesstils  │   4 │     │     4 │  0.00
  @mansrimi        │   4 │     │     4 │  0.00
+ @radioswh        │   4 │     │     4 │  0.00
  @ritapanorama    │   4 │     │     4 │  0.00
+ @tv3lv           │   4 │     │     4 │  0.00
+ @tvnet_portals   │   4 │     │     4 │  0.00
  AdvokateKrista   │   4 │     │     4 │  0.00
  AijaMelle        │   4 │     │     4 │  0.00
  Aljaa_1808       │     │   4 │     4 │  0.00
@@ -216,7 +235,10 @@ Line style is unicode.
  IamMartyna       │   4 │     │     4 │  0.00
  KSSLHH           │     │   4 │     4 │  0.00
  Kalvis_Egle      │   4 │     │     4 │  0.00
+ KasparsLuksis    │   4 │     │     4 │  0.00
  LaurisReiniks    │   4 │     │     4 │  0.00
+ LigaaaaaaD       │   4 │     │     4 │  0.00
+ LucsNeuss        │   4 │     │     4 │  0.00
  MaartinsKa       │   4 │     │     4 │  0.00
  Mazachiksee      │   4 │     │     4 │  0.00
  Minciiicc        │   4 │     │     4 │  0.00
@@ -225,9 +247,11 @@ Line style is unicode.
  Raivis_Spalvens  │   4 │     │     4 │  0.00
  Runcis_Zabakos   │   4 │     │     4 │  0.00
  SANDISGABRIELS2  │   4 │     │     4 │  0.00
+ SaldusRadio      │   4 │     │     4 │  0.00
  TheLauma         │   4 │     │     4 │  0.00
  UgisB            │   4 │     │     4 │  0.00
  VioJankova       │   4 │     │     4 │  0.00
+ andrispp         │   4 │     │     4 │  0.00
  arturalexeev     │     │   4 │     4 │  0.00
  atjaunotiesisku  │   4 │     │     4 │  0.00
  barbiegurlxx_    │   4 │     │     4 │  0.00
@@ -239,6 +263,7 @@ Line style is unicode.
  janis_dreimanis  │   4 │     │     4 │  0.00
  karsupavelnieks  │   4 │     │     4 │  0.00
  lastovskaya__    │     │   4 │     4 │  0.00
+ lerocko_         │     │   4 │     4 │  0.00
  lienishhh        │   4 │     │     4 │  0.00
  marry_woods      │     │   4 │     4 │  0.00
  mehanikslabs     │   4 │     │     4 │  0.00
@@ -251,11 +276,11 @@ Line style is unicode.
  wesservic        │     │   4 │     4 │  0.00
  zarinstoms       │   4 │     │     4 │  0.00
  zhamalov_        │     │   4 │     4 │  0.00
- zilonmate        │   4 │     │     4 │  0.00
  zybr_D           │     │   4 │     4 │  0.00
- 1wSvens          │   3 │     │     3 │  0.00
  20006794         │     │   3 │     3 │  0.00
  5899339b0a334bf  │     │   3 │     3 │  0.00
+ @@CINEMA         │   3 │     │     3 │  0.00
+ @apollo_lv       │   3 │     │     3 │  0.00
  @latvijasradio4  │     │   3 │     3 │  0.00
  @lsmkultura      │   3 │     │     3 │  0.00
  APogodkina       │     │   3 │     3 │  0.00
@@ -278,26 +303,26 @@ Line style is unicode.
  JanisPolis       │   3 │     │     3 │  0.00
  JansIkes         │   3 │     │     3 │  0.00
  JurisZvirbulis   │   3 │     │     3 │  0.00
- KasparsLuksis    │   3 │     │     3 │  0.00
  Kipsalasbaseins  │   3 │     │     3 │  0.00
+ Krista_Baumane   │   3 │     │     3 │  0.00
  LatviesuCalis    │   3 │     │     3 │  0.00
  Liepkalns        │   3 │     │     3 │  0.00
- LigaaaaaaD       │   3 │     │     3 │  0.00
  Liigens          │   3 │     │     3 │  0.00
  LittleCocainum   │     │   3 │     3 │  0.00
- LucsNeuss        │   3 │     │     3 │  0.00
  MaijaBadune      │   3 │     │     3 │  0.00
+ Milana_Hreyman   │     │   3 │     3 │  0.00
  MonikaSarkane    │   3 │     │     3 │  0.00
  Monstrinjshhh    │   3 │     │     3 │  0.00
  Olj4ikk          │     │   3 │     3 │  0.00
  OlyBetLBL        │   3 │     │     3 │  0.00
  Olya1801         │     │   3 │     3 │  0.00
  Paurs            │   3 │     │     3 │  0.00
+ PyxlsApparel     │   3 │     │     3 │  0.00
+ RenarsKrigers    │   3 │     │     3 │  0.00
  RockSandis112    │   3 │     │     3 │  0.00
  RocknBerriesLv   │   3 │     │     3 │  0.00
  Rudzinrudis      │   3 │     │     3 │  0.00
  SVILPE           │   3 │     │     3 │  0.00
- SaldusRadio      │   3 │     │     3 │  0.00
  Sandijabu        │   3 │     │     3 │  0.00
  Sheins50         │   3 │     │     3 │  0.00
  Skots_           │   3 │     │     3 │  0.00
@@ -307,20 +332,17 @@ Line style is unicode.
  adri_iepur       │     │   3 │     3 │  0.00
  agnijajaja       │   3 │     │     3 │  0.00
  alisa_mayaa      │     │   3 │     3 │  0.00
- andrispp         │   3 │     │     3 │  0.00
  arsenijep        │   3 │     │     3 │  0.00
- bonuks30         │   3 │     │     3 │  0.00
  bukucis          │   3 │     │     3 │  0.00
  demonhog63       │   3 │     │     3 │  0.00
+ edgarskvitka     │   3 │     │     3 │  0.00
  egle_martins     │   3 │     │     3 │  0.00
  elina2455        │     │   3 │     3 │  0.00
  girtsgg          │   3 │     │     3 │  0.00
  hadesworld       │     │   3 │     3 │  0.00
  iivittis         │   3 │     │     3 │  0.00
- irifann12        │     │   3 │     3 │  0.00
  janauska         │   3 │     │     3 │  0.00
  juceklis         │   3 │     │     3 │  0.00
- lerocko_         │     │   3 │     3 │  0.00
  llauramu         │   3 │     │     3 │  0.00
  margrieta333     │     │   3 │     3 │  0.00
  marisjonovs      │   3 │     │     3 │  0.00
@@ -331,6 +353,7 @@ Line style is unicode.
  roadragemonkey   │   3 │     │     3 │  0.00
  rsmeltere        │     │   3 │     3 │  0.00
  sandragromova    │     │   3 │     3 │  0.00
+ scisorssss       │   3 │     │     3 │  0.00
  smss11           │   3 │     │     3 │  0.00
  sofija1151       │     │   3 │     3 │  0.00
  tatiana4598      │     │   3 │     3 │  0.00
@@ -342,15 +365,15 @@ Line style is unicode.
  vickyniclat      │     │   3 │     3 │  0.00
  vigants          │   3 │     │     3 │  0.00
  vitalijsiva      │   3 │     │     3 │  0.00
+ zhdanovss        │     │   3 │     3 │  0.00
  2kikii           │   2 │     │     2 │  0.00
  98Nata6a         │     │   2 │     2 │  0.00
- @@CINEMA         │   2 │     │     2 │  0.00
- @@CULTURE        │   2 │     │     2 │  0.00
+ @@DIENA          │   2 │     │     2 │  0.00
  @@LEISURE        │   2 │     │     2 │  0.00
  @@NILSUSAKOVS💬   │   2 │     │     2 │  0.00
- @@RADIO          │   2 │     │     2 │  0.00
  @@SHOPPING       │   2 │     │     2 │  0.00
  @csdd_lv         │   2 │     │     2 │  0.00
+ @dienalv         │   2 │     │     2 │  0.00
  @edgarsrinkevics │   2 │     │     2 │  0.00
  @forumcinemaslv  │   2 │     │     2 │  0.00
  @galleriariga    │   2 │     │     2 │  0.00
@@ -358,10 +381,12 @@ Line style is unicode.
  @krustpunkta     │   2 │     │     2 │  0.00
  @lsm_ru          │     │   2 │     2 │  0.00
  @nilsusakovs     │   2 │     │     2 │  0.00
- @radioswh        │   2 │     │     2 │  0.00
+ @nralv           │   2 │     │     2 │  0.00
+ @otkrito         │     │   2 │     2 │  0.00
  @rdsvc           │   2 │     │     2 │  0.00
  @rigaszoodarzs   │   2 │     │     2 │  0.00
  @tele2latvia     │   2 │     │     2 │  0.00
+ @valsts_policija │   2 │     │     2 │  0.00
  AVG_SP           │   2 │     │     2 │  0.00
  Abolits123       │   2 │     │     2 │  0.00
  AdidasMan1999    │   2 │     │     2 │  0.00
@@ -369,6 +394,7 @@ Line style is unicode.
  AlyLauveens      │   2 │     │     2 │  0.00
  Amanda_Pivarune  │   2 │     │     2 │  0.00
  Anastasia_kxx    │     │   2 │     2 │  0.00
+ Andrejs25481433  │   2 │     │     2 │  0.00
  AnsisEgle        │   2 │     │     2 │  0.00
  ApgadsJumava     │   2 │     │     2 │  0.00
  Babjors          │   2 │     │     2 │  0.00
@@ -390,10 +416,12 @@ Line style is unicode.
  Esmeraldddda     │   2 │     │     2 │  0.00
  FreimanePaula    │   2 │     │     2 │  0.00
  GRozenbergs      │   2 │     │     2 │  0.00
+ Gasbijs          │   2 │     │     2 │  0.00
  GatisZalitis     │   2 │     │     2 │  0.00
  GaumigsJoks      │   2 │     │     2 │  0.00
  HenrietaVerho    │   2 │     │     2 │  0.00
  I_hate_yourface  │   2 │     │     2 │  0.00
+ InraRubene       │   2 │     │     2 │  0.00
  JANISRIEKSTINSH  │   2 │     │     2 │  0.00
  Jancuxs007       │   2 │     │     2 │  0.00
  JanisIesalnieks  │   2 │     │     2 │  0.00
@@ -404,7 +432,6 @@ Line style is unicode.
  KingRosenthal    │   2 │     │     2 │  0.00
  Koknesesbibliot  │   2 │     │     2 │  0.00
  KrisjanisValter  │   2 │     │     2 │  0.00
- Krista_Baumane   │   2 │     │     2 │  0.00
  Kuzminska17      │   2 │     │     2 │  0.00
  LLBDup           │   2 │     │     2 │  0.00
  LVhandball       │   2 │     │     2 │  0.00
@@ -414,12 +441,12 @@ Line style is unicode.
  Loritaahl        │   2 │     │     2 │  0.00
  Lorklinika       │   2 │     │     2 │  0.00
  ManaBalss_rus    │     │   2 │     2 │  0.00
+ MaraMikelsone    │   2 │     │     2 │  0.00
  Marionetta9      │     │   2 │     2 │  0.00
  Mariss09615914   │   2 │     │     2 │  0.00
  MartinsBraslavs  │   2 │     │     2 │  0.00
  MegyDana         │   2 │     │     2 │  0.00
  MiksDukurs       │   2 │     │     2 │  0.00
- Milana_Hreyman   │     │   2 │     2 │  0.00
  Millumins        │   2 │     │     2 │  0.00
  MrParva          │     │   2 │     2 │  0.00
  Nadik99Nodja99   │     │   2 │     2 │  0.00
@@ -427,14 +454,15 @@ Line style is unicode.
  Nataliya_Yanush  │     │   2 │     2 │  0.00
  Nodusgordius     │   2 │     │     2 │  0.00
  Outbackt0ys      │   2 │     │     2 │  0.00
+ Paganel72        │     │   2 │     2 │  0.00
  Pandinja13       │   2 │     │     2 │  0.00
  PatverumsDM      │   2 │     │     2 │  0.00
  PavelsJurs       │   2 │     │     2 │  0.00
  PensisLV         │   2 │     │     2 │  0.00
  Pocins           │   2 │     │     2 │  0.00
+ ProRacers1995    │   2 │     │     2 │  0.00
  RastafarI__Smok  │   2 │     │     2 │  0.00
  ReinisKa         │   2 │     │     2 │  0.00
- RenarsKrigers    │   2 │     │     2 │  0.00
  Riga_Lara        │     │   2 │     2 │  0.00
  Rizhiks_Pizhiks  │   2 │     │     2 │  0.00
  Rolands_Pulins   │   2 │     │     2 │  0.00
@@ -450,6 +478,7 @@ Line style is unicode.
  Sportacentrs     │   2 │     │     2 │  0.00
  TE_Karaliste     │   2 │     │     2 │  0.00
  TM_FightingTeam  │   2 │     │     2 │  0.00
+ TalisEglitis     │   2 │     │     2 │  0.00
  Talis_L          │   2 │     │     2 │  0.00
  TarakanovaMc     │     │   2 │     2 │  0.00
  Tesmenjasmens    │   2 │     │     2 │  0.00
@@ -461,6 +490,7 @@ Line style is unicode.
  Yefimova08       │     │   2 │     2 │  0.00
  ZaneStulpina     │   2 │     │     2 │  0.00
  ZemniekuSaeima   │   2 │     │     2 │  0.00
+ _Ammm_           │   2 │     │     2 │  0.00
  _GAZDELIANI_     │     │   2 │     2 │  0.00
  _kalere          │   2 │     │     2 │  0.00
  a_valujevica     │   2 │     │     2 │  0.00
@@ -478,9 +508,11 @@ Line style is unicode.
  boborotenj       │     │   2 │     2 │  0.00
  brevings         │   2 │     │     2 │  0.00
  buvservissa13lv  │   2 │     │     2 │  0.00
+ cbuchanan27      │   2 │     │     2 │  0.00
  cenkurito        │   2 │     │     2 │  0.00
  chococatKS       │     │   2 │     2 │  0.00
  comicdafak       │   2 │     │     2 │  0.00
+ cult2follow      │     │   2 │     2 │  0.00
  dambrovskaya     │     │   2 │     2 │  0.00
  dancedeets       │   2 │     │     2 │  0.00
  danielqino       │     │   2 │     2 │  0.00
@@ -488,6 +520,7 @@ Line style is unicode.
  dinars_k         │   2 │     │     2 │  0.00
  djedveto         │   2 │     │     2 │  0.00
  domuskapis       │   2 │     │     2 │  0.00
+ edgars_roze      │     │   2 │     2 │  0.00
  egliitis         │   2 │     │     2 │  0.00
  elittesport      │   2 │     │     2 │  0.00
  empathedxpa      │   2 │     │     2 │  0.00
@@ -514,6 +547,7 @@ Line style is unicode.
  l_pantelejeva    │     │   2 │     2 │  0.00
  leonids3211      │   2 │     │     2 │  0.00
  levushkan        │     │   2 │     2 │  0.00
+ lianamok         │     │   2 │     2 │  0.00
  liene_b          │   2 │     │     2 │  0.00
  lilucis_14       │   2 │     │     2 │  0.00
  lisina_x         │     │   2 │     2 │  0.00
@@ -524,11 +558,13 @@ Line style is unicode.
  martins_tilcens  │   2 │     │     2 │  0.00
  marupesuznemeji  │   2 │     │     2 │  0.00
  miculis          │   2 │     │     2 │  0.00
+ minka221         │   2 │     │     2 │  0.00
  nikuuusja1111    │     │   2 │     2 │  0.00
  nizivijs         │   2 │     │     2 │  0.00
  official_piztwi  │     │   2 │     2 │  0.00
  okertanov        │     │   2 │     2 │  0.00
  olegshindogins   │   2 │     │     2 │  0.00
+ oskarsvolts      │   2 │     │     2 │  0.00
  patkovskalaura   │   2 │     │     2 │  0.00
  pavitola_dana    │   2 │     │     2 │  0.00
  personalatlase   │   2 │     │     2 │  0.00
@@ -537,12 +573,13 @@ Line style is unicode.
  pol1nkv          │     │   2 │     2 │  0.00
  polinas30410324  │     │   2 │     2 │  0.00
  projektukoord    │   2 │     │     2 │  0.00
+ pxnkx7sos        │   2 │     │     2 │  0.00
  riakrisha        │     │   2 │     2 │  0.00
  ricinss1         │   2 │     │     2 │  0.00
  rizanka          │   2 │     │     2 │  0.00
  roberts_putnis   │   2 │     │     2 │  0.00
  rokijss          │   2 │     │     2 │  0.00
- scisorssss       │   2 │     │     2 │  0.00
+ sandradiezina    │   2 │     │     2 │  0.00
  sofija103        │     │   2 │     2 │  0.00
  taapati_         │   2 │     │     2 │  0.00
  trakaablondaa    │   2 │     │     2 │  0.00
@@ -551,7 +588,6 @@ Line style is unicode.
  wtfisellie       │     │   2 │     2 │  0.00
  yuyukinar        │     │   2 │     2 │  0.00
  zais_            │   2 │     │     2 │  0.00
- zhdanovss        │     │   2 │     2 │  0.00
  zimuliiine       │   2 │     │     2 │  0.00
  zips123          │   2 │     │     2 │  0.00
  00asket00        │     │   1 │     1 │  0.00
@@ -563,19 +599,29 @@ Line style is unicode.
  5516984          │     │   1 │     1 │  0.00
  63Kostas         │     │   1 │     1 │  0.00
  987Igor          │   1 │     │     1 │  0.00
+ @1bknews         │     │   1 │     1 │  0.00
  @@EDU            │   1 │     │     1 │  0.00
  @@SCHOOL         │   1 │     │     1 │  0.00
+ @dailesteatris   │   1 │     │     1 │  0.00
+ @kinogalerija    │   1 │     │     1 │  0.00
  @latvijas_armija │   1 │     │     1 │  0.00
  @ltrk_info       │   1 │     │     1 │  0.00
+ @lv_portals      │   1 │     │     1 │  0.00
  @marupesvsk      │   1 │     │     1 │  0.00
  @maximaveikals   │   1 │     │     1 │  0.00
+ @radioswhrock    │   1 │     │     1 │  0.00
+ @radiotev        │   1 │     │     1 │  0.00
  @satorilv        │   1 │     │     1 │  0.00
+ @spikeri         │   1 │     │     1 │  0.00
+ @tv3zinas        │   1 │     │     1 │  0.00
  @ugunsdzeseji    │   1 │     │     1 │  0.00
  @vas_ldz         │   1 │     │     1 │  0.00
+ @vkontrole       │   1 │     │     1 │  0.00
  @zebra_tv        │   1 │     │     1 │  0.00
  @zeltazivtina    │   1 │     │     1 │  0.00
  AAS_Baltikums    │   1 │     │     1 │  0.00
  ARomanovnaM      │     │   1 │     1 │  0.00
+ AdlereB          │   1 │     │     1 │  0.00
  Afanasjevv       │   1 │     │     1 │  0.00
  AgneseDrunka     │   1 │     │     1 │  0.00
  AgneseLace       │   1 │     │     1 │  0.00
@@ -594,7 +640,6 @@ Line style is unicode.
  Anarhists        │   1 │     │     1 │  0.00
  AnceMikelsone    │   1 │     │     1 │  0.00
  AndreeBravo      │   1 │     │     1 │  0.00
- Andrejs25481433  │   1 │     │     1 │  0.00
  AneteZatirka     │   1 │     │     1 │  0.00
  AnnaFoma         │   1 │     │     1 │  0.00
  Anorete          │   1 │     │     1 │  0.00
@@ -638,6 +683,7 @@ Line style is unicode.
  Dzimumkoks       │   1 │     │     1 │  0.00
  ECL_PSE          │   1 │     │     1 │  0.00
  EGoizane         │   1 │     │     1 │  0.00
+ EdgarsChatmen32  │   1 │     │     1 │  0.00
  EdgarsGaross     │   1 │     │     1 │  0.00
  EdgarsMarkovs    │   1 │     │     1 │  0.00
  Edijs999         │   1 │     │     1 │  0.00
@@ -679,6 +725,7 @@ Line style is unicode.
  GrinbergaAnna    │   1 │     │     1 │  0.00
  GunaSkangale     │   1 │     │     1 │  0.00
  Happy_ArtMuseum  │   1 │     │     1 │  0.00
+ Henrijs_F        │   1 │     │     1 │  0.00
  HmelovaLiza      │     │   1 │     1 │  0.00
  HuaweiMobileLV   │   1 │     │     1 │  0.00
  IMilovs          │     │   1 │     1 │  0.00
@@ -691,7 +738,6 @@ Line style is unicode.
  IngaAntane       │   1 │     │     1 │  0.00
  Ingrida_Avotina  │   1 │     │     1 │  0.00
  InitaKresa       │   1 │     │     1 │  0.00
- InraRubene       │   1 │     │     1 │  0.00
  IntarsBusulis    │   1 │     │     1 │  0.00
  Intrac_Latvija   │   1 │     │     1 │  0.00
  IrinaDmitrevna   │     │   1 │     1 │  0.00
@@ -709,7 +755,6 @@ Line style is unicode.
  Jezebel2004      │   1 │     │     1 │  0.00
  Jorens           │   1 │     │     1 │  0.00
  JudaFox123       │   1 │     │     1 │  0.00
- JuljansK         │   1 │     │     1 │  0.00
  JurisLi          │   1 │     │     1 │  0.00
  Jurjite          │   1 │     │     1 │  0.00
  KBlumberga       │   1 │     │     1 │  0.00
@@ -749,6 +794,7 @@ Line style is unicode.
  LilKateSODMG     │   1 │     │     1 │  0.00
  Linciiis         │   1 │     │     1 │  0.00
  LivanuTIC        │   1 │     │     1 │  0.00
+ Lokfjurer        │   1 │     │     1 │  0.00
  LolitLolita      │   1 │     │     1 │  0.00
  LuKangOMG        │     │   1 │     1 │  0.00
  Lupatniece       │     │   1 │     1 │  0.00
@@ -774,6 +820,7 @@ Line style is unicode.
  MarisPlume       │   1 │     │     1 │  0.00
  MarshMelloua     │   1 │     │     1 │  0.00
  MartinGrinbergs  │   1 │     │     1 │  0.00
+ Matiiss_Alksnis  │   1 │     │     1 │  0.00
  Mayskolpino      │     │   1 │     1 │  0.00
  MelnisM          │   1 │     │     1 │  0.00
  Mikimauss23      │   1 │     │     1 │  0.00
@@ -784,6 +831,7 @@ Line style is unicode.
  MissNegativus    │   1 │     │     1 │  0.00
  Misszemenite     │     │   1 │     1 │  0.00
  Mjauful          │   1 │     │     1 │  0.00
+ MjawLinda        │   1 │     │     1 │  0.00
  Moolusk          │     │   1 │     1 │  0.00
  MoyNadin         │     │   1 │     1 │  0.00
  MsEncissss       │   1 │     │     1 │  0.00
@@ -800,30 +848,30 @@ Line style is unicode.
  OCipulis         │     │   1 │     1 │  0.00
  OZO_LA           │   1 │     │     1 │  0.00
  OldTrencis       │   1 │     │     1 │  0.00
+ OlegOvcharenkoR  │   1 │     │     1 │  0.00
  OliveOilTrading  │   1 │     │     1 │  0.00
  Originalkri      │     │   1 │     1 │  0.00
  OskarsDeigelis   │   1 │     │     1 │  0.00
  Oskars_Kaulens   │   1 │     │     1 │  0.00
  OtoGrinbergs     │   1 │     │     1 │  0.00
  OttoOzols        │   1 │     │     1 │  0.00
- Paganel72        │     │   1 │     1 │  0.00
  PalmTreezzzz     │   1 │     │     1 │  0.00
  PandaElijah      │   1 │     │     1 │  0.00
  PandaHeheheh     │   1 │     │     1 │  0.00
  Pariize          │   1 │     │     1 │  0.00
+ PaulinMariya     │   1 │     │     1 │  0.00
  PeterisJur       │   1 │     │     1 │  0.00
  Pikatchju_       │   1 │     │     1 │  0.00
  Pilsetasdzive    │   1 │     │     1 │  0.00
  Piromeistars     │   1 │     │     1 │  0.00
  PolskaSotnja     │     │   1 │     1 │  0.00
- ProRacers1995    │   1 │     │     1 │  0.00
  Prusis           │   1 │     │     1 │  0.00
  PulsometrsLV     │   1 │     │     1 │  0.00
- PyxlsApparel     │   1 │     │     1 │  0.00
  RIIMC1           │   1 │     │     1 │  0.00
  RKBirojs         │   1 │     │     1 │  0.00
  RVilaks          │   1 │     │     1 │  0.00
  R_Gagunovs       │   1 │     │     1 │  0.00
+ R_Grosbergs      │   1 │     │     1 │  0.00
  RaivoLeimanen    │   1 │     │     1 │  0.00
  ReTouchStudio1   │     │   1 │     1 │  0.00
  Relax_or_Die     │   1 │     │     1 │  0.00
@@ -831,10 +879,12 @@ Line style is unicode.
  RenarsValters    │   1 │     │     1 │  0.00
  Renate_Dulbe     │   1 │     │     1 │  0.00
  Resetins         │   1 │     │     1 │  0.00
+ RhanRhaan412     │   1 │     │     1 │  0.00
  Richulis         │   1 │     │     1 │  0.00
  RigaBrain        │   1 │     │     1 │  0.00
  Rkrilis          │   1 │     │     1 │  0.00
  Roberts35788095  │     │   1 │     1 │  0.00
+ RobertsMillers   │   1 │     │     1 │  0.00
  Rokpelnis        │   1 │     │     1 │  0.00
  SA_Sandria       │   1 │     │     1 │  0.00
  Saattans         │   1 │     │     1 │  0.00
@@ -865,8 +915,10 @@ Line style is unicode.
  VanjaProRanked   │     │   1 │     1 │  0.00
  Var_na           │   1 │     │     1 │  0.00
  Varetupavalet    │   1 │     │     1 │  0.00
+ VentsAKrauklis   │   1 │     │     1 │  0.00
  VentspilsJM      │   1 │     │     1 │  0.00
  Ventspilsreiss   │   1 │     │     1 │  0.00
+ VidisVidinsh     │   1 │     │     1 │  0.00
  VieglatletikaLV  │   1 │     │     1 │  0.00
  VienkaarshiNee   │   1 │     │     1 │  0.00
  Vika_Mayakovska  │     │   1 │     1 │  0.00
@@ -878,7 +930,6 @@ Line style is unicode.
  ZemGun           │   1 │     │     1 │  0.00
  ZemesDienests    │   1 │     │     1 │  0.00
  Zigxx            │   1 │     │     1 │  0.00
- _Ammm_           │   1 │     │     1 │  0.00
  _Pest            │     │   1 │     1 │  0.00
  _chuch_          │   1 │     │     1 │  0.00
  _jagris_         │   1 │     │     1 │  0.00
@@ -886,6 +937,7 @@ Line style is unicode.
  aaabbbiiisss     │   1 │     │     1 │  0.00
  adza_k           │   1 │     │     1 │  0.00
  aeria_gloris_    │     │   1 │     1 │  0.00
+ ag_linde         │   1 │     │     1 │  0.00
  agaccii_tie      │   1 │     │     1 │  0.00
  agga210          │   1 │     │     1 │  0.00
  ainars_knoks     │   1 │     │     1 │  0.00
@@ -905,6 +957,8 @@ Line style is unicode.
  amornbryzz       │   1 │     │     1 │  0.00
  ampelmaniss      │   1 │     │     1 │  0.00
  anarhitekts      │   1 │     │     1 │  0.00
+ andr1kpu1ka      │   1 │     │     1 │  0.00
+ annakononova     │   1 │     │     1 │  0.00
  annarozova       │     │   1 │     1 │  0.00
  annjuks69        │   1 │     │     1 │  0.00
  ansisklintsons   │   1 │     │     1 │  0.00
@@ -935,14 +989,12 @@ Line style is unicode.
  bums56           │   1 │     │     1 │  0.00
  cakesaretasty    │   1 │     │     1 │  0.00
  catsxy           │   1 │     │     1 │  0.00
- cbuchanan27      │   1 │     │     1 │  0.00
  cepums11         │     │   1 │     1 │  0.00
  chabuliitiis     │   1 │     │     1 │  0.00
  chalisbezsirds   │   1 │     │     1 │  0.00
  chokolaade       │   1 │     │     1 │  0.00
  ciftler76        │   1 │     │     1 │  0.00
  cipanss          │   1 │     │     1 │  0.00
- cult2follow      │     │   1 │     1 │  0.00
  cursesfridayy    │     │   1 │     1 │  0.00
  dannya_77        │   1 │     │     1 │  0.00
  daviskarklinsh   │   1 │     │     1 │  0.00
@@ -951,11 +1003,14 @@ Line style is unicode.
  ddedebas         │   1 │     │     1 │  0.00
  ded_maroz        │     │   1 │     1 │  0.00
  dedpulio         │     │   1 │     1 │  0.00
+ dinapreisa       │   1 │     │     1 │  0.00
+ diskopele        │   1 │     │     1 │  0.00
  dita_plepa       │   1 │     │     1 │  0.00
  dmoshkoff        │     │   1 │     1 │  0.00
  duratupaja       │     │   1 │     1 │  0.00
  edgarkalnins     │   1 │     │     1 │  0.00
  edudzeru         │   1 │     │     1 │  0.00
+ egonsbeitiks     │   1 │     │     1 │  0.00
  elcerene         │   1 │     │     1 │  0.00
  elenastar25      │     │   1 │     1 │  0.00
  elinapetersone2  │   1 │     │     1 │  0.00
@@ -1000,6 +1055,7 @@ Line style is unicode.
  iveta_lepesko    │   1 │     │     1 │  0.00
  ivetarouge       │   1 │     │     1 │  0.00
  jacobskoglund71  │   1 │     │     1 │  0.00
+ janissipkevics   │   1 │     │     1 │  0.00
  jd7000ffg        │     │   1 │     1 │  0.00
  jenuufa          │   1 │     │     1 │  0.00
  jjukams          │   1 │     │     1 │  0.00
@@ -1021,23 +1077,24 @@ Line style is unicode.
  kristiaanaaa_    │   1 │     │     1 │  0.00
  kristivv__       │     │   1 │     1 │  0.00
  krmednis         │   1 │     │     1 │  0.00
+ ksander_n        │     │   1 │     1 │  0.00
  kurzemnieks_K    │   1 │     │     1 │  0.00
  laacz            │   1 │     │     1 │  0.00
  laurucics        │   1 │     │     1 │  0.00
  laurushh         │   1 │     │     1 │  0.00
  ledusauksts      │   1 │     │     1 │  0.00
- lenabelaja1      │   1 │     │     1 │  0.00
  lerkavlasova2    │     │   1 │     1 │  0.00
- lianamok         │     │   1 │     1 │  0.00
  lienesomase      │   1 │     │     1 │  0.00
  liepajalv        │   1 │     │     1 │  0.00
  liidaka          │   1 │     │     1 │  0.00
  linardsh         │   1 │     │     1 │  0.00
  lindiushaaa      │   1 │     │     1 │  0.00
  littleowlsandra  │     │   1 │     1 │  0.00
+ liyabuble        │   1 │     │     1 │  0.00
  lizite1006       │   1 │     │     1 │  0.00
  lizkaa34         │     │   1 │     1 │  0.00
  lizuncik2109     │     │   1 │     1 │  0.00
+ loan4362         │   1 │     │     1 │  0.00
  lotinova         │     │   1 │     1 │  0.00
  lovebigkid       │     │   1 │     1 │  0.00
  lusis3000        │   1 │     │     1 │  0.00
@@ -1055,6 +1112,7 @@ Line style is unicode.
  mazaaevijaa      │   1 │     │     1 │  0.00
  mdenisexoxo__    │   1 │     │     1 │  0.00
  melnaisenggelis  │   1 │     │     1 │  0.00
+ mezabriedis      │   1 │     │     1 │  0.00
  mikeliits        │   1 │     │     1 │  0.00
  milaamrr         │     │   1 │     1 │  0.00
  mincitis1        │   1 │     │     1 │  0.00
@@ -1066,6 +1124,7 @@ Line style is unicode.
  ms_pocs          │   1 │     │     1 │  0.00
  msanminina       │     │   1 │     1 │  0.00
  muzeologija      │   1 │     │     1 │  0.00
+ myhardcoreponyy  │   1 │     │     1 │  0.00
  nabelslv         │   1 │     │     1 │  0.00
  nataliya1943     │     │   1 │     1 │  0.00
  ne_login         │     │   1 │     1 │  0.00
@@ -1081,18 +1140,20 @@ Line style is unicode.
  pavel7766        │     │   1 │     1 │  0.00
  piparkuks        │   1 │     │     1 │  0.00
  politeprofile    │     │   1 │     1 │  0.00
- pxnkx7sos        │   1 │     │     1 │  0.00
+ princewis5       │   1 │     │     1 │  0.00
+ purple_hepatica  │   1 │     │     1 │  0.00
+ qRobertsq        │   1 │     │     1 │  0.00
  rachelblat       │     │   1 │     1 │  0.00
  raibow__unicorn  │     │   1 │     1 │  0.00
  raiccaaa         │     │   1 │     1 │  0.00
  realansta        │     │   1 │     1 │  0.00
  reinisvaza       │   1 │     │     1 │  0.00
  riga_airport     │   1 │     │     1 │  0.00
+ rigadude         │   1 │     │     1 │  0.00
  rommmzzza        │     │   1 │     1 │  0.00
  rozentalsm       │   1 │     │     1 │  0.00
  s_mikus          │   1 │     │     1 │  0.00
  salcevica97      │   1 │     │     1 │  0.00
- sandradiezina    │   1 │     │     1 │  0.00
  sarmucuks        │   1 │     │     1 │  0.00
  say_yessummer    │     │   1 │     1 │  0.00
  semltd73         │   1 │     │     1 │  0.00
@@ -1116,6 +1177,8 @@ Line style is unicode.
  startoursLV      │   1 │     │     1 │  0.00
  supemaris1       │   1 │     │     1 │  0.00
  superkauss       │   1 │     │     1 │  0.00
+ tanagvz          │   1 │     │     1 │  0.00
+ tejaskruze1      │   1 │     │     1 │  0.00
  tfjackj310       │   1 │     │     1 │  0.00
  theagnisb        │   1 │     │     1 │  0.00
  thisbitchwithme  │     │   1 │     1 │  0.00
@@ -1146,5 +1209,5 @@ Line style is unicode.
  zhozesedanova20  │     │   1 │     1 │  0.00
  zondaks          │   1 │     │     1 │  0.00
  zviedrs123       │   1 │     │     1 │  0.00
-(1144 rows)
+(1207 rows)
 
