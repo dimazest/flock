@@ -17,7 +17,7 @@ round (
 from crosstab(
     $$
 	select
-	screen_name,
+	screen_name#>>'{}',
 	tweet->>'lang' as lang,
 	count(*) as count
 	from tweet, jsonb_array_elements(features->'screen_names') screen_name

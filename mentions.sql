@@ -17,7 +17,7 @@ round (
 from crosstab(
     $$
 	select
-	user_mention,
+	user_mention#>>'{}',
 	tweet->>'lang' as lang,
 	count(*) as count
 	from tweet, jsonb_array_elements(features->'user_mentions') user_mention
