@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, request
+from flask import render_template, Blueprint, request, redirect, url_for
 
 from flask import json
 from flask_menu import register_menu
@@ -19,7 +19,7 @@ bp_root = Blueprint(
 @bp_root.route('/')
 @register_menu(bp_root, '.', 'Home', order=0)
 def index():
-    return render_template('root/index.html')
+    return redirect(url_for('.tweets'))
 
 
 def get_page(query):
