@@ -7,9 +7,10 @@ import click
 import click_log
 
 from poultry import readline_dir
+
 from sqlalchemy.dialects import postgresql as pg
 
-from .model import tweet_table, metadata
+from . import model
 
 
 logger = logging.getLogger(__name__)
@@ -20,7 +21,7 @@ def create_session(ctx, param, value):
     from sqlalchemy.orm import sessionmaker
 
     engine = create_engine(value)
-    metadata.bind = engine
+    model.metadata.bind = engine
     Session = sessionmaker(bind=engine)
 
     return Session()
@@ -36,13 +37,13 @@ def cli():
 @cli.command()
 @click.option('--session', default='postgresql://127.0.0.1/twitter', callback=create_session)
 def initdb(session):
-        metadata.create_all()
+    model.metadata.create_all()
 
 
 @cli.command()
 @click.option('--session', default='postgresql://127.0.0.1/twitter', callback=create_session)
 def dropdb(session):
-        metadata.drop_all()
+        model.metadata.drop_all()
 
 
 def create_expander(ctx, param, value):
@@ -84,12 +85,13 @@ def insert(source, session, clusters):
             24.3247299 <= t.coordinates.lat <= 57.0859184
         )
 
-        stmt = pg.insert(tweet_table).values(
-            _id=t.id,
+        stmt = pg.insert(model.Tweet.__table__).values(
+            id=t.id,
             tweet=t.parsed,
             features=features,
+            created_at=t.created_at,
         ).on_conflict_do_update(
-            index_elements=['_id'],
+            index_elements=['id'],
             set_={'features': json.dumps(features)}
         )
 

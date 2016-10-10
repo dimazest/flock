@@ -1,0 +1,28 @@
+{% extends "root/base.html" %}
+
+{% block content %}
+<table class="table">
+<thead>
+<tr>
+  <th>User mention</th>
+  <th>Latvian</th>
+  <th>Russian</th>
+  <th>English</th>
+  <th>Total</th>
+  <th>Score</th>
+</tr>
+</thead>
+<tbody>
+{%- for r in result %}
+<tr>
+  <td><a href="{{ url_for(details_endpoint, label=r[label]) }}">{{ r[label] }}</a></td>
+  <td>{{ r.lv or '' }}</td>
+  <td>{{ r.ru or '' }}</td>
+  <td>{{ r.en or '' }}</td>
+  <td>{{ r.total }}</td>
+  <td>{{ r.score }}</td>
+ {%- endfor %}
+</tr>
+</tbody>
+</table>
+{% endblock %}

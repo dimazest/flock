@@ -1,22 +1,39 @@
-from sqlalchemy import Table, Column, BigInteger, MetaData
+from sqlalchemy import Column, Table, MetaData, types
 from sqlalchemy.dialects import postgresql as pg
-from sqlalchemy.orm import mapper
 
-from poultry.tweet import Tweet
+from sqlalchemy.ext.declarative import declarative_base
 
 metadata = MetaData()
+Base = declarative_base(metadata=metadata)
 
 
-tweet_table = Table(
-    'tweet', metadata,
+class Tweet(Base):
+    __tablename__ = 'tweet'
 
-    Column('_id', BigInteger, primary_key=True),
-    Column('tweet', pg.JSONB, nullable=False),
-    Column('features', pg.JSONB),
+    id = Column(types.BigInteger, primary_key=True)
+    tweet = Column(pg.JSONB, nullable=False)
+    features = Column(pg.JSONB)
 
+    created_at = Column(types.DateTime, nullable=False)
+
+
+screen_name_view = Table(
+    'screen_name', metadata,
+    Column('screen_name', types.String),
+    Column('lv', types.String),
+    Column('ru', types.String),
+    Column('en', types.String),
+    Column('total', types.Integer),
+    Column('score', types.Float),
 )
 
 
-mapper(
-    Tweet, tweet_table
+user_mention_view = Table(
+    'user_mention', metadata,
+    Column('user_mention', types.String),
+    Column('lv', types.String),
+    Column('ru', types.String),
+    Column('en', types.String),
+    Column('total', types.Integer),
+    Column('score', types.Float),
 )

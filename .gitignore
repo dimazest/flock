@@ -6,9 +6,10 @@ develop-eggs/
 eggs/
 parts/
 src/
-flock.egg-info/
 
+flock.egg-info/
 flock-conf/flock_conf.egg-info/
+flock-web/flock_web.egg-info/
 
 # Twarc
 twarc.log

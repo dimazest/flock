@@ -1,0 +1,132 @@
+{% extends "root/base.html" %}
+
+{% macro render_pagination(pagination) %}
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    {%- if pagination.has_prev %}
+      <li class="page-item">
+      <a class="page-link" href="{{ url_for(endpoint, page=pagination.prev_num, **endpoint_kwargs) }}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    {%- else %}
+      <li class="page-item disabled">
+        <span class="page-link" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </span>
+      </li>
+    {%- endif %}
+
+    {%- for page in pagination.iter_pages() %}
+    {% if page %}
+      {% if page != pagination.page %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for(endpoint, page=page, **endpoint_kwargs) }}">{{ page }}</a>
+        </li>
+      {% else %}
+        <li class="page-item active">
+          <span class="page-link">{{ page }}
+            <span class="sr-only">(current)</span>
+          </span>
+        </li>
+      {% endif %}
+    {% else %}
+      <li class="page-item disabled">
+        <span class="page-link" aria-label="Ellipsis">
+          <span aria-hidden="true">...</span>
+          <span class="sr-only">Ellipsis</span>
+        </span>
+      </li>
+    {% endif %}
+    {%- endfor %}
+
+    {%- if pagination.has_next %}
+      <li class="page-item">
+      <a class="page-link" href="{{ url_for(endpoint, page=pagination.next_num, **endpoint_kwargs) }}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    {%- else %}
+      <li class="page-item disabled">
+        <span class="page-link" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </span>
+      </li>
+    {%- endif %}
+  </ul>
+</nav>
+{% endmacro %}
+
+{% macro render_features(tweet) %}
+<div class="card card-block">
+<div class="highlight">
+    <h6>Screen names</h6>
+    {%- for screen_name in tweet.features['screen_names'] %}
+      <a href="{{ url_for('.feature_screen_names', label=screen_name) }}" role="button">{{ screen_name }}</a>
+    {%- endfor %}
+
+    {%- if tweet.features['user_mentions'] %}
+      <h6>Mentions</h6>
+      {%- for user_mention in tweet.features['user_mentions'] %}
+        <a href="{{ url_for('.feature_user_mentions', label=user_mention) }}" role="button">{{ user_mention }}</a>
+      {%- endfor %}
+    {%- endif %}
+
+    <h6>Raw data</h6>
+    <pre>{{ json.dumps(tweet.features, indent=2) }}</pre>
+</div>
+{% endmacro %}
+
+{% macro render_tweets(tweets, lang) %}
+{%- for tweet in tweets | reverse %}
+  {%- if tweet.tweet['lang'] == lang %}
+    {{ oembed_tweet(tweet.id, omit_script=True) }}
+
+    <p>
+      <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-{{ tweet.id }}" aria-expanded="false" aria-controls="collapseExample">
+        Features
+      </button>
+    </p>
+    <div class="collapse" id="tweet-features-{{ tweet.id }}">
+        {{ render_features(tweet) }}
+      </div>
+    </div>
+
+
+  {%- endif %}
+{%- endfor %}
+{% endmacro %}
+
+
+{% block content %}
+
+There are {{ pagination.total }} tweets.
+
+{{ render_pagination(pagination) }}
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+      <h1>Latvian</h1>
+      {{ render_tweets(pagination.items, 'lv') }}
+    </div>
+    <div class="col-sm-4">
+      <h1>Russian</h1>
+      {{ render_tweets(pagination.items, 'ru') }}
+    </div>
+    <div class="col-sm-4">
+      <h1>English</h1>
+      {{ render_tweets(pagination.items, 'en') }}
+    </div>
+  </div>
+</div>
+
+{%- for tweet in pagination.items %}
+{%- endfor %}
+
+{{ render_pagination(pagination) }}
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+{% endblock %}
