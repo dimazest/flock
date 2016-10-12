@@ -1,13 +1,14 @@
 from flask import render_template, Blueprint, request, redirect, url_for, g
 
-from flask import json
-from flask_menu import register_menu
 from flask_sqlalchemy import BaseQuery
 
-from sqlalchemy import sql
+from sqlalchemy import func, select, Table, Column, Integer, String
+import crosstab
 
 from flock import model
 from flock_web.app import db
+
+from . sa_helpers import jsonb_array_elements_text
 
 bp_root = Blueprint(
     'root', __name__,
@@ -34,7 +35,6 @@ def pull_collection(endpoint, values):
 
 
 @bp_root.route('/')
-@register_menu(bp_root, '.', 'Home', order=0)
 def index():
     return redirect(url_for('.tweets'))
 
@@ -51,17 +51,22 @@ def get_page(query):
     return page, redirect
 
 
-@bp_root.route('/tweets', defaults={'filter_key': None, 'filter_value': None})
-@bp_root.route('/tweets/<filter_key>/<filter_value>')
-@register_menu(bp_root, 'tweets', 'Tweets', order=1)
-def tweets(filter_key, filter_value):
+@bp_root.route('/tweets', defaults={'feature_name': None, 'feature_value': None})
+@bp_root.route('/tweets/<feature_name>/<feature_value>')
+def tweets(feature_name, feature_value):
 
-    if filter_key is not None:
-        g.tweets = g.tweets.from_self().filter(model.Tweet.features[filter_key].contains('"{}"'.format(filter_value)))
+    if feature_name is not None:
+        g.tweets = (
+            g.tweets.from_self()
+            .filter(
+                model.Tweet.features[feature_name]
+                .contains('"{}"'.format(feature_value))
+            )
+        )
 
     page, do_redirect = get_page(g.tweets)
     if do_redirect:
-        kwargs = {} if not filter_key else{'filter_key': filter_key, 'filter_value': filter_value}
+        kwargs = {} if not feature_name else{'feature_name': feature_name, 'filter_value': feature_value}
         return redirect(url_for('.tweets', page=page, **kwargs))
 
     return render_template(
@@ -69,78 +74,59 @@ def tweets(filter_key, filter_value):
         pagination=g.tweets.paginate(page=page),
         endpoint='.tweets',
         endpoint_kwargs={},
-        json=json,
     )
 
 
-@bp_root.route('/features/user_mentions')
-@register_menu(bp_root, 'user_mentions', 'Mentions', order=3)
-def list_feature_user_mentions():
-    select = sql.select([model.user_mention_view])
-    result = db.session.execute(select)
+@bp_root.route('/tweets/<filter_key>')
+def feature_info(filter_key):
+    feature = jsonb_array_elements_text(model.Tweet.features[filter_key]).alias('feature')
+
+    crosstab_input = (
+        g.tweets.session.query(
+            feature.c.value, model.Tweet.label, func.count()
+        )
+        .select_from(g.tweets.selectable, feature)
+
+        .group_by(feature, model.Tweet.label)
+    ).selectable.where(model.Tweet.label.in_(['lv', 'ru', 'en']))
+
+    categories = (
+        g.tweets.session.query(
+            func.distinct(model.Tweet.label),
+        )
+    ).selectable.where(model.Tweet.label.in_(['lv', 'ru', 'en']))
+
+    ret_types = Table(
+        'ct', model.metadata,
+        Column('label', String),
+        Column('en', Integer),
+        Column('lv', Integer),
+        Column('ru', Integer),
+        extend_existing=True,
+    )
+
+    row_total = crosstab.row_total(
+        [ret_types.c[l] for l in ('en', 'lv', 'ru')]
+    ).label('total')
+
+    q = (
+        select(
+            [
+                '*', row_total,
+            ]
+        )
+        .select_from(
+            crosstab.crosstab(
+                crosstab_input,
+                ret_types,
+                categories=categories,
+            )
+        )
+        .order_by(row_total.desc(), ret_types.c.label)
+    )
 
     return render_template(
         'root/statistics.html',
-        result=result,
-        details_endpoint='.feature_user_mentions',
-        label='user_mention',
-    )
-
-
-@bp_root.route('/features/user_mentions/<label>')
-# @register_menu(bp_root, 'user_mentions.details', 'Mention')
-def feature_user_mentions(label):
-    tweets = (
-        BaseQuery(model.Tweet, db.session())
-        .filter(model.Tweet.features['user_mentions'].contains('"{}"'.format(label)))
-        .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
-    )
-
-    page, do_redirect = get_page(tweets)
-    if do_redirect:
-        return redirect(url_for('.feature_user_mentions', label=label, page=page))
-
-    return render_template(
-        'root/tweets.html',
-        tweets=tweets,
-        pagination=tweets.paginate(page=page),
-        endpoint='.feature_user_mentions',
-        endpoint_kwargs={'label': label},
-        json=json,
-    )
-
-
-@bp_root.route('/features/screen_name')
-@register_menu(bp_root, 'screen_name', 'Users', order=2)
-def list_feature_screen_namess():
-    select = sql.select([model.screen_name_view])
-    result = db.session.execute(select)
-
-    return render_template(
-        'root/statistics.html',
-        result=result,
-        details_endpoint='.feature_screen_names',
-        label='screen_name',
-    )
-
-
-@bp_root.route('/features/screen_name/<label>')
-def feature_screen_names(label):
-    tweets = (
-        BaseQuery(model.Tweet, db.session())
-        .filter(model.Tweet.features['screen_names'].contains('"{}"'.format(label)))
-        .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
-    )
-
-    page, do_redirect = get_page(tweets)
-    if do_redirect:
-        return redirect(url_for('.feature_screen_names', label=label, page=page))
-
-    return render_template(
-        'root/tweets.html',
-        tweets=tweets,
-        pagination=tweets.paginate(page=page),
-        endpoint='.feature_screen_names',
-        endpoint_kwargs={'label': label},
-        json=json,
+        result=db.session.execute(q),
+        filter_key=filter_key,
     )

@@ -13,12 +13,13 @@
     <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
   </head>
   <body>
+
     <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
         <a class="navbar-brand" href="{{url_for('.index')}}">flock</a>
         <ul class="nav navbar-nav">
-            {%- for item in current_menu.children -%}
-                <li class="nav-item {% if item.active %}active{% endif%}">
-                    <a class="nav-link" href="{{ item.url }}">{{ item.text }}</a>
+            {%- for item in nav.top -%}
+                <li class="nav-item {{ 'active' if item.is_active else '' }}">
+                    <a class="nav-link" href="{{ item.url }}">{{ item.label }}</a>
                 </li>
             {% endfor %}
         </ul>
