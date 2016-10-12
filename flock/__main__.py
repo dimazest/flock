@@ -56,7 +56,8 @@ def create_expander(ctx, param, value):
 @click.option('--source', default=None, help='Tweet source.')
 @click.option('--session', default='postgresql://127.0.0.1/twitter', callback=create_session)
 @click.option('--clusters', default='clusters.cfg', callback=create_expander)
-def insert(source, session, clusters):
+@click.option('--collection', default='lv')
+def insert(source, session, clusters, collection):
 
     user_labels = clusters.user_labels()
 
@@ -68,7 +69,7 @@ def insert(source, session, clusters):
         features = dict()
 
         # As a side effect, the users whose ids are not in user label don't have an @ infront.
-        features['screen_names'] = list(
+        features['screen_names'] = sorted(
             user_labels.get(t.parsed['user']['id'], [t.screen_name])
         )
 
@@ -86,12 +87,14 @@ def insert(source, session, clusters):
         )
 
         stmt = pg.insert(model.Tweet.__table__).values(
-            id=t.id,
-            tweet=t.parsed,
+            tweet_id=t.id,
+            collection=collection,
+            label=t.parsed['lang'],
+            # tweet=t.parsed(),
             features=features,
             created_at=t.created_at,
         ).on_conflict_do_update(
-            index_elements=['id'],
+            index_elements=['tweet_id', 'collection'],
             set_={'features': json.dumps(features)}
         )
 

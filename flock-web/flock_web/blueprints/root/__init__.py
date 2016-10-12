@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, request, redirect, url_for
+from flask import render_template, Blueprint, request, redirect, url_for, g
 
 from flask import json
 from flask_menu import register_menu
@@ -13,6 +13,23 @@ bp_root = Blueprint(
     'root', __name__,
     static_folder='static',
     template_folder='templates',
+    url_prefix='/<collection>'
+    )
+
+
+@bp_root.url_defaults
+def add_collection(endpoint, values):
+    values.setdefault('collection', g.collection)
+
+
+@bp_root.url_value_preprocessor
+def pull_collection(endpoint, values):
+    g.collection = values.pop('collection')
+
+    g.tweets = (
+        BaseQuery(model.Tweet, db.session())
+        .filter_by(collection=g.collection)
+        .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     )
 
 
@@ -26,23 +43,30 @@ def get_page(query):
     page = request.args.get('page', None)
     if page is None:
         page = query.paginate().pages
+        redirect = True
     else:
         page = int(page)
+        redirect = False
 
-    return page
+    return page, redirect
 
 
-@bp_root.route('/tweets')
+@bp_root.route('/tweets', defaults={'filter_key': None, 'filter_value': None})
+@bp_root.route('/tweets/<filter_key>/<filter_value>')
 @register_menu(bp_root, 'tweets', 'Tweets', order=1)
-def tweets():
-    tweets = BaseQuery(model.Tweet, db.session()).order_by(model.Tweet.created_at, model.Tweet.id)
+def tweets(filter_key, filter_value):
 
-    page = get_page(tweets)
+    if filter_key is not None:
+        g.tweets = g.tweets.from_self().filter(model.Tweet.features[filter_key].contains('"{}"'.format(filter_value)))
+
+    page, do_redirect = get_page(g.tweets)
+    if do_redirect:
+        kwargs = {} if not filter_key else{'filter_key': filter_key, 'filter_value': filter_value}
+        return redirect(url_for('.tweets', page=page, **kwargs))
 
     return render_template(
         'root/tweets.html',
-        tweets=tweets,
-        pagination=tweets.paginate(page=page),
+        pagination=g.tweets.paginate(page=page),
         endpoint='.tweets',
         endpoint_kwargs={},
         json=json,
@@ -69,10 +93,12 @@ def feature_user_mentions(label):
     tweets = (
         BaseQuery(model.Tweet, db.session())
         .filter(model.Tweet.features['user_mentions'].contains('"{}"'.format(label)))
-        .order_by(model.Tweet.created_at, model.Tweet.id)
+        .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     )
 
-    page = get_page(tweets)
+    page, do_redirect = get_page(tweets)
+    if do_redirect:
+        return redirect(url_for('.feature_user_mentions', label=label, page=page))
 
     return render_template(
         'root/tweets.html',
@@ -103,10 +129,12 @@ def feature_screen_names(label):
     tweets = (
         BaseQuery(model.Tweet, db.session())
         .filter(model.Tweet.features['screen_names'].contains('"{}"'.format(label)))
-        .order_by(model.Tweet.created_at, model.Tweet.id)
+        .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     )
 
-    page = get_page(tweets)
+    page, do_redirect = get_page(tweets)
+    if do_redirect:
+        return redirect(url_for('.feature_screen_names', label=label, page=page))
 
     return render_template(
         'root/tweets.html',

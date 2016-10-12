@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Table, MetaData, types
+from sqlalchemy import Column, Table, UniqueConstraint, MetaData, types
 from sqlalchemy.dialects import postgresql as pg
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -9,9 +9,17 @@ Base = declarative_base(metadata=metadata)
 
 class Tweet(Base):
     __tablename__ = 'tweet'
+    __table_args__ = (
+        UniqueConstraint('tweet_id', 'collection', name='uix_'),
+    )
 
-    id = Column(types.BigInteger, primary_key=True)
-    tweet = Column(pg.JSONB, nullable=False)
+    id = Column(types.Integer, primary_key=True)
+
+    tweet_id = Column(types.BigInteger, nullable=False)
+    collection = Column(types.String, nullable=False)
+
+    # tweet = Column(pg.JSONB, nullable=False)
+    label = Column(types.String)
     features = Column(pg.JSONB)
 
     created_at = Column(types.DateTime, nullable=False)

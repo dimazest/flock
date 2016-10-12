@@ -64,32 +64,32 @@
 <div class="highlight">
     <h6>Screen names</h6>
     {%- for screen_name in tweet.features['screen_names'] %}
-      <a href="{{ url_for('.feature_screen_names', label=screen_name) }}" role="button">{{ screen_name }}</a>
+      <a href="{{ url_for('.tweets', filter_key='screen_names', filter_value=screen_name) }}" role="button">{{ screen_name }}</a>
     {%- endfor %}
 
     {%- if tweet.features['user_mentions'] %}
       <h6>Mentions</h6>
       {%- for user_mention in tweet.features['user_mentions'] %}
-        <a href="{{ url_for('.feature_user_mentions', label=user_mention) }}" role="button">{{ user_mention }}</a>
+        <a href="{{ url_for('.tweets', filter_key='user_mentions', filter_value=user_mention) }}" role="button">{{ user_mention }}</a>
       {%- endfor %}
     {%- endif %}
 
     <h6>Raw data</h6>
-    <pre>{{ json.dumps(tweet.features, indent=2) }}</pre>
+    <pre>{{ tweet.features|tojson(indent=2) }}</pre>
 </div>
 {% endmacro %}
 
 {% macro render_tweets(tweets, lang) %}
 {%- for tweet in tweets | reverse %}
-  {%- if tweet.tweet['lang'] == lang %}
-    {{ oembed_tweet(tweet.id, omit_script=True) }}
+  {%- if tweet.label == lang %}
+    {{ oembed_tweet(tweet.tweet_id, omit_script=True) }}
 
     <p>
-      <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-{{ tweet.id }}" aria-expanded="false" aria-controls="collapseExample">
+      <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseExample">
         Features
       </button>
     </p>
-    <div class="collapse" id="tweet-features-{{ tweet.id }}">
+    <div class="collapse" id="tweet-features-{{ tweet.tweet_id }}">
         {{ render_features(tweet) }}
       </div>
     </div>
