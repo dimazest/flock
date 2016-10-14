@@ -105,7 +105,7 @@
 
 {% block content %}
 
-There are {{ pagination.total }} tweets.
+There are {{ pagination.total|humanize('intcomma') }} tweets.
 
 {{ render_pagination(pagination) }}
 
