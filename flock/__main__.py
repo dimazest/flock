@@ -9,6 +9,7 @@ import click_log
 from poultry import readline_dir
 
 from sqlalchemy.dialects import postgresql as pg
+from sqlalchemy.exc import ProgrammingError
 
 from . import model
 
@@ -39,6 +40,11 @@ def cli():
 def initdb(session):
     model.metadata.create_all()
 
+    for index in model.indexes:
+        try:
+            index.create(session.bind)
+        except ProgrammingError:
+            pass
 
 @cli.command()
 @click.option('--session', default='postgresql://127.0.0.1/twitter', callback=create_session)
