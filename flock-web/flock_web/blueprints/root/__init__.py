@@ -6,7 +6,7 @@ from sqlalchemy import func, select, Table, Column, Integer, String
 import crosstab
 
 from flock import model
-from flock_web.app import db
+from flock_web.app import db, url_for_other_page
 
 from . sa_helpers import jsonb_array_elements_text
 
@@ -60,7 +60,6 @@ def get_page(query):
 @bp_root.route('/tweets', defaults={'feature_name': None, 'feature_value': None})
 @bp_root.route('/tweets/<feature_name>/<feature_value>')
 def tweets(feature_name, feature_value):
-    endpoint_kwargs = {} if not feature_name else{'feature_name': feature_name, 'feature_value': feature_value}
 
     if feature_name is not None:
         g.tweets = (
@@ -73,13 +72,11 @@ def tweets(feature_name, feature_value):
 
     page, do_redirect = get_page(g.tweets)
     if do_redirect:
-        return redirect(url_for('.tweets', page=page, **endpoint_kwargs))
+        return redirect(url_for_other_page(page))
 
     return render_template(
         'root/tweets.html',
         pagination=g.tweets.paginate(page=page),
-        endpoint='.tweets',
-        endpoint_kwargs=endpoint_kwargs,
         label_names=g.label_names,
     )
 

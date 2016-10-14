@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, url_for
 
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.cache import Cache
@@ -17,6 +17,12 @@ twitter_oembedder = TwitterOEmbedder()
 humanise = Humanize()
 
 
+def url_for_other_page(page):
+    args = request.view_args.copy()
+    args['page'] = page
+    return url_for(request.endpoint, **args)
+
+
 def create_app(config_file):
     app = Flask(__name__)
 
@@ -33,6 +39,8 @@ def create_app(config_file):
 
     from .blueprints.root import bp_root
     app.register_blueprint(bp_root)
+
+    app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 
     @app.after_request
     def after_request(response):
