@@ -63,7 +63,7 @@ def insert(source, session, clusters, collection):
 
     for i, t in enumerate(readline_dir(source), start=1):
         if (i % 10000) == 0:
-            logger.debug('Processed %s tweets, it\'s time to flush.', i)
+            logger.debug('Processed %s tweets, it\'s time to commit.', i)
             session.commit()
 
         features = dict()

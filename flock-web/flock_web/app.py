@@ -5,6 +5,7 @@ from flask.ext.cache import Cache
 from flask.ext.twitter_oembedder import TwitterOEmbedder
 from flask.ext.iniconfig import INIConfig
 from flask.ext.sqlalchemy import get_debug_queries
+from flask_humanize import Humanize
 
 from flock.model import metadata
 
@@ -13,6 +14,7 @@ cache = Cache()
 db = SQLAlchemy(metadata=metadata)
 ini_config = INIConfig()
 twitter_oembedder = TwitterOEmbedder()
+humanise = Humanize()
 
 
 def create_app(config_file):
@@ -22,10 +24,9 @@ def create_app(config_file):
     app.config.from_inifile(config_file)
 
     cache.init_app(app)
-
     db.init_app(app)
-
     twitter_oembedder.init(app, cache, timeout=60*60*24*30)
+    humanise.init_app(app)
 
     from .blueprints.main import bp_main
     app.register_blueprint(bp_main)

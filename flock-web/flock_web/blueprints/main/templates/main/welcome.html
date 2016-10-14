@@ -17,7 +17,7 @@
   <td>
     <a href="{{ url_for('root.tweets', collection=collection) }}">{{ collection }}</a>
   </td>
-  <td>{{ size }}</td>
+  <td>{{ size|humanize('intcomma') }}</td>
 </tr>
 {%- endfor %}
 </tbody>

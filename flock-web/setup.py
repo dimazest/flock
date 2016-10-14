@@ -38,6 +38,7 @@ setup(
         'Flask-Cache',
         'flask-twitter-oembedder',
         'flask-iniconfig',
+        'Flask-Humanize',
     ],
     entry_points={
         'console_scripts': [
