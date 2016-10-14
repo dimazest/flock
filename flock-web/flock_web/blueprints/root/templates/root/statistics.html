@@ -18,9 +18,9 @@
     <a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=r.feature_value) }}">{{ r.feature_value }}</a>
   </td>
   {%- for category in category_labels %}
-    <td>{{ r[category] or '' }}</td>
+    <td>{{ r[category]|humanize('intcomma') if r[category] else '' }}</td>
   {%- endfor %}
-  <td>{{ r.total }}</td>
+  <td>{{ r.total|humanize('intcomma') }}</td>
  {%- endfor %}
 </tr>
 </tbody>

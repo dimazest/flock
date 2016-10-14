@@ -20,6 +20,8 @@ def welcome():
     collections = db.session.query(
         model.Tweet.collection,
         size,
+        func.min(model.Tweet.created_at),
+        func.max(model.Tweet.created_at),
     ).group_by(model.Tweet.collection).order_by(size.desc())
 
     return render_template(
