@@ -5,6 +5,7 @@ from sqlalchemy.ext.compiler import compiles
 
 # https://bitbucket.org/zzzeek/sqlalchemy/issues/3566/figure-out-how-to-support-all-of-pgs#comment-22842678
 
+
 class FunctionColumn(ColumnClause):
     def __init__(self, function, name, type_=None):
         self.function = self.table = function
@@ -51,4 +52,8 @@ class ColumnFunction(functions.FunctionElement):
 
 class jsonb_array_elements_text(ColumnFunction):
     name = 'jsonb_array_elements_text'
+    column_names = ['value']
+
+class jsonb_object_keys(ColumnFunction):
+    name = 'jsonb_object_keys'
     column_names = ['value']

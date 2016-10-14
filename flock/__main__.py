@@ -62,13 +62,12 @@ def insert(source, session, clusters, collection):
     user_labels = clusters.user_labels()
 
     for i, t in enumerate(readline_dir(source), start=1):
-        if (i % 100000) == 0:
+        if (i % 10000) == 0:
             logger.debug('Processed %s tweets, it\'s time to flush.', i)
-            session.flush()
+            session.commit()
 
         features = dict()
 
-        # As a side effect, the users whose ids are not in user label don't have an @ infront.
         features['screen_names'] = sorted(
             user_labels.get(t.parsed['user']['id'], [t.screen_name])
         )
@@ -80,22 +79,32 @@ def insert(source, session, clusters, collection):
             )
         )
 
-        features['from_riga'] = (
-            t.coordinates and
-            23.9325829 <= t.coordinates.lon <= 56.8570671 and
-            24.3247299 <= t.coordinates.lat <= 57.0859184
+        features['hashtags'] = sorted(
+            ht['text'].lower()
+            for ht in t.parsed['entities']['hashtags']
         )
+
+        features['language'] = [t.parsed['lang']]
+
+        if collection == 'lv':
+            label = t.parsed['lang']
+            if label not in ('lv', 'ru', 'en'):
+                continue
+        else:
+            label = '_{}'.format(t.id % 3)
 
         stmt = pg.insert(model.Tweet.__table__).values(
             tweet_id=t.id,
             collection=collection,
-            label=t.parsed['lang'],
-            # tweet=t.parsed(),
+            label=label,
             features=features,
             created_at=t.created_at,
         ).on_conflict_do_update(
             index_elements=['tweet_id', 'collection'],
-            set_={'features': json.dumps(features)}
+            set_={
+                'features': json.dumps(features),
+                'label': label,
+            }
         )
 
         session.execute(stmt)

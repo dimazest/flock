@@ -20,7 +20,7 @@ bp_root = Blueprint(
 
 @bp_root.url_defaults
 def add_collection(endpoint, values):
-    values.setdefault('collection', g.collection)
+    values.setdefault('collection', getattr(g, 'collection', None))
 
 
 @bp_root.url_value_preprocessor
@@ -32,6 +32,12 @@ def pull_collection(endpoint, values):
         .filter_by(collection=g.collection)
         .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     )
+    g.tweets_selectable = g.tweets.selectable.alias()
+
+    g.labels = g.tweets.session.query(
+            func.distinct(g.tweets_selectable.columns['tweet_label'])
+    ).order_by(g.tweets_selectable.columns['tweet_label'])
+    g.label_names = [c for (c, ) in g.labels.all()]
 
 
 @bp_root.route('/')
@@ -54,6 +60,7 @@ def get_page(query):
 @bp_root.route('/tweets', defaults={'feature_name': None, 'feature_value': None})
 @bp_root.route('/tweets/<feature_name>/<feature_value>')
 def tweets(feature_name, feature_value):
+    endpoint_kwargs = {} if not feature_name else{'feature_name': feature_name, 'feature_value': feature_value}
 
     if feature_name is not None:
         g.tweets = (
@@ -66,47 +73,40 @@ def tweets(feature_name, feature_value):
 
     page, do_redirect = get_page(g.tweets)
     if do_redirect:
-        kwargs = {} if not feature_name else{'feature_name': feature_name, 'filter_value': feature_value}
-        return redirect(url_for('.tweets', page=page, **kwargs))
+        return redirect(url_for('.tweets', page=page, **endpoint_kwargs))
 
     return render_template(
         'root/tweets.html',
         pagination=g.tweets.paginate(page=page),
         endpoint='.tweets',
-        endpoint_kwargs={},
+        endpoint_kwargs=endpoint_kwargs,
+        label_names=g.label_names,
     )
 
 
-@bp_root.route('/tweets/<filter_key>')
-def feature_info(filter_key):
-    feature = jsonb_array_elements_text(model.Tweet.features[filter_key]).alias('feature')
+@bp_root.route('/tweets/<feature_name>')
+def feature_info(feature_name):
+    feature = jsonb_array_elements_text(
+        g.tweets_selectable.columns['tweet_features'][feature_name]
+    ).alias('feature')
 
     crosstab_input = (
-        g.tweets.session.query(
-            feature.c.value, model.Tweet.label, func.count()
+        db.session.query(
+            feature.c.value, g.tweets_selectable.columns['tweet_label'], func.count()
         )
-        .select_from(g.tweets.selectable, feature)
-
-        .group_by(feature, model.Tweet.label)
-    ).selectable.where(model.Tweet.label.in_(['lv', 'ru', 'en']))
-
-    categories = (
-        g.tweets.session.query(
-            func.distinct(model.Tweet.label),
-        )
-    ).selectable.where(model.Tweet.label.in_(['lv', 'ru', 'en']))
+        .select_from(g.tweets_selectable, feature)
+        .group_by(feature, g.tweets_selectable.columns['tweet_label'])
+    ).selectable
 
     ret_types = Table(
-        'ct', model.metadata,
-        Column('label', String),
-        Column('en', Integer),
-        Column('lv', Integer),
-        Column('ru', Integer),
+        'ct_{}'.format(g.collection), model.metadata,
+        Column('feature_value', String),
         extend_existing=True,
+        *[Column(c, Integer) for c in g.label_names]
     )
 
     row_total = crosstab.row_total(
-        [ret_types.c[l] for l in ('en', 'lv', 'ru')]
+        [ret_types.c[c] for c in g.label_names]
     ).label('total')
 
     q = (
@@ -119,14 +119,18 @@ def feature_info(filter_key):
             crosstab.crosstab(
                 crosstab_input,
                 ret_types,
-                categories=categories,
+                categories=g.labels.selectable,
             )
         )
-        .order_by(row_total.desc(), ret_types.c.label)
+        .order_by(
+            row_total.desc(),
+            ret_types.c.feature_value
+        )
     )
 
     return render_template(
         'root/statistics.html',
         result=db.session.execute(q),
-        filter_key=filter_key,
+        feature_name=feature_name,
+        category_labels=g.label_names,
     )

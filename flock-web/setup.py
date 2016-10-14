@@ -34,7 +34,6 @@ setup(
         'flock',
         'flock-conf',
         'flask',
-        'Flask-Navigation',
         'Flask-SQLAlchemy',
         'Flask-Cache',
         'flask-twitter-oembedder',

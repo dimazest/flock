@@ -1,47 +1,32 @@
-from sqlalchemy import Column, Table, UniqueConstraint, MetaData, types
+import sqlalchemy as sa
+from sqlalchemy import types
 from sqlalchemy.dialects import postgresql as pg
 
 from sqlalchemy.ext.declarative import declarative_base
 
-metadata = MetaData()
+metadata = sa.MetaData()
 Base = declarative_base(metadata=metadata)
 
 
 class Tweet(Base):
     __tablename__ = 'tweet'
     __table_args__ = (
-        UniqueConstraint('tweet_id', 'collection', name='uix_'),
+        sa.UniqueConstraint('tweet_id', 'collection', name='uix_tweet_tweet_id'),
+        sa.Index('idx_tweet_collection', 'collection')
     )
 
-    id = Column(types.Integer, primary_key=True)
+    _id = sa.Column(types.Integer, primary_key=True)
 
-    tweet_id = Column(types.BigInteger, nullable=False)
-    collection = Column(types.String, nullable=False)
+    tweet_id = sa.Column(types.BigInteger, nullable=False)
+    collection = sa.Column(types.String, nullable=False)
 
     # tweet = Column(pg.JSONB, nullable=False)
-    label = Column(types.String)
-    features = Column(pg.JSONB)
+    label = sa.Column(types.String)
+    features = sa.Column(pg.JSONB)
 
-    created_at = Column(types.DateTime, nullable=False)
+    created_at = sa.Column(types.DateTime, nullable=False)
 
-
-screen_name_view = Table(
-    'screen_name', metadata,
-    Column('screen_name', types.String),
-    Column('lv', types.String),
-    Column('ru', types.String),
-    Column('en', types.String),
-    Column('total', types.Integer),
-    Column('score', types.Float),
-)
-
-
-user_mention_view = Table(
-    'user_mention', metadata,
-    Column('user_mention', types.String),
-    Column('lv', types.String),
-    Column('ru', types.String),
-    Column('en', types.String),
-    Column('total', types.Integer),
-    Column('score', types.Float),
+sa.Index(
+    'idx_tweet_features_hashtags',
+    Tweet.features['hashtags'],
 )

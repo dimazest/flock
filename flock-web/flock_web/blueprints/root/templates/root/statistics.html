@@ -1,26 +1,26 @@
-{% extends "root/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <table class="table">
 <thead>
 <tr>
-  <th>User mention</th>
-  <th>Latvian</th>
-  <th>Russian</th>
-  <th>English</th>
+  <th style="max-width: 300px">{{ feature_name }}</th>
+  {%- for category in category_labels %}
+    <th>{{ category }}</th>
+  {%- endfor %}
   <th>Total</th>
-  <th>Score</th>
 </tr>
 </thead>
 <tbody>
 {%- for r in result %}
 <tr>
-  <td><a href="{{ url_for('.tweets', filter_key=filter_key, filter_value=r.label) }}">{{ r.label }}</a></td>
-  <td>{{ r.lv or '' }}</td>
-  <td>{{ r.ru or '' }}</td>
-  <td>{{ r.en or '' }}</td>
+  <td style="max-width: 300px">
+    <a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=r.feature_value) }}">{{ r.feature_value }}</a>
+  </td>
+  {%- for category in category_labels %}
+    <td>{{ r[category] or '' }}</td>
+  {%- endfor %}
   <td>{{ r.total }}</td>
-  <td>{{ r.score }}</td>
  {%- endfor %}
 </tr>
 </tbody>

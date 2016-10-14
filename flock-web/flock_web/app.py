@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask.ext.cache import Cache
 from flask.ext.twitter_oembedder import TwitterOEmbedder
 from flask.ext.iniconfig import INIConfig
-from flask.ext.navigation import Navigation
+from flask.ext.sqlalchemy import get_debug_queries
 
 from flock.model import metadata
 
@@ -12,12 +12,8 @@ from flock.model import metadata
 cache = Cache()
 db = SQLAlchemy(metadata=metadata)
 ini_config = INIConfig()
-nav = Navigation()
 twitter_oembedder = TwitterOEmbedder()
 
-nav.Bar('top', [
-    nav.Item('Tweets', '.tweets'),
-])
 
 def create_app(config_file):
     app = Flask(__name__)
@@ -28,11 +24,30 @@ def create_app(config_file):
     cache.init_app(app)
 
     db.init_app(app)
-    nav.init_app(app)
 
     twitter_oembedder.init(app, cache, timeout=60*60*24*30)
 
+    from .blueprints.main import bp_main
+    app.register_blueprint(bp_main)
+
     from .blueprints.root import bp_root
     app.register_blueprint(bp_root)
+
+    @app.after_request
+    def after_request(response):
+        for query in get_debug_queries():
+            if query.duration >= app.config['DATABASE_QUERY_TIMEOUT']:
+                app.logger.warning(
+                    'SLOW QUERY: %s\n'
+                    'Parameters: %s\n'
+                    'Duration: %fs\n'
+                    'Context: %s\n',
+                    query.statement,
+                    query.parameters,
+                    query.duration,
+                    query.context,
+                )
+
+        return response
 
     return app

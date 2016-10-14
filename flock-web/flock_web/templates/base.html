@@ -15,7 +15,8 @@
   <body>
 
     <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
-        <a class="navbar-brand" href="{{url_for('.index')}}">flock</a>
+        <a class="navbar-brand" href="{{url_for('main.welcome')}}">flock</a>
+        {#
         <ul class="nav navbar-nav">
             {%- for item in nav.top -%}
                 <li class="nav-item {{ 'active' if item.is_active else '' }}">
@@ -23,6 +24,7 @@
                 </li>
             {% endfor %}
         </ul>
+        #}
     </nav>
 
     <div class="container">

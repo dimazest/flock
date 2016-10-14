@@ -65,14 +65,22 @@ The challenge is to map data in two, or maybe even more languages. To link the t
 
 Hashtags might do their job!
 
-### Relevant materials
+#### Relevant materials
 
 * http://www.diena.lv/dienas-zurnali/sestdiena/loliga-valoda-14149966
 * http://liva.online/dr-sc-comm/publikacijas/
 * http://www.la.lv/latvijas-politiskais-tviteris-mazs-bet-nikns-la-lv-tvitertops/
 
-The model
----------
+## Other datasets
+
+There are some small collections at https://github.com/dimazest/sw-twitter:
+
+* koninginnedag: Queen's day 2012
+* olympics: London 2012
+* pinkpop: Pinkpop 2012
+* uefa_euro: UEFA Euro 2012
+
+# The model
 
 The first idea is to apply doc2vec to a collection. The main goal is to get distributed representation of tweets, so later we could cluster them and see whether tweets are organised into meaningful groupings.
 

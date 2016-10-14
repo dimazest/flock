@@ -1,14 +1,12 @@
 PRODUCE = bin/python src/produce/produce
 
-report: insert
-	psql -d twitter < user_names.sql > user_names.sql.txt
-	psql -d twitter < mentions.sql > mentions.sql.txt
-
 insert:
-	 ${PRODUCE} $(patsubst tweets/share/%.txt,tweets/db/%.inserted,$(wildcard tweets/share/*))
+	 ${PRODUCE} $(patsubst tweets/share/%.txt,tweets/db/%.inserted,$(wildcard tweets/share/lv/*))
+	 ${PRODUCE} $(patsubst tweets/share/%.txt,tweets/db/%.inserted,$(wildcard tweets/share/koninginnedag2012/*))
+	 ${PRODUCE} $(patsubst tweets/share/%.txt,tweets/db/%.inserted,$(wildcard tweets/share/uefa_euro2012/*))
 
 share:
-	${PRODUCE} $(patsubst tweets/select/%.gz,tweets/share/%.txt,$(wildcard tweets/select/*))
+	${PRODUCE} $(patsubst tweets/select/%.gz,tweets/share/%.txt,$(wildcard tweets/select/*/*))
 
 clean:
 	rm tweets/{hydrate,db}/*

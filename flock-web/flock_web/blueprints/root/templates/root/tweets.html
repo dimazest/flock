@@ -1,4 +1,4 @@
-{% extends "root/base.html" %}
+{% extends "base.html" %}
 
 {% macro render_pagination(pagination) %}
 <nav aria-label="Page navigation">
@@ -62,20 +62,23 @@
 {% macro render_features(tweet) %}
 <div class="card card-block">
 <div class="highlight">
-    <h6>Screen names</h6>
-    {%- for screen_name in tweet.features['screen_names'] %}
-      <a href="{{ url_for('.tweets', filter_key='screen_names', filter_value=screen_name) }}" role="button">{{ screen_name }}</a>
-    {%- endfor %}
+    <pre>
+{
+{%- for feature_name, feature_values in tweet.features.items() %}
+  "<a href="{{ url_for('.feature_info', feature_name=feature_name) }}">{{ feature_name }}</a>": [
+    {%- for feature_value in feature_values%}
+    "<a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=feature_value) }}">{{ feature_value }}</a>",
+    {%- endfor%}
+  ]
+{%- endfor %}
+}</pre>
 
-    {%- if tweet.features['user_mentions'] %}
-      <h6>Mentions</h6>
-      {%- for user_mention in tweet.features['user_mentions'] %}
-        <a href="{{ url_for('.tweets', filter_key='user_mentions', filter_value=user_mention) }}" role="button">{{ user_mention }}</a>
-      {%- endfor %}
-    {%- endif %}
-
-    <h6>Raw data</h6>
-    <pre>{{ tweet.features|tojson(indent=2) }}</pre>
+    <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-raw-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseExample">
+      Raw data
+    </button>
+    <div class="collapse" id="tweet-features-raw-{{ tweet.tweet_id }}">
+        <pre>{{ tweet.features|tojson(indent=2) }}</pre>
+    </div>
 </div>
 {% endmacro %}
 
@@ -108,18 +111,12 @@ There are {{ pagination.total }} tweets.
 
 <div class="container">
   <div class="row">
-    <div class="col-sm-4">
-      <h1>Latvian</h1>
-      {{ render_tweets(pagination.items, 'lv') }}
-    </div>
-    <div class="col-sm-4">
-      <h1>Russian</h1>
-      {{ render_tweets(pagination.items, 'ru') }}
-    </div>
-    <div class="col-sm-4">
-      <h1>English</h1>
-      {{ render_tweets(pagination.items, 'en') }}
-    </div>
+    {%- for label in label_names %}
+      <div class="col-sm-4">
+        <h1>{{ label }}</h1>
+        {{ render_tweets(pagination.items, label) }}
+      </div>
+    {%- endfor %}
   </div>
 </div>
 
