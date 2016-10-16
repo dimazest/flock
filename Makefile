@@ -2,10 +2,7 @@ PRODUCE = bin/python src/produce/produce
 
 insert:
 	${PRODUCE} $(patsubst tweets/share/lv/%.txt,tweets/db/lv/%.inserted,$(wildcard tweets/share/lv/*))
-	${PRODUCE} $(patsubst tweets/hydrate/%.gz,tweets/db/%.inserted,$(wildcard tweets/hydrate/koninginnedag2012/*))
-	${PRODUCE} $(patsubst tweets/hydrate/%.gz,tweets/db/%.inserted,$(wildcard tweets/hydrate/uefa_euro2012/*))
-	${PRODUCE} $(patsubst tweets/hydrate/%.gz,tweets/db/%.inserted,$(wildcard tweets/hydrate/london2012/*))
-	${PRODUCE} $(patsubst tweets/hydrate/%.gz,tweets/db/%.inserted,$(wildcard tweets/hydrate/pinkpop2012/*))
+	${PRODUCE} $(patsubst tweets/hydrate/%.gz,tweets/db/%.inserted,$(wildcard tweets/hydrate/*/*))
 
 share:
 	${PRODUCE} $(patsubst tweets/select/%.gz,tweets/share/%.txt,$(wildcard tweets/select/*/*))

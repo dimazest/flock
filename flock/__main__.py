@@ -90,7 +90,8 @@ def insert(source, session, clusters, collection):
             for ht in t.parsed['entities']['hashtags']
         )
 
-        features['language'] = [t.parsed['lang']]
+        if 'lang' in t.parsed:
+            features['language'] = [t.parsed['lang']]
 
         if collection == 'lv':
             label = t.parsed['lang']
