@@ -36,7 +36,7 @@ def cli():
 
 
 @cli.command()
-@click.option('--session', default='postgresql://127.0.0.1/twitter', callback=create_session)
+@click.option('--session', default='postgresql:///twitter', callback=create_session)
 def initdb(session):
     model.metadata.create_all()
 
@@ -47,7 +47,7 @@ def initdb(session):
             pass
 
 @cli.command()
-@click.option('--session', default='postgresql://127.0.0.1/twitter', callback=create_session)
+@click.option('--session', default='postgresql:///twitter', callback=create_session)
 def dropdb(session):
         model.metadata.drop_all()
 
@@ -60,7 +60,7 @@ def create_expander(ctx, param, value):
 
 @cli.command()
 @click.option('--source', default=None, help='Tweet source.')
-@click.option('--session', default='postgresql://127.0.0.1/twitter', callback=create_session)
+@click.option('--session', default='postgresql:///twitter', callback=create_session)
 @click.option('--clusters', default='clusters.cfg', callback=create_expander)
 @click.option('--collection', default='lv')
 def insert(source, session, clusters, collection):
