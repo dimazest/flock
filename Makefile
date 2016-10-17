@@ -2,10 +2,10 @@ PRODUCE = bin/python src/produce/produce
 
 insert:
 	${PRODUCE} $(patsubst tweets/share/lv/%.txt,tweets/db/lv/%.inserted,$(wildcard tweets/share/lv/*))
-	${PRODUCE} $(patsubst tweets/hydrate/%.gz,tweets/db/%.inserted,$(wildcard tweets/hydrate/*/*))
+	${PRODUCE} -j2 $(patsubst tweets/hydrate/%.gz,tweets/db/%.inserted,$(wildcard tweets/hydrate/brexit/*))
 
 share:
-	${PRODUCE} $(patsubst tweets/select/%.gz,tweets/share/%.txt,$(wildcard tweets/select/*/*))
+	${PRODUCE} -j2 $(patsubst tweets/select/%.gz,tweets/share/%.txt,$(wildcard tweets/select/*/*))
 
 clean:
 	rm tweets/{hydrate,db}/*
