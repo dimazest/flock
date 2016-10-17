@@ -166,6 +166,7 @@ Take a ~4M sample of #brexit tweets during 23-24 July. See:
 # Relevant materials
 * http://www.journals.elsevier.com/computers-and-electrical-engineering/call-for-papers/special-section-on-new-trends-in-humanistic-informatics
 * https://medium.com/@swainjo/us-presidential-election-2016-twitter-analysis-7596606853e5#.u71p5nuk3
+* https://scholar.google.com/citations?hl=en&vq=eng_databasesinformationsystems&view_op=list_hcore&venue=Yqny2grKwjoJ.2015
 
 ## Corpus construction
 * https://hal.archives-ouvertes.fr/hal-01323274/document
