@@ -39,6 +39,8 @@ setup(
         'flask-twitter-oembedder',
         'flask-iniconfig',
         'Flask-Humanize',
+
+        'flask-debugtoolbar',
     ],
     entry_points={
         'console_scripts': [
