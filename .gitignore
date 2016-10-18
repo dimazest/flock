@@ -27,3 +27,6 @@ tweets/db
 .ipynb_checkpoints/
 
 __pycache__/
+
+TAGS
+.projectile
