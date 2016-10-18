@@ -12,5 +12,5 @@ get_user_ids:
 	bin/flock config query_user_ids --poultry-config parts/etc/poultry.cfg --clusters clusters/lv.cfg
 
 tweets/%:
-	${PRODUCE} $@
+	time ${PRODUCE} $@
 
