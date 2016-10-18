@@ -68,6 +68,15 @@ def insert(source, session, clusters, collection):
     user_labels = clusters.user_labels()
     rows = []
 
+    stmt = pg.insert(model.Tweet.__table__)
+    stmt = stmt.on_conflict_do_update(
+        index_elements=['tweet_id', 'collection'],
+        set_={
+            'features': stmt.excluded.features,
+            'label': stmt.excluded.label,
+        }
+    )
+
     for i, t in enumerate(readline_dir(source), start=1):
 
         features = dict()
@@ -98,15 +107,6 @@ def insert(source, session, clusters, collection):
         else:
             label = '_{}'.format(t.id % 3)
 
-        stmt = pg.insert(model.Tweet.__table__)
-        stmt = stmt.on_conflict_do_update(
-            index_elements=['tweet_id', 'collection'],
-            set_={
-                'features': stmt.excluded.features,
-                'label': stmt.excluded.label,
-            }
-        )
-
         rows.append(
             {
                 'tweet_id': t.id,
@@ -123,8 +123,11 @@ def insert(source, session, clusters, collection):
             session.execute(stmt, rows)
             rows[:] = []
     else:
-        session.execute(stmt, rows)
+        if rows:
+            session.execute(stmt, rows)
+
         session.commit()
+
         try:
             i
         except UnboundLocalError:
