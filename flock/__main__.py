@@ -66,11 +66,9 @@ def create_expander(ctx, param, value):
 def insert(source, session, clusters, collection):
 
     user_labels = clusters.user_labels()
+    rows = []
 
     for i, t in enumerate(readline_dir(source), start=1):
-        if (i % 10000) == 0:
-            logger.debug('Processed %s tweets, it\'s time to commit.', i)
-            session.commit()
 
         features = dict()
 
@@ -100,22 +98,32 @@ def insert(source, session, clusters, collection):
         else:
             label = '_{}'.format(t.id % 3)
 
-        stmt = pg.insert(model.Tweet.__table__).values(
-            tweet_id=t.id,
-            collection=collection,
-            label=label,
-            features=features,
-            created_at=t.created_at,
-        ).on_conflict_do_update(
+        stmt = pg.insert(model.Tweet.__table__)
+        stmt = stmt.on_conflict_do_update(
             index_elements=['tweet_id', 'collection'],
             set_={
-                'features': json.dumps(features),
-                'label': label,
+                'features': stmt.excluded.features,
+                'label': stmt.excluded.label,
             }
         )
 
-        session.execute(stmt)
+        rows.append(
+            {
+                'tweet_id': t.id,
+                'collection': collection,
+                'label': label,
+                'features': features,
+                'created_at': t.created_at,
+            }
+        )
+
+        if (i % 10000) == 0:
+            logger.debug('Processed %s tweets, it\'s time to commit.', i)
+
+            session.execute(stmt, rows)
+            rows[:] = []
     else:
+        session.execute(stmt, rows)
         session.commit()
         try:
             i
