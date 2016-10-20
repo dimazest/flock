@@ -12,7 +12,7 @@ class Expander:
         for section in self.config.sections():
             users.update(
                 {
-                    k: v
+                    k[1:]: v  # Omit the @ sign.
                     for k, v in self.config[section].items()
                     if k.startswith('@')
                 }
