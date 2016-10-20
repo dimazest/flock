@@ -1,70 +1,72 @@
 {% extends "base.html" %}
 
 {% macro render_features(tweet) %}
-<div class="card card-block">
-<div class="highlight">
+  <div class="highlight">
     <pre>
-{
-{%- for feature_name, feature_values in tweet.features.items() %}
-  "<a href="{{ url_for('.feature_info', feature_name=feature_name) }}">{{ feature_name }}</a>": [
-    {%- for feature_value in feature_values%}
-    "<a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=feature_value) }}">{{ feature_value }}</a>",
-    {%- endfor%}
-  ]
-{%- endfor %}
-}</pre>
+      {
+      {%- for feature_name, feature_values in tweet.features.items() %}
+        "<a href="{{ url_for('.feature_info', feature_name=feature_name) }}">{{ feature_name }}</a>": [
+        {%- for feature_value in feature_values%}
+          {%- if feature_value.__class__.__name__ == 'str' %}
+            "<a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=feature_value) }}">{{ feature_value }}</a>",
+          {%- else %}
+            {{ feature_value|tojson }},
+          {%- endif %}
+        {%- endfor%}
+        ]
+      {%- endfor %}
+      }</pre>
 
-    <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-raw-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseExample">
-      Raw data
-    </button>
-    <div class="collapse" id="tweet-features-raw-{{ tweet.tweet_id }}">
+      <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-raw-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseExample">
+        Raw data
+      </button>
+      <div class="collapse" id="tweet-features-raw-{{ tweet.tweet_id }}">
         <pre>{{ tweet.features|tojson(indent=2) }}</pre>
-    </div>
-</div>
+      </div>
+  </div>
 {% endmacro %}
 
-{% macro render_tweets(tweets, lang) %}
-{%- for tweet in tweets | reverse %}
-  {%- if tweet.label == lang %}
-    {{ oembed_tweet(tweet.tweet_id, omit_script=True) }}
-
-    <p>
-      <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseExample">
-        Features
-      </button>
-    </p>
-    <div class="collapse" id="tweet-features-{{ tweet.tweet_id }}">
-        {{ render_features(tweet) }}
+{% macro render_tweets(tweets) %}
+  <div class="card-columns">
+    {%- for tweet in tweets | reverse %}
+      <div class="card">
+        <div class="card-header">
+          <ul class="nav nav-pills card-header-pills float-xs-left">
+            <li class="nav-item">
+              <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseFeatures">Features</button>
+            </li>
+          </ul>
+        </div>
+        {{ oembed_tweet(tweet.tweet_id, omit_script=True) }}
+        <div class="card-block collapse" id="tweet-features-{{ tweet.tweet_id }}"> 
+          {{ render_features(tweet) }} 
+        </div> 
+        <div class="card-block">
+        </div>
       </div>
-    </div>
-
-
-  {%- endif %}
-{%- endfor %}
+    {%- endfor %}
+  </div>
 {% endmacro %}
 
 
 {% block content %}
 
-There are {{ pagination.total|humanize('intcomma') }} tweets.
+  There are {{ pagination.total|humanize('intcomma') }} tweets.
 
-{{ render_pagination(pagination) }}
+  {{ render_pagination(pagination) }}
 
-<div class="container">
-  <div class="row">
-    {%- for label in label_names %}
-      <div class="col-sm-4">
-        <h1>{{ label }}</h1>
-        {{ render_tweets(pagination.items, label) }}
-      </div>
-    {%- endfor %}
-  </div>
-</div>
+  {{ render_tweets(pagination.items) }}
+  {# {%- for label in label_names %} #}
+  {# <div class="col-sm-4"> #}
+  {#     <h1>{{ label }}</h1> #}
+  {#     {{ render_tweets(pagination.items, label) }} #}
+  {# </div> #}
+  {# {%- endfor %} #}
 
-{%- for tweet in pagination.items %}
-{%- endfor %}
+  {%- for tweet in pagination.items %}
+  {%- endfor %}
 
-{{ render_pagination(pagination) }}
+  {{ render_pagination(pagination) }}
 
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 {% endblock %}
