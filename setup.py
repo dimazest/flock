@@ -29,7 +29,6 @@ setup(
         'click',
         'click-log',
         'poultry',
-        'psycopg2',
         'sqlalchemy',
         'flock-conf',
     ],

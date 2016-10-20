@@ -1,7 +1,4 @@
-import json
 import logging
-
-from itertools import chain
 
 import click
 import click_log
@@ -12,7 +9,15 @@ from sqlalchemy.dialects import postgresql as pg
 from sqlalchemy.exc import ProgrammingError
 
 from . import model
+from .features import basic_features, lv_features
 
+
+try:
+    import psycopg2
+except ImportError:
+    # Fall back to psycopg2cffi
+    from psycopg2cffi import compat
+    compat.register()
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +26,7 @@ def create_session(ctx, param, value):
     from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
 
-    engine = create_engine(value)
+    engine = create_engine(value, client_encoding='utf8')
     model.metadata.bind = engine
     Session = sessionmaker(bind=engine)
 
@@ -46,6 +51,7 @@ def initdb(session):
         except ProgrammingError:
             pass
 
+
 @cli.command()
 @click.option('--session', default='postgresql:///twitter', callback=create_session)
 def dropdb(session):
@@ -62,7 +68,7 @@ def create_expander(ctx, param, value):
 @click.option('--source', default=None, help='Tweet source.')
 @click.option('--session', default='postgresql:///twitter', callback=create_session)
 @click.option('--clusters', default='clusters.cfg', callback=create_expander)
-@click.option('--collection', default='lv')
+@click.option('--collection', default='default')
 def insert(source, session, clusters, collection):
 
     user_labels = clusters.user_labels()
@@ -77,45 +83,15 @@ def insert(source, session, clusters, collection):
         }
     )
 
-    for i, t in enumerate(readline_dir(source), start=1):
+    rows_tweets = basic_features(readline_dir(source), user_labels)
 
-        features = dict()
+    if collection == 'lv':
+        rows_tweets = lv_features(rows_tweets)
 
-        features['screen_names'] = sorted(
-            user_labels.get(t.parsed['user']['id'], [t.screen_name])
-        )
+    for i, (row, tweet) in enumerate(rows_tweets, start=1):
+        row['collection'] = collection
 
-        features['user_mentions'] = sorted(
-            chain.from_iterable(
-                user_labels.get(mention['id'], [mention['screen_name']])
-                for mention in t.parsed['entities']['user_mentions']
-            )
-        )
-
-        features['hashtags'] = sorted(
-            ht['text'].lower()
-            for ht in t.parsed['entities']['hashtags']
-        )
-
-        if 'lang' in t.parsed:
-            features['language'] = [t.parsed['lang']]
-
-        if collection == 'lv':
-            label = t.parsed['lang']
-            if label not in ('lv', 'ru', 'en'):
-                continue
-        else:
-            label = '_{}'.format(t.id % 3)
-
-        rows.append(
-            {
-                'tweet_id': t.id,
-                'collection': collection,
-                'label': label,
-                'features': features,
-                'created_at': t.created_at,
-            }
-        )
+        rows.append(row)
 
         if (i % 10000) == 0:
             logger.debug('Processed %s tweets, it\'s time to commit.', i)
