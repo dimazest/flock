@@ -39,8 +39,8 @@ setup(
         'flask-twitter-oembedder',
         'flask-iniconfig',
         'Flask-Humanize',
-
         'flask-debugtoolbar',
+        'paginate_sqlalchemy',
     ],
     entry_points={
         'console_scripts': [

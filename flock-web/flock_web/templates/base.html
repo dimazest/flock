@@ -1,60 +1,39 @@
-{% macro render_pagination(pagination) %}
-<nav aria-label="Page navigation">
-  <ul class="pagination">
-    {%- if pagination.has_prev %}
-      <li class="page-item">
-      <a class="page-link" href="{{ url_for_other_page(pagination.prev_num) }}" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-        <span class="sr-only">Previous</span>
-      </a>
-    {%- else %}
-      <li class="page-item disabled">
-        <span class="page-link" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-          <span class="sr-only">Previous</span>
-        </span>
-      </li>
-    {%- endif %}
+{% macro render_pagination(page) %}
 
-    {%- for page in pagination.iter_pages() %}
-    {% if page %}
-      {% if page != pagination.page %}
-        <li class="page-item">
-          <a class="page-link" href="{{ url_for_other_page(page) }}">{{ page }}</a>
-        </li>
-      {% else %}
-        <li class="page-item active">
-          <span class="page-link">{{ page }}
-            <span class="sr-only">(current)</span>
-          </span>
-        </li>
-      {% endif %}
-    {% else %}
-      <li class="page-item disabled">
-        <span class="page-link" aria-label="Ellipsis">
-          <span aria-hidden="true">...</span>
-          <span class="sr-only">Ellipsis</span>
-        </span>
-      </li>
-    {% endif %}
-    {%- endfor %}
+  {% set pager = page.link_map(symbol_previous='&laquo;', symbol_next='&raquo;',) %}
 
-    {%- if pagination.has_next %}
-      <li class="page-item">
-      <a class="page-link" href="{{ url_for_other_page(pagination.next_num) }}" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-        <span class="sr-only">Next</span>
-      </a>
-    {%- else %}
-      <li class="page-item disabled">
-        <span class="page-link" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-          <span class="sr-only">Next</span>
-        </span>
-      </li>
-    {%- endif %}
-  </ul>
-</nav>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      {%- for page in [pager.previous_page, pager.first_page] + pager.range_pages + [pager.last_page, pager.next_page] %}
+        {% if page.type == 'current_page' %}
+          <li class="page-item active">
+            <span class="page-link">{{ page.value }}
+              <span class="sr-only">(Current page)</span>
+            </span>
+          </li>
+        {% elif page.type == 'span' %}
+          <li class="page-item disabled">
+            <span class="page-link" aria-label="Ellipsis">
+              <span aria-hidden="true">...</span>
+              <span class="sr-only">Ellipsis</span>
+            </span>
+          </li>
+        {%- elif page.number != pager.current_page.value %}
+          <li class="page-item">
+            <a class="page-link" href="{{ page.href }}" aria-label="Next">
+              <span aria-hidden="true">{{ page.value|safe if page.type not in ('first_page', 'last_page') else page.number }}</span>
+            </a>
+          </li>
+        {%- elif page.type not in ('first_page', 'last_page') %}
+          <li class="page-item disabled">
+            <span class="page-link">
+              {{ page.value|safe}}
+            </span>
+          </li>
+        {% endif %}
+      {%- endfor %}
+    </ul>
+  </nav>
 {% endmacro %}
 
 <!DOCTYPE html>
@@ -68,33 +47,32 @@
     <title>flock</title>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
     <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
   </head>
   <body>
 
     <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
-        <a class="navbar-brand" href="{{url_for('main.welcome')}}">flock</a>
-        {#
-        <ul class="nav navbar-nav">
-            {%- for item in nav.top -%}
-                <li class="nav-item {{ 'active' if item.is_active else '' }}">
-                    <a class="nav-link" href="{{ item.url }}">{{ item.label }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-        #}
+      <a class="navbar-brand" href="{{url_for('main.welcome')}}">flock</a>
+      {#
+      <ul class="nav navbar-nav">
+        {%- for item in nav.top -%}
+          <li class="nav-item {{ 'active' if item.is_active else '' }}">
+            <a class="nav-link" href="{{ item.url }}">{{ item.label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+      #}
     </nav>
 
     <div class="container">
-        <div class="starter-template">
-            {% block content %}{% endblock %}
-        </div>
+      <div class="starter-template">
+        {% block content %}{% endblock %}
+      </div>
     </div>
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>
-  </body>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>  </body>
 </html>

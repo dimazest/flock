@@ -2,20 +2,21 @@
 
 {% macro render_features(tweet) %}
   <div class="highlight">
-    <pre>
-      {
-      {%- for feature_name, feature_values in tweet.features.items() %}
-        "<a href="{{ url_for('.feature_info', feature_name=feature_name) }}">{{ feature_name }}</a>": [
-        {%- for feature_value in feature_values%}
-          {%- if feature_value.__class__.__name__ == 'str' %}
-            "<a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=feature_value) }}">{{ feature_value }}</a>",
-          {%- else %}
-            {{ feature_value|tojson }},
-          {%- endif %}
-        {%- endfor%}
-        ]
-      {%- endfor %}
-      }</pre>
+<pre>
+{
+{%- for feature_name, feature_values in tweet.features.items() %}
+  "<a href="{{ url_for('.feature_info', feature_name=feature_name) }}">{{ feature_name }}</a>": [
+  {%- for feature_value in feature_values%}
+    {%- if feature_value.__class__.__name__ == 'str' %}
+      "<a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=feature_value) }}">{{ feature_value }}</a>",
+    {%- else %}
+      {{ feature_value|tojson }},
+    {%- endif %}
+  {%- endfor%}
+  ],
+{%- endfor %}
+}
+</pre>
 
       <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-raw-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseExample">
         Raw data
@@ -33,7 +34,7 @@
         <div class="card-header">
           <ul class="nav nav-pills card-header-pills float-xs-left">
             <li class="nav-item">
-              <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseFeatures">Features</button>
+              <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseFeatures" aria-pressed="false">Features</button>
             </li>
           </ul>
         </div>

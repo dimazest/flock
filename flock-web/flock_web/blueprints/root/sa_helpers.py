@@ -50,10 +50,16 @@ class ColumnFunction(functions.FunctionElement):
             self._columns[name] = FunctionColumn(self, name)
 
 
-class jsonb_array_elements_text(ColumnFunction):
+class extract_feature(ColumnFunction):
     name = 'jsonb_array_elements_text'
-    column_names = ['value']
+    column_names = ['feature']
+
+
+class extract_other_feature(ColumnFunction):
+    name = 'jsonb_array_elements_text'
+    column_names = ['other_feature']
+
 
 class jsonb_object_keys(ColumnFunction):
     name = 'jsonb_object_keys'
-    column_names = ['value']
+    #column_names = ['value']

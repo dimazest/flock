@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  {#{{ render_pagination(page) }}#}
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th style="max-width: 300px" class="text-capitalize">{{ feature_name }}</th>
+        {# {%- for category in category_labels %} #}
+        {% if other_feature_name and not other_feature_values %}
+          <th class="text-capitalize">{{ other_feature_name }}</th>
+        {% elif other_feature_values %}
+          {% for other_feature_vale in other_feature_values %}
+            <th class="text-capitalize">{{ other_feature_vale }}</th>
+          {% endfor %}
+        {%- endif %}
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for item in items %}
+        <tr>
+          <td style="max-width: 300px">
+            <a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=item.feature) }}">{{ item.feature }}</a> 
+          </td>
+          {% if other_feature_name and not other_feature_values %}
+            <td>{{ item.other_feature }}</td>
+          {% elif other_feature_values %}
+            {% for other_feature_vale in other_feature_values %}
+              <td class="text-capitalize">{{ item[other_feature_vale] or '' }}</td>
+            {% endfor %}
+        {%- endif %}
+          <td>{{ item[-1] }}</td>
+        {%- endfor %} 
+        </tr>
+    </tbody>
+  </table>
+{% endblock %}
