@@ -27,6 +27,3 @@ ublogen: $(patsubst ${UBLOG_15_APRIL}/%,${UBLOG_15_APRIL_EN}/%,$(wildcard ${UBLO
 
 tweets/%:
 	time ${PRODUCE} $@
-h
-ph
-

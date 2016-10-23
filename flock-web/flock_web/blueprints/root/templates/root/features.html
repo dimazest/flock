@@ -2,7 +2,7 @@
 
 {% block content %}
 
-  {#{{ render_pagination(page) }}#}
+  {{ render_pagination(page) }}
 
   <table class="table table-striped">
     <thead>
@@ -23,7 +23,7 @@
       {%- for item in items %}
         <tr>
           <td style="max-width: 300px">
-            <a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=item.feature) }}">{{ item.feature }}</a> 
+            <a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=item.feature) }}">{{ item.feature }}</a>
           </td>
           {% if other_feature_name and not other_feature_values %}
             <td>{{ item.other_feature }}</td>
@@ -33,8 +33,11 @@
             {% endfor %}
         {%- endif %}
           <td>{{ item[-1] }}</td>
-        {%- endfor %} 
+        {%- endfor %}
         </tr>
     </tbody>
   </table>
+
+  {{ render_pagination(page) }}
+
 {% endblock %}

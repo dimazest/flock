@@ -19,15 +19,19 @@
             </span>
           </li>
         {%- elif page.number != pager.current_page.value %}
+          {% if not (page.type == 'first_page' and pager.range_pages[0].type != 'span')
+             and not (page.type == 'last_page' and pager.range_pages[-1].type != 'span')
+          %}
           <li class="page-item">
             <a class="page-link" href="{{ page.href }}" aria-label="Next">
               <span aria-hidden="true">{{ page.value|safe if page.type not in ('first_page', 'last_page') else page.number }}</span>
             </a>
           </li>
+          {% endif %}
         {%- elif page.type not in ('first_page', 'last_page') %}
           <li class="page-item disabled">
             <span class="page-link">
-              {{ page.value|safe}}
+              {{ page.value|safe }}
             </span>
           </li>
         {% endif %}

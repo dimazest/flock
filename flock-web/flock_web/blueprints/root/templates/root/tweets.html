@@ -5,7 +5,7 @@
 <pre>
 {
 {%- for feature_name, feature_values in tweet.features.items() %}
-  "<a href="{{ url_for('.feature_info', feature_name=feature_name) }}">{{ feature_name }}</a>": [
+  "<a href="{{ url_for('.features', feature_name=feature_name) }}">{{ feature_name }}</a>": [
   {%- for feature_value in feature_values%}
     {%- if feature_value.__class__.__name__ == 'str' %}
       "<a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=feature_value) }}">{{ feature_value }}</a>",
@@ -29,7 +29,7 @@
 
 {% macro render_tweets(tweets) %}
   <div class="card-columns">
-    {%- for tweet in tweets | reverse %}
+    {%- for tweet in tweets %}
       <div class="card">
         <div class="card-header">
           <ul class="nav nav-pills card-header-pills float-xs-left">
@@ -39,9 +39,9 @@
           </ul>
         </div>
         {{ oembed_tweet(tweet.tweet_id, omit_script=True) }}
-        <div class="card-block collapse" id="tweet-features-{{ tweet.tweet_id }}"> 
-          {{ render_features(tweet) }} 
-        </div> 
+        <div class="card-block collapse" id="tweet-features-{{ tweet.tweet_id }}">
+          {{ render_features(tweet) }}
+        </div>
         <div class="card-block">
         </div>
       </div>
@@ -52,22 +52,11 @@
 
 {% block content %}
 
-  There are {{ pagination.total|humanize('intcomma') }} tweets.
+  There are {{ page.item_count|humanize('intcomma') }} tweets.
 
-  {{ render_pagination(pagination) }}
-
-  {{ render_tweets(pagination.items) }}
-  {# {%- for label in label_names %} #}
-  {# <div class="col-sm-4"> #}
-  {#     <h1>{{ label }}</h1> #}
-  {#     {{ render_tweets(pagination.items, label) }} #}
-  {# </div> #}
-  {# {%- endfor %} #}
-
-  {%- for tweet in pagination.items %}
-  {%- endfor %}
-
-  {{ render_pagination(pagination) }}
+  {{ render_pagination(page) }}
+  {{ render_tweets(page.items) }}
+  {{ render_pagination(page) }}
 
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 {% endblock %}
