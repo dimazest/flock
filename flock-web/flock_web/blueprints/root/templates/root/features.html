@@ -12,8 +12,8 @@
         {% if other_feature_name and not other_feature_values %}
           <th class="text-capitalize">{{ other_feature_name }}</th>
         {% elif other_feature_values %}
-          {% for other_feature_vale in other_feature_values %}
-            <th class="text-capitalize">{{ other_feature_vale }}</th>
+          {% for other_feature_value in other_feature_values %}
+            <th class="text-capitalize">{{ other_feature_value }}</th>
           {% endfor %}
         {%- endif %}
         <th>Total</th>
@@ -28,11 +28,11 @@
           {% if other_feature_name and not other_feature_values %}
             <td>{{ item.other_feature }}</td>
           {% elif other_feature_values %}
-            {% for other_feature_vale in other_feature_values %}
-              <td class="text-capitalize">{{ item[other_feature_vale] or '' }}</td>
+            {% for other_feature_value in other_feature_values %}
+              <td class="text-capitalize">{{ item[other_feature_value]|humanize('intcomma') if item[other_feature_value] else '' }}</td>
             {% endfor %}
         {%- endif %}
-          <td>{{ item[-1] }}</td>
+          <td>{{ item[-1]|humanize('intcomma') }}</td>
         {%- endfor %}
         </tr>
     </tbody>
