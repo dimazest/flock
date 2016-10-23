@@ -6,7 +6,7 @@ UBLOG_15_APRIL_EN = ${UBLOG_15_APRIL}_EN
 
 .PHONY: insert hydrate share ger_user_ids ublogen
 
-insert: $(patsubst tweets/hydrate/%.gz,tweets/db/%.inserted,$(wildcard tweets/hydrate/lv/*.gz))
+insert: $(patsubst tweets/hydrate/%.gz,tweets/db/%.inserted,$(wildcard tweets/hydrate/*/*.gz))
 
 hydrate: $(patsubst tweets/share/%.txt,tweets/hydrate/%.gz,$(wildcard tweets/share/*/*.txt))
 
