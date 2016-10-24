@@ -86,14 +86,14 @@ The first idea is to apply doc2vec to a collection. The main goal is to get dist
 
 doc2vec takes labeled documents as in input. In our case, documents are tweets and labels are any metadata we could come up with. The labels could be:
 
-* ✓ tweet id, however it's not unique!
+* ✓ tweet id
 * ✓ hashtags
 * ✓ the screen name of the author
-* user mentions
+* ✓ user mentions
 * ✓ URLs that are in the tweet
   * expand urls, so https://t.co/IQGSj1V3pU becomes http://www.wsj.com/articles/boris-johnson-emerges-as-big-winner-in-brexit-vote-1466740369?mod=e2tw
   * It ight be a good idea to split an url to several parts, so https://www.theguardian.com/travel/2016/aug/03/10-best-outdoor-swimming-holidays-around-world-italy-france-greece becomes:
-    * the domain (www.theguardian.com)
+    * ✓ the domain (www.theguardian.com), it is hostname in the urlparse terminology.
     * the rest of the url, but split by / (travel, 2016, aug, 03, 10-best...)
     * maybe also split the parts by '-'.
 * geo information, pobably as a sring (e.g. Berlin, Germany).
@@ -111,15 +111,13 @@ doc2vec takes labeled documents as in input. In our case, documents are tweets a
 
 The good point is that we can also get a distributed representation of the labels, so we could in prinicple cluster hashtags, or compare websites.
 
-The (visual) reports
---------------------
+## The (visual) reports
 
 Let say we want to map the hastags. We can show different clusters and see whether they make sense. In the case of #brexit, there shoule be a cloud of the #leave tweets and a cloud of the #remain tweets. Moreover, since we now hashtag counts, we could estimate density function in the space. This estimation should show us how important a cluster is. For example, there might be a very distinctive cluster, that, however appears in a very small number of tweets. This also should help us to visually show wether there are more #leave or #remain tweets.
 
 Plot dates, for example, of the weeks before and after the referendum, show the closest hashtags around them.
 
-Technical details
------------------
+## Technical details
 
 A tweet collection is stored in a `.gz` archive that contain tweet encoded with JSON. We can pump a collection into a PosgreSQL database for further analysis as it natively supports json and allows to index fields inside of a JSON blob.
 
@@ -127,7 +125,7 @@ The metadata that does not come from Twitter, for example named entities, or sen
 
 ### Some performance data
 
-4.9M Brexit tweets from 24-25 of July are sampled by taking every 40th tweet making a selection of 122K tweets:
+4.9M Brexit tweets from 24-25 of July are sampled by taking everyph 40th tweet making a selection of 122K tweets:
 
 ``` bash
 

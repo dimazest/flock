@@ -63,7 +63,7 @@ def tweets(feature_name, feature_value):
     )
 
 
-@bp_root.route('/features/<feature_name>')
+@bp_root.route('/tweets/<feature_name>')
 def features(feature_name):
     other_feature = request.args.get('other', None)
     unstack = request.args.get('unstack', None) if other_feature is not None else None
@@ -135,9 +135,7 @@ def features(feature_name):
 
         from sqlalchemy import MetaData
         ret_types = Table(
-            '__t'.format(g.collection, feature_name, other_feature)
-            .replace('.', '__').replace('-', '__'),
-            MetaData(),
+            '_t_', MetaData(),
             Column('feature', String),
             extend_existing=True,
             *[Column(v, Integer) for v in other_feature_values]
