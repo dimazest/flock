@@ -22,10 +22,27 @@ toolbar = DebugToolbarExtension()
 
 
 def url_for_other_page(page):
-    args = request.view_args.copy()
+    return restricted_url(_page=page)
+
+
+def restricted_url(endpoint=None, **kwargs):
+    if endpoint is None:
+        endpoint = request.endpoint
+
+    if endpoint == request.endpoint:
+        args = request.view_args.copy()
+    else:
+        args = {}
     args.update(request.args)
-    args['page'] = page
-    return url_for(request.endpoint, **args)
+
+    if endpoint != request.endpoint:
+        for arg in list(args.keys()):
+            if arg.startswith('_'):
+                del args[arg]
+
+    args.update(kwargs)
+
+    return url_for(endpoint, **args)
 
 
 def create_app(config_file):
@@ -49,6 +66,7 @@ def create_app(config_file):
     app.register_blueprint(bp_root)
 
     app.jinja_env.globals['url_for_other_page'] = url_for_other_page
+    app.jinja_env.globals['restricted_url'] = restricted_url
 
     @app.after_request
     def after_request(response):
