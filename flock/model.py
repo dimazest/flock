@@ -44,7 +44,7 @@ indexes = [
     ),
 
     sa.Index(
-        'idx_tweet_features_languege',
-        Tweet.features['langueage'],
+        'idx_tweet_features_languages',
+        Tweet.features['languages'],
     ),
 ]
