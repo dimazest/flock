@@ -8,7 +8,6 @@
     <thead>
       <tr>
         <th style="max-width: 300px" class="text-capitalize">{{ feature_name }}</th>
-        {# {%- for category in category_labels %} #}
         {% if other_feature_name and not other_feature_values %}
           <th class="text-capitalize">{{ other_feature_name }}</th>
         {% elif other_feature_values %}
@@ -22,17 +21,20 @@
     <tbody>
       {%- for item in items %}
         <tr>
-          <td style="max-width: 300px">
-            <a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=item.feature) }}">{{ item.feature }}</a>
-          </td>
+          <td style="max-width: 300px">{{ item.feature }}</td>
           {% if other_feature_name and not other_feature_values %}
-            <td>{{ item.other_feature }}</td>
+            <td><a href="{{ restricted_url('.tweets', **{other_feature_name: item.other_feature}) }}">{{ item.other_feature }}</a></td>
           {% elif other_feature_values %}
             {% for other_feature_value in other_feature_values %}
-              <td class="text-capitalize">{{ item[other_feature_value]|humanize('intcomma') if item[other_feature_value] else '' }}</td>
+              <td class="text-capitalize">
+                <a href="{{ restricted_url('.tweets', **{other_feature_name: other_feature_value}) }}">
+                {{ item[other_feature_value]|humanize('intcomma') if item[other_feature_value] else '' }}
+              </td>
             {% endfor %}
-        {%- endif %}
-          <td>{{ item[-1]|humanize('intcomma') }}</td>
+          {%- endif %}
+          <td>
+            <a href="{{ restricted_url('.tweets', **{feature_name: item.feature}) }}">{{ item[-1]|humanize('intcomma') }}</a>
+          </td>
         {%- endfor %}
         </tr>
     </tbody>

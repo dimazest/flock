@@ -5,10 +5,10 @@
 <pre>
 {
 {%- for feature_name, feature_values in tweet.features.items() %}
-  "<a href="{{ url_for('.features', feature_name=feature_name) }}">{{ feature_name }}</a>": [
-  {%- for feature_value in feature_values%}
+  "<a href="{{ restricted_url('.features', feature_name=feature_name) }}">{{ feature_name }}</a>": [
+  {%- for feature_value in feature_values %}
     {%- if feature_value.__class__.__name__ == 'str' %}
-      "<a href="{{ url_for('.tweets', feature_name=feature_name, feature_value=feature_value) }}">{{ feature_value }}</a>",
+      "<a href="{{ restricted_url('.tweets', **{feature_name: feature_value}) }}">{{ feature_value }}</a>",
     {%- else %}
       {{ feature_value|tojson }},
     {%- endif %}
@@ -41,8 +41,6 @@
         {{ oembed_tweet(tweet.tweet_id, omit_script=True) }}
         <div class="card-block collapse" id="tweet-features-{{ tweet.tweet_id }}">
           {{ render_features(tweet) }}
-        </div>
-        <div class="card-block">
         </div>
       </div>
     {%- endfor %}

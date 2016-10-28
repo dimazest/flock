@@ -1,7 +1,7 @@
 from flask import render_template, Blueprint, request, redirect, url_for, g
 
 from sqlalchemy import func, select, Table, Column, Integer, String, and_, sql
-from sqlalchemy.sql.expression import text
+from sqlalchemy.sql.expression import text, and_
 from paginate_sqlalchemy import SqlalchemySelectPage, SqlalchemyOrmPage
 
 import crosstab
@@ -33,23 +33,24 @@ def index():
     return redirect(url_for('.tweets'))
 
 
-@bp_root.route('/tweets', defaults={'feature_name': None, 'feature_value': None})
-@bp_root.route('/tweets/<feature_name>/<feature_value>')
-def tweets(feature_name, feature_value):
-    page_num = int(request.args.get('page', 1))
-    items_per_page = int(request.args.get('items_per_page', 20))
+def feature_query_args():
+    feature_query = request.args.copy()
+    return feature_query
+
+
+@bp_root.route('/tweets')
+def tweets():
+    page_num = int(request.args.get('_page', 1))
+    items_per_page = int(request.args.get('_items_per_page', 20))
+
+    feature_query = feature_query_args()
 
     tweets = (
         db.session.query(model.Tweet)
         .filter(model.Tweet.collection == g.collection)
+        .filter(*(model.Tweet.features.contains({k: [v]}) for k, v in feature_query.items() if not k.startswith('_')))
         .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     )
-
-    if feature_name is not None:
-        tweets = tweets.filter(
-            model.Tweet.features[feature_name]
-            .contains('"{}"'.format(feature_value))
-        )
 
     page = SqlalchemyOrmPage(
         tweets,
@@ -63,25 +64,31 @@ def tweets(feature_name, feature_value):
     )
 
 
-@bp_root.route('/features/<feature_name>')
+@bp_root.route('/tweets/<feature_name>')
 def features(feature_name):
-    other_feature = request.args.get('other', None)
-    unstack = request.args.get('unstack', None) if other_feature is not None else None
+    other_feature = request.args.get('_other', None)
+    unstack = request.args.get('_unstack', None) if other_feature is not None else None
     other_feature_values = None
 
-    page_num = int(request.args.get('page', 1))
-    items_per_page = int(request.args.get('items_per_page', 20))
+    page_num = int(request.args.get('_page', 1))
+    items_per_page = int(request.args.get('_items_per_page', 20))
 
+    feature_query = feature_query_args()
+
+    features_to_filter = [model.Tweet.features.contains({k: [v]}) for k, v in feature_query.items() if not k.startswith('_')]
     feature_select = (
         select(['feature', func.count()])
         .select_from(
             text(
-                'tweet, '
+                ('tweet, ' if not features_to_filter else '') +
                 'jsonb_array_elements_text(tweet.features->:feature) as feature'
             ).bindparams(feature=feature_name)
         )
         .where(
-            sql.literal_column('collection') == g.collection,
+            and_(
+                sql.literal_column('collection') == g.collection,
+                *features_to_filter,
+            )
         )
         .group_by('feature')
         .order_by(func.count().desc())
@@ -135,9 +142,7 @@ def features(feature_name):
 
         from sqlalchemy import MetaData
         ret_types = Table(
-            '__t'.format(g.collection, feature_name, other_feature)
-            .replace('.', '__').replace('-', '__'),
-            MetaData(),
+            '_t_', MetaData(),
             Column('feature', String),
             extend_existing=True,
             *[Column(v, Integer) for v in other_feature_values]

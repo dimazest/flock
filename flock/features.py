@@ -1,4 +1,5 @@
 from itertools import chain
+from urllib.parse import urlparse
 
 
 def basic_features(tweets, user_labels):
@@ -30,6 +31,14 @@ def basic_features(tweets, user_labels):
                 'tracked': mention['screen_name'] in user_labels,
             }
             for mention in tweet.parsed['entities']['user_mentions']
+        ]
+
+        features['urls'] = [
+            url['expanded_url'] for url in tweet.parsed['entities']['urls']
+        ]
+
+        features['hostnames'] = [
+            urlparse(url).hostname for url in features['urls']
         ]
 
         features['hashtags'] = sorted(
