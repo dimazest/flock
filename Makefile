@@ -10,7 +10,7 @@ insert: $(patsubst tweets/hydrate/%.gz,tweets/db/%.inserted,$(wildcard tweets/hy
 
 hydrate: $(patsubst tweets/share/%.txt,tweets/hydrate/%.gz,$(wildcard tweets/share/*/*.txt))
 
-share: $(patsubst tweets/select/%.gz,tweets/share/%.txt,$(wildcard tweets/select/*/*))
+share-lv: $(patsubst tweets/select/%.gz,tweets/share/%.txt,$(wildcard tweets/select/lv/*))
 
 get_user_ids:
 	bin/flock config query_user_ids --poultry-config parts/etc/poultry.cfg --clusters $F
