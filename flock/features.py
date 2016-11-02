@@ -49,8 +49,16 @@ def basic_features(tweets, user_labels):
         if 'lang' in tweet.parsed:
             features['languages'] = [tweet.parsed['lang']]
 
-        if tweet.parsed.get('retweeted_status', None):
-            features['retweeted_status__user__screen_names'] = [tweet.parsed['retweeted_status']['user']['screen_name']]
+        retweeted_status = tweet.parsed.get('retweeted_status', None)
+        if retweeted_status:
+            features['retweeted_status__user__screen_names'] = [retweeted_status['user']['screen_name']]
+            features['retweeted_status__id'] = [retweeted_status['id']]
+
+        in_reply_to_user_id = tweet.parsed.get('in_reply_to_user_id', None)
+        if in_reply_to_user_id:
+            features['in_reply_to_screen_names'] = sorted(
+                user_labels.get(in_reply_to_user_id, [tweet.parsed['in_reply_to_screen_name']])
+            )
 
         row = {
             'tweet_id': tweet.id,
