@@ -21,7 +21,9 @@
     <tbody>
       {%- for item in items %}
         <tr>
-          <td style="max-width: 300px">{{ item.feature }}</td>
+          <td style="max-width: 300px">
+            <a href="{{ url_for('.tweets', **{feature_name: item.feature}) }}">{{ item.feature }}</a>
+          </td>
           {% if other_feature_name and not other_feature_values %}
             <td><a href="{{ restricted_url('.tweets', **{other_feature_name: item.other_feature}) }}">{{ item.other_feature }}</a></td>
           {% elif other_feature_values %}
