@@ -94,7 +94,7 @@ def insert(source, session, clusters, collection):
         rows.append(row)
 
         if (i % 10000) == 0:
-            logger.debug('Processed %s tweets, it\'s time to commit.', i)
+            logger.debug('Processed %s tweets.', i)
 
             session.execute(stmt, rows)
             rows[:] = []
