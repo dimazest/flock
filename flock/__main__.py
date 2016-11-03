@@ -65,11 +65,43 @@ def create_expander(ctx, param, value):
 
 
 @cli.command()
+@click.option('--clusters', default='clusters.cfg', callback=create_expander)
+@click.option('--source', '-s', multiple=True)
+def export(clusters, source):
+    user_labels = clusters.user_labels()
+
+    clusters = {}
+
+    for expanded_user in user_labels.values():
+        user, = (u for u in expanded_user if u[0] == '@' and u[1] != '@')
+        categories = (u for u in expanded_user if u.startswith('@@'))
+
+        for category in categories:
+            clusters.setdefault(category, set()).add(user)
+
+    template = (
+        "if {conditions}:\n"
+        "    source = '{source}'"
+    )
+
+    result = '\n\n'.join(
+        template.format(
+            source=s,
+            conditions = ' or '.join("'{} ' in ttext".format(u) for u in users)
+        )
+        for s, users in clusters.items() if not source or s in source
+    )
+
+    print(result)
+
+
+@cli.command()
 @click.option('--source', default=None, help='Tweet source.')
 @click.option('--session', default='postgresql:///twitter', callback=create_session)
 @click.option('--clusters', default='clusters.cfg', callback=create_expander)
 @click.option('--collection', default='default')
-def insert(source, session, clusters, collection):
+@click.option('--extract-retweets', is_flag=True)
+def insert(source, session, clusters, collection, extract_retweets):
 
     user_labels = clusters.user_labels()
     rows = []
@@ -79,11 +111,12 @@ def insert(source, session, clusters, collection):
         index_elements=['tweet_id', 'collection'],
         set_={
             'features': stmt.excluded.features,
+            # TODO: get rid of label.
             'label': stmt.excluded.label,
         }
     )
 
-    rows_tweets = basic_features(readline_dir(source), user_labels)
+    rows_tweets = basic_features(readline_dir(source, extract_retweets=extract_retweets), user_labels)
 
     if collection == 'lv':
         rows_tweets = lv_features(rows_tweets)
