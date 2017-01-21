@@ -53,7 +53,7 @@ def basic_features(tweets, user_labels, with_text=False):
         features['is_retweet'] = [str(bool(retweeted_status))]
         if retweeted_status:
             features['retweeted_status__user__screen_names'] = sorted(
-                user_labels.get(in_reply_to_user_id, [retweeted_status['id']])
+                user_labels.get(retweeted_status['user']['id'], [retweeted_status['user']['screen_name']])
             )
             features['retweeted_status__id'] = [retweeted_status['id']]
 
