@@ -69,7 +69,8 @@ def create_expander(ctx, param, value):
 @click.option('--session', default='postgresql:///twitter', callback=create_session)
 @click.option('--clusters', default='clusters.cfg', callback=create_expander)
 @click.option('--collection', default='default')
-def insert(source, session, clusters, collection):
+@click.option('--with-text', is_flag=True)
+def insert(source, session, clusters, collection, with_text):
 
     user_labels = clusters.user_labels()
     rows = []
@@ -83,7 +84,7 @@ def insert(source, session, clusters, collection):
         }
     )
 
-    rows_tweets = basic_features(readline_dir(source), user_labels)
+    rows_tweets = basic_features(readline_dir(source), user_labels, with_text=with_text)
 
     if collection == 'lv':
         rows_tweets = lv_features(rows_tweets)

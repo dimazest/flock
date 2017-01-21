@@ -2,7 +2,7 @@ from itertools import chain
 from urllib.parse import urlparse
 
 
-def basic_features(tweets, user_labels):
+def basic_features(tweets, user_labels, with_text=False):
 
     for tweet in tweets:
 
@@ -51,6 +51,9 @@ def basic_features(tweets, user_labels):
 
         if tweet.parsed.get('retweeted_status', None):
             features['retweeted_status__user__screen_names'] = [tweet.parsed['retweeted_status']['user']['screen_name']]
+
+        if with_text:
+            features['text'] = tweet.parsed['text']
 
         row = {
             'tweet_id': tweet.id,
