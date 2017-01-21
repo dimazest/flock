@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint
+from flask import render_template, Blueprint, send_from_directory, request
 
 from sqlalchemy import func
 from flock import model
@@ -10,6 +10,7 @@ bp_main = Blueprint(
     'main',
     __name__,
     template_folder='templates',
+    static_folder='static',
     )
 
 
@@ -28,3 +29,8 @@ def welcome():
         'main/welcome.html',
         collections=collections,
     )
+
+
+@bp_main.route('/robots.txt')
+def static_from_root():
+    return send_from_directory(bp_main.static_folder, request.path[1:])

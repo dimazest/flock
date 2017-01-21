@@ -70,6 +70,8 @@ Hashtags might do their job!
 * http://www.diena.lv/dienas-zurnali/sestdiena/loliga-valoda-14149966
 * http://liva.online/dr-sc-comm/publikacijas/
 * http://www.la.lv/latvijas-politiskais-tviteris-mazs-bet-nikns-la-lv-tvitertops/
+* https://twitter.com/thedansimonson/status/794207087228162048 Rudra et al.: understanding codeswitching behavior in Hindi-English bilinguals
+* http://nodalida2017.se/
 
 ## Other datasets
 

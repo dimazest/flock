@@ -65,6 +65,37 @@ def create_expander(ctx, param, value):
 
 
 @cli.command()
+@click.option('--clusters', default='clusters.cfg', callback=create_expander)
+@click.option('--source', '-s', multiple=True)
+def export(clusters, source):
+    user_labels = clusters.user_labels()
+
+    clusters = {}
+
+    for expanded_user in user_labels.values():
+        user, = (u for u in expanded_user if u[0] == '@' and u[1] != '@')
+        categories = (u for u in expanded_user if u.startswith('@@'))
+
+        for category in categories:
+            clusters.setdefault(category, set()).add(user)
+
+    template = (
+        "if {conditions}:\n"
+        "    source = '{source}'"
+    )
+
+    result = '\n\n'.join(
+        template.format(
+            source=s,
+            conditions = ' or '.join("'{} ' in ttext".format(u) for u in users)
+        )
+        for s, users in clusters.items() if not source or s in source
+    )
+
+    print(result)
+
+
+@cli.command()
 @click.option('--source', default=None, help='Tweet source.')
 @click.option('--session', default='postgresql:///twitter', callback=create_session)
 @click.option('--clusters', default='clusters.cfg', callback=create_expander)
@@ -80,6 +111,7 @@ def insert(source, session, clusters, collection, with_text):
         index_elements=['tweet_id', 'collection'],
         set_={
             'features': stmt.excluded.features,
+            # TODO: get rid of label.
             'label': stmt.excluded.label,
         }
     )
@@ -95,7 +127,7 @@ def insert(source, session, clusters, collection, with_text):
         rows.append(row)
 
         if (i % 10000) == 0:
-            logger.debug('Processed %s tweets, it\'s time to commit.', i)
+            logger.debug('Processed %s tweets.', i)
 
             session.execute(stmt, rows)
             rows[:] = []
