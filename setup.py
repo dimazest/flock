@@ -31,6 +31,9 @@ setup(
         'poultry',
         'sqlalchemy',
         'flock-conf',
+        'simhash',
+
+        'ark-twokenize-py',
     ],
     entry_points={
         'console_scripts': [
