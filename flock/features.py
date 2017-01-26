@@ -64,6 +64,13 @@ def basic_features(tweets, user_labels):
                 user_labels.get(in_reply_to_user_id, [tweet.parsed['in_reply_to_screen_name']])
             )
 
+        features['repr'] = {
+            'text': tweet.parsed['text'],
+            'user__name': tweet.parsed['user']['screen_name'],
+            'user__screen_name': tweet.parsed['user']['screen_name'],
+            'lang': tweet.parsed['lang'],
+        }
+
         row = {
             'tweet_id': tweet.id,
             'label': '_{}'.format(tweet.id % 3),

@@ -28,17 +28,35 @@
 {% endmacro %}
 
 {% macro render_tweets(tweets) %}
-  <div class="card-columns">
+  <div class="card-columns tweet-selection">
     {%- for tweet in tweets %}
-      <div class="card">
-        <div class="card-header">
-          <ul class="nav nav-pills card-header-pills float-xs-left">
-            <li class="nav-item">
-              <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseFeatures" aria-pressed="false">Features</button>
-            </li>
-          </ul>
-        </div>
-        {{ oembed_tweet(tweet.tweet_id, omit_script=True) }}
+      <div>
+        {# <div class="card-header">  #}
+        {#   <ul class="nav nav-pills card-header-pills float-xs-left">  #}
+        {#     <li class="nav-item">  #}
+        {#       <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseFeatures" aria-pressed="false">Features</button>  #}
+        {#     </li>  #}
+        {#   </ul>  #}
+        {# </div>  #}
+        {# {\# {{ oembed_tweet(tweet.tweet_id, omit_script=True) }}     #\} #}
+        {# <pre><code>{{ tweet.features['tokenizer']['tokens']|tojson(indent=2) }}</code></pre>  #}
+
+        <blockquote class="twitter-tweet card-blockquote">
+          <div class="card custom-tweet">
+            <div class="card-block">
+              <blockquote class="card-blockquote">
+                <p dir="ltr" lang="{{ tweet.features.repr.lang }}" class="card-text">
+                  {{ tweet.features.repr.text }}
+                </p>
+                <footer>
+                  — {{ tweet.features.repr.user__name }}(@{{ tweet.features.repr.user__screen_name }})
+                  <a href="https://twitter.com/{{ tweet.features.repr.user__screen_name }}/status/{{ tweet.tweet_id }}">{{ tweet.created_at }}</a>
+                </footer>
+              </blockquote>
+            </div>
+          </div>
+        </blockquote>
+
         <div class="card-block collapse" id="tweet-features-{{ tweet.tweet_id }}">
           {{ render_features(tweet) }}
         </div>
@@ -49,11 +67,39 @@
 
 {% block content %}
 
-  There are {{ page.item_count|humanize('intcomma') }} tweets.
+  <div class="row">
 
-  {{ render_pagination(page) }}
-  {{ render_tweets(page.items) }}
-  {{ render_pagination(page) }}
+    <nav class="col-xl-4 bg-faded sidebar">
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Stories</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Top hashtags</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Keywords</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Top mentions</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Timeline</a>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="col-xl-8 offset-xl-4">
+      There are {{ page.item_count|humanize('intcomma') }} tweets.
+
+      {{ render_pagination(page) }}
+      {{ render_tweets(page.items) }}
+      {{ render_pagination(page) }}
+
+    </main>
+
+  </div>
 
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-{% endblock %}
+
+{% endblock content %}

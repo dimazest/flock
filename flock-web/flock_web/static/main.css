@@ -2,9 +2,102 @@ body {
   padding-top: 5rem;
 }
 
-@media (min-width: 1200px) {
-    .card-columns {
-        -moz-column-count: 5;
-    }
+.tweet-selection {
+    -moz-column-count: 4;
+    column-count: 4;
 }
 
+/*
+ * Sidebar
+ */
+
+.sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    border-right: 1px solid #eee;
+}
+
+/* Sidebar navigation */
+.sidebar {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar .nav {
+    margin-bottom: 20px;
+}
+
+.sidebar .nav-item {
+    width: 100%;
+}
+
+.sidebar .nav-item + .nav-item {
+    margin-left: 0;
+}
+
+.sidebar .nav-link {
+    border-radius: 0;
+}
+
+/*
+ * Dashboard
+ *
+
+/* Placeholders */
+.placeholders {
+    padding-bottom: 3rem;
+}
+
+.placeholder img {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+blockquote.twitter-tweet {
+    display: inline-block;
+    padding: 10px;
+    /* margin: 10px 0; */
+    max-width: 468px;
+    border: none;
+    font-weight: bold;
+    color: #000;
+}
+
+blockquote.twitter-tweet p {
+    font-weight: normal;
+    margin: 0 5px 10px 0;
+}
+
+blockquote.twitter-tweet a[href^="https://twitter.com"] {
+    font-weight: normal;
+    color: #666;
+}
+
+iframe.twitter-tweet-rendered {
+    /* margin: 0 !important; */
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    margin-top: 0 !important;
+}
+
+.EmbeddedTweet-tweet {
+    border: none !important;
+}
+
+div.custom-tweet {
+    margin: 0;
+}
+
+blockquote.twitter-tweet-error {
+    margin: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0;
+    padding-bottom: 5;
+}
