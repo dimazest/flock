@@ -41,26 +41,43 @@ def feature_query_args():
 @bp_root.route('/tweets')
 def tweets():
     page_num = int(request.args.get('_page', 1))
-    items_per_page = int(request.args.get('_items_per_page', 20))
+    items_per_page = int(request.args.get('_items_per_page', 100))
 
     feature_query = feature_query_args()
 
     tweets = (
         db.session.query(model.Tweet)
         .filter(model.Tweet.collection == g.collection)
-        .filter(*(model.Tweet.features.contains({k: [v]}) for k, v in feature_query.items() if not k.startswith('_')))
+        .filter(*(model.Tweet.features.contains({k: [v]}) for k, v in feature_query.items() if not k.startswith('_') and k != 'story'))
         .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
+    )
+
+    _story_id = request.args.get('story')
+    story = None
+    if _story_id is not None:
+        _story_id = int(_story_id)
+        story = db.session.query(model.Story).get(_story_id)
+
+        tweets = tweets.filter(model.Tweet.stories.contains(story))
+
+    stories = (
+        db.session.query(model.Story)
+        .filter(model.Story.collection == g.collection)
+        .all()
     )
 
     page = SqlalchemyOrmPage(
         tweets,
-        page=page_num, items_per_page=items_per_page,
+        page=page_num,
+        items_per_page=items_per_page,
         url_maker=url_for_other_page,
     )
 
     return render_template(
         'root/tweets.html',
         page=page,
+        stories=stories,
+        selected_story=story,
     )
 
 
@@ -71,11 +88,19 @@ def features(feature_name):
     other_feature_values = None
 
     page_num = int(request.args.get('_page', 1))
-    items_per_page = int(request.args.get('_items_per_page', 20))
+    items_per_page = int(request.args.get('_items_per_page', 100))
 
     feature_query = feature_query_args()
 
-    features_to_filter = [model.Tweet.features.contains({k: [v]}) for k, v in feature_query.items() if not k.startswith('_')]
+    features_to_filter = [model.Tweet.features.contains({k: [v]}) for k, v in feature_query.items() if not k.startswith('_') and k != 'story']
+
+    _story_id = request.args.get('story')
+    if _story_id is not None:
+        _story_id = int(_story_id)
+        story = db.session.query(model.Story).get(_story_id)
+
+        features_to_filter.append(model.Tweet.stories.contains(story))
+
     feature_select = (
         select(['feature', func.count()])
         .select_from(
@@ -86,7 +111,7 @@ def features(feature_name):
         )
         .where(
             and_(
-                sql.literal_column('collection') == g.collection,
+                sql.literal_column('tweet.collection') == g.collection,
                 *features_to_filter,
             )
         )

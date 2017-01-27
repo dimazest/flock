@@ -1,4 +1,6 @@
 import logging
+import json
+import itertools
 
 import click
 import click_log
@@ -242,6 +244,33 @@ def find_near_matches(session, collection, index_size, probability_index_near_ma
                 insert_relation_stmt.values(
                     [(tweet_id, collection, 'near_match', near_match_id)]
                 )
+            )
+
+    session.commit()
+
+
+@cli.command()
+@click.option('--session', default='postgresql:///twitter', callback=create_session)
+@click.option('--collection')
+@click.argument('story_file', type=click.File())
+def insert_stories(session, collection, story_file):
+    stories = json.load(story_file)
+
+    insert_stmt = pg.insert(model.tweet_story)
+
+    for story_id, data in stories['topics'].items():
+        title = data['topic']
+        tweet_ids = itertools.chain.from_iterable(data['clusters'])
+
+        story = model.Story(story_id=story_id, collection=collection, title=title)
+        session.add(story)
+        session.flush()
+
+        for tweet_id in tweet_ids:
+            session.execute(
+                insert_stmt.values(
+                    [(int(tweet_id), collection, story._id)]
+                ),
             )
 
     session.commit()

@@ -18,8 +18,6 @@ Base = declarative_base(metadata=metadata)
 
 class Tweet(Base):
     __tablename__ = 'tweet'
-    __table_args__ = (
-    )
 
     tweet_id = sa.Column(types.BigInteger, nullable=False, primary_key=True)
     collection = sa.Column(types.String, nullable=False, primary_key=True)
@@ -38,6 +36,35 @@ class Tweet(Base):
     #     secondaryjoin=tweet_representative.c.representative_tweet_id == tweet_id,
     # )
 
+    stories = sa.orm.relationship(
+        'Story',
+        secondary='tweet_story',
+        backref='tweets',
+    )
+
+
+class Story(Base):
+    __tablename__ ='story'
+    __table_args__ = (
+        sa.UniqueConstraint('story_id', 'collection'),
+    )
+    _id = sa.Column(types.Integer, primary_key=True)
+
+    story_id = sa.Column(types.String, nullable=False,)
+    collection = sa.Column(types.String, nullable=False)
+
+    title = sa.Column(types.String, nullable=False)
+
+
+tweet_story = sa.Table(
+    'tweet_story', metadata,
+    sa.Column('tweet_id', sa.BigInteger),
+    sa.Column('collection', sa.String),
+    sa.Column('_story_id', sa.Integer, sa.ForeignKey('story._id')),
+    sa.ForeignKeyConstraint(
+        ('tweet_id', 'collection'), ('tweet.tweet_id', 'tweet.collection')
+    ),
+)
 
 indexes = [
     sa.Index(

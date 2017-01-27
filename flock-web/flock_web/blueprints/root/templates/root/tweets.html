@@ -41,17 +41,20 @@
         {# {\# {{ oembed_tweet(tweet.tweet_id, omit_script=True) }}     #\} #}
         {# <pre><code>{{ tweet.features['tokenizer']['tokens']|tojson(indent=2) }}</code></pre>  #}
 
-        <blockquote class="twitter-tweet card-blockquote">
+        <blockquote class="twitter-tweet card-blockquote" data-cards="hidden">
           <div class="card custom-tweet">
             <div class="card-block">
+              <header>
+                <p class="twitter-user-name">{{ tweet.features.repr.user__name }}</p>
+                <small class="text-muted">@{{ tweet.features.repr.user__screen_name }}</small>
+              </header>
               <blockquote class="card-blockquote">
                 <p dir="ltr" lang="{{ tweet.features.repr.lang }}" class="card-text">
                   {{ tweet.features.repr.text }}
                 </p>
-                <footer>
-                  — {{ tweet.features.repr.user__name }}(@{{ tweet.features.repr.user__screen_name }})
+                <small>
                   <a href="https://twitter.com/{{ tweet.features.repr.user__screen_name }}/status/{{ tweet.tweet_id }}">{{ tweet.created_at }}</a>
-                </footer>
+                </small>
               </blockquote>
             </div>
           </div>
@@ -69,32 +72,127 @@
 
   <div class="row">
 
-    <nav class="col-xl-4 bg-faded sidebar">
-      <ul class="nav nav-pills flex-column">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Stories</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Top hashtags</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Keywords</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Top mentions</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Timeline</a>
-        </li>
-      </ul>
-    </nav>
+    <div class="col-xl-4 bg-faded sidebar bd-links">
+
+      There are {{ page.item_count|humanize('intcomma') }} tweets. 
+
+      {{ render_pagination(page) }}
+
+      {# <h3><a href="{{ restricted_url('.features', feature_name='user_mentions') }}">User mentions</a></h3>  #}
+      {# <ul class="list-group"> #}
+      {#   <li class="list-group-item justify-content-between"> #}
+      {#     @justinbieber #}
+      {#     <span class="badge badge-default badge-pill">39</span> #}
+      {#   </li> #}
+      {#   <li class="list-group-item justify-content-between"> #}
+      {#     @louis_tomlinson #}
+      {#     <span class="badge badge-default badge-pill">33</span> #}
+      {#   </li> #}
+      {#   <li class="list-group-item justify-content-between"> #}
+      {#     @5hvotestats #}
+      {#     <span class="badge badge-default badge-pill">31</span> #}
+      {#   </li> #}
+      {# </ul> #}
+
+      <div class="card">
+        <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name='screen_names') }}">Users</a></h3> 
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <div class="container"> 
+              <div class="row">
+                <div class="col-9">
+                  <p class="mb-0">
+                    <button type="button" class="btn btn-outline-danger btn-sm">
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
+                    @radiodisney
+                  </p>
+                </div>
+                <div class="col-3">
+                  <small>2794 tweets.</small>
+                </div>
+              </div>
+            </div> 
+            {# <span class="badge badge-default badge-pill">2794</span>  #}
+          </li>
+          <li class="list-group-item text-muted">
+            <p class="mb-0">
+              <button type="button" class="btn btn-danger btn-sm">
+                <i class="fa fa-times" aria-hidden="true"></i>
+              </button>
+              @justinbieber
+            </p>
+            <small>383 tweets.</small>
+          </li>
+          <li class="list-group-item">
+            <p class="mb-0">
+            <button type="button" class="btn btn-outline-danger btn-sm">
+              <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+            @ArianaGrande
+            </p>
+            <small>366 tweets.</small>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name='hashtags') }}">Hashtags</a></h3>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item ">
+            #theyretheone
+            <span class="badge badge-default badge-pill">1,403</span>
+          </li>
+          <li class="list-group-item">
+            #fifthharmony
+            <span class="badge badge-default badge-pill">740</span>
+          </li>
+          <li class="list-group-item">
+            #onedirection
+            <span class="badge badge-default badge-pill">662</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name='hostnames') }}">Websites</a></h3>
+        <ul class="list-group">
+          <li class="list-group-item">
+            bit.ly
+            <span class="badge badge-default badge-pill">2,048</span>
+          </li>
+          <li class="list-group-item">
+            vine.co 
+            <span class="badge badge-default badge-pill">1562</span>
+          </li>
+          <li class="list-group-item">
+            instagram.com
+            <span class="badge badge-default badge-pill">1160</span>
+          </li>
+        </ul>
+      </div>
+
+      {% if stories|count  %}
+        <div class="card">
+          <h3 class="card-header">Stories</h3>
+          <div class="list-group list-group-flush">
+            {% for story in stories %}
+              <a href="{{ restricted_url('.tweets', story=story._id if story != selected_story else None) }}" class="list-group-item list-group-item-action flex-column align-items-start {{ 'active' if story == selected_story}}">
+                <p class="mb-0">{{ story.title  }}</p>
+                <small {{ 'class="text-muted"' if story != selected_story }}>{{ story.tweets|count|humanize('intword') }} tweets.</small> 
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
 
     <main class="col-xl-8 offset-xl-4">
-      There are {{ page.item_count|humanize('intcomma') }} tweets.
 
-      {{ render_pagination(page) }}
+      {# {{ render_pagination(page) }} #}
       {{ render_tweets(page.items) }}
-      {{ render_pagination(page) }}
+      {# {{ render_pagination(page) }} #}
 
     </main>
 
