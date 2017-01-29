@@ -52,7 +52,7 @@ Events of interest:
 * Museum night,
 * Major natoinal celebrations, e.g, November 18,
 * Cultural events: both Christmas, the New Year,
-* Controversial celebrations: 8th of March, 9th of May, 16th? of March,
+* Controversial celebrations: 8th of March, 9th of May, 16th of March,
 * The beginning and the end of the school year: 1st of September, 31 of May, final exams at schools.
 
 **TODO:**
@@ -65,6 +65,18 @@ The challenge is to map data in two, or maybe even more languages. To link the t
 
 Hashtags might do their job!
 
+#### Study 1: keyword analysis
+
+Take the keywords disscussed in Wierzbicka (1997, page 26). Translate them to Latvia and Russian. See what their frequency ranks are, do they correlate?
+
+Randomly sample 100 words from Latvian and Russian tweets (sampling frequency might depend on rank, so we get a portion of frequent words, a portion of medium frequent words and some rarely used words). Come up with the translations of Latvian words to Russian and for Russian words to Latvian. Note that this is a bit naive and optimistic. Again, see how frequency ranks of word pairs correlate.
+
+Given a pair of words (taken either from Wierzbicka's list of our sample), for each word retrieve the top 5 distributional neighbours in that language. Measure the correspondence between the Latvian and Russian neighbours. The correpondance judgements should be crowdsourced.
+
+These two experiments (frequency ranks and neighbours overlap) will identify words that are used similarly and differently.
+
+Another contribution is the construction of a bilingual corpus.
+
 #### Relevant materials
 
 * http://www.diena.lv/dienas-zurnali/sestdiena/loliga-valoda-14149966
@@ -72,6 +84,8 @@ Hashtags might do their job!
 * http://www.la.lv/latvijas-politiskais-tviteris-mazs-bet-nikns-la-lv-tvitertops/
 * https://twitter.com/thedansimonson/status/794207087228162048 Rudra et al.: understanding codeswitching behavior in Hindi-English bilinguals
 * http://nodalida2017.se/
+* https://sites.google.com/site/nlpandcss/home
+* Wierzbicka, Anna. Understanding cultures through their key words: English, Russian, Polish, German, and Japanese. Vol. 8. Oxford University Press, 1997.
 
 ## Other datasets
 
