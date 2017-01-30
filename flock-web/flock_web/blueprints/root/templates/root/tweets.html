@@ -42,12 +42,7 @@
         {# <pre><code>{{ tweet.features['tokenizer']['tokens']|tojson(indent=2) }}</code></pre>  #}
 
         <div class='card tweet-outer'>
-          <div class="card-header text-muted tweet-outer-header">
-            <small>
-              {{ tweet.representees|count }}
-            </small>
-          </div>
-        <blockquote class="twitter-tweet card-blockquote" data-cards="hidden">
+          <blockquote class="twitter-tweet card-blockquote" data-cards="hidden">
           <div class="card custom-tweet">
             <div class="card-block">
               <header>
@@ -65,6 +60,14 @@
             </div>
           </div>
         </blockquote>
+
+          <div class="card-footer text-muted tweet-outer-meta">
+            <small>
+              {{ tweet.tweet_id }}
+              {{ tweet.representees|count }}
+            </small>
+          </div>
+
         </div>
 
         <div class="card-block collapse" id="tweet-features-{{ tweet.tweet_id }}">

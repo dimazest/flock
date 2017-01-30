@@ -50,6 +50,7 @@ def tweets():
         .filter(model.Tweet.collection == g.collection)
         .filter(*(model.Tweet.features.contains({k: [v]}) for k, v in feature_query.items() if not k.startswith('_') and k != 'story'))
         #.filter(model.Tweet.features['filter', 'is_retweet'].astext != 'true' )
+        .filter(model.Tweet.representative == None)
         .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     )
 

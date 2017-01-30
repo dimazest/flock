@@ -80,7 +80,10 @@ blockquote.twitter-tweet-error {
     border: none;
 }
 
-.tweet-outer-header {
+.tweet-outer-meta {
     padding: 0 1.25rem;
     border: none;
+    position: absolute;
+    bottom: 1px;
+    right: 0;
 }
