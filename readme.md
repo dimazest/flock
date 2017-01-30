@@ -88,6 +88,7 @@ Another contribution is the construction of a bilingual corpus.
 * Wierzbicka, Anna. Understanding cultures through their key words: English, Russian, Polish, German, and Japanese. Vol. 8. Oxford University Press, 1997.
 * Kristen Johnson, Dan Goldwasser Identifying Stance by Analyzing Political Discourse on Twitter. In Proceedings of the First Workshop on NLP and Computational Social Science, Austin, Texas, 2016.
 * Sunghwan Mac Kim, Stephen Wan, Cecile Paris, Jin Brian, Bella Robinson The Effects of Data Collection Methods in Twitter. In Proceedings of the First Workshop on NLP and Computational Social Science, Austin, Texas, 2016.
+
 ## Other datasets
 
 There are some small collections at https://github.com/dimazest/sw-twitter:
