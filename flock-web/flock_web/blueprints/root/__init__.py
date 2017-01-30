@@ -1,6 +1,6 @@
 from flask import render_template, Blueprint, request, redirect, url_for, g
 
-from sqlalchemy import func, select, Table, Column, Integer, String, and_, sql
+from sqlalchemy import func, select, Table, Column, Integer, String, sql
 from sqlalchemy.sql.expression import text, and_
 from paginate_sqlalchemy import SqlalchemySelectPage, SqlalchemyOrmPage
 
@@ -49,6 +49,7 @@ def tweets():
         db.session.query(model.Tweet)
         .filter(model.Tweet.collection == g.collection)
         .filter(*(model.Tweet.features.contains({k: [v]}) for k, v in feature_query.items() if not k.startswith('_') and k != 'story'))
+        #.filter(model.Tweet.features['filter', 'is_retweet'].astext != 'true' )
         .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     )
 

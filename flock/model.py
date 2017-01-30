@@ -8,12 +8,16 @@ metadata = sa.MetaData()
 Base = declarative_base(metadata=metadata)
 
 
-# tweet_representative = sa.Table(
-#     'tweet_representative', metadata,
-#     sa.Column('tweet_id', sa.BigInteger, sa.ForeignKey('tweet.tweet_id')),
-#     sa.Column('collection', sa.String),
-#     sa.Column('representative_tweet_id', sa.BigInteger, sa.ForeignKey('tweet.tweet_id')),
-# )
+
+tweet_representative = sa.Table(
+    'tweet_representative', metadata,
+    sa.Column('tweet_id', sa.BigInteger),
+    sa.Column('collection', sa.String),
+    sa.Column('representative_tweet_id', sa.BigInteger, sa.ForeignKey('tweet.tweet_id')),
+    sa.ForeignKeyConstraint(
+        ('tweet_id', 'collection'), ('tweet.tweet_id', 'tweet.collection')
+    ),
+)
 
 
 class Tweet(Base):
@@ -28,13 +32,14 @@ class Tweet(Base):
 
     created_at = sa.Column(types.DateTime, nullable=False, index=True)
 
-    # representative = sa.orm.relationship(
-    #     'Tweet',
-    #     uselist=False,
-    #     secondary=tweet_representative,
-    #     primaryjoin=tweet_id == tweet_representative.c.tweet_id,
-    #     secondaryjoin=tweet_representative.c.representative_tweet_id == tweet_id,
-    # )
+    representative = sa.orm.relationship(
+        'Tweet',
+        uselist=False,
+        secondary=tweet_representative,
+        primaryjoin=sa.and_(tweet_id == tweet_representative.c.tweet_id, collection == tweet_representative.c.collection),
+        secondaryjoin=sa.and_(tweet_representative.c.representative_tweet_id == tweet_id, tweet_representative.c.collection == collection),
+        backref='representees',
+    )
 
     stories = sa.orm.relationship(
         'Story',
@@ -105,4 +110,5 @@ relation = sa.Table(
     sa.Column('collection', sa.String, primary_key=True, index=True),
     sa.Column('relation', sa.String, primary_key=True, index=True),
     sa.Column('head_tweet_id', sa.BigInteger),
+    sa.Index('tweet_id', 'collection'),
 )

@@ -45,7 +45,8 @@ def cli():
 @cli.command()
 @click.option('--session', default='postgresql:///twitter', callback=create_session)
 def initdb(session):
-    model.metadata.create_all()
+    tables = [t for t in model.metadata.tables if t.name != 'tweet_representative']
+    model.metadata.create_all(tables=tables)
 
     for index in model.indexes:
         try:

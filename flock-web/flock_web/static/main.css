@@ -58,9 +58,8 @@ blockquote.twitter-tweet a[href^="https://twitter.com"] {
 }
 
 iframe.twitter-tweet-rendered {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-    margin-top: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 .EmbeddedTweet-tweet {
@@ -73,7 +72,15 @@ div.custom-tweet {
 
 blockquote.twitter-tweet-error {
     margin: 0;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 0;
+    padding: 0;
+}
+
+
+.tweet-outer {
+    border: none;
+}
+
+.tweet-outer-header {
+    padding: 0 1.25rem;
+    border: none;
 }

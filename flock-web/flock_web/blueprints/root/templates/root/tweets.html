@@ -41,6 +41,12 @@
         {# {\# {{ oembed_tweet(tweet.tweet_id, omit_script=True) }}     #\} #}
         {# <pre><code>{{ tweet.features['tokenizer']['tokens']|tojson(indent=2) }}</code></pre>  #}
 
+        <div class='card tweet-outer'>
+          <div class="card-header text-muted tweet-outer-header">
+            <small>
+              {{ tweet.representees|count }}
+            </small>
+          </div>
         <blockquote class="twitter-tweet card-blockquote" data-cards="hidden">
           <div class="card custom-tweet">
             <div class="card-block">
@@ -59,6 +65,7 @@
             </div>
           </div>
         </blockquote>
+        </div>
 
         <div class="card-block collapse" id="tweet-features-{{ tweet.tweet_id }}">
           {{ render_features(tweet) }}
@@ -172,7 +179,7 @@
         </ul>
       </div>
 
-      {% if stories|count  %}
+      {% if stories|count %}
         <div class="card">
           <h3 class="card-header">Stories</h3>
           <div class="list-group list-group-flush">
