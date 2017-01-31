@@ -10,6 +10,8 @@ from flask.ext.sqlalchemy import get_debug_queries
 from flask_humanize import Humanize
 from flask_debugtoolbar import DebugToolbarExtension
 
+from werkzeug.datastructures import MultiDict
+
 from flock.model import metadata
 
 
@@ -25,14 +27,15 @@ def url_for_other_page(page):
     return restricted_url(_page=page)
 
 
-def restricted_url(endpoint=None, **kwargs):
+def restricted_url(endpoint=None, include=None, exclude=None, **single_args):
     if endpoint is None:
         endpoint = request.endpoint
 
     if endpoint == request.endpoint:
-        args = request.view_args.copy()
+        args = MultiDict(request.view_args)
     else:
-        args = {}
+        args = MultiDict()
+
     args.update(request.args)
 
     if endpoint != request.endpoint:
@@ -40,7 +43,15 @@ def restricted_url(endpoint=None, **kwargs):
             if arg.startswith('_'):
                 del args[arg]
 
-    args.update(kwargs)
+    if include:
+        args.update(include)
+
+    if exclude:
+        for k, to_exclude in exclude.items():
+            args.setlist(k, [v for v in args.getlist(k) if v != to_exclude])
+
+    for k, v in single_args.items():
+        args.setlist(k, [v])
 
     return url_for(endpoint, **args)
 

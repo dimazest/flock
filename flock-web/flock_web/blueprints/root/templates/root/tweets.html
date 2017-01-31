@@ -104,83 +104,26 @@
       {#   </li> #}
       {# </ul> #}
 
-      <div class="card">
-        <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name='screen_names') }}">Users</a></h3> 
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <div class="container"> 
-              <div class="row">
-                <div class="col-9">
-                  <p class="mb-0">
-                    <button type="button" class="btn btn-outline-danger btn-sm">
-                      <i class="fa fa-times" aria-hidden="true"></i>
-                    </button>
-                    @radiodisney
-                  </p>
+        {% for feature_name, features, active_features in stats %}
+          <div class="card">
+            <h3 class="card-header"><a href="{{ restricted_url('.features', include={'feature_name': feature_name}) }}">{{ feature_name }}</a></h3>
+            <div class="card-columns feature-stats-container">
+              {% for feature, count in features  %}
+                <div class="card feature-stats">
+                  <a href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}) }}" class="list-group-item list-group-item-action flex-column align-items-start {{ 'active' if feature in active_features}}">
+                    <p class="mb-0" style="white-space: nowrap; overflow:auto; max-width: 100%;">
+                      <button type="button" class="btn btn-outline-danger btn-sm"> 
+                        <i class="fa fa-times" aria-hidden="true"></i> 
+                      </button> 
+                      {{ feature  }}
+                    </p>
+                    <small {{ 'class="text-muted"' if story != TODO }}>{{ count|humanize('intword') }} tweets.</small> 
+                  </a>
                 </div>
-                <div class="col-3">
-                  <small>2794 tweets.</small>
-                </div>
-              </div>
-            </div> 
-            {# <span class="badge badge-default badge-pill">2794</span>  #}
-          </li>
-          <li class="list-group-item text-muted">
-            <p class="mb-0">
-              <button type="button" class="btn btn-danger btn-sm">
-                <i class="fa fa-times" aria-hidden="true"></i>
-              </button>
-              @justinbieber
-            </p>
-            <small>383 tweets.</small>
-          </li>
-          <li class="list-group-item">
-            <p class="mb-0">
-            <button type="button" class="btn btn-outline-danger btn-sm">
-              <i class="fa fa-times" aria-hidden="true"></i>
-            </button>
-            @ArianaGrande
-            </p>
-            <small>366 tweets.</small>
-          </li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name='hashtags') }}">Hashtags</a></h3>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item ">
-            #theyretheone
-            <span class="badge badge-default badge-pill">1,403</span>
-          </li>
-          <li class="list-group-item">
-            #fifthharmony
-            <span class="badge badge-default badge-pill">740</span>
-          </li>
-          <li class="list-group-item">
-            #onedirection
-            <span class="badge badge-default badge-pill">662</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name='hostnames') }}">Websites</a></h3>
-        <ul class="list-group">
-          <li class="list-group-item">
-            bit.ly
-            <span class="badge badge-default badge-pill">2,048</span>
-          </li>
-          <li class="list-group-item">
-            vine.co 
-            <span class="badge badge-default badge-pill">1562</span>
-          </li>
-          <li class="list-group-item">
-            instagram.com
-            <span class="badge badge-default badge-pill">1160</span>
-          </li>
-        </ul>
-      </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
 
       {% if stories|count %}
         <div class="card">

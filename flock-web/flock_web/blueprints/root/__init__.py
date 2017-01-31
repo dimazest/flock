@@ -1,7 +1,7 @@
 from flask import render_template, Blueprint, request, redirect, url_for, g
 
 from sqlalchemy import func, select, Table, Column, Integer, String, sql
-from sqlalchemy.sql.expression import text, and_
+from sqlalchemy.sql.expression import text, and_, or_
 from paginate_sqlalchemy import SqlalchemySelectPage, SqlalchemyOrmPage
 
 import crosstab
@@ -18,6 +18,26 @@ bp_root = Blueprint(
     )
 
 
+def stats_for_feature(feature_name, feature_filter_args=()):
+    return (
+        select(['feature', func.count()])
+        .select_from(
+            text(
+                ('tweet, ' if not feature_filter_args else '') +
+                'jsonb_array_elements_text(tweet.features->:feature) as feature'
+            ).bindparams(feature=feature_name)
+        )
+        .where(
+            and_(
+                sql.literal_column('tweet.collection') == g.collection,
+                *g.feature_filter_args
+            )
+        )
+        .group_by('feature')
+        .order_by(func.count().desc())
+    )
+
+
 @bp_root.url_defaults
 def add_collection(endpoint, values):
     values.setdefault('collection', getattr(g, 'collection', None))
@@ -27,40 +47,33 @@ def add_collection(endpoint, values):
 def pull_collection(endpoint, values):
     g.collection = values.pop('collection')
 
+    g.feature_filter_args = [or_(*(model.Tweet.features.contains({k: [v]}) for v in vs)) for k, vs in request.args.lists() if not k.startswith('_') and k != 'story']
+
+    _story_id = request.args.get('story', type=int)
+    g.story = None
+    if _story_id is not None:
+        g.story = db.session.query(model.Story).get(int(_story_id))
+        g.feature_filter_args.append(model.Tweet.stories.contains(g.story))
+
 
 @bp_root.route('/')
 def index():
     return redirect(url_for('.tweets'))
 
 
-def feature_query_args():
-    feature_query = request.args.copy()
-    return feature_query
-
-
 @bp_root.route('/tweets')
 def tweets():
-    page_num = int(request.args.get('_page', 1))
-    items_per_page = int(request.args.get('_items_per_page', 100))
-
-    feature_query = feature_query_args()
+    page_num = request.args.get('_page', 1, type=int)
+    items_per_page = request.args.get('_items_per_page', 100, type=int)
 
     tweets = (
         db.session.query(model.Tweet)
         .filter(model.Tweet.collection == g.collection)
-        .filter(*(model.Tweet.features.contains({k: [v]}) for k, v in feature_query.items() if not k.startswith('_') and k != 'story'))
+        .filter(*g.feature_filter_args)
         #.filter(model.Tweet.features['filter', 'is_retweet'].astext != 'true' )
         .filter(model.Tweet.representative == None)
         .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     )
-
-    _story_id = request.args.get('story')
-    story = None
-    if _story_id is not None:
-        _story_id = int(_story_id)
-        story = db.session.query(model.Story).get(_story_id)
-
-        tweets = tweets.filter(model.Tweet.stories.contains(story))
 
     stories = (
         db.session.query(model.Story)
@@ -79,7 +92,11 @@ def tweets():
         'root/tweets.html',
         page=page,
         stories=stories,
-        selected_story=story,
+        selected_story=g.story,
+        stats=(
+            (f, db.session.query(stats_for_feature(f, g.feature_filter_args).limit(12).alias()), request.args.getlist(f, None))
+            for f in ['screen_names', 'hashtags']
+        )
     )
 
 
@@ -92,34 +109,7 @@ def features(feature_name):
     page_num = int(request.args.get('_page', 1))
     items_per_page = int(request.args.get('_items_per_page', 100))
 
-    feature_query = feature_query_args()
-
-    features_to_filter = [model.Tweet.features.contains({k: [v]}) for k, v in feature_query.items() if not k.startswith('_') and k != 'story']
-
-    _story_id = request.args.get('story')
-    if _story_id is not None:
-        _story_id = int(_story_id)
-        story = db.session.query(model.Story).get(_story_id)
-
-        features_to_filter.append(model.Tweet.stories.contains(story))
-
-    feature_select = (
-        select(['feature', func.count()])
-        .select_from(
-            text(
-                ('tweet, ' if not features_to_filter else '') +
-                'jsonb_array_elements_text(tweet.features->:feature) as feature'
-            ).bindparams(feature=feature_name)
-        )
-        .where(
-            and_(
-                sql.literal_column('tweet.collection') == g.collection,
-                *features_to_filter,
-            )
-        )
-        .group_by('feature')
-        .order_by(func.count().desc())
-    )
+    feature_select = stats_for_feature(feature_name, g.feature_filter_args)
 
     page = SqlalchemySelectPage(
         db.session, feature_select,

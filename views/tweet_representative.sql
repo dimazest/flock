@@ -14,7 +14,7 @@ with recursive search_relation(tweet_id, collection, head_tweet_id, relation, de
                from tweet t1, tweet t2
                where t1.features#>'{filter,simhash}' = t2.features#>'{filter,simhash}' and t1.collection = t2.collection and t1.created_at < t2.created_at
           ) r
-          WHERE collection = 'hour'
+          --WHERE collection = 'hour'
         UNION ALL
         SELECT r.tweet_id, r.collection, r.head_tweet_id,
           sr.relation || r.relation,
@@ -22,7 +22,7 @@ with recursive search_relation(tweet_id, collection, head_tweet_id, relation, de
           path || r.tweet_id,
           r.tweet_id = ANY(path)
         FROM relation r, search_relation sr
-        WHERE r.tweet_id = sr.head_tweet_id AND NOT cycle
+        WHERE r.tweet_id = sr.head_tweet_id AND r.collection = sr.collection AND NOT cycle
 )
 SELECT
 path[1] as tweet_id, collection, min(head_tweet_id) as representative_tweet_id
