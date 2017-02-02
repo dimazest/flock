@@ -1,7 +1,7 @@
 from flask import render_template, Blueprint, request, redirect, url_for, g
 
 from sqlalchemy import func, select, Table, Column, Integer, String, sql
-from sqlalchemy.sql.expression import text, and_, or_
+from sqlalchemy.sql.expression import text, and_, or_, not_
 from paginate_sqlalchemy import SqlalchemySelectPage, SqlalchemyOrmPage
 
 import crosstab
@@ -47,7 +47,36 @@ def add_collection(endpoint, values):
 def pull_collection(endpoint, values):
     g.collection = values.pop('collection')
 
-    g.feature_filter_args = [or_(*(model.Tweet.features.contains({k: [v]}) for v in vs)) for k, vs in request.args.lists() if not k.startswith('_') and k != 'story']
+    filter_args = [(k, vs) for k, vs in request.args.lists() if not k.startswith('_') and k != 'story']
+
+    g.feature_filter_args = []
+
+    positive_include = [(k, [v for v in vs if not v.startswith('-')]) for k, vs, in filter_args]
+    positive_include = [(k, v) for k, vs in positive_include if vs for v in vs]
+    if positive_include:
+        g.feature_filter_args.append(or_(*(model.Tweet.features.contains({k: [v]}) for k, v in positive_include)))
+
+    negative_include = [(k, [v[1:] for v in vs if v.startswith('-')]) for k, vs, in filter_args]
+    negative_include = [(k, v) for k, vs in negative_include if vs for v in vs]
+
+    users_to_ignore = [
+        '@@NOISE',
+        'TheFunnyTeens', 'SteveStfler', 'zaynmalik', 'SpeakComedy', 'textposts', 'honestfandom', 'OneLifeAlways',
+        'TumbIrsPosts', 'UberFacts', 'lnsaneTweets', 'zaynbaabe', 'CraziestSex', 'JBCrewdotcom', 'RELATlONSHlP',
+        'IosttransIation', 'JuliannaBisex', 'zouirinialI', 'chocomalikk', 'socialsearch01', 
+    ]
+    negative_include.extend(
+        [('screen_names', ht) for ht in users_to_ignore] +
+        [('user_mentions', ht) for ht in users_to_ignore] +
+        [
+            ('hashtags', ht) for ht in [
+                'porn', 'nswf', 'nowplaying', 'teamfollowback', 'retweet', 'rt', 'ff'
+            ]
+        ]
+    )
+
+    if negative_include:
+        g.feature_filter_args.append(and_(*(not_(model.Tweet.features.contains({k: [v]})) for k, v in negative_include)))
 
     _story_id = request.args.get('story', type=int)
     g.story = None
@@ -95,7 +124,7 @@ def tweets():
         selected_story=g.story,
         stats=(
             (f, db.session.query(stats_for_feature(f, g.feature_filter_args).limit(12).alias()), request.args.getlist(f, None))
-            for f in ['screen_names', 'hashtags']
+            for f in ['screen_names', 'hashtags', 'user_mentions']
         )
     )
 

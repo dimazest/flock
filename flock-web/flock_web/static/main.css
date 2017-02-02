@@ -90,12 +90,15 @@ blockquote.twitter-tweet-error {
 }
 
 .feature-stats {
-    border: 0;
+    margin-bottom: 5px;
 }
 
+.feature-link {
+    color: #555;
+}
 
 .feature-stats-container {
-    margin: .75rem .75rem 0 .75rem;
+    margin: .75rem .75rem .75rem .75rem;
 }
 
 nav > .active {
