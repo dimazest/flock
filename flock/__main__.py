@@ -24,6 +24,9 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
+tables = [table for name, table in model.metadata.tables.items() if name not in ('tweet_representative', 'filtered_tweets', 'feature_scores')]
+
+
 def create_session(ctx, param, value):
     from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
@@ -45,7 +48,6 @@ def cli():
 @cli.command()
 @click.option('--session', default='postgresql:///twitter', callback=create_session)
 def initdb(session):
-    tables = [table for name, table in model.metadata.tables.items() if name != 'tweet_representative']
 
     model.metadata.create_all(tables=tables)
 
@@ -60,7 +62,7 @@ def initdb(session):
 @cli.command()
 @click.option('--session', default='postgresql:///twitter', callback=create_session)
 def dropdb(session):
-        model.metadata.drop_all()
+        model.metadata.drop_all(tables=tables)
 
 
 def create_expander(ctx, param, value):

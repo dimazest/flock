@@ -20,6 +20,27 @@ tweet_representative = sa.Table(
 )
 
 
+filtered_tweets = sa.Table(
+    'filtered_tweets', metadata,
+    sa.Column('tweet_id', sa.BigInteger),
+    sa.Column('collection', sa.String),
+    sa.ForeignKeyConstraint(
+        ('tweet_id', 'collection'), ('tweet.tweet_id', 'tweet.collection')
+    ),
+)
+
+
+feature_scores = sa.Table(
+    'feature_scores', metadata,
+    sa.Column('collection', sa.String),
+    sa.Column('feature_name', sa.String),
+    sa.Column('feature_value', sa.String),
+    sa.Column('count', sa.Integer),
+    sa.Column('global_count', sa.Integer),
+    sa.Column('score', sa.Float),
+)
+
+
 class Tweet(Base):
     __tablename__ = 'tweet'
 

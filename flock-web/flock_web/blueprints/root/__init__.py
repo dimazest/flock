@@ -1,7 +1,7 @@
 from flask import render_template, Blueprint, request, redirect, url_for, g
 
 from sqlalchemy import func, select, Table, Column, Integer, String, sql
-from sqlalchemy.sql.expression import text, and_, or_, not_
+from sqlalchemy.sql.expression import text, and_, or_, not_, join, column
 from paginate_sqlalchemy import SqlalchemySelectPage, SqlalchemyOrmPage
 
 import crosstab
@@ -19,23 +19,38 @@ bp_root = Blueprint(
 
 
 def stats_for_feature(feature_name, feature_filter_args=()):
-    return (
-        select(['feature', func.count()])
-        .select_from(
-            text(
-                ('tweet, ' if not feature_filter_args else '') +
-                'jsonb_array_elements_text(tweet.features->:feature) as feature'
-            ).bindparams(feature=feature_name)
-        )
-        .where(
-            and_(
-                sql.literal_column('tweet.collection') == g.collection,
-                *g.feature_filter_args
+    if feature_filter_args:
+        feature = text(
+            'select collection, tweet_id, feature_value from tweet, jsonb_array_elements_text(tweet.features->:feature) as feature_value'
+        ).columns(column('collection'), column('tweet_id'), column('feature_value')).bindparams(feature=feature_name).alias()
+
+        feature = (
+            select([feature.c.feature_value, func.count().label('count')])
+            .where(
+                and_(
+                    feature.c.collection == model.Tweet.collection,
+                    feature.c.tweet_id == model.Tweet.tweet_id,
+                    model.Tweet.tweet_id == model.filtered_tweets.c.tweet_id,
+                    model.Tweet.collection == model.filtered_tweets.c.collection,
+                    *feature_filter_args
+                )
             )
+            .group_by(feature.c.feature_value)
+            .alias()
         )
-        .group_by('feature')
-        .order_by(func.count().desc())
+
+    else:
+        feature = select(
+            [model.feature_scores.c.collection, model.feature_scores.c.feature_value, model.feature_scores.c.count]
+        ).where(model.feature_scores.c.feature_name == feature_name).alias()
+
+    s = (
+        select([feature.c.feature_value, feature.c.count])
+        .select_from(feature)
+        .order_by(feature.c.count.desc())
     )
+
+    return s
 
 
 @bp_root.url_defaults
@@ -60,18 +75,18 @@ def pull_collection(endpoint, values):
     negative_include = [(k, v) for k, vs in negative_include if vs for v in vs]
 
     users_to_ignore = [
-        '@@NOISE',
-        'TheFunnyTeens', 'SteveStfler', 'zaynmalik', 'SpeakComedy', 'textposts', 'honestfandom', 'OneLifeAlways',
-        'TumbIrsPosts', 'UberFacts', 'lnsaneTweets', 'zaynbaabe', 'CraziestSex', 'JBCrewdotcom', 'RELATlONSHlP',
-        'IosttransIation', 'JuliannaBisex', 'zouirinialI', 'chocomalikk', 'socialsearch01', 
+        # '@@NOISE',
+        # 'TheFunnyTeens', 'SteveStfler', 'zaynmalik', 'SpeakComedy', 'textposts', 'honestfandom', 'OneLifeAlways',
+        # 'TumbIrsPosts', 'UberFacts', 'lnsaneTweets', 'zaynbaabe', 'CraziestSex', 'JBCrewdotcom', 'RELATlONSHlP',
+        # 'IosttransIation', 'JuliannaBisex', 'zouirinialI', 'chocomalikk', 'socialsearch01',
     ]
     negative_include.extend(
         [('screen_names', ht) for ht in users_to_ignore] +
         [('user_mentions', ht) for ht in users_to_ignore] +
         [
-            ('hashtags', ht) for ht in [
-                'porn', 'nswf', 'nowplaying', 'teamfollowback', 'retweet', 'rt', 'ff'
-            ]
+            # ('hashtags', ht) for ht in [
+                # 'porn', 'nswf', 'nowplaying', 'teamfollowback', 'retweet', 'rt', 'ff'
+            # ]
         ]
     )
 
@@ -97,10 +112,12 @@ def tweets():
 
     tweets = (
         db.session.query(model.Tweet)
-        .filter(model.Tweet.collection == g.collection)
+        .select_from(model.filtered_tweets)
+        .join(model.Tweet)
+        .filter(model.filtered_tweets.c.collection == g.collection)
         .filter(*g.feature_filter_args)
         #.filter(model.Tweet.features['filter', 'is_retweet'].astext != 'true' )
-        .filter(model.Tweet.representative == None)
+        # .filter(model.Tweet.representative == None)
         .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     )
 
@@ -122,10 +139,10 @@ def tweets():
         page=page,
         stories=stories,
         selected_story=g.story,
-        stats=(
-            (f, db.session.query(stats_for_feature(f, g.feature_filter_args).limit(12).alias()), request.args.getlist(f, None))
+        stats=[
+            (f, db.session.query(stats_for_feature(f, g.feature_filter_args).limit(12).alias()), request.args.getlist(f))
             for f in ['screen_names', 'hashtags', 'user_mentions']
-        )
+        ]
     )
 
 
