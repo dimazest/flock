@@ -40,9 +40,16 @@ def stats_for_feature(feature_name, feature_filter_args=()):
         )
 
     else:
-        feature = select(
-            [model.feature_scores.c.collection, model.feature_scores.c.feature_value, model.feature_scores.c.count]
-        ).where(model.feature_scores.c.feature_name == feature_name).alias()
+        feature = (
+            select([model.feature_scores.c.collection, model.feature_scores.c.feature_value, model.feature_scores.c.count])
+            .where(
+                and_(
+                    model.feature_scores.c.feature_name == feature_name,
+                    model.feature_scores.c.collection == g.collection,
+                )
+            )
+            .alias()
+        )
 
     s = (
         select([feature.c.feature_value, feature.c.count])
@@ -116,10 +123,17 @@ def tweets():
         .join(model.Tweet)
         .filter(model.filtered_tweets.c.collection == g.collection)
         .filter(*g.feature_filter_args)
-        #.filter(model.Tweet.features['filter', 'is_retweet'].astext != 'true' )
-        # .filter(model.Tweet.representative == None)
-        .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
+        # # .filter(model.Tweet.features['filter', 'is_retweet'].astext == 'false' )
+        # # .filter(model.Tweet.representative == None)
+        # .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     )
+
+    # tweet_count = tweets.count()
+
+    if not g.story:
+        tweets = tweets.limit(100)
+    # else:
+        # tweets = tweets.order_by(model.tweet_story.c.rank)
 
     stories = (
         db.session.query(model.Story)
@@ -127,20 +141,22 @@ def tweets():
         .all()
     )
 
-    page = SqlalchemyOrmPage(
-        tweets,
-        page=page_num,
-        items_per_page=items_per_page,
-        url_maker=url_for_other_page,
-    )
+    # page = SqlalchemyOrmPage(
+    #     tweets,
+    #     page=page_num,
+    #     items_per_page=items_per_page,
+    #     url_maker=url_for_other_page,
+    # )
 
     return render_template(
         'root/tweets.html',
-        page=page,
+        tweets=tweets.all(),
+        # tweet_count=tweet_count,
+        # page=page,
         stories=stories,
         selected_story=g.story,
         stats=[
-            (f, db.session.query(stats_for_feature(f, g.feature_filter_args).limit(12).alias()), request.args.getlist(f))
+            (f, db.session.query(stats_for_feature(f, g.feature_filter_args).limit(30).alias()), request.args.getlist(f))
             for f in ['screen_names', 'hashtags', 'user_mentions']
         ]
     )

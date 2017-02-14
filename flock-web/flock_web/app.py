@@ -51,7 +51,7 @@ def restricted_url(endpoint=None, include=None, exclude=None, **single_args):
             args.setlist(k, [v for v in args.getlist(k) if v != to_exclude])
 
     for k, v in single_args.items():
-        args.setlist(k, [v])
+        args[k] = v
 
     return url_for(endpoint, **args)
 

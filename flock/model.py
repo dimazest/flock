@@ -8,7 +8,6 @@ metadata = sa.MetaData()
 Base = declarative_base(metadata=metadata)
 
 
-
 tweet_representative = sa.Table(
     'tweet_representative', metadata,
     sa.Column('tweet_id', sa.BigInteger),
@@ -43,6 +42,9 @@ feature_scores = sa.Table(
 
 class Tweet(Base):
     __tablename__ = 'tweet'
+    __table_args__ = (
+        sa.Index('idx_tweet_created_at_tweet_id', 'created_at', 'tweet_id'),
+    )
 
     tweet_id = sa.Column(types.BigInteger, nullable=False, primary_key=True)
     collection = sa.Column(types.String, nullable=False, primary_key=True)
@@ -87,6 +89,7 @@ tweet_story = sa.Table(
     sa.Column('tweet_id', sa.BigInteger),
     sa.Column('collection', sa.String),
     sa.Column('_story_id', sa.Integer, sa.ForeignKey('story._id')),
+    sa.Column('rank', sa.Integer),
     sa.ForeignKeyConstraint(
         ('tweet_id', 'collection'), ('tweet.tweet_id', 'tweet.collection')
     ),
@@ -94,34 +97,40 @@ tweet_story = sa.Table(
 
 indexes = [
     sa.Index(
-        'idx_tweet_features_screen_names',
-        Tweet.features['screen_names'],
+        'idx_tweet_features',
+        Tweet.features,
+        postgresql_using='gin',
     ),
 
-    sa.Index(
-        'idx_tweet_features_user_mentions',
-        Tweet.features['user_mentions'],
-    ),
+#     sa.Index(
+#         'idx_tweet_features_screen_names',
+#         Tweet.features['screen_names'],
+#     ),
 
-    sa.Index(
-        'idx_tweet_features_hashtags',
-        Tweet.features['hashtags'],
-    ),
+#     sa.Index(
+#         'idx_tweet_features_user_mentions',
+#         Tweet.features['user_mentions'],
+#     ),
 
-    sa.Index(
-        'idx_tweet_features_languages',
-        Tweet.features['languages'],
-    ),
+#     sa.Index(
+#         'idx_tweet_features_hashtags',
+#         Tweet.features['hashtags'],
+#     ),
 
-    sa.Index(
-        'idx_tweet_features_filter_simhash',
-        Tweet.features['filter', 'simhash'],
-    ),
+#     sa.Index(
+#         'idx_tweet_features_languages',
+#         Tweet.features['languages'],
+#     ),
 
-    sa.Index(
-        'idx_tweet_features_filter_is_retweet',
-        Tweet.features['filter', 'is_retweet'],
-    ),
+#     sa.Index(
+#         'idx_tweet_features_filter_simhash',
+#         Tweet.features['filter', 'simhash'],
+#     ),
+
+#     sa.Index(
+#         'idx_tweet_features_filter_is_retweet',
+#         Tweet.features['filter', 'is_retweet'],
+#     ),
 ]
 
 

@@ -31,40 +31,31 @@
   <div class="card-columns tweet-selection">
     {%- for tweet in tweets %}
       <div>
-        {# <div class="card-header">  #}
-        {#   <ul class="nav nav-pills card-header-pills float-xs-left">  #}
-        {#     <li class="nav-item">  #}
-        {#       <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseFeatures" aria-pressed="false">Features</button>  #}
-        {#     </li>  #}
-        {#   </ul>  #}
-        {# </div>  #}
-        {# {\# {{ oembed_tweet(tweet.tweet_id, omit_script=True) }}     #\} #}
-        {# <pre><code>{{ tweet.features['tokenizer']['tokens']|tojson(indent=2) }}</code></pre>  #}
 
         <div class='card tweet-outer'>
-          <blockquote class="twitter-tweet card-blockquote" {# data-cards="hidden" #}>
-          <div class="card custom-tweet">
-            <div class="card-block">
-              <header>
-                <p class="twitter-user-name">{{ tweet.features.repr.user__name }}</p>
-                <small class="text-muted">@{{ tweet.features.repr.user__screen_name }}</small>
-              </header>
-              <blockquote class="card-blockquote">
-                <p dir="ltr" lang="{{ tweet.features.repr.lang }}" class="card-text">
-                  {{ tweet.features.repr.text }}
-                </p>
-                <small>
-                  <a href="https://twitter.com/{{ tweet.features.repr.user__screen_name }}/status/{{ tweet.tweet_id }}">{{ tweet.created_at }}</a>
-                </small>
-              </blockquote>
+          <blockquote class="twitter-tweet card-blockquote" data-cards="hidden">
+            <div class="card custom-tweet">
+              <div class="card-block">
+                <header>
+                  <p class="twitter-user-name">{{ tweet.features.repr.user__name }}</p>
+                  <small class="text-muted">@{{ tweet.features.repr.user__screen_name }}</small>
+                </header>
+                <blockquote class="card-blockquote">
+                  <p dir="ltr" lang="{{ tweet.features.repr.lang }}" class="card-text">
+                    {{ tweet.features.repr.text }}
+                  </p>
+                  <small>
+                    <a href="https://twitter.com/{{ tweet.features.repr.user__screen_name }}/status/{{ tweet.tweet_id }}">{{ tweet.created_at }}</a>
+                  </small>
+                </blockquote>
+              </div>
             </div>
-          </div>
-        </blockquote>
+          </blockquote>
 
           <div class="card-footer text-muted tweet-outer-meta">
             <small>
               {{ tweet.tweet_id }}
-              {{ tweet.representees|count }}
+              {# {{ tweet.representees|count }} #}
             </small>
           </div>
 
@@ -84,13 +75,17 @@
 
     <div class="col-xl-4 bg-faded sidebar bd-links">
 
-      There are {{ page.item_count|humanize('intcomma') }} tweets.
+      {# <p> #}
+      {#   {\# There are {{ page.item_count|humanize('intcomma') }} tweets. #\} #}
+      {#   {\# There are {{ tweet_count|humanize('intcomma') }} tweets. #\} #}
+      {# </p> #}
 
-      {{ render_pagination(page) }}
+      {# {{ render_pagination(page) }} #}
 
         {% for feature_name, features, active_features in stats %}
           <div class="card">
-            <h3 class="card-header"><a href="{{ restricted_url('.features', include={'feature_name': feature_name}) }}">{{ feature_name }}</a></h3>
+            {# <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name=feature_name) }}">{{ feature_name }}</a></h3> #}
+            <h3 class="card-header">{{ feature_name }}</h3>
             <div class="card-columns feature-stats-container">
               {% for feature, count in features  %}
                 <div class="card feature-stats list-group-item list-group-item-action flex-column align-items-start {{ 'active' if feature in active_features}}">
@@ -127,7 +122,8 @@
 
     <main class="col-xl-8 offset-xl-4">
 
-      {{ render_tweets(page.items) }}
+      {# {{ render_tweets(page.items) }} #}
+      {{ render_tweets(tweets) }}
 
     </main>
 

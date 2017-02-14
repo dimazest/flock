@@ -270,10 +270,10 @@ def insert_stories(session, collection, story_file):
         session.add(story)
         session.flush()
 
-        for tweet_id in tweet_ids:
+        for tweet_rank, tweet_id in enumerate(tweet_ids):
             session.execute(
                 insert_stmt.values(
-                    [(int(tweet_id), collection, story._id)]
+                    [(int(tweet_id), collection, story._id, tweet_rank)]
                 ),
             )
 
