@@ -1,1 +1,109 @@
-{"topics": {"T8": {"topic": "prefers remember obama mission erin diplomacy dialog bombing accomplished", "clusters": [["583787759023824898"]]}, "T9": {"topic": "novel george releases author thrones excerpt progress martin", "clusters": [["583790103664926721"]]}, "T6": {"topic": "movies documentary afternoon highly likes delis terrific recommended saw mission", "clusters": [["583784298723069952"]]}, "T7": {"topic": "indictment pacs robert senator super points menendez potential corrupting accomplished", "clusters": [["583793249384439809"]]}, "T4": {"topic": "wrong caved first left job fix place lgbt great", "clusters": [["583791617791758336"]]}, "T5": {"topic": "part florists sin sell refuse just gays flowers take ceremony", "clusters": [["583790535657263104"]]}, "T2": {"topic": "rescued sea fish catching survived man rain drinking water hands", "clusters": [["583781660518256640"], ["583784382613172224"], ["583790879598632960"]]}, "T3": {"topic": "university attack killed twitter agency college confirms garissa kenyan embassy", "clusters": [["583794486691639296"], ["583795904383037440"]]}, "T0": {"topic": "women arrested attacks bomb build planning allegedly idolized bin laden", "clusters": [["583792863512670209"], ["583795510106009601"], ["583794344089354241"], ["583787628992028673"]]}, "T1": {"topic": "review great nyt migration lawrences jacob moma paintings movie nostalgia", "clusters": [["583783300499693568"], ["583786114877530112"], ["583790221097050112"]]}}}
+{
+    "topics": {},
+    "__topics": {
+        "T8": {
+            "topic": "prefers remember obama mission erin diplomacy dialog bombing accomplished",
+            "clusters": [
+                [
+                    "583787759023824898"
+                ]
+            ]
+        },
+        "T9": {
+            "topic": "novel george releases author thrones excerpt progress martin",
+            "clusters": [
+                [
+                    "583790103664926721"
+                ]
+            ]
+        },
+        "T6": {
+            "topic": "movies documentary afternoon highly likes delis terrific recommended saw mission",
+            "clusters": [
+                [
+                    "583784298723069952"
+                ]
+            ]
+        },
+        "T7": {
+            "topic": "indictment pacs robert senator super points menendez potential corrupting accomplished",
+            "clusters": [
+                [
+                    "583793249384439809"
+                ]
+            ]
+        },
+        "T4": {
+            "topic": "wrong caved first left job fix place lgbt great",
+            "clusters": [
+                [
+                    "583791617791758336"
+                ]
+            ]
+        },
+        "T5": {
+            "topic": "part florists sin sell refuse just gays flowers take ceremony",
+            "clusters": [
+                [
+                    "583790535657263104"
+                ]
+            ]
+        },
+        "T2": {
+            "topic": "rescued sea fish catching survived man rain drinking water hands",
+            "clusters": [
+                [
+                    "583781660518256640"
+                ],
+                [
+                    "583784382613172224"
+                ],
+                [
+                    "583790879598632960"
+                ]
+            ]
+        },
+        "T3": {
+            "topic": "university attack killed twitter agency college confirms garissa kenyan embassy",
+            "clusters": [
+                [
+                    "583794486691639296"
+                ],
+                [
+                    "583795904383037440"
+                ]
+            ]
+        },
+        "T0": {
+            "topic": "women arrested attacks bomb build planning allegedly idolized bin laden",
+            "clusters": [
+                [
+                    "583792863512670209"
+                ],
+                [
+                    "583795510106009601"
+                ],
+                [
+                    "583794344089354241"
+                ],
+                [
+                    "583787628992028673"
+                ]
+            ]
+        },
+        "T1": {
+            "topic": "review great nyt migration lawrences jacob moma paintings movie nostalgia",
+            "clusters": [
+                [
+                    "583783300499693568"
+                ],
+                [
+                    "583786114877530112"
+                ],
+                [
+                    "583790221097050112"
+                ]
+            ]
+        }
+    }
+}
