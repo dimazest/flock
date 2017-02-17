@@ -32,6 +32,9 @@ def create_session(ctx, param, value):
     from sqlalchemy.orm import sessionmaker
 
     engine = create_engine(value, client_encoding='utf8')
+
+    sa.orm.configure_mappers()
+
     model.metadata.bind = engine
     Session = sessionmaker(bind=engine)
 
@@ -111,8 +114,6 @@ def insert(source, session, clusters, collection, extract_retweets, language):
         index_elements=['tweet_id', 'collection'],
         set_={
             'features': stmt.excluded.features,
-            # TODO: get rid of label.
-            'label': stmt.excluded.label,
         }
     )
 

@@ -1,5 +1,7 @@
 import os
 
+import sqlalchemy as sa
+
 from flask import Flask, request, url_for
 
 from flask_sqlalchemy import SQLAlchemy
@@ -64,6 +66,7 @@ def create_app(config_file):
 
     cache.init_app(app)
     db.init_app(app)
+    sa.orm.configure_mappers()
     twitter_oembedder.init(app, cache, timeout=60*60*24*30)
     humanise.init_app(app)
 

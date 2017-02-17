@@ -68,12 +68,12 @@ def basic_features(tweets, user_labels):
             'text': tweet.parsed['text'],
             'user__name': tweet.parsed['user']['screen_name'],
             'user__screen_name': tweet.parsed['user']['screen_name'],
-            'lang': tweet.parsed['lang'],
+            'lang': tweet.parsed.get('lang', None),
         }
 
         row = {
             'tweet_id': tweet.id,
-            'label': '_{}'.format(tweet.id % 3),
+            'text': tweet.parsed['text'],
             'features': features,
             'created_at': tweet.created_at,
         }

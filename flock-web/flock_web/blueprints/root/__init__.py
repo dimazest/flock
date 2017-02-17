@@ -3,6 +3,7 @@ from flask import render_template, Blueprint, request, redirect, url_for, g
 from sqlalchemy import func, select, Table, Column, Integer, String, sql
 from sqlalchemy.sql.expression import text, and_, or_, not_, join, column
 from paginate_sqlalchemy import SqlalchemySelectPage, SqlalchemyOrmPage
+from sqlalchemy_searchable import search, parse_search_query
 
 import crosstab
 
@@ -19,7 +20,7 @@ bp_root = Blueprint(
 
 
 def stats_for_feature(feature_name, feature_filter_args=()):
-    if feature_filter_args:
+    if feature_filter_args or g.query:
         feature = text(
             'select collection, tweet_id, feature_value from tweet, jsonb_array_elements_text(tweet.features->:feature) as feature_value'
         ).columns(column('collection'), column('tweet_id'), column('feature_value')).bindparams(feature=feature_name).alias()
@@ -32,12 +33,20 @@ def stats_for_feature(feature_name, feature_filter_args=()):
                     feature.c.tweet_id == model.Tweet.tweet_id,
                     model.Tweet.tweet_id == model.filtered_tweets.c.tweet_id,
                     model.Tweet.collection == model.filtered_tweets.c.collection,
+                    (
+                        text(
+                            "tweet.search_vector @@ to_tsquery('pg_catalog.english', :search_vector)"
+                        ).bindparams(search_vector=parse_search_query(g.query))
+                        if g.query else True
+                    ),
                     *feature_filter_args
                 )
             )
             .group_by(feature.c.feature_value)
             .alias()
         )
+
+        feature = feature.alias()
 
     else:
         feature = (
@@ -69,7 +78,9 @@ def add_collection(endpoint, values):
 def pull_collection(endpoint, values):
     g.collection = values.pop('collection')
 
-    filter_args = [(k, vs) for k, vs in request.args.lists() if not k.startswith('_') and k != 'story']
+    g.query = request.args.get('q')
+
+    filter_args = [(k, vs) for k, vs in request.args.lists() if not k.startswith('_') and k not in ( 'story', 'q')]
 
     g.feature_filter_args = []
 
@@ -80,22 +91,6 @@ def pull_collection(endpoint, values):
 
     negative_include = [(k, [v[1:] for v in vs if v.startswith('-')]) for k, vs, in filter_args]
     negative_include = [(k, v) for k, vs in negative_include if vs for v in vs]
-
-    users_to_ignore = [
-        # '@@NOISE',
-        # 'TheFunnyTeens', 'SteveStfler', 'zaynmalik', 'SpeakComedy', 'textposts', 'honestfandom', 'OneLifeAlways',
-        # 'TumbIrsPosts', 'UberFacts', 'lnsaneTweets', 'zaynbaabe', 'CraziestSex', 'JBCrewdotcom', 'RELATlONSHlP',
-        # 'IosttransIation', 'JuliannaBisex', 'zouirinialI', 'chocomalikk', 'socialsearch01',
-    ]
-    negative_include.extend(
-        [('screen_names', ht) for ht in users_to_ignore] +
-        [('user_mentions', ht) for ht in users_to_ignore] +
-        [
-            # ('hashtags', ht) for ht in [
-                # 'porn', 'nswf', 'nowplaying', 'teamfollowback', 'retweet', 'rt', 'ff'
-            # ]
-        ]
-    )
 
     if negative_include:
         g.feature_filter_args.append(and_(*(not_(model.Tweet.features.contains({k: [v]})) for k, v in negative_include)))
@@ -128,7 +123,13 @@ def tweets():
         # .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     )
 
-    # tweet_count = tweets.count()
+    if g.query:
+        tweets = search(tweets, g.query)
+
+    if g.query or g.feature_filter_args:
+        tweet_count = tweets.count()
+    else:
+        tweet_count = None
 
     if not g.story:
         tweets = tweets.limit(100)
@@ -151,14 +152,16 @@ def tweets():
     return render_template(
         'root/tweets.html',
         tweets=tweets.all(),
-        # tweet_count=tweet_count,
+        tweet_count=tweet_count,
         # page=page,
         stories=stories,
         selected_story=g.story,
         stats=[
             (f, db.session.query(stats_for_feature(f, g.feature_filter_args).limit(30).alias()), request.args.getlist(f))
             for f in ['screen_names', 'hashtags', 'user_mentions']
-        ]
+        ],
+        query=g.query,
+        query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k != 'q'),
     )
 
 

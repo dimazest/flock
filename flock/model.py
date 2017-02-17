@@ -3,9 +3,15 @@ from sqlalchemy import types
 from sqlalchemy.dialects import postgresql as pg
 
 from sqlalchemy.ext.declarative import declarative_base
+import sqlalchemy_searchable
+
+from sqlalchemy_utils.types import TSVectorType
 
 metadata = sa.MetaData()
 Base = declarative_base(metadata=metadata)
+
+
+sqlalchemy_searchable.make_searchable()
 
 
 tweet_representative = sa.Table(
@@ -50,7 +56,9 @@ class Tweet(Base):
     collection = sa.Column(types.String, nullable=False, primary_key=True)
 
     # tweet = Column(pg.JSONB, nullable=False)
-    label = sa.Column(types.String)
+    text = sa.Column(types.UnicodeText)
+    search_vector = sa.Column(TSVectorType('text'))
+
     features = sa.Column(pg.JSONB)
 
     created_at = sa.Column(types.DateTime, nullable=False, index=True)

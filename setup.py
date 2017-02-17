@@ -30,6 +30,7 @@ setup(
         'click-log',
         'poultry',
         'sqlalchemy',
+        'SQLAlchemy-Searchable',
         'flock-conf',
         'simhash',
 

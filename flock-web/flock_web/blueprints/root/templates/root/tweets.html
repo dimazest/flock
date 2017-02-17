@@ -33,7 +33,7 @@
       <div>
 
         <div class='card tweet-outer'>
-          <blockquote class="twitter-tweet card-blockquote" data-cards="hidden">
+          <blockquote class="twitter-tweet card-blockquote" {# data-cards="hidden"#}>
             <div class="card custom-tweet">
               <div class="card-block">
                 <header>
@@ -75,15 +75,31 @@
 
     <div class="col-xl-4 bg-faded sidebar bd-links">
 
-      {# <p> #}
-      {#   {\# There are {{ page.item_count|humanize('intcomma') }} tweets. #\} #}
-      {#   {\# There are {{ tweet_count|humanize('intcomma') }} tweets. #\} #}
-      {# </p> #}
+      {% if tweet_count %}
+        <p> 
+          {# There are {{ page.item_count|humanize('intcomma') }} tweets.   #}
+          There are {{ tweet_count|humanize('intcomma') }} tweets.  
+        </p> 
+      {% endif %}
+
+      <form class="sidebar-element" action="{{ url_for('.tweets') }}" method="get">
+          <div class="row" id="sidebar-search-box">
+            <div class="col-10"> 
+              <input type="text" class="form-control" placeholder="Search" name="q", {% if query %} value="{{ query }}" {% endif %}> 
+            </div> 
+            <div class="col-2"> 
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="width: 100%;">Search</button>  
+            </div> 
+          </div> 
+          {% for k, v in query_form_hidden_fields %}
+            <input type="hidden" name="{{ k }}" value="{{ v }}"}>
+          {% endfor %}
+      </form>
 
       {# {{ render_pagination(page) }} #}
 
         {% for feature_name, features, active_features in stats %}
-          <div class="card">
+          <div class="card sidebar-element">
             {# <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name=feature_name) }}">{{ feature_name }}</a></h3> #}
             <h3 class="card-header">{{ feature_name }}</h3>
             <div class="card-columns feature-stats-container">

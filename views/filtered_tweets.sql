@@ -23,7 +23,7 @@ WHERE
           'deal', 'deals', 'free', 'win', 'marketing', 'etsymntt', 'iartg',
           'gameinsight'
      ]
-     AND (select count(*) from jsonb_array_elements_text(features->'hashtags') where value like 'vote%mtv') = 0
+     AND (select count(*) from jsonb_array_elements_text(features->'hashtags') where value like 'vote%mtv' or value like 'myexandwhys%') = 0
      AND r.score < 100
     )
 )

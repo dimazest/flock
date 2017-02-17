@@ -7,13 +7,17 @@ body {
     column-count: 4;
 }
 
+#main-content {
+    /* margin-top: 20px; */
+}
+
 /*
  * Sidebar
  */
 
 .sidebar {
     position: fixed;
-    top: 51px;
+    top: 56px;
     bottom: 0;
     left: 0;
     z-index: 1000;
@@ -35,6 +39,14 @@ body {
 .sidebar {
     padding-left: 15px;
     padding-right: 15px;
+}
+
+#sidebar-search-box {
+    padding-top: 5px;
+}
+
+.sidebar-element {
+    margin-bottom: 12px;
 }
 
 blockquote.twitter-tweet {
