@@ -2,7 +2,7 @@ import os
 
 import sqlalchemy as sa
 
-from flask import Flask, request, url_for
+from flask import Flask, request, url_for, g
 
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.cache import Cache
@@ -52,10 +52,18 @@ def restricted_url(endpoint=None, include=None, exclude=None, **single_args):
         for k, to_exclude in exclude.items():
             args.setlist(k, [v for v in args.getlist(k) if v != to_exclude])
 
+    collection = g.collection
     for k, v in single_args.items():
-        args[k] = v
+        if k == 'collection':
+            collection = v
+        else:
+            args[k] = v
 
-    return url_for(endpoint, **args)
+    return url_for(
+        endpoint,
+        collection=collection,
+        **args
+    )
 
 
 def create_app(config_file):

@@ -33,7 +33,7 @@
       <div>
 
         <div class='card tweet-outer'>
-          <blockquote class="twitter-tweet card-blockquote" {# data-cards="hidden"#}>
+          <blockquote class="twitter-tweet card-blockquote" {% if not show_images %} data-cards="hidden" {% endif %}>
             <div class="card custom-tweet">
               <div class="card-block">
                 <header>
@@ -78,21 +78,21 @@
       {% if tweet_count %}
         <p> 
           {# There are {{ page.item_count|humanize('intcomma') }} tweets.   #}
-          There are {{ tweet_count|humanize('intcomma') }} tweets.  
+          There are {{ tweet_count|humanize('intcomma') }} tweets.
         </p> 
       {% endif %}
 
       <form class="sidebar-element" action="{{ url_for('.tweets') }}" method="get">
           <div class="row" id="sidebar-search-box">
             <div class="col-10"> 
-              <input type="text" class="form-control" placeholder="Search" name="q", {% if query %} value="{{ query }}" {% endif %}> 
+              <input type="text" class="form-control" placeholder="Search" name="q" {% if query %} value="{{ query }}" {% endif %}>
             </div> 
             <div class="col-2"> 
               <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="width: 100%;">Search</button>  
             </div> 
           </div> 
           {% for k, v in query_form_hidden_fields %}
-            <input type="hidden" name="{{ k }}" value="{{ v }}"}>
+            <input type="hidden" name="{{ k }}" value="{{ v }}">
           {% endfor %}
       </form>
 
@@ -105,34 +105,34 @@
             <div class="card-columns feature-stats-container">
               {% for feature, count in features  %}
                 <div class="card feature-stats list-group-item list-group-item-action flex-column align-items-start {{ 'active' if feature in active_features}}">
-                    <p class="mb-0" style="white-space: nowrap; overflow:auto; max-width: 100%;">
-                      <a class="btn btn-outline-danger btn-sm" href="{{ restricted_url('.tweets', include={feature_name: '-{}'.format(feature)}, exclude={feature_name: feature}) }}" role="button">
-                        <i class="fa fa-times" aria-hidden="true"></i>
-                      </a>
-                        <a href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}) }}" class="feature-link">
-                          {{ feature  }}
-                        </a>
-                    </p>
-                    <small {{ 'class="text-muted"' if story != TODO }}>{{ count|humanize('intword') }} tweets.</small>
+                  <p class="mb-0" style="white-space: nowrap; overflow:auto; max-width: 100%;">
+                    <a class="btn btn-outline-danger btn-sm" href="{{ restricted_url('.tweets', include={feature_name: '-{}'.format(feature)}, exclude={feature_name: feature}) }}" role="button">
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    </a>
+                    <a href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}) }}" class="feature-link">
+                      {{ feature  }}
+                    </a>
+                  </p>
+                  <small {{ 'class="text-muted"' if story != TODO }}>{{ count|humanize('intword') }} tweets.</small>
                 </div>
               {% endfor %}
             </div>
           </div>
         {% endfor %}
 
-      {% if stories|count %}
-        <div class="card">
-          <h3 class="card-header">Stories</h3>
-          <div class="list-group list-group-flush">
-            {% for story in stories %}
-              <a href="{{ restricted_url('.tweets', story=story._id if story != selected_story else None) }}" class="list-group-item list-group-item-action flex-column align-items-start {{ 'active' if story == selected_story}}">
-                <p class="mb-0">{{ story.title  }}</p>
-                <small {{ 'class="text-muted"' if story != selected_story }}>{{ story.tweets|count|humanize('intword') }} tweets.</small>
-              </a>
-            {% endfor %}
+        {% if stories|count %}
+          <div class="card">
+            <h3 class="card-header">Stories</h3>
+            <div class="list-group list-group-flush">
+              {% for story in stories %}
+                <a href="{{ restricted_url('.tweets', story=story._id if story != selected_story else None, filter='none' if story != selected_story else None) }}" class="list-group-item list-group-item-action flex-column align-items-start {{ 'active' if story == selected_story}}">
+                  <p class="mb-0">{{ story.title  }}</p>
+                  <small {{ 'class="text-muted"' if story != selected_story }}>{{ story.tweets|count|humanize('intword') }} tweets.</small>
+                </a>
+              {% endfor %}
+            </div>
           </div>
-        </div>
-      {% endif %}
+        {% endif %}
 
     </div>
 
@@ -148,3 +148,40 @@
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 {% endblock content %}
+
+{% block navbar_body %}
+{% for c, title in [('2017-02-14', '2017-02-14'), ('ublog-2015_for-yasi_2ndweek', 'ublog: 2nd week'), ('ublog-2015_for-yasi_3rdweek', 'ublog: 3rd week')] %}
+  <li class="nav-item {% if c == collection %}active{% endif %}">
+    <a class="nav-link" href="{{ restricted_url('.tweets', collection=c, story=None) }}">{{ title }}</a>
+  </li>
+{% endfor %}
+{% endblock navbar_body %}
+
+{% block navbar_extra %}
+
+  <form class="form-inline" action="{{ url_for('.tweets') }}" method="get">
+
+    <div class="form-check mb-2 mr-sm-2 mb-sm-0">
+      <label class="form-check-hide-images">
+        <input class="form-check-input" type="checkbox" name="show_images" {% if show_images %}checked{% endif %}><span class="navbar-text">Show images</span>
+      </label>
+    </div>
+
+    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+      <label class="mr-sm-2 navbar-text" for="inlineFilterSelect">Filter</label>
+      <select name="filter" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFilterSelect">
+        {% for filter_value, filter_option in [('none', 'None'), ('pmi', 'PMI')] %}
+          <option value="{{ filter_value }}" {% if filter_value == selected_filter %}selected{% endif %}>{{ filter_option }}</option>
+          {# <option value="pmi">PMI</option> #}
+        {% endfor %}
+      </select>
+    </div>
+
+    {% for k, v in filter_form_hidden_fields %}
+      <input type="hidden" name="{{ k }}" value="{{ v }}">
+    {% endfor %}
+
+    <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Submit</button>
+  </form>
+
+{% endblock navbar_extra %}

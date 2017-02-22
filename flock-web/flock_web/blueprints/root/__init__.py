@@ -29,15 +29,21 @@ def stats_for_feature(feature_name, feature_filter_args=()):
             select([feature.c.feature_value, func.count().label('count')])
             .where(
                 and_(
+                    feature.c.collection == g.collection,
                     feature.c.collection == model.Tweet.collection,
                     feature.c.tweet_id == model.Tweet.tweet_id,
-                    model.Tweet.tweet_id == model.filtered_tweets.c.tweet_id,
-                    model.Tweet.collection == model.filtered_tweets.c.collection,
                     (
                         text(
                             "tweet.search_vector @@ to_tsquery('pg_catalog.english', :search_vector)"
                         ).bindparams(search_vector=parse_search_query(g.query))
                         if g.query else True
+                    ),
+                    *(
+                        [
+                            model.Tweet.tweet_id == model.filtered_tweets.c.tweet_id,
+                            model.Tweet.collection == model.filtered_tweets.c.collection,
+                        ]
+                        if g.filter != 'none' else []
                     ),
                     *feature_filter_args
                 )
@@ -49,12 +55,17 @@ def stats_for_feature(feature_name, feature_filter_args=()):
         feature = feature.alias()
 
     else:
+        if g.filter == 'none':
+            count_table = model.feature_counts
+        else:
+            count_table = model.feature_scores
+
         feature = (
-            select([model.feature_scores.c.collection, model.feature_scores.c.feature_value, model.feature_scores.c.count])
+            select([count_table.c.collection, count_table.c.feature_value, count_table.c.count])
             .where(
                 and_(
-                    model.feature_scores.c.feature_name == feature_name,
-                    model.feature_scores.c.collection == g.collection,
+                    count_table.c.feature_name == feature_name,
+                    count_table.c.collection == g.collection,
                 )
             )
             .alias()
@@ -79,8 +90,10 @@ def pull_collection(endpoint, values):
     g.collection = values.pop('collection')
 
     g.query = request.args.get('q')
+    g.filter = request.args.get('filter', 'pmi')
+    g.show_images = request.args.get('show_images') == 'on'
 
-    filter_args = [(k, vs) for k, vs in request.args.lists() if not k.startswith('_') and k not in ( 'story', 'q')]
+    filter_args = [(k, vs) for k, vs in request.args.lists() if not k.startswith('_') and k not in ( 'story', 'q', 'filter', 'show_images')]
 
     g.feature_filter_args = []
 
@@ -112,15 +125,27 @@ def tweets():
     page_num = request.args.get('_page', 1, type=int)
     items_per_page = request.args.get('_items_per_page', 100, type=int)
 
+    tweets = db.session.query(model.Tweet)
+
+    if g.filter == 'none':
+        tweets = (
+            tweets
+            .filter(model.Tweet.collection == g.collection)
+        )
+    else:
+        tweets = (
+            tweets
+            .select_from(model.filtered_tweets)
+            .join(model.Tweet)
+            .filter(model.Tweet.collection == g.collection)
+            .filter(model.filtered_tweets.c.collection == g.collection)
+        )
+
     tweets = (
-        db.session.query(model.Tweet)
-        .select_from(model.filtered_tweets)
-        .join(model.Tweet)
-        .filter(model.filtered_tweets.c.collection == g.collection)
+        tweets
         .filter(*g.feature_filter_args)
         # # .filter(model.Tweet.features['filter', 'is_retweet'].astext == 'false' )
         # # .filter(model.Tweet.representative == None)
-        # .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     )
 
     if g.query:
@@ -128,13 +153,21 @@ def tweets():
 
     if g.query or g.feature_filter_args:
         tweet_count = tweets.count()
+
+        tweets = tweets.order_by(model.Tweet.created_at, model.Tweet.tweet_id)
     else:
         tweet_count = None
 
     if not g.story:
         tweets = tweets.limit(100)
-    # else:
-        # tweets = tweets.order_by(model.tweet_story.c.rank)
+    else:
+        ts = model.tweet_story.alias()
+        tweets = (
+            tweets
+            .join(ts)
+            .order_by(None)
+            .order_by(ts.c.rank)
+        )
 
     stories = (
         db.session.query(model.Story)
@@ -162,6 +195,10 @@ def tweets():
         ],
         query=g.query,
         query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k != 'q'),
+        filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
+        selected_filter=g.filter,
+        collection=g.collection,
+        show_images=g.show_images,
     )
 
 

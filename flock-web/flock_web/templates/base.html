@@ -61,6 +61,11 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <a class="navbar-brand" href="{{url_for('main.welcome')}}">flock</a>
+
+      <ul class="navbar-nav mr-auto">
+        {% block navbar_body  %} {% endblock navbar_body %}
+      </ul>
+      {% block navbar_extra  %} {% endblock navbar_extra %}
     </nav>
 
     <div class="container-fluid" id='main-content'>

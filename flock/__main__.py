@@ -24,7 +24,7 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-tables = [table for name, table in model.metadata.tables.items() if name not in ('tweet_representative', 'filtered_tweets', 'feature_scores')]
+tables = [table for name, table in model.metadata.tables.items() if name not in ('tweet_representative', 'filtered_tweets', 'feature_scores', 'feature_counts')]
 
 
 def create_session(ctx, param, value):
@@ -272,11 +272,16 @@ def insert_stories(session, collection, story_file):
         session.flush()
 
         for tweet_rank, tweet_id in enumerate(tweet_ids):
-            session.execute(
-                insert_stmt.values(
-                    [(int(tweet_id), collection, story._id, tweet_rank)]
-                ),
-            )
+            tweet_id = int(tweet_id)
+
+            tweet = session.query(model.Tweet).get((tweet_id, collection))
+
+            for id_ in [tweet_id]: # + tweet.features.get('retweeted_status__id', []):
+                session.execute(
+                    insert_stmt.values(
+                        [(id_, collection, story._id, tweet_rank)]
+                    ),
+                )
 
     session.commit()
 

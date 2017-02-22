@@ -35,6 +35,14 @@ filtered_tweets = sa.Table(
 )
 
 
+feature_counts = sa.Table(
+    'feature_counts', metadata,
+    sa.Column('collection', sa.String),
+    sa.Column('feature_name', sa.String),
+    sa.Column('feature_value', sa.String),
+    sa.Column('count', sa.Integer),
+)
+
 feature_scores = sa.Table(
     'feature_scores', metadata,
     sa.Column('collection', sa.String),
