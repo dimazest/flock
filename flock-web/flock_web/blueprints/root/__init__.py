@@ -190,7 +190,7 @@ def tweets():
         stories=stories,
         selected_story=g.story,
         stats=[
-            (f, db.session.query(stats_for_feature(f, g.feature_filter_args).limit(30).alias()), request.args.getlist(f))
+            (f, db.session.query(stats_for_feature(f, g.feature_filter_args).limit(9).alias()), request.args.getlist(f))
             for f in ['screen_names', 'hashtags', 'user_mentions']
         ],
         query=g.query,
