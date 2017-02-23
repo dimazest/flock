@@ -76,21 +76,21 @@
     <div class="col-xl-4 bg-faded sidebar bd-links">
 
       {% if tweet_count %}
-        <p> 
+        <p>
           {# There are {{ page.item_count|humanize('intcomma') }} tweets.   #}
           There are {{ tweet_count|humanize('intcomma') }} tweets.
-        </p> 
+        </p>
       {% endif %}
 
       <form class="sidebar-element" action="{{ url_for('.tweets') }}" method="get">
           <div class="row" id="sidebar-search-box">
-            <div class="col-10"> 
+            <div class="col-10">
               <input type="text" class="form-control" placeholder="Search" name="q" {% if query %} value="{{ query }}" {% endif %}>
-            </div> 
-            <div class="col-2"> 
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="width: 100%;">Search</button>  
-            </div> 
-          </div> 
+            </div>
+            <div class="col-2">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="width: 100%;">Search</button>
+            </div>
+          </div>
           {% for k, v in query_form_hidden_fields %}
             <input type="hidden" name="{{ k }}" value="{{ v }}">
           {% endfor %}
@@ -98,41 +98,40 @@
 
       {# {{ render_pagination(page) }} #}
 
+        {% if stories|count %}
+          <div class="card sidebar-element">
+            <h3 class="card-header">Stories</h3>
+            <div class="list-group list-group-flush">
+              {% for story in stories %}
+                <a href="{{ restricted_url('.tweets', story=story._id if story != selected_story else None, filter='none' if story != selected_story else None) }}" class="list-group-item list-group-item-action flex-column align-items-start feature-item {{ 'active' if story == selected_story}}">
+                  <p class="mb-0">{{ story.title  }} ({{ story.tweets|count|humanize('intword') }})</p>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
         {% for feature_name, features, active_features in stats %}
           <div class="card sidebar-element">
             {# <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name=feature_name) }}">{{ feature_name }}</a></h3> #}
             <h3 class="card-header">{{ feature_name }}</h3>
             <div class="card-columns feature-stats-container">
               {% for feature, count in features  %}
-                <div class="card feature-stats list-group-item list-group-item-action flex-column align-items-start {{ 'active' if feature in active_features}}">
-                  <p class="mb-0" style="white-space: nowrap; overflow:auto; max-width: 100%;">
-                    {# <a class="btn btn-outline-danger btn-sm" href="{{ restricted_url('.tweets', include={feature_name: '-{}'.format(feature)}, exclude={feature_name: feature}) }}" role="button"> #}
-                    {#   <i class="fa fa-times" aria-hidden="true"></i> #}
-                    {# </a> #}
-                    <a href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}) }}" class="feature-link">
-                      {{ feature  }}
+                <div class="card" style="margin-bottom: 0;">
+                  <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action flex-column align-items-start feature-stats-item feature-item {{ 'active' if feature in active_features}}" href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}) }}">
+                      {{ feature }} ({{ count|humanize('intword') }})
                     </a>
-                  </p>
-                  <small {{ 'class="text-muted"' if story != TODO }}>{{ count|humanize('intword') }} tweets.</small>
+                  </div>
                 </div>
+
+                {# <a class="btn btn-outline-danger btn-sm" href="{{ restricted_url('.tweets', include={feature_name: '-{}'.format(feature)}, exclude={feature_name: feature}) }}" role="button"> #}
+                {#   <i class="fa fa-times" aria-hidden="true"></i> #}
+                {# </a> #}
               {% endfor %}
             </div>
           </div>
         {% endfor %}
-
-        {% if stories|count %}
-          <div class="card">
-            <h3 class="card-header">Stories</h3>
-            <div class="list-group list-group-flush">
-              {% for story in stories %}
-                <a href="{{ restricted_url('.tweets', story=story._id if story != selected_story else None, filter='none' if story != selected_story else None) }}" class="list-group-item list-group-item-action flex-column align-items-start {{ 'active' if story == selected_story}}">
-                  <p class="mb-0">{{ story.title  }}</p>
-                  <small {{ 'class="text-muted"' if story != selected_story }}>{{ story.tweets|count|humanize('intword') }} tweets.</small>
-                </a>
-              {% endfor %}
-            </div>
-          </div>
-        {% endif %}
 
     </div>
 

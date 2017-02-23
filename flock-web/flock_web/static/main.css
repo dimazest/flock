@@ -113,6 +113,18 @@ blockquote.twitter-tweet-error {
     margin: .75rem .75rem .75rem .75rem;
 }
 
+.feature-stats-item {
+    white-space: nowrap;
+    overflow:auto;
+    max-width: 100%;
+    /* padding: 0; */
+}
+
+.feature-item {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
 nav > .active {
 }
 
