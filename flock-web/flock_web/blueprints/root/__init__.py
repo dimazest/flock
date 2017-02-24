@@ -165,8 +165,7 @@ def tweets():
         tweets = (
             tweets
             .join(ts)
-            .order_by(None)
-            .order_by(ts.c.rank)
+            .order_by(None).order_by(ts.c.rank)
         )
 
     stories = (
