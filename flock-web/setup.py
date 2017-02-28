@@ -42,6 +42,8 @@ setup(
         'flask-debugtoolbar',
         'paginate_sqlalchemy',
         'celery',
+        'gensim',
+        'hdbscan',
     ],
     entry_points={
         'console_scripts': [

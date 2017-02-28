@@ -272,8 +272,13 @@ def cluster():
     else:
         task_id = clustered_selection.celery_id
 
+    task = g.celery.AsyncResult(task_id)
+
     location = url_for('.cluster_status', task_id=task_id, collection=g.collection)
-    return jsonify({'Location': location}), 202, {'Location': location}
+    if not 'redirect' in request.form:
+        return jsonify({'Location': location, 'info': task.info}), 202, {'Location': location}
+    else:
+        return redirect(location)
 
 
 @bp_root.route('/cluster/status/<task_id>')

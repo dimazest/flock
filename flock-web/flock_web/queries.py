@@ -5,7 +5,7 @@ from flock import model
 from .app import db
 
 
-def build_tweet_query(collection, query, filter, filter_args):
+def build_tweet_query(collection, query, filter, filter_args, possibly_limit=True):
 
     feature_filter_args = []
 
@@ -52,14 +52,17 @@ def build_tweet_query(collection, query, filter, filter_args):
     else:
         tweet_count = None
 
-    if True or not g.story:  # XXX refactor stories
+    if possibly_limit:
         tweets = tweets.limit(100)
-    else:
-        ts = model.tweet_story.alias()
-        tweets = (
-            tweets
-            .join(ts)
-            .order_by(None).order_by(ts.c.rank)
-        )
+        # if not g.story:  # XXX refactor stories
+        #     tweets = tweets.limit(100)
+        # else:
+        #     ts = model.tweet_story.alias()
+        #     tweets = (
+        #         tweets
+        #         .join(ts)
+        #         .order_by(None).order_by(ts.c.rank)
+        #     )
+
 
     return tweets, tweet_count, feature_filter_args

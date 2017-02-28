@@ -70,11 +70,12 @@
           <div id='clustering_progress' class="progress-bar" role="progressbar"></div>
       </div>
 
-      {# <form class="sidebar-element" action="{{ url_for('.cluster') }}" method="post"> #}
-        {# <input type="hidden" name="selection_args" value="{{ selection_args }}"> #}
-        {# <input type="hidden" name="from_url" value="{{ restricted_url('.tweets') }}"> #}
-        {# <button class="btn btn-outline-success my-2 my-sm-0 w-100" type="submit">Cluster</button> #}
-      {# </form> #}
+      <form class="sidebar-element" action="{{ url_for('.cluster') }}" method="post">
+        <input type="hidden" name="redirect" value="yes">
+        <input type="hidden" name="selection_args" value="{{ selection_args }}">
+        <input type="hidden" name="from_url" value="{{ restricted_url('.tweets') }}">
+        <button class="btn btn-outline-secondary my-2 my-sm-0 w-100" type="submit">Cluster (POST)</button>
+      </form>
 
       <p>
         <button id="start-clustering-task" class="btn btn-outline-success w-100">Cluster</button>
@@ -164,56 +165,52 @@
       <input type="hidden" name="{{ k }}" value="{{ v }}">
     {% endfor %}
 
-      <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Submit</button>
+    <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Submit</button>
   </form>
-
-  {% endblock navbar_extra %}
-
-  <input type="hidden" name="selection_args" value="{{ selection_args }}">
-        <input type="hidden" name="from_url" value="">
-
+{% endblock navbar_extra %}
 
 {% block extra_scripts %}
-        <script>
-         function start_clustering_task() {
-             $.post({
-                 url: '{{ url_for('.cluster') }}',
-                 data: {
-                     selection_args: '{{ selection_args|safe }}',
-                     from_url: '{{ restricted_url('.tweets')|safe }}',
-                 },
-                 success: function(data, status, request) {
-                     status_url = request.getResponseHeader('Location');
-                     update_progress(status_url);
-                 },
-                 error: function() {
-                     console.log('Unexpected error');
-                 }
-             });
+<script>
+ function start_clustering_task() {
+     $.post({
+         url: '{{ url_for('.cluster') }}',
+         data: {
+             selection_args: '{{ selection_args|safe }}',
+             from_url: '{{ restricted_url('.tweets')|safe }}',
+         },
+         success: function(data, status, request) {
+             status_url = request.getResponseHeader('Location');
+             update_progress(status_url);
+         },
+         error: function() {
+             console.log('Unexpected error');
          }
+     });
+ }
 
-         function update_progress(status_url){
-             $.getJSON(status_url, function(data){
-                 $('#clustering_progress_container').show();
-                 $('#start-clustering-task').hide();
+ function update_progress(status_url){
+     $.getJSON(status_url, function(data){
+         $('#clustering_progress_container').show();
+         $('#start-clustering-task').hide();
 
-                 if (data['state'] != 'SUCCESS') {
-                     var progress = data['info']['current'] / data['info']['total'] * 100;
-                     $('#clustering_progress').attr('style', 'width:' + progress + '%;');
+         if (data['state'] == 'PROGRESS') {
+             var progress = data['info']['current'] / data['info']['total'] * 100;
+             $('#clustering_progress').attr('style', 'width:' + progress + '%;');
+             console.log(data['info']['status']);
+             $('#clustering_progress').html( data['info']['status']);
 
-                     setTimeout(function() {
-                         update_progress(status_url);
-                     }, 2000);
-                 }
-                 else if (data['state'] == 'SUCCESS') {
-                     $('#clustering_progress_container').hide()
-                 }
-             });
          }
+         else if (data['state'] == 'SUCCESS') {
+              $('#clustering_progress_container').hide()
+              return;
+         }
+         setTimeout(function(){update_progress(status_url);}, 2000);
+     });
+ }
 
-         $(document).ready(function() {
-             console.log( "ready!" );
-             $('#start-clustering-task').click(start_clustering_task);
-         });
-        </script>
+ $(document).ready(function() {
+     console.log( "ready!" );
+     $('#start-clustering-task').click(start_clustering_task);
+ });
+</script>
   {% endblock extra_scripts %}
