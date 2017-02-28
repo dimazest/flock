@@ -1,14 +1,15 @@
 import os
 
 import sqlalchemy as sa
+from celery import Celery
 
 from flask import Flask, request, url_for, g
 
 from flask_sqlalchemy import SQLAlchemy
-from flask.ext.cache import Cache
-from flask.ext.twitter_oembedder import TwitterOEmbedder
-from flask.ext.iniconfig import INIConfig
-from flask.ext.sqlalchemy import get_debug_queries
+from flask_cache import Cache
+from flask_twitter_oembedder import TwitterOEmbedder
+from flask_iniconfig import INIConfig
+from flask_sqlalchemy import get_debug_queries
 from flask_humanize import Humanize
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -66,7 +67,23 @@ def restricted_url(endpoint=None, include=None, exclude=None, **single_args):
     )
 
 
-def create_app(config_file):
+def make_celery(app):
+    celery = Celery(app.import_name,
+                    backend=app.config['CELERY_RESULT_BACKEND'],
+                    broker=app.config['CELERY_BROKER_URL'],
+    )
+    celery.conf.update(app.config)
+    TaskBase = celery.Task
+    class ContextTask(TaskBase):
+        abstract = True
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+    celery.Task = ContextTask
+    return celery
+
+
+def create_app(config_file, return_celery=False):
     app = Flask(__name__)
 
     ini_config.init_app(app)
@@ -90,6 +107,13 @@ def create_app(config_file):
     app.jinja_env.globals['url_for_other_page'] = url_for_other_page
     app.jinja_env.globals['restricted_url'] = restricted_url
 
+    celery = make_celery(app)
+
+    @app.before_request
+    def before_request():
+        from flask import g
+        g.celery = celery
+
     @app.after_request
     def after_request(response):
         for query in get_debug_queries():
@@ -107,4 +131,7 @@ def create_app(config_file):
 
         return response
 
-    return app
+    if not return_celery:
+        return app
+    else:
+        return app, celery

@@ -100,6 +100,22 @@ class Story(Base):
     title = sa.Column(types.String, nullable=False)
 
 
+class ClusteredSelection(Base):
+    __tablename__ = 'clustered_selection'
+    __table_args__ = (
+        sa.UniqueConstraint('collection', 'query', 'filter', 'filter_args'),
+    )
+
+    _id = sa.Column(types.Integer, primary_key=True)
+    celery_id = sa.Column(types.String)
+    celery_status = sa.Column(types.String)
+
+    collection = sa.Column(types.String, nullable=False)
+    query = sa.Column(types.String)
+    filter = sa.Column(types.String)
+    filter_args = sa.Column(pg.JSONB)
+
+
 tweet_story = sa.Table(
     'tweet_story', metadata,
     sa.Column('tweet_id', sa.BigInteger),

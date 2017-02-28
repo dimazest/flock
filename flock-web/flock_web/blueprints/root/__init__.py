@@ -1,14 +1,19 @@
-from flask import render_template, Blueprint, request, redirect, url_for, g
+import json
+
+from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify
 
 from sqlalchemy import func, select, Table, Column, Integer, String, sql
 from sqlalchemy.sql.expression import text, and_, or_, not_, join, column
+from sqlalchemy.orm.exc import NoResultFound
 from paginate_sqlalchemy import SqlalchemySelectPage, SqlalchemyOrmPage
-from sqlalchemy_searchable import search, parse_search_query
-
+from sqlalchemy_searchable import parse_search_query
 import crosstab
+
+from celery.execute import send_task
 
 from flock import model
 from flock_web.app import db, url_for_other_page
+from flock_web.queries import build_tweet_query
 
 
 bp_root = Blueprint(
@@ -93,20 +98,7 @@ def pull_collection(endpoint, values):
     g.filter = request.args.get('filter', 'pmi')
     g.show_images = request.args.get('show_images') == 'on'
 
-    filter_args = [(k, vs) for k, vs in request.args.lists() if not k.startswith('_') and k not in ( 'story', 'q', 'filter', 'show_images')]
-
-    g.feature_filter_args = []
-
-    positive_include = [(k, [v for v in vs if not v.startswith('-')]) for k, vs, in filter_args]
-    positive_include = [(k, v) for k, vs in positive_include if vs for v in vs]
-    if positive_include:
-        g.feature_filter_args.append(or_(*(model.Tweet.features.contains({k: [v]}) for k, v in positive_include)))
-
-    negative_include = [(k, [v[1:] for v in vs if v.startswith('-')]) for k, vs, in filter_args]
-    negative_include = [(k, v) for k, vs in negative_include if vs for v in vs]
-
-    if negative_include:
-        g.feature_filter_args.append(and_(*(not_(model.Tweet.features.contains({k: [v]})) for k, v in negative_include)))
+    g.filter_args = sorted([(k, sorted(vs)) for k, vs in request.args.lists() if not k.startswith('_') and k not in ( 'story', 'q', 'filter', 'show_images')])
 
     _story_id = request.args.get('story', type=int)
     g.story = None
@@ -125,48 +117,7 @@ def tweets():
     page_num = request.args.get('_page', 1, type=int)
     items_per_page = request.args.get('_items_per_page', 100, type=int)
 
-    tweets = db.session.query(model.Tweet)
-
-    if g.filter == 'none':
-        tweets = (
-            tweets
-            .filter(model.Tweet.collection == g.collection)
-        )
-    else:
-        tweets = (
-            tweets
-            .select_from(model.filtered_tweets)
-            .join(model.Tweet)
-            .filter(model.Tweet.collection == g.collection)
-            .filter(model.filtered_tweets.c.collection == g.collection)
-        )
-
-    tweets = (
-        tweets
-        .filter(*g.feature_filter_args)
-        # # .filter(model.Tweet.features['filter', 'is_retweet'].astext == 'false' )
-        # # .filter(model.Tweet.representative == None)
-    )
-
-    if g.query:
-        tweets = search(tweets, g.query)
-
-    if g.query or g.feature_filter_args:
-        tweet_count = tweets.count()
-
-        tweets = tweets.order_by(model.Tweet.created_at, model.Tweet.tweet_id)
-    else:
-        tweet_count = None
-
-    if not g.story:
-        tweets = tweets.limit(100)
-    else:
-        ts = model.tweet_story.alias()
-        tweets = (
-            tweets
-            .join(ts)
-            .order_by(None).order_by(ts.c.rank)
-        )
+    tweets, tweet_count, feature_filter_args = build_tweet_query(g.collection, g.query, g.filter, g.filter_args)
 
     stories = (
         db.session.query(model.Story)
@@ -189,12 +140,20 @@ def tweets():
         stories=stories,
         selected_story=g.story,
         stats=[
-            (f, db.session.query(stats_for_feature(f, g.feature_filter_args).limit(12).alias()), request.args.getlist(f))
+            (f, db.session.query(stats_for_feature(f, feature_filter_args).limit(12).alias()), request.args.getlist(f))
             for f in ['screen_names', 'hashtags', 'user_mentions']
         ],
         query=g.query,
         query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k != 'q'),
         filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
+        selection_args=json.dumps(
+            {
+                'collection': g.collection,
+                'query': g.query,
+                'filter': g.filter,
+                'filter_args': g.filter_args,
+            }
+        ),
         selected_filter=g.filter,
         collection=g.collection,
         show_images=g.show_images,
@@ -299,3 +258,46 @@ def features(feature_name):
         page=page,
         items=items,
     )
+
+
+@bp_root.route('/cluster', methods=['POST'])
+def cluster():
+    selection_args = json.loads(request.form['selection_args'])
+    from_url = request.form['from_url']
+
+    try:
+        clustered_selection = db.session.query(model.ClusteredSelection).filter_by(**selection_args).one()
+    except NoResultFound:
+        task_id = g.celery.send_task('flock_web.tasks.cluster_selection', kwargs={'selection_args': selection_args}).id
+    else:
+        task_id = clustered_selection.celery_id
+
+    location = url_for('.cluster_status', task_id=task_id, collection=g.collection)
+    return jsonify({'Location': location}), 202, {'Location': location}
+
+
+@bp_root.route('/cluster/status/<task_id>')
+def cluster_status(task_id):
+    task = g.celery.AsyncResult(task_id)
+    if task.state == 'PENDING':
+        response = {
+            'state': task.state,
+            'info': {
+                'current': 0,
+                'total': 1,
+            },
+            'status': 'Pending...'
+        }
+    elif task.state != 'FAILURE':
+        response = {
+            'state': task.state,
+            'info': task.info,
+        }
+    else:
+        response = {
+            'state': task.state,
+            'current': 1,
+            'total': 1,
+            'status': str(task.info),  # this is the exception raised
+        }
+    return jsonify(response)

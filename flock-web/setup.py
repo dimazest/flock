@@ -41,6 +41,7 @@ setup(
         'Flask-Humanize',
         'flask-debugtoolbar',
         'paginate_sqlalchemy',
+        'celery',
     ],
     entry_points={
         'console_scripts': [
