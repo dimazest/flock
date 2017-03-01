@@ -5,7 +5,7 @@ from flock import model
 from .app import db
 
 
-def build_tweet_query(collection, query, filter, filter_args, possibly_limit=True):
+def build_tweet_query(collection, query, filter, filter_args, possibly_limit=True, story=None, cluster=None, clustered_selection=None):
 
     feature_filter_args = []
 
@@ -45,6 +45,27 @@ def build_tweet_query(collection, query, filter, filter_args, possibly_limit=Tru
     if query:
         tweets = search(tweets, query)
 
+    if story is not None:
+        ts = model.tweet_story.alias()
+        tweets = (
+            tweets
+            .join(ts)
+            .order_by(None).order_by(ts.c.rank)
+        )
+    elif cluster is not None:
+        assert clustered_selection
+
+        tweets = (
+            tweets
+            .join(model.tweet_cluster)
+            .filter(
+                # model.Tweet.tweet_id == model.tweet_cluster.c.tweet_id,
+                # model.Tweet.collection == model.tweet_cluster.c.collection,
+                model.tweet_cluster.c.label == cluster,
+                model.tweet_cluster.c._clustered_selection_id == clustered_selection._id,
+            )
+        )
+
     if query or feature_filter_args:
         tweet_count = tweets.count()
 
@@ -52,17 +73,7 @@ def build_tweet_query(collection, query, filter, filter_args, possibly_limit=Tru
     else:
         tweet_count = None
 
-    if possibly_limit:
+    if possibly_limit and story is None:
         tweets = tweets.limit(100)
-        # if not g.story:  # XXX refactor stories
-        #     tweets = tweets.limit(100)
-        # else:
-        #     ts = model.tweet_story.alias()
-        #     tweets = (
-        #         tweets
-        #         .join(ts)
-        #         .order_by(None).order_by(ts.c.rank)
-        #     )
-
 
     return tweets, tweet_count, feature_filter_args

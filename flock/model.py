@@ -1,5 +1,4 @@
 import sqlalchemy as sa
-from sqlalchemy import types
 from sqlalchemy.dialects import postgresql as pg
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -60,16 +59,16 @@ class Tweet(Base):
         sa.Index('idx_tweet_created_at_tweet_id', 'created_at', 'tweet_id'),
     )
 
-    tweet_id = sa.Column(types.BigInteger, nullable=False, primary_key=True)
-    collection = sa.Column(types.String, nullable=False, primary_key=True)
+    tweet_id = sa.Column(sa.BigInteger, nullable=False, primary_key=True)
+    collection = sa.Column(sa.String, nullable=False, primary_key=True)
 
     # tweet = Column(pg.JSONB, nullable=False)
-    text = sa.Column(types.UnicodeText)
+    text = sa.Column(sa.UnicodeText)
     search_vector = sa.Column(TSVectorType('text'))
 
     features = sa.Column(pg.JSONB)
 
-    created_at = sa.Column(types.DateTime, nullable=False, index=True)
+    created_at = sa.Column(sa.DateTime, nullable=False, index=True)
 
     representative = sa.orm.relationship(
         'Tweet',
@@ -92,32 +91,17 @@ class Story(Base):
     __table_args__ = (
         sa.UniqueConstraint('story_id', 'collection'),
     )
-    _id = sa.Column(types.Integer, primary_key=True)
+    _id = sa.Column(sa.Integer, primary_key=True)
 
-    story_id = sa.Column(types.String, nullable=False,)
-    collection = sa.Column(types.String, nullable=False)
+    story_id = sa.Column(sa.String, nullable=False,)
+    collection = sa.Column(sa.String, nullable=False)
 
-    title = sa.Column(types.String, nullable=False)
-
-
-class ClusteredSelection(Base):
-    __tablename__ = 'clustered_selection'
-    __table_args__ = (
-        sa.UniqueConstraint('collection', 'query', 'filter', 'filter_args'),
-    )
-
-    _id = sa.Column(types.Integer, primary_key=True)
-    celery_id = sa.Column(types.String)
-    celery_status = sa.Column(types.String)
-
-    collection = sa.Column(types.String, nullable=False)
-    query = sa.Column(types.String)
-    filter = sa.Column(types.String)
-    filter_args = sa.Column(pg.JSONB)
+    title = sa.Column(sa.String, nullable=False)
 
 
 tweet_story = sa.Table(
     'tweet_story', metadata,
+    # XXX: primary key
     sa.Column('tweet_id', sa.BigInteger),
     sa.Column('collection', sa.String),
     sa.Column('_story_id', sa.Integer, sa.ForeignKey('story._id')),
@@ -126,6 +110,36 @@ tweet_story = sa.Table(
         ('tweet_id', 'collection'), ('tweet.tweet_id', 'tweet.collection')
     ),
 )
+
+
+class ClusteredSelection(Base):
+    __tablename__ = 'clustered_selection'
+    __table_args__ = (
+        sa.UniqueConstraint('collection', 'query', 'filter', 'filter_args'),
+    )
+
+    _id = sa.Column(sa.Integer, primary_key=True)
+    celery_id = sa.Column(sa.String)
+    celery_status = sa.Column(sa.String)
+
+    collection = sa.Column(sa.String, nullable=False)
+    query = sa.Column(sa.String)
+    filter = sa.Column(sa.String)
+    filter_args = sa.Column(pg.JSONB)
+
+
+tweet_cluster = sa.Table(
+    'tweet_cluster', metadata,
+    sa.Column('_id', sa.Integer, primary_key=True),
+    sa.Column('tweet_id', sa.BigInteger),
+    sa.Column('collection', sa.String),
+    sa.Column('_clustered_selection_id', sa.Integer, sa.ForeignKey('clustered_selection._id')),
+    sa.Column('label', sa.String),  # XXX it should be a foreign key to the "cluster" relation that hold the label.
+    sa.ForeignKeyConstraint(
+        ('tweet_id', 'collection'), ('tweet.tweet_id', 'tweet.collection')
+    ),
+)
+
 
 indexes = [
     sa.Index(

@@ -70,12 +70,12 @@
           <div id='clustering_progress' class="progress-bar" role="progressbar"></div>
       </div>
 
-      <form class="sidebar-element" action="{{ url_for('.cluster') }}" method="post">
-        <input type="hidden" name="redirect" value="yes">
-        <input type="hidden" name="selection_args" value="{{ selection_args }}">
-        <input type="hidden" name="from_url" value="{{ restricted_url('.tweets') }}">
-        <button class="btn btn-outline-secondary my-2 my-sm-0 w-100" type="submit">Cluster (POST)</button>
-      </form>
+      {# <form class="sidebar-element" action="{{ url_for('.cluster') }}" method="post"> #}
+      {#   <input type="hidden" name="redirect" value="yes"> #}
+      {#   <input type="hidden" name="selection_args" value="{{ selection_args }}"> #}
+      {#   <input type="hidden" name="from_url" value="{{ restricted_url('.tweets') }}"> #}
+      {#   <button class="btn btn-outline-secondary my-2 my-sm-0 w-100" type="submit">Cluster (POST)</button> #}
+      {# </form> #}
 
       <p>
         <button id="start-clustering-task" class="btn btn-outline-success w-100">Cluster</button>
@@ -83,18 +83,31 @@
 
       {# {{ render_pagination(page) }} #}
 
-        {% if stories|count %}
+        {% if clusters %}
           <div class="card sidebar-element">
-            <h3 class="card-header">Stories</h3>
+            <h3 class="card-header">Clusters</h3>
             <div class="list-group list-group-flush">
-              {% for story in stories %}
-                <a href="{{ restricted_url('.tweets', story=story._id if story != selected_story else None, filter='none' if story != selected_story else None) }}" class="list-group-item list-group-item-action flex-column align-items-start feature-item {{ 'active' if story == selected_story}}">
-                  <p class="mb-0">{{ story.title  }} ({{ story.tweets|count|humanize('intword') }})</p>
+              {% for cluster, tweet_count in clusters %}
+                <a href="{{ restricted_url('.tweets', cluster=cluster if cluster != selected_cluster else None) }}" class="list-group-item list-group-item-action flex-column align-items-start feature-item {{ 'active' if cluster == selected_cluster}}">
+                  <p class="mb-0">{{ cluster  }} ({{ tweet_count|humanize('intword') }})</p>
                 </a>
               {% endfor %}
             </div>
           </div>
         {% endif %}
+
+        {# {% if stories|count %} #}
+        {#   <div class="card sidebar-element"> #}
+        {#     <h3 class="card-header">Stories</h3> #}
+        {#     <div class="list-group list-group-flush"> #}
+        {#       {% for story in stories %} #}
+        {#         <a href="{{ restricted_url('.tweets', story=story._id if story != selected_story else None, filter='none' if story != selected_story else None) }}" class="list-group-item list-group-item-action flex-column align-items-start feature-item {{ 'active' if story == selected_story}}"> #}
+        {#           <p class="mb-0">{{ story.title  }} ({{ story.tweets|count|humanize('intword') }})</p> #}
+        {#         </a> #}
+        {#       {% endfor %} #}
+        {#     </div> #}
+        {#   </div> #}
+        {# {% endif %} #}
 
         {% for feature_name, features, active_features in stats %}
           <div class="card sidebar-element">
@@ -104,7 +117,7 @@
               {% for feature, count in features  %}
                 <div class="card" style="margin-bottom: 0;">
                   <div class="list-group list-group-flush">
-                    <a class="list-group-item list-group-item-action flex-column align-items-start feature-stats-item feature-item {{ 'active' if feature in active_features}}" href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}) }}">
+                    <a class="list-group-item list-group-item-action flex-column align-items-start feature-stats-item feature-item {{ 'active' if feature in active_features}}" href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}, cluster=None)  }}">
                       {{ feature }} ({{ count|humanize('intword') }})
                     </a>
                   </div>
@@ -136,7 +149,7 @@
 {% block navbar_body %}
 {% for c, title in [('2017-02-14', '2017-02-14'), ('ublog-2015_for-yasi_2ndweek', 'ublog: 2nd week'), ('ublog-2015_for-yasi_3rdweek', 'ublog: 3rd week')] %}
   <li class="nav-item {% if c == collection %}active{% endif %}">
-    <a class="nav-link" href="{{ restricted_url('.tweets', collection=c, story=None) }}">{{ title }}</a>
+    <a class="nav-link" href="{{ restricted_url('.tweets', collection=c, story=None, cluster=None) }}">{{ title }}</a>
   </li>
 {% endfor %}
 {% endblock navbar_body %}

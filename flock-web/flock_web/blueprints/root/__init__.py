@@ -98,13 +98,33 @@ def pull_collection(endpoint, values):
     g.filter = request.args.get('filter', 'pmi')
     g.show_images = request.args.get('show_images') == 'on'
 
-    g.filter_args = sorted([(k, sorted(vs)) for k, vs in request.args.lists() if not k.startswith('_') and k not in ( 'story', 'q', 'filter', 'show_images')])
+    g.filter_args = sorted(
+        (k, sorted(vs))
+        for k, vs in request.args.lists()
+        if not k.startswith('_') and k not in ('story', 'q', 'filter', 'show_images', 'cluster')
+    )
 
     _story_id = request.args.get('story', type=int)
     g.story = None
     if _story_id is not None:
         g.story = db.session.query(model.Story).get(int(_story_id))
         g.feature_filter_args.append(model.Tweet.stories.contains(g.story))
+
+    g.selection_args = {
+        'collection': g.collection,
+        'query': g.query,
+        'filter': g.filter,
+        'filter_args': g.filter_args,
+    }
+
+    try:
+        g.clustered_selection = db.session.query(model.ClusteredSelection).filter_by(celery_status='completed', **g.selection_args).one()
+    except NoResultFound:
+        g.clustered_selection = None
+
+    g.cluster = request.args.get('cluster')
+    if g.cluster:
+        assert g.clustered_selection is not None
 
 
 @bp_root.route('/')
@@ -117,7 +137,7 @@ def tweets():
     page_num = request.args.get('_page', 1, type=int)
     items_per_page = request.args.get('_items_per_page', 100, type=int)
 
-    tweets, tweet_count, feature_filter_args = build_tweet_query(g.collection, g.query, g.filter, g.filter_args)
+    tweets, tweet_count, feature_filter_args = build_tweet_query(g.collection, g.query, g.filter, g.filter_args, cluster=g.cluster, clustered_selection=g.clustered_selection)
 
     stories = (
         db.session.query(model.Story)
@@ -132,6 +152,20 @@ def tweets():
     #     url_maker=url_for_other_page,
     # )
 
+    if g.clustered_selection:
+        clusters = (
+            db.session.query(
+                select([model.tweet_cluster.c.label, func.count()])
+                .select_from(model.tweet_cluster)
+                .where(model.tweet_cluster.c._clustered_selection_id==g.clustered_selection._id)
+                .group_by(model.tweet_cluster.c.label)
+                .order_by(model.tweet_cluster.c.label)
+                .alias()
+            )
+        )
+    else:
+        clusters = None
+
     return render_template(
         'root/tweets.html',
         tweets=tweets.all(),
@@ -144,17 +178,12 @@ def tweets():
             for f in ['screen_names', 'hashtags', 'user_mentions']
         ],
         query=g.query,
-        query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k != 'q'),
+        query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
         filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
-        selection_args=json.dumps(
-            {
-                'collection': g.collection,
-                'query': g.query,
-                'filter': g.filter,
-                'filter_args': g.filter_args,
-            }
-        ),
+        selection_args=json.dumps(g.selection_args),
         selected_filter=g.filter,
+        clusters=clusters,
+        selected_cluster=g.cluster,
         collection=g.collection,
         show_images=g.show_images,
     )

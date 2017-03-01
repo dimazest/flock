@@ -3,6 +3,7 @@ import logging
 import itertools
 
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.dialects import postgresql as pg
 
 from gensim.models.doc2vec import LabeledSentence, Doc2Vec
 from sklearn import cluster, preprocessing, neighbors, metrics
@@ -74,14 +75,14 @@ def cluster_selection(self, selection_args):
 
     with flask_app.app_context():
 
-        # clustered_selection = model.ClusteredSelection(celery_id=self.request.id, celery_status='started', **selection_args)
-        # db.session.add(clustered_selection)
-        # try:
-        #     db.session.commit()
-        # except IntegrityError:
-        #     db.session.rollback()
-        #     logger.info('A duplicate task.')
-        #     return {'current': 1, 'total': 1, 'status': 'A duplicate task.'}
+        clustered_selection = model.ClusteredSelection(celery_id=self.request.id, celery_status='started', **selection_args)
+        db.session.add(clustered_selection)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            logger.info('A duplicate task.')
+            return {'current': 1, 'total': 1, 'status': 'A duplicate task.'}
 
         tweets, tweet_count, feature_filter_args = build_tweet_query(possibly_limit=False, **selection_args)
 
@@ -135,11 +136,24 @@ def cluster_selection(self, selection_args):
 
         dbscan.fit(A)
 
-        # for i in range(10):
-        #     import time
-        #     time.sleep(1)
+        insert_stmt = pg.insert(model.tweet_cluster)
+        for doctag, label in zip(doctags, dbscan.labels_):
+            tweet_id = int(doctag[3:])
 
-        # clustered_selection.celery_status = 'completed'
-        # db.session.commit()
+            db.session.execute(
+                insert_stmt.values(
+                    [
+                        {
+                            'tweet_id': tweet_id,
+                            'collection': selection_args['collection'],
+                            '_clustered_selection_id': clustered_selection._id,
+                            'label':str(label),
+                        }
+                    ]
+                )
+            )
+
+        clustered_selection.celery_status = 'completed'
+        db.session.commit()
 
     return {'current': 10, 'total': 10, 'status': 'Task completed!', 'total_labels': len(set(dbscan.labels_))}
