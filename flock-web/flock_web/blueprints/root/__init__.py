@@ -13,7 +13,7 @@ from celery.execute import send_task
 
 from flock import model
 from flock_web.app import db, url_for_other_page
-from flock_web.queries import build_tweet_query
+import flock_web.queries  as q
 
 
 bp_root = Blueprint(
@@ -146,7 +146,7 @@ def tweets():
     page_num = request.args.get('_page', 1, type=int)
     items_per_page = request.args.get('_items_per_page', 100, type=int)
 
-    tweets, tweet_count, feature_filter_args = build_tweet_query(g.collection, g.query, g.filter, g.filter_args, cluster=g.cluster, clustered_selection=g.clustered_selection)
+    tweets, tweet_count, feature_filter_args = q.build_tweet_query(g.collection, g.query, g.filter, g.filter_args, cluster=g.cluster, clustered_selection=g.clustered_selection)
 
     stories = (
         db.session.query(model.Story)
@@ -162,16 +162,8 @@ def tweets():
     # )
 
     if g.clustered_selection:
-        clusters = (
-            db.session.query(
-                select([model.tweet_cluster.c.label, func.count()])
-                .select_from(model.tweet_cluster)
-                .where(model.tweet_cluster.c._clustered_selection_id==g.clustered_selection._id)
-                .group_by(model.tweet_cluster.c.label)
-                .order_by(model.tweet_cluster.c.label)
-                .alias()
-            )
-        )
+        clusters = q.build_cluster_query(g.clustered_selection._id)
+
     else:
         clusters = None
 
@@ -312,7 +304,7 @@ def cluster():
 
     task = g.celery.AsyncResult(task_id)
 
-    location = url_for('.cluster_status', task_id=task_id, collection=g.collection)
+    location = url_for('.cluster_status', task_id=task_id)
     if not 'redirect' in request.form:
         return jsonify({'Location': location, 'info': task.info}), 202, {'Location': location}
     else:
@@ -343,4 +335,22 @@ def cluster_status(task_id):
             'total': 1,
             'status': str(task.info),  # this is the exception raised
         }
+
+    cluster_html_snippet = None
+    if task.state == 'SUCCESS':
+        try:
+            clustered_selection = db.session.query(model.ClusteredSelection).filter_by(celery_id=task_id).one()
+        except NoResultFound:
+            pass
+        else:
+            clusters = q.build_cluster_query(clustered_selection._id)
+
+            cluster_html_snippet = render_template(
+                'root/cluster_snippet.html',
+                clusters=clusters,
+            )
+
+    response['cluster_html_snippet'] = cluster_html_snippet
+
+
     return jsonify(response)

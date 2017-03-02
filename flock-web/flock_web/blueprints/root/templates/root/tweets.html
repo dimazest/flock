@@ -1,43 +1,6 @@
 {% extends "base.html" %}
 
-{% macro render_tweets(tweets) %}
-  <div class="card-columns tweet-selection">
-    {%- for tweet in tweets %}
-      <div>
-
-        <div class='card tweet-outer'>
-          <blockquote class="twitter-tweet card-blockquote" {% if not show_images %} data-cards="hidden" {% endif %}>
-            <div class="card custom-tweet">
-              <div class="card-block">
-                <header>
-                  <p class="twitter-user-name">{{ tweet.features.repr.user__name }}</p>
-                  <small class="text-muted">@{{ tweet.features.repr.user__screen_name }}</small>
-                </header>
-                <blockquote class="card-blockquote">
-                  <p dir="ltr" lang="{{ tweet.features.repr.lang }}" class="card-text">
-                    {{ tweet.features.repr.text }}
-                  </p>
-                  <small>
-                    <a href="https://twitter.com/{{ tweet.features.repr.user__screen_name }}/status/{{ tweet.tweet_id }}">{{ tweet.created_at }}</a>
-                  </small>
-                </blockquote>
-              </div>
-            </div>
-          </blockquote>
-
-          {# <div class="card-footer text-muted tweet-outer-meta"> #}
-          {#   <small> #}
-          {#     {{ tweet.tweet_id }} #}
-          {#     {\# {{ tweet.representees|count }} #\} #}
-          {#   </small> #}
-          {# </div> #}
-
-        </div>
-
-      </div>
-    {%- endfor %}
-  </div>
-{% endmacro %}
+{% import "root/macro.html" as m %}
 
 {% block content %}
 
@@ -66,35 +29,28 @@
           {% endfor %}
       </form>
 
-      <div id='clustering_progress_container' class="progress" style="display: none;">
-          <div id='clustering_progress' class="progress-bar" role="progressbar"></div>
-      </div>
-
-      {# <form class="sidebar-element" action="{{ url_for('.cluster') }}" method="post"> #}
-      {#   <input type="hidden" name="redirect" value="yes"> #}
-      {#   <input type="hidden" name="selection_args" value="{{ selection_args }}"> #}
-      {#   <input type="hidden" name="from_url" value="{{ restricted_url('.tweets') }}"> #}
-      {#   <button class="btn btn-outline-secondary my-2 my-sm-0 w-100" type="submit">Cluster (POST)</button> #}
-      {# </form> #}
-
-      <p>
-        <button id="start-clustering-task" class="btn btn-outline-success w-100">Cluster</button>
-      </p>
 
       {# {{ render_pagination(page) }} #}
 
+      <div id="clusters">
         {% if clusters %}
-          <div class="card sidebar-element">
-            <h3 class="card-header">Clusters</h3>
-            <div class="list-group list-group-flush">
-              {% for cluster, tweet_count in clusters %}
-                <a href="{{ restricted_url('.tweets', cluster=cluster if cluster != selected_cluster else None) }}" class="list-group-item list-group-item-action flex-column align-items-start feature-item {{ 'active' if cluster == selected_cluster}}">
-                  <p class="mb-0">{{ cluster  }} ({{ tweet_count|humanize('intword') }})</p>
-                </a>
-              {% endfor %}
+          {{ m.render_clusters(clusters, selected_cluster=selected_cluster) }}
+        {% else %}
+          <p>
+            <div id='clustering_progress_container' class="progress" style="display: none;">
+              <div id='clustering_progress' class="progress-bar" role="progressbar"></div>
             </div>
-          </div>
+            <button id="start-clustering-task" class="btn btn-outline-success w-100">Cluster</button>
+
+            {# <form class="sidebar-element" action="{{ url_for('.cluster') }}" method="post"> #}
+            {#   <input type="hidden" name="redirect" value="yes"> #}
+            {#   <input type="hidden" name="selection_args" value="{{ selection_args }}"> #}
+            {#   <input type="hidden" name="from_url" value="{{ restricted_url('.tweets') }}"> #}
+            {#   <button class="btn btn-outline-secondary my-2 my-sm-0 w-100" type="submit">Cluster (POST)</button> #}
+            {# </form> #}
+          </p>
         {% endif %}
+      </div>
 
         {# {% if stories|count %} #}
         {#   <div class="card sidebar-element"> #}
@@ -136,7 +92,7 @@
     <main class="col-xl-8 offset-xl-4">
 
       {# {{ render_tweets(page.items) }} #}
-      {{ render_tweets(tweets) }}
+      {{ m.render_tweets(tweets) }}
 
     </main>
 
@@ -183,47 +139,49 @@
 {% endblock navbar_extra %}
 
 {% block extra_scripts %}
-<script>
- function start_clustering_task() {
-     $.post({
-         url: '{{ url_for('.cluster') }}',
-         data: {
-             selection_args: '{{ selection_args|safe }}',
-             from_url: '{{ restricted_url('.tweets')|safe }}',
-         },
-         success: function(data, status, request) {
-             status_url = request.getResponseHeader('Location');
-             update_progress(status_url);
-         },
-         error: function() {
-             console.log('Unexpected error');
-         }
-     });
- }
+  <script>
+   function start_clustering_task() {
+       $.post({
+           url: '{{ url_for('.cluster') }}',
+           data: {
+               selection_args: '{{ selection_args|safe }}',
+               from_url: '{{ restricted_url('.tweets')|safe }}',
+           },
+           success: function(data, status, request) {
+               var status_url = request.getResponseHeader('Location');
+               status_url = status_url + '?' + window.location.search.slice(1);
 
- function update_progress(status_url){
-     $.getJSON(status_url, function(data){
-         $('#clustering_progress_container').show();
-         $('#start-clustering-task').hide();
+               update_progress(status_url);
+           },
+           error: function() {
+               console.log('Unexpected error');
+           }
+       });
+   }
 
-         if (data['state'] == 'PROGRESS') {
-             var progress = data['info']['current'] / data['info']['total'] * 100;
-             $('#clustering_progress').attr('style', 'width:' + progress + '%;');
-             console.log(data['info']['status']);
-             $('#clustering_progress').html( data['info']['status']);
+   function update_progress(status_url){
+       $.getJSON(status_url, function(data){
+           $('#clustering_progress_container').show();
+           $('#start-clustering-task').hide();
 
-         }
-         else if (data['state'] == 'SUCCESS') {
-              $('#clustering_progress_container').hide()
-              return;
-         }
-         setTimeout(function(){update_progress(status_url);}, 2000);
-     });
- }
+           if (data['state'] == 'PROGRESS') {
+               var progress = data['info']['current'] / data['info']['total'] * 100;
+               $('#clustering_progress').attr('style', 'width:' + progress + '%;');
+               $('#clustering_progress').html(data['info']['status']);
 
- $(document).ready(function() {
-     console.log( "ready!" );
-     $('#start-clustering-task').click(start_clustering_task);
- });
-</script>
+           }
+           else if (data['state'] == 'SUCCESS') {
+               $('#clustering_progress_container').hide();
+               $('#clusters').html(data['cluster_html_snippet'])
+               return;
+           }
+           setTimeout(function(){update_progress(status_url);}, 2000);
+       });
+   }
+
+   $(document).ready(function() {
+       console.log( "ready!" );
+       $('#start-clustering-task').click(start_clustering_task);
+   });
+  </script>
   {% endblock extra_scripts %}

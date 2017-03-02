@@ -66,8 +66,6 @@ def cluster_selection(self, selection_args):
                 'status': status,
                 'current': current,
                 'total': total,
-                'tweet_count': tweet_count,
-                'selection_args': selection_args,
                 **extra_meta,
             }
         )
@@ -83,6 +81,8 @@ def cluster_selection(self, selection_args):
             db.session.rollback()
             logger.info('A duplicate task.')
             return {'current': 1, 'total': 1, 'status': 'A duplicate task.'}
+
+        update_state(1, 3, status='Started.')
 
         tweets, tweet_count, feature_filter_args = build_tweet_query(possibly_limit=False, **selection_args)
 
@@ -138,7 +138,7 @@ def cluster_selection(self, selection_args):
 
         insert_stmt = pg.insert(model.tweet_cluster)
 
-        update_state(1, 2, status='Retrieving tweets.')
+        update_state(2, 3, status='Retrieving tweets.')
         import random
         for tweet in tweets:
             db.session.execute(

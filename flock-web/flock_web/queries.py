@@ -1,4 +1,4 @@
-from sqlalchemy.sql.expression import text, and_, or_, not_, join, column
+from sqlalchemy.sql.expression import text, and_, or_, not_, join, column, select, func
 from sqlalchemy_searchable import search
 
 from flock import model
@@ -75,3 +75,16 @@ def build_tweet_query(collection, query, filter, filter_args, possibly_limit=Tru
         tweets = tweets.limit(100)
 
     return tweets, tweet_count, feature_filter_args
+
+
+def build_cluster_query(clustered_selection_id):
+    return (
+        db.session.query(
+            select([model.tweet_cluster.c.label, func.count()])
+            .select_from(model.tweet_cluster)
+            .where(model.tweet_cluster.c._clustered_selection_id==clustered_selection_id)
+            .group_by(model.tweet_cluster.c.label)
+            .order_by(model.tweet_cluster.c.label)
+            .alias()
+        )
+    )
