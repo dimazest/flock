@@ -50,6 +50,15 @@ def stats_for_feature(feature_name, feature_filter_args=()):
                         ]
                         if g.filter != 'none' else []
                     ),
+                    *(
+                        [
+                            model.Tweet.tweet_id == model.tweet_cluster.c.tweet_id,
+                            model.Tweet.collection == model.tweet_cluster.c.collection,
+                            model.tweet_cluster.c._clustered_selection_id == g.clustered_selection._id,
+                            model.tweet_cluster.c.label == g.cluster,
+                        ]
+                        if g.cluster else []
+                    ),
                     *feature_filter_args
                 )
             )
