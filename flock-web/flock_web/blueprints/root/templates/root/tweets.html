@@ -1,5 +1,4 @@
-{% extends "base.html" %}
-
+{% extends "root/base.html" %}
 {% import "root/macro.html" as m %}
 
 {% block content %}
@@ -21,7 +20,7 @@
               <input type="text" class="form-control" placeholder="Search" name="q" {% if query %} value="{{ query }}" {% endif %}>
             </div>
             <div class="col-2">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="width: 100%;">Search</button>
+                <button class="btn btn-outline-success my-2 my-sm-0 w-100" type="submit">Search</button>
             </div>
           </div>
           {% for k, v in query_form_hidden_fields %}
@@ -51,19 +50,6 @@
           </p>
         {% endif %}
       </div>
-
-        {# {% if stories|count %} #}
-        {#   <div class="card sidebar-element"> #}
-        {#     <h3 class="card-header">Stories</h3> #}
-        {#     <div class="list-group list-group-flush"> #}
-        {#       {% for story in stories %} #}
-        {#         <a href="{{ restricted_url('.tweets', story=story._id if story != selected_story else None, filter='none' if story != selected_story else None) }}" class="list-group-item list-group-item-action flex-column align-items-start feature-item {{ 'active' if story == selected_story}}"> #}
-        {#           <p class="mb-0">{{ story.title  }} ({{ story.tweets|count|humanize('intword') }})</p> #}
-        {#         </a> #}
-        {#       {% endfor %} #}
-        {#     </div> #}
-        {#   </div> #}
-        {# {% endif %} #}
 
         {% for feature_name, features, active_features in stats %}
           <div class="card sidebar-element">
@@ -102,16 +88,7 @@
 
 {% endblock content %}
 
-{% block navbar_body %}
-{% for c, title in [('2017-02-14', '2017-02-14'), ('ublog-2015_for-yasi_2ndweek', 'ublog: 2nd week'), ('ublog-2015_for-yasi_3rdweek', 'ublog: 3rd week')] %}
-  <li class="nav-item {% if c == collection %}active{% endif %}">
-    <a class="nav-link" href="{{ restricted_url('.tweets', collection=c, story=None, cluster=None) }}">{{ title }}</a>
-  </li>
-{% endfor %}
-{% endblock navbar_body %}
-
 {% block navbar_extra %}
-
   <form class="form-inline" action="{{ url_for('.tweets') }}" method="get">
 
     <div class="form-check mb-2 mr-sm-2 mb-sm-0">
@@ -130,9 +107,8 @@
       </select>
     </div>
 
-    {% for k, v in filter_form_hidden_fields %}
-      <input type="hidden" name="{{ k }}" value="{{ v }}">
-    {% endfor %}
+    {% block navbar_extra_root %}
+    {% endblock navbar_extra_root %}
 
     <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Submit</button>
   </form>

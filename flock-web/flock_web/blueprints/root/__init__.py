@@ -113,12 +113,6 @@ def pull_collection(endpoint, values):
         if not k.startswith('_') and k not in ('story', 'q', 'filter', 'show_images', 'cluster')
     )
 
-    _story_id = request.args.get('story', type=int)
-    g.story = None
-    if _story_id is not None:
-        g.story = db.session.query(model.Story).get(int(_story_id))
-        g.feature_filter_args.append(model.Tweet.stories.contains(g.story))
-
     g.selection_args = {
         'collection': g.collection,
         'query': g.query,
@@ -138,7 +132,37 @@ def pull_collection(endpoint, values):
 
 @bp_root.route('/')
 def index():
-    return redirect(url_for('.tweets'))
+
+    _story_id = request.args.get('story', type=int)
+    story = None
+    if _story_id is not None:
+        story = db.session.query(model.Story).get(int(_story_id))
+
+    stories = (
+        db.session.query(model.Story)
+        .filter(model.Story.collection == g.collection)
+        .all()
+    )
+
+    if story is not None:
+        tweets = (
+            db.session.query(model.Tweet)
+            .join(model.tweet_story)
+            .filter(model.tweet_story.c._story_id == story._id)
+            .order_by(model.tweet_story.c.rank)
+            .limit(30)
+        )
+    else:
+        tweets = []
+
+    return render_template(
+        'root/index.html',
+        endpoint='.index',
+        collection=g.collection,
+        stories=stories,
+        selected_story=story,
+        tweets=tweets,
+    )
 
 
 @bp_root.route('/tweets')
@@ -147,12 +171,6 @@ def tweets():
     items_per_page = request.args.get('_items_per_page', 100, type=int)
 
     tweets, tweet_count, feature_filter_args = q.build_tweet_query(g.collection, g.query, g.filter, g.filter_args, cluster=g.cluster, clustered_selection=g.clustered_selection)
-
-    stories = (
-        db.session.query(model.Story)
-        .filter(model.Story.collection == g.collection)
-        .all()
-    )
 
     # page = SqlalchemyOrmPage(
     #     tweets,
@@ -172,7 +190,6 @@ def tweets():
         tweets=tweets.all(),
         tweet_count=tweet_count,
         # page=page,
-        stories=stories,
         selected_story=g.story,
         stats=[
             (f, db.session.query(stats_for_feature(f, feature_filter_args).limit(12).alias()), request.args.getlist(f))
@@ -187,6 +204,7 @@ def tweets():
         selected_cluster=g.cluster,
         collection=g.collection,
         show_images=g.show_images,
+        endpoint='.tweets',
     )
 
 
