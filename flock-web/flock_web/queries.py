@@ -59,8 +59,6 @@ def build_tweet_query(collection, query, filter, filter_args, possibly_limit=Tru
             tweets
             .join(model.tweet_cluster)
             .filter(
-                # model.Tweet.tweet_id == model.tweet_cluster.c.tweet_id,
-                # model.Tweet.collection == model.tweet_cluster.c.collection,
                 model.tweet_cluster.c.label == cluster,
                 model.tweet_cluster.c._clustered_selection_id == clustered_selection._id,
             )
