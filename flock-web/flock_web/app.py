@@ -12,10 +12,12 @@ from flask_iniconfig import INIConfig
 from flask_sqlalchemy import get_debug_queries
 from flask_humanize import Humanize
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_login import LoginManager
 
 from werkzeug.datastructures import MultiDict
 
 from flock.model import metadata
+from flock_web.model import User
 
 
 cache = Cache()
@@ -24,6 +26,7 @@ ini_config = INIConfig()
 twitter_oembedder = TwitterOEmbedder()
 humanise = Humanize()
 toolbar = DebugToolbarExtension()
+lm = LoginManager()
 
 
 def url_for_other_page(page):
@@ -53,7 +56,7 @@ def restricted_url(endpoint=None, include=None, exclude=None, **single_args):
         for k, to_exclude in exclude.items():
             args.setlist(k, [v for v in args.getlist(k) if v != to_exclude])
 
-    collection = g.collection
+    collection = g.collection if hasattr(g, 'collection') else None
     for k, v in single_args.items():
         if k == 'collection':
             collection = v
@@ -83,6 +86,11 @@ def make_celery(app):
     return celery
 
 
+@lm.user_loader
+def user_loader(user_id):
+    return db.session.query(User).get(user_id)
+
+
 def create_app(config_file, return_celery=False):
     app = Flask(__name__)
 
@@ -94,6 +102,7 @@ def create_app(config_file, return_celery=False):
     sa.orm.configure_mappers()
     twitter_oembedder.init(app, cache, timeout=60*60*24*30)
     humanise.init_app(app)
+    lm.init_app(app)
 
     app.config['SECRET_KEY'] = os.urandom(24)
     toolbar.init_app(app)
@@ -130,6 +139,8 @@ def create_app(config_file, return_celery=False):
                 )
 
         return response
+
+    lm.login_view = 'main.login'
 
     if not return_celery:
         return app

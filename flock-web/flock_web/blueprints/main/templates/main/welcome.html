@@ -5,26 +5,26 @@
 <h1>Collections</h1>
 
 <table class="table table-striped">
-<thead>
-<tr>
-  <th>Collection</th>
-  <th>Size</th>
-  <th>From</th>
-  <th>Duration</th>
-</tr>
-</thead>
-<tbody>
-{%- for collection, size, earliest, latest in collections %}
-<tr>
-  <td>
-    <a href="{{ url_for('root.tweets', collection=collection) }}">{{ collection }}</a>
-  </td>
-  <td>{{ size|humanize('intcomma') }}</td>
-<td>{{ earliest|humanize('naturaldate') }}</td>
-<td>{{ (latest - earliest)|humanize('naturaldelta') }}</td>
-</tr>
-{%- endfor %}
-</tbody>
+  <thead>
+    <tr>
+      <th>Collection</th>
+      <th>Size</th>
+      {# <th>From</th> #}
+      {# <th>Duration</th> #}
+    </tr>
+  </thead>
+  <tbody>
+    {%- for collection, size in collections %}
+      <tr>
+        <td>
+          <a href="{{ url_for('root.index', collection=collection) }}">{{ collection }}</a>
+        </td>
+        <td>{{ size|humanize('intcomma') }}</td>
+        {# <td>{{ earliest|humanize('naturaldate') }}</td> #}
+        {# <td>{{ (latest - earliest)|humanize('naturaldelta') }}</td> #}
+      </tr>
+    {%- endfor %}
+  </tbody>
 </table>
 
 {% endblock content %}

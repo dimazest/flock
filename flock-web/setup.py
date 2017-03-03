@@ -44,6 +44,9 @@ setup(
         'celery',
         'gensim',
         'hdbscan',
+        'flask-login',
+        'WTForms',
+        'flask_wtf',
     ],
     entry_points={
         'console_scripts': [

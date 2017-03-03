@@ -1,6 +1,7 @@
 import json
 
 from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify
+import flask_login
 
 from sqlalchemy import func, select, Table, Column, Integer, String, sql
 from sqlalchemy.sql.expression import text, and_, or_, not_, join, column
@@ -110,7 +111,7 @@ def pull_collection(endpoint, values):
     g.filter_args = sorted(
         (k, sorted(vs))
         for k, vs in request.args.lists()
-        if not k.startswith('_') and k not in ('story', 'q', 'filter', 'show_images', 'cluster')
+        if not k.startswith('_') and k not in ('q', 'filter', 'show_images', 'cluster')
     )
 
     g.selection_args = {
@@ -131,6 +132,7 @@ def pull_collection(endpoint, values):
 
 
 @bp_root.route('/')
+@flask_login.login_required
 def index():
 
     _story_id = request.args.get('story', type=int)
@@ -165,6 +167,7 @@ def index():
 
 
 @bp_root.route('/tweets')
+@flask_login.login_required
 def tweets():
     page_num = request.args.get('_page', 1, type=int)
     items_per_page = request.args.get('_items_per_page', 100, type=int)
@@ -189,7 +192,6 @@ def tweets():
         tweets=tweets.all(),
         tweet_count=tweet_count,
         # page=page,
-        selected_story=g.story,
         stats=[
             (f, db.session.query(stats_for_feature(f, feature_filter_args).limit(12).alias()), request.args.getlist(f))
             for f in ['screen_names', 'hashtags', 'user_mentions']
@@ -208,6 +210,7 @@ def tweets():
 
 
 @bp_root.route('/tweets/<feature_name>')
+@flask_login.login_required
 def features(feature_name):
     other_feature = request.args.get('_other', None)
     unstack = request.args.get('_unstack', None) if other_feature is not None else None
@@ -308,6 +311,7 @@ def features(feature_name):
 
 
 @bp_root.route('/cluster', methods=['POST'])
+@flask_login.login_required
 def cluster():
     selection_args = json.loads(request.form['selection_args'])
     from_url = request.form['from_url']
@@ -329,6 +333,7 @@ def cluster():
 
 
 @bp_root.route('/cluster/status/<task_id>')
+@flask_login.login_required
 def cluster_status(task_id):
     task = g.celery.AsyncResult(task_id)
     if task.state == 'PENDING':
@@ -368,6 +373,5 @@ def cluster_status(task_id):
             )
 
     response['cluster_html_snippet'] = cluster_html_snippet
-
 
     return jsonify(response)

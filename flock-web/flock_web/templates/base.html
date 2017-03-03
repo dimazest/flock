@@ -65,7 +65,20 @@
       <ul class="navbar-nav mr-auto">
         {% block navbar_body  %} {% endblock navbar_body %}
       </ul>
+
       {% block navbar_extra  %} {% endblock navbar_extra %}
+
+      {% if current_user.is_authenticated %}
+        <ul class="navbar-nav float-right">
+          <li class="nav-item mr-3">
+            <span class="navbar-text"><i class="fa fa-user" aria-hidden="true"></i> {{ current_user.first_name }} {{ current_user.last_name }}</span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-danger" href="{{ url_for('main.logout')  }}">Logout</a>
+          </li>
+        </ul>
+      {% endif %}
+
     </nav>
 
     <div class="container-fluid" id='main-content'>
