@@ -150,7 +150,6 @@ def index():
             .join(model.tweet_story)
             .filter(model.tweet_story.c._story_id == story._id)
             .order_by(model.tweet_story.c.rank)
-            .limit(30)
         )
     else:
         tweets = []
