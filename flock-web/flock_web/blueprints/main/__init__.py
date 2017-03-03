@@ -53,7 +53,7 @@ class LoginForm(FlaskForm):
 
         user = db.session.query(User).filter_by(first_name=self.first_name.data, last_name=self.last_name.data).one_or_none()
         if user is None:
-            self.first_name.errors.append('Unknown user')
+            flash('''Such user doesn't exist''', 'danger')
             return False
 
         self.user = user
@@ -65,8 +65,6 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        flash('Logged in successfully.')
-
         session['user_id'] = form.user.id
         return redirect(url_for('.welcome'))
 

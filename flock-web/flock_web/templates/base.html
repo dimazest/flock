@@ -81,6 +81,29 @@
 
     </nav>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="container">
+          <div class="row justify-content-md-center" id="sidebar-search-box">
+            <div class="col-7">
+
+              {% for category, message in messages %}
+              <div class="alert alert-{{category or 'info'}} alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+              </div>
+            {% endfor %}
+
+            </div>
+          </div>
+        </div>
+
+      {% endif %}
+    {% endwith %}
+
+
     <div class="container-fluid" id='main-content'>
       {% block content %}{% endblock %}
     </div>
