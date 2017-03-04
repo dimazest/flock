@@ -5,13 +5,12 @@
 {% block content %}
 
   <div class="jumbotron">
-
     <form action="{{ url_for('.tweets') }}" method="get">
       <div class="row justify-content-md-center" id="sidebar-search-box">
         <div class="col-5">
           <input type="text" class="form-control form-control-lg" placeholder="Search" name="q" {% if query %} value="{{ query }}" {% endif %}>
         </div>
-        <div class="col-1">
+        <div class="col-3 col-lg-2">
           <button class="btn btn-success btn-lg my-2 my-sm-0" type="submit" style="width: 100%;">Search</button>
         </div>
       </div>

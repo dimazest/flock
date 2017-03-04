@@ -2,11 +2,19 @@ body {
   padding-top: 5rem;
 }
 
-.tweet-selection {
-    -moz-column-count: 4;
-    column-count: 4;
+@media (min-width: 992px) {
+    .tweet-selection {
+        -moz-column-count: 3;
+        column-count: 3;
+    }
 }
 
+@media (min-width: 1600px) {
+    .tweet-selection {
+        -moz-column-count: 4;
+        column-count: 4;
+    }
+}
 #main-content {
     /* margin-top: 20px; */
 }
