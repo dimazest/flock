@@ -15,13 +15,13 @@ from celery.execute import send_task
 from flock import model
 from flock_web.app import db, url_for_other_page
 import flock_web.queries  as q
-
+import flock_web.model as fw_model
 
 bp_root = Blueprint(
     'root', __name__,
     static_folder='static',
     template_folder='templates',
-    url_prefix='/<collection>'
+    url_prefix='/c/<collection>'
     )
 
 
@@ -187,6 +187,9 @@ def tweets():
     else:
         clusters = None
 
+    selection_for_topic_args = {'cluster': g.cluster, **g.selection_args}
+    del selection_for_topic_args['collection']
+
     return render_template(
         'root/tweets.html',
         tweets=tweets.all(),
@@ -199,7 +202,10 @@ def tweets():
         query=g.query,
         query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
         filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
+        # topic_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('show_images',)),
         selection_args=json.dumps(g.selection_args),
+        selection_for_topic_args=json.dumps(selection_for_topic_args),
+        topics=flask_login.current_user.topics,
         selected_filter=g.filter,
         clusters=clusters,
         selected_cluster=g.cluster,

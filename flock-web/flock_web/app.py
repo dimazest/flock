@@ -104,7 +104,11 @@ def create_app(config_file, return_celery=False):
     humanise.init_app(app)
     lm.init_app(app)
 
-    app.config['SECRET_KEY'] = os.urandom(24)
+    if not app.config.get('DEBUG', False):
+        app.config['SECRET_KEY'] = os.urandom(24)
+    else:
+        app.config['SECRET_KEY'] = '__DEBUG__'
+
     toolbar.init_app(app)
 
     from .blueprints.main import bp_main
@@ -117,6 +121,12 @@ def create_app(config_file, return_celery=False):
     app.jinja_env.globals['restricted_url'] = restricted_url
 
     celery = make_celery(app)
+
+    app.config['COLLECTIONS'] = app.config['COLLECTIONS'].split()
+    app.config['COLLECTION_ALIAS'] = {
+        'ublog-2015_for-yasi_2ndweek': 'ublog: 2nd week',
+        'ublog-2015_for-yasi_3rdweek': 'ublog: 3rd week',
+    }
 
     @app.before_request
     def before_request():
