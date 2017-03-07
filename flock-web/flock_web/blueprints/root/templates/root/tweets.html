@@ -118,20 +118,22 @@
     <label class="mr-sm-2 navbar-text" for="inlineTopicSelect">Topic</label>
     <select name="topic_id" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineTopicSelect">
 
-      <option value="__none__" selected></option>
+      <option value="__none__" {% if not topic %}selected{% endif %}></option>
       <option value="-1" style="font-weight: bold;"><b>New</b></option>
       {% for topic in topics %}
-        <option value="{{ topic.id }}">{{ topic.title }}</option>
+        <option value="{{ topic.id }}" {% if topic.id == selected_topic.id %}selected{% endif %}>{{ topic.title }}</option>
       {% endfor %}
     </select>
 
     <input type="hidden" name="selection_args" value="{{  selection_for_topic_args }}">
+    <input type="hidden" name="return_to_collection" value="{{ collection }}">
 
     <button type="submit" class="btn btn-success my-2 my-sm-0 mr-5">Assign to a topic</button>
   </form>
 
   {% block navbar_extra_root %}
   {% endblock navbar_extra_root %}
+
 {% endblock navbar_extra %}
 
 {% block extra_scripts %}

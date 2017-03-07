@@ -1,7 +1,7 @@
 import json
 from urllib.parse import urlparse, urljoin
 
-from flask import render_template, Blueprint, redirect, url_for, flash, session, abort, request
+from flask import render_template, Blueprint, redirect, url_for, flash, session, abort, request, render_template_string
 import flask_login
 
 from sqlalchemy import func
@@ -93,16 +93,6 @@ def logout():
     return redirect(url_for('.login'))
 
 
-@bp_main.route('/topics')
-@flask_login.login_required
-def topics():
-    topics = db.session.query(fw_model.Topic).filter_by(user=flask_login.current_user)
-    return render_template(
-        'main/topics.html',
-        topics=topics,
-    )
-
-
 class TopicForm(FlaskForm):
     title = wtf.StringField('Title', [validators.Required()])
     description = wtf.TextAreaField('Description')
@@ -111,13 +101,24 @@ class TopicForm(FlaskForm):
     topic_id = wtf.HiddenField()
 
 
-@bp_main.route('/topic', methods=['POST'], endpoint='topic_post')
-@bp_main.route('/topic/<topic_id>', endpoint='topic_with_id')
+@bp_main.route('/topics', methods=['POST'], endpoint='topic_post')
+@bp_main.route('/topics', methods=['GET'], endpoint='topics')
+@bp_main.route('/topics/<topic_id>', endpoint='topic')
 @flask_login.login_required
 def topic(topic_id=None):
     if request.method == 'POST':
 
         topic_id = request.form.get('topic_id', type=int)
+        selection_args = json.loads(request.form['selection_args']) if 'selection_args' in request.form else None
+
+        new_topic_created = False
+
+        if topic_id is None:
+            collection = request.form['return_to_collection']
+            query = fw_model.TopicQuery(**selection_args)
+            redirect_to = url_for('root.tweets', collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, **query.filter_args_dict)
+
+            return redirect(redirect_to)
 
         if topic_id > 0:
             topic = db.session.query(fw_model.Topic).get(topic_id)
@@ -130,33 +131,47 @@ def topic(topic_id=None):
                 flash('A topic is updated.', 'success')
 
         else:
+            # New topic is requested
+            topic = fw_model.Topic(title=selection_args['query'])
+            topic.user = flask_login.current_user
 
-            selection_args = json.loads(request.form['selection_args'])
+            new_topic_created = True
+            db.session.flush()
 
-            if topic_id < 0:
-                # New topic is requested
-                topic = fw_model.Topic(title=selection_args['query'])
-                topic.user = flask_login.current_user
+        redirect_to = url_for('.topic', topic_id=topic.id)
 
-                flash('A new topic is created.', 'success')
-
-            else:
-                topic = db.session.query(fw_model.Topic).get(topic_id)
-                assert topic.user == flask_login.current_user
-
+        if 'selection_args' in request.form:
             query = fw_model.TopicQuery(**selection_args)
-
             topic.queries.append(query)
 
-            db.session.add(query)
+            if 'return_to_collection' in request.form:
+                collection = request.form['return_to_collection']
+                redirect_to = url_for('root.tweets', topic=topic.id, collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, **query.filter_args_dict)
 
         db.session.commit()
 
-        return redirect(url_for('.topic_with_id', topic_id=topic.id))
+        if new_topic_created:
+            flash(
+                render_template_string(
+                    '''
+                    A new topic <a class="alert-link" href="{{ topic_url }}">"{{topic.title}}"</a> is created.
+                    ''',
+                    topic=topic,
+                    topic_url=url_for('main.topic', topic_id=topic.id)
+                ),
+                'success',
+            )
 
 
 
-    from flask import jsonify
+        return redirect(redirect_to)
+
+    if topic_id is None:
+            topics = db.session.query(fw_model.Topic).filter_by(user=flask_login.current_user)
+            return render_template(
+                'main/topics.html',
+                topics=topics,
+            )
 
     topic = db.session.query(fw_model.Topic).get(topic_id)
     assert topic.user == flask_login.current_user
@@ -171,5 +186,6 @@ def topic(topic_id=None):
     return render_template(
         'main/topic.html',
         form=form,
+        topic=topic,
     )
 

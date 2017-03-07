@@ -111,7 +111,7 @@ def pull_collection(endpoint, values):
     g.filter_args = sorted(
         (k, sorted(vs))
         for k, vs in request.args.lists()
-        if not k.startswith('_') and k not in ('q', 'filter', 'show_images', 'cluster')
+        if not k.startswith('_') and k not in ('q', 'filter', 'show_images', 'cluster', 'topic')
     )
 
     g.selection_args = {
@@ -130,6 +130,12 @@ def pull_collection(endpoint, values):
     if g.cluster:
         assert g.clustered_selection is not None
 
+
+    topic_id = request.args.get('topic', None, type=int)
+    if topic_id is not None:
+        g.topic = db.session.query(fw_model.Topic).get(topic_id)
+    else:
+        g.topic = None
 
 @bp_root.route('/')
 @flask_login.login_required
@@ -212,6 +218,7 @@ def tweets():
         collection=g.collection,
         show_images=g.show_images,
         endpoint='.tweets',
+        selected_topic=g.topic,
     )
 
 

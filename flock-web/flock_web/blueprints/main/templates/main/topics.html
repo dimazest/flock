@@ -1,49 +1,11 @@
 {% extends "base.html" %}
+{% import "main/macro.html" as m %}
 
 
 {% block content %}
 
   <h1>Topics</h1>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Query</th>
-        <th>Filter</th>
-        <th>Cluster</th>
-        <th>Features</th>
-        {% for collection in config.COLLECTIONS %}
-          <th>
-            {{ config.COLLECTION_ALIAS.get(collection, collection) }}
-          </th>
-        {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-      {%- for topic in topics %}
-        <tr>
-          {# <td> #}
-          {# <a href="{{ url_for('root.index', collection=collection) }}">{{ collection }}</a> #}
-          {# </td> #}
-            <th scope="row" class="text-center" colspan="{{ config.COLLECTIONS|count + 4}}">
-                <a href="{{ url_for('.topic_with_id', topic_id=topic.id)  }}">{{ topic.title }}</a>
-            </th>
-        </tr>
-        {%- for query in topic.queries %}
-          <tr>
-            <td>{{ query.query }}</td>
-            <td>{{ query.filter or '' }}</td>
-            <td>{{ query.cluster or '' }}</td>
-            <td><pre class="mb-0">{{ query.filter_args_dict|tojson }}</pre></td>
-            {% for collection in config.COLLECTIONS %}
-              <td>
-                <a href="{{url_for('root.tweets', collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, **query.filter_args_dict)}}">Show</a>
-              </td>
-            {% endfor %}
-          </tr>
-        {%- endfor %}
-      {%- endfor %}
-    </tbody>
-  </table>
+  {{ m.render_topic_queries_table(topics, show_topics=True) }}
 
 {% endblock content %}
