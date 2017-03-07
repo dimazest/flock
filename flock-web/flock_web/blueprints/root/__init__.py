@@ -206,9 +206,8 @@ def tweets():
             for f in ['screen_names', 'hashtags', 'user_mentions']
         ],
         query=g.query,
-        query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
+        query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story', 'topic')),
         filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
-        # topic_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('show_images',)),
         selection_args=json.dumps(g.selection_args),
         selection_for_topic_args=json.dumps(selection_for_topic_args),
         topics=flask_login.current_user.topics,
@@ -219,6 +218,7 @@ def tweets():
         show_images=g.show_images,
         endpoint='.tweets',
         selected_topic=g.topic,
+        relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
     )
 
 

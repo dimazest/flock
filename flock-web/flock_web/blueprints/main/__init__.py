@@ -1,10 +1,12 @@
 import json
 from urllib.parse import urlparse, urljoin
 
-from flask import render_template, Blueprint, redirect, url_for, flash, session, abort, request, render_template_string
+from flask import render_template, Blueprint, redirect, url_for, flash, session, abort, request, render_template_string, jsonify
 import flask_login
 
 from sqlalchemy import func
+from sqlalchemy.dialects import postgresql as pg
+
 from flock import model
 
 from flock_web.app import db
@@ -112,6 +114,7 @@ def topic(topic_id=None):
         selection_args = json.loads(request.form['selection_args']) if 'selection_args' in request.form else None
 
         new_topic_created = False
+        new_query_created = False
 
         if topic_id is None:
             collection = request.form['return_to_collection']
@@ -148,6 +151,8 @@ def topic(topic_id=None):
                 collection = request.form['return_to_collection']
                 redirect_to = url_for('root.tweets', topic=topic.id, collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, **query.filter_args_dict)
 
+            new_query_created = True
+
         db.session.commit()
 
         if new_topic_created:
@@ -162,7 +167,17 @@ def topic(topic_id=None):
                 'success',
             )
 
-
+        if new_query_created:
+            flash(
+                render_template_string(
+                    '''
+                    A new query was assigned to the topic <a class="alert-link" href="{{ topic_url }}">"{{topic.title}}"</a>.
+                    ''',
+                    topic=topic,
+                    topic_url=url_for('main.topic', topic_id=topic.id)
+                ),
+                'success',
+            )
 
         return redirect(redirect_to)
 
@@ -189,3 +204,25 @@ def topic(topic_id=None):
         topic=topic,
     )
 
+
+@bp_main.route('/relevance', methods=['POST'])
+@flask_login.login_required
+def relevance():
+    # XXX: this clearly needs validation.
+
+    topic_id = request.form.get('topic_id', type=int)
+    tweet_id = request.form.get('tweet_id', type=int)
+    judgment = request.form.get('judgment', type=int)
+
+    stmt = pg.insert(fw_model.RelevanceJudgment.__table__)
+    stmt = stmt.on_conflict_do_update(
+        index_elements=['topic_id', 'tweet_id'],
+        set_={
+            'judgment': stmt.excluded.judgment,
+        },
+    )
+
+    db.session.execute(stmt, [{'topic_id': topic_id, 'tweet_id': tweet_id, 'judgment': judgment}])
+    db.session.commit()
+
+    return jsonify(request.form)

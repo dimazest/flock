@@ -35,11 +35,14 @@ class Topic(Base):
     user_id = sa.Column(sa.Integer, sa.ForeignKey('user.id'), nullable=False)
     user = sa.orm.relationship('User', backref='topics')
 
+    def judgment_count(self, value):
+        return len([j for j in self.judgments if j.judgment == value])
+
 
 class TopicQuery(Base):
-    __tablename__ ='topic_query'
+    __tablename__ = 'topic_query'
     __table_args__ = (
-        sa.UniqueConstraint('query', 'filter', 'filter_args', 'cluster'),
+        sa.UniqueConstraint('query', 'filter', 'filter_args', 'cluster', 'topic_id'),
     )
 
     id = sa.Column(sa.Integer, primary_key=True)
@@ -55,3 +58,19 @@ class TopicQuery(Base):
     @property
     def filter_args_dict(self):
         return dict(self.filter_args) if self.filter_args is not None else {}
+
+
+class RelevanceJudgment(Base):
+    __tablename__ = 'relevance_judgment'
+
+    topic_id = sa.Column(sa.Integer, sa.ForeignKey('topic.id'), nullable=False, primary_key=True)
+    topic = sa.orm.relationship('Topic', backref='judgments')
+
+    tweet_id = sa.Column(
+        sa.BigInteger,
+        # sa.ForeignKey('tweet.tweet_id'),
+        nullable=False,
+        primary_key=True,
+    )
+
+    judgment = sa.Column(sa.Integer, nullable=False)

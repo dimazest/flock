@@ -54,66 +54,68 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"></link>
     <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='pace.css') }}" rel="stylesheet">
   </head>
   <body>
-    <nav class="navbar navbar-toggleable-md navbar-fixed-top navbar-dark bg-inverse navbar-inverse bg-inverse fixed-top">
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <a class="navbar-brand" href="{{url_for('main.welcome')}}">flock</a>
+      <nav class="navbar navbar-toggleable-md navbar-fixed-top navbar-dark bg-inverse navbar-inverse bg-inverse fixed-top">
+          <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <a class="navbar-brand" href="{{url_for('main.welcome')}}">flock</a>
 
-      <ul class="navbar-nav mr-auto">
-        {% block navbar_body  %} {% endblock navbar_body %}
-      </ul>
+          <ul class="navbar-nav mr-auto">
+              {% block navbar_body  %} {% endblock navbar_body %}
+          </ul>
 
-      {% block navbar_extra  %} {% endblock navbar_extra %}
+          {% block navbar_extra  %} {% endblock navbar_extra %}
 
-      {% if current_user.is_authenticated %}
-        <ul class="navbar-nav float-right">
-          <li class="nav-item mr-3">
-            <a class="nav-link" href="{{ url_for('main.topics') }}">
-              <i class="fa fa-user" aria-hidden="true"></i>
-              {{ current_user.first_name }} {{ current_user.last_name }}</a> 
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn btn-danger" href="{{ url_for('main.logout')  }}">Logout</a>
-          </li>
-        </ul>
-      {% endif %}
+          {% if current_user.is_authenticated %}
+          <ul class="navbar-nav float-right">
+              <li class="nav-item mr-3">
+                  <a class="nav-link" href="{{ url_for('main.topics') }}">
+                      <i class="fa fa-user" aria-hidden="true"></i>
+                      {{ current_user.first_name }} {{ current_user.last_name }}</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link btn btn-danger" href="{{ url_for('main.logout')  }}">Logout</a>
+              </li>
+          </ul>
+          {% endif %}
 
-    </nav>
+      </nav>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        <div class="container">
+      <div class="container">
           <div class="row justify-content-md-center" id="sidebar-search-box">
-            <div class="col-7">
+              <div class="col-7">
 
-              {% for category, message in messages %}
-              <div class="alert alert-{{ {'message': 'danger'}.get(category, category) }} alert-dismissible fade show" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                {{ message|safe }}
+                  {% for category, message in messages %}
+                  <div class="alert alert-{{ {'message': 'danger'}.get(category, category) }} alert-dismissible fade show" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                      {{ message|safe }}
+                  </div>
+                  {% endfor %}
+
               </div>
-            {% endfor %}
-
-            </div>
           </div>
-        </div>
+      </div>
 
       {% endif %}
-    {% endwith %}
+      {% endwith %}
 
 
-    <div class="container-fluid" id='main-content'>
-      {% block content %}{% endblock %}
-    </div>
+      <div class="container-fluid" id='main-content'>
+          {% block content %}{% endblock %}
+      </div>
 
-    <!-- jQuery first, then Tether, then Bootstrap JS. -->
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+      <!-- jQuery first, then Tether, then Bootstrap JS. -->
+      <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+      <script src="{{ url_for('static', filename='pace.min.js') }}"></script>
 
     {% block extra_scripts %}{% endblock %}
 

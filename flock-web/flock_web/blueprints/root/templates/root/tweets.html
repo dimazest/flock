@@ -59,7 +59,7 @@
             {% for feature, count in features  %}
               <div class="card" style="margin-bottom: 0;">
                 <div class="list-group list-group-flush">
-                  <a class="list-group-item list-group-item-action flex-column align-items-start feature-stats-item feature-item {{ 'active' if feature in active_features}}" href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}, cluster=None)  }}">
+                  <a class="list-group-item list-group-item-action flex-column align-items-start feature-stats-item feature-item {{ 'active' if feature in active_features}}" href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}, cluster=None, topic=None)  }}">
                     {{ feature }} ({{ count|humanize('intword') }})
                   </a>
                 </div>
@@ -78,13 +78,11 @@
     <main class="col-xl-8 offset-xl-4">
 
       {# {{ render_tweets(page.items) }} #}
-      {{ m.render_tweets(tweets) }}
+      {{ m.render_tweets(tweets, topic=selected_topic, show_images=show_images, relevance_judgments=relevance_judgments) }}
 
     </main>
 
   </div>
-
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 {% endblock content %}
 
@@ -181,5 +179,30 @@
        console.log( "ready!" );
        $('#start-clustering-task').click(start_clustering_task);
    });
+
+   function send_relevance(element, tweet_id, topic_id, judgment){
+       console.log(tweet_id, topic_id, judgment);
+
+       $.post({
+           url: '{{ url_for('main.relevance') }}',
+           data: {
+               tweet_id: tweet_id,
+               topic_id: topic_id,
+               judgment: judgment,
+           },
+           success: function(data, status, request) {
+               console.log('Everything is fine');
+           },
+           error: function() {
+               console.log('Unexpected error');
+               /* location.reload();*/
+           }
+       });
+
+   }
+
   </script>
+
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
   {% endblock extra_scripts %}
