@@ -115,9 +115,8 @@
   <form class="form-inline" action="{{ url_for('main.topic_post') }}" method="post" >
     <label class="mr-sm-2 navbar-text" for="inlineTopicSelect">Topic</label>
     <select name="topic_id" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineTopicSelect">
-
       <option value="__none__" {% if not topic %}selected{% endif %}></option>
-      <option value="-1" style="font-weight: bold;"><b>New</b></option>
+      <option value="-1" style="font-weight: bold;">New ({{ g.query }})</option>
       {% for topic in topics %}
         <option value="{{ topic.id }}" {% if topic.id == selected_topic.id %}selected{% endif %}>{{ topic.title }}</option>
       {% endfor %}
@@ -213,7 +212,7 @@
            },
            error: function() {
                console.log('Unexpected error');
-               /* location.reload();*/
+               /* location.reload(); */
            }
        });
 

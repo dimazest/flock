@@ -70,23 +70,27 @@
           {% block navbar_extra  %} {% endblock navbar_extra %}
 
           {% if current_user.is_authenticated %}
-          <ul class="navbar-nav float-right">
+            <ul class="navbar-nav float-right">
+              <li class="nav-item mr-3 navbar-text">
+                {# <a class="nav-link" href="{{ url_for('main.topics') }}"> #}
+                <i class="fa fa-user" aria-hidden="true"></i>
+                {{ current_user.first_name }} {{ current_user.last_name }}
+                {# </a> #}
+              </li>
               <li class="nav-item mr-3">
-                  <a class="nav-link" href="{{ url_for('main.topics') }}">
-                      <i class="fa fa-user" aria-hidden="true"></i>
-                      {{ current_user.first_name }} {{ current_user.last_name }}</a>
+                <a class="nav-link btn btn-info" href="{{ url_for('main.topics')  }}">Topics</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link btn btn-danger" href="{{ url_for('main.logout')  }}">Logout</a>
+                <a class="nav-link btn btn-danger" href="{{ url_for('main.logout')  }}">Logout</a>
               </li>
-          </ul>
+            </ul>
           {% endif %}
 
       </nav>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-      <div class="container">
+        {% if messages %}
+          <div class="container">
           <div class="row justify-content-md-center">
               <div class="col-7">
                   {% for category, message in messages %}

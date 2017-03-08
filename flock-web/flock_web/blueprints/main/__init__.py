@@ -1,4 +1,5 @@
 import json
+import collections
 from urllib.parse import urlparse, urljoin
 
 from flask import render_template, Blueprint, redirect, url_for, flash, session, abort, request, render_template_string, jsonify
@@ -180,7 +181,7 @@ def topic(topic_id=None):
         return redirect(redirect_to)
 
     if topic_id is None:
-            topics = db.session.query(fw_model.Topic).filter_by(user=flask_login.current_user)
+            topics = db.session.query(fw_model.Topic).filter_by(user=flask_login.current_user).order_by(fw_model.Topic.id)
             return render_template(
                 'main/topics.html',
                 topics=topics,
@@ -202,6 +203,26 @@ def topic(topic_id=None):
         topic=topic,
     )
 
+@bp_main.route('/topics.json')
+def topics_json():
+    topics = db.session.query(fw_model.Topic).order_by(fw_model.Topic.user_id, fw_model.Topic.id)
+
+    result = [
+        collections.OrderedDict(
+            [
+                ('topid', topic.id),
+                ('title', topic.title),
+                ('description', topic.description),
+                ('narrative', topic.narrative),
+                ('relevant_count', topic.judgment_count(1)),
+                ('irrelevant_count', topic.judgment_count(-1)),
+                ('queries', len(topic.queries)),
+            ]
+        )
+        for topic in topics
+    ]
+
+    return jsonify(result)
 
 @bp_main.route('/relevance', methods=['POST'])
 @flask_login.login_required
