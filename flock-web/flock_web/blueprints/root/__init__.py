@@ -121,10 +121,7 @@ def pull_collection(endpoint, values):
         'filter_args': g.filter_args,
     }
 
-    try:
-        g.clustered_selection = db.session.query(model.ClusteredSelection).filter_by(celery_status='completed', **g.selection_args).one()
-    except NoResultFound:
-        g.clustered_selection = None
+    g.clustered_selection = db.session.query(model.ClusteredSelection).filter_by(celery_status='completed', **g.selection_args).one_or_none()
 
     g.cluster = request.args.get('cluster')
     if g.cluster:
@@ -206,7 +203,7 @@ def tweets():
             for f in ['screen_names', 'hashtags', 'user_mentions']
         ],
         query=g.query,
-        query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story', 'topic')),
+        query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
         filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
         selection_args=json.dumps(g.selection_args),
         selection_for_topic_args=json.dumps(selection_for_topic_args),

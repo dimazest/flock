@@ -1,0 +1,45 @@
+{% macro render_topic_queries_table(topics, show_topics=True) %}
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Query</th>
+        <th>Filter</th>
+        <th>Cluster</th>
+        <th>Features</th>
+        {% for collection in config.COLLECTIONS %}
+          <th>
+            {{ config.COLLECTION_ALIAS.get(collection, collection) }}
+          </th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {%- for topic in topics %}
+        {%- if show_topics %}
+          <tr>
+            <th scope="row" class="pl-3" colspan="{{ config.COLLECTIONS|count + 4}}">
+              <span class="badge badge-success">{{ topic.judgment_count(1) }}</span>
+              <span class="badge badge-danger">{{ topic.judgment_count(-1) }}</span>
+              <a href="{{ url_for('.topic', topic_id=topic.id)  }}">{{ topic.title }}</a>
+            </th>
+          </tr>
+        {%- endif %}
+        {%- for query in topic.queries %}
+          <tr>
+            <td>{{ query.query }}</td>
+            <td>{{ query.filter or '' }}</td>
+            <td>{{ query.cluster or '' }}</td>
+            <td><pre class="mb-0">{{ query.filter_args_dict|tojson }}</pre></td>
+            {% for collection in config.COLLECTIONS %}
+              <td>
+                <a href="{{ url_for('root.tweets', collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, topic=topic.id, **query.filter_args_dict) }}">Show</a>
+              </td>
+            {% endfor %}
+          </tr>
+        {%- endfor %}
+      {%- endfor %}
+    </tbody>
+  </table>
+
+{% endmacro %}

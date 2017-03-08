@@ -87,9 +87,8 @@
       {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
       <div class="container">
-          <div class="row justify-content-md-center" id="sidebar-search-box">
+          <div class="row justify-content-md-center">
               <div class="col-7">
-
                   {% for category, message in messages %}
                   <div class="alert alert-{{ {'message': 'danger'}.get(category, category) }} alert-dismissible fade show" role="alert">
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -98,7 +97,6 @@
                       {{ message|safe }}
                   </div>
                   {% endfor %}
-
               </div>
           </div>
       </div>

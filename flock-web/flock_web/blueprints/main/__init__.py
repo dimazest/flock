@@ -131,8 +131,6 @@ def topic(topic_id=None):
             if form.validate_on_submit():
                 form.populate_obj(topic)
 
-                flash('A topic is updated.', 'success')
-
         else:
             # New topic is requested
             topic = fw_model.Topic(title=selection_args['query'])
@@ -167,7 +165,7 @@ def topic(topic_id=None):
                 'success',
             )
 
-        if new_query_created:
+        elif new_query_created:
             flash(
                 render_template_string(
                     '''
@@ -214,6 +212,17 @@ def relevance():
     tweet_id = request.form.get('tweet_id', type=int)
     judgment = request.form.get('judgment', type=int)
 
+    result = dict(request.form)
+
+    selection_args = json.loads(request.form['selection_args']) if 'selection_args' in request.form else None
+    query = db.session.query(fw_model.TopicQuery).filter_by(topic_id=topic_id, **selection_args).first()
+    if query is None:
+        query = fw_model.TopicQuery(topic_id=topic_id, **selection_args)
+        db.session.add(query)
+        db.session.flush()
+
+        result['new_query_id'] = query.id
+
     stmt = pg.insert(fw_model.RelevanceJudgment.__table__)
     stmt = stmt.on_conflict_do_update(
         index_elements=['topic_id', 'tweet_id'],
@@ -225,4 +234,4 @@ def relevance():
     db.session.execute(stmt, [{'topic_id': topic_id, 'tweet_id': tweet_id, 'judgment': judgment}])
     db.session.commit()
 
-    return jsonify(request.form)
+    return jsonify(result)
