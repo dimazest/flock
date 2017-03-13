@@ -7,7 +7,6 @@ from sqlalchemy import func, select, Table, Column, Integer, String, sql
 from sqlalchemy.sql.expression import text, and_, or_, not_, join, column
 from sqlalchemy.orm.exc import NoResultFound
 from paginate_sqlalchemy import SqlalchemySelectPage, SqlalchemyOrmPage
-from sqlalchemy_searchable import parse_search_query
 import crosstab
 
 from celery.execute import send_task
@@ -23,76 +22,6 @@ bp_root = Blueprint(
     template_folder='templates',
     url_prefix='/c/<collection>'
     )
-
-
-def stats_for_feature(feature_name, feature_filter_args=()):
-    if feature_filter_args or g.query:
-        feature = text(
-            'select collection, tweet_id, feature_value from tweet, jsonb_array_elements_text(tweet.features->:feature) as feature_value'
-        ).columns(column('collection'), column('tweet_id'), column('feature_value')).bindparams(feature=feature_name).alias()
-
-        feature = (
-            select([feature.c.feature_value, func.count().label('count')])
-            .where(
-                and_(
-                    feature.c.collection == g.collection,
-                    feature.c.collection == model.Tweet.collection,
-                    feature.c.tweet_id == model.Tweet.tweet_id,
-                    (
-                        text(
-                            "tweet.search_vector @@ to_tsquery('pg_catalog.english', :search_vector)"
-                        ).bindparams(search_vector=parse_search_query(g.query))
-                        if g.query else True
-                    ),
-                    *(
-                        [
-                            model.Tweet.tweet_id == model.filtered_tweets.c.tweet_id,
-                            model.Tweet.collection == model.filtered_tweets.c.collection,
-                        ]
-                        if g.filter != 'none' else []
-                    ),
-                    *(
-                        [
-                            model.Tweet.tweet_id == model.tweet_cluster.c.tweet_id,
-                            model.Tweet.collection == model.tweet_cluster.c.collection,
-                            model.tweet_cluster.c._clustered_selection_id == g.clustered_selection._id,
-                            model.tweet_cluster.c.label == g.cluster,
-                        ]
-                        if g.cluster else []
-                    ),
-                    *feature_filter_args
-                )
-            )
-            .group_by(feature.c.feature_value)
-            .alias()
-        )
-
-        feature = feature.alias()
-
-    else:
-        if g.filter == 'none':
-            count_table = model.feature_counts
-        else:
-            count_table = model.feature_scores
-
-        feature = (
-            select([count_table.c.collection, count_table.c.feature_value, count_table.c.count])
-            .where(
-                and_(
-                    count_table.c.feature_name == feature_name,
-                    count_table.c.collection == g.collection,
-                )
-            )
-            .alias()
-        )
-
-    s = (
-        select([feature.c.feature_value, feature.c.count])
-        .select_from(feature)
-        .order_by(feature.c.count.desc())
-    )
-
-    return s
 
 
 @bp_root.url_defaults
@@ -193,15 +122,32 @@ def tweets():
     selection_for_topic_args = {'cluster': g.cluster, **g.selection_args}
     del selection_for_topic_args['collection']
 
+    stat_tasks = [
+        (
+            f,
+            g.celery.send_task(
+                'flock_web.tasks.stats_for_feature',
+                kwargs={
+                    'feature_name': f,
+                    'feature_filter_args': feature_filter_args,
+                    'query': g.query,
+                    'collection': g.collection,
+                    'filter_': g.filter,
+                    'clustered_selection': g.clustered_selection,
+                    'cluster': g.cluster,
+                },
+            ),
+            request.args.getlist(f),
+        )
+        for f in ['screen_names', 'hashtags', 'user_mentions']
+    ]
+
     return render_template(
         'root/tweets.html',
         tweets=tweets.all(),
         tweet_count=tweet_count,
         # page=page,
-        stats=[
-            (f, db.session.query(stats_for_feature(f, feature_filter_args).limit(12).alias()), request.args.getlist(f))
-            for f in ['screen_names', 'hashtags', 'user_mentions']
-        ],
+        stats=[(feature_name, t.get(), args) for feature_name, t, args in stat_tasks],
         query=g.query,
         query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
         filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),

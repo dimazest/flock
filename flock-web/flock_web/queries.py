@@ -1,5 +1,5 @@
 from sqlalchemy.sql.expression import text, and_, or_, not_, join, column, select, func
-from sqlalchemy_searchable import search
+from sqlalchemy_searchable import search, parse_search_query
 
 from flock import model
 from .app import db
@@ -88,3 +88,73 @@ def build_cluster_query(clustered_selection_id):
             .alias()
         )
     )
+
+
+def stats_for_feature_query(feature_name, query, collection, filter_, clustered_selection, cluster, feature_filter_args=()):
+    if feature_filter_args or query:
+        feature = text(
+            'select collection, tweet_id, feature_value from tweet, jsonb_array_elements_text(tweet.features->:feature) as feature_value'
+        ).columns(column('collection'), column('tweet_id'), column('feature_value')).bindparams(feature=feature_name).alias()
+
+        feature = (
+            select([feature.c.feature_value, func.count().label('count')])
+            .where(
+                and_(
+                    feature.c.collection == collection,
+                    feature.c.collection == model.Tweet.collection,
+                    feature.c.tweet_id == model.Tweet.tweet_id,
+                    (
+                        text(
+                            "tweet.search_vector @@ to_tsquery('pg_catalog.english', :search_vector)"
+                        ).bindparams(search_vector=parse_search_query(query))
+                        if query else True
+                    ),
+                    *(
+                        [
+                            model.Tweet.tweet_id == model.filtered_tweets.c.tweet_id,
+                            model.Tweet.collection == model.filtered_tweets.c.collection,
+                        ]
+                        if filter_ != 'none' else []
+                    ),
+                    *(
+                        [
+                            model.Tweet.tweet_id == model.tweet_cluster.c.tweet_id,
+                            model.Tweet.collection == model.tweet_cluster.c.collection,
+                            model.tweet_cluster.c._clustered_selection_id == clustered_selection._id,
+                            model.tweet_cluster.c.label == cluster,
+                        ]
+                        if cluster else []
+                    ),
+                    *feature_filter_args
+                )
+            )
+            .group_by(feature.c.feature_value)
+            .alias()
+        )
+
+        feature = feature.alias()
+
+    else:
+        if filter_ == 'none':
+            count_table = model.feature_counts
+        else:
+            count_table = model.feature_scores
+
+        feature = (
+            select([count_table.c.collection, count_table.c.feature_value, count_table.c.count])
+            .where(
+                and_(
+                    count_table.c.feature_name == feature_name,
+                    count_table.c.collection == collection,
+                )
+            )
+            .alias()
+        )
+
+    s = (
+        select([feature.c.feature_value, feature.c.count])
+        .select_from(feature)
+        .order_by(feature.c.count.desc())
+    )
+
+    return s

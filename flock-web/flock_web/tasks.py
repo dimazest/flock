@@ -11,22 +11,13 @@ import hdbscan
 
 from flock_web.app import create_app, db
 from flock import model
-from flock_web.queries import build_tweet_query
+from flock_web import queries as q
 
 
 flask_app, celery = create_app(os.environ['FLOCK_CONFIG'], return_celery=True)
 
 
 logger = logging.getLogger(__name__)
-
-
-@celery.task
-def sleep():
-    import time, random
-
-    time.sleep(5)
-
-    return random.randint(0, 100)
 
 
 def sentences(tweets):
@@ -84,7 +75,7 @@ def cluster_selection(self, selection_args):
 
         update_state(1, 3, status='Started.')
 
-        tweets, tweet_count, feature_filter_args = build_tweet_query(possibly_limit=False, **selection_args)
+        tweets, tweet_count, feature_filter_args = q.build_tweet_query(possibly_limit=False, **selection_args)
 
         # doc2vec_model = Doc2Vec(
         #     size=100,
@@ -175,3 +166,11 @@ def cluster_selection(self, selection_args):
 
     # return {'current': 10, 'total': 10, 'status': 'Task completed!', 'total_labels': len(set(dbscan.labels_))}
     return {'current': 10, 'total': 10, 'status': 'Task completed!', 'total_labels': None}
+
+
+@celery.task
+def stats_for_feature(**query_kwargs):
+    with flask_app.app_context():
+        return db.session.query(
+            q.stats_for_feature_query(**query_kwargs).limit(12).alias()
+        ).all()
