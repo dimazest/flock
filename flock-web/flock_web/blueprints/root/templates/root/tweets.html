@@ -120,6 +120,7 @@
       {% for topic in topics %}
         <option value="{{ topic.id }}" {% if topic.id == selected_topic.id %}selected{% endif %}>{{ topic.title }}</option>
       {% endfor %}
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     </select>
 
     <input type="hidden" name="selection_args" value="{{  selection_for_topic_args }}">
