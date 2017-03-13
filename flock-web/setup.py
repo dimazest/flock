@@ -36,7 +36,6 @@ setup(
         'flask',
         'Flask-SQLAlchemy',
         'Flask-Cache',
-        'flask-twitter-oembedder',
         'flask-iniconfig',
         'Flask-Humanize',
         'flask-debugtoolbar',

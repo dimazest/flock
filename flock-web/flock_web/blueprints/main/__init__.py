@@ -203,6 +203,7 @@ def topic(topic_id=None):
         topic=topic,
     )
 
+
 @bp_main.route('/topics.json')
 def topics_json():
     topics = db.session.query(fw_model.Topic).order_by(fw_model.Topic.user_id, fw_model.Topic.id)
@@ -223,6 +224,7 @@ def topics_json():
     ]
 
     return jsonify(result)
+
 
 @bp_main.route('/relevance', methods=['POST'])
 @flask_login.login_required
