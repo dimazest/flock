@@ -124,8 +124,9 @@ def create_app(config_file, return_celery=False):
 
     app.config['COLLECTIONS'] = app.config['COLLECTIONS'].split()
     app.config['COLLECTION_ALIAS'] = {
-        'ublog-2015_for-yasi_2ndweek': 'ublog: 2nd week',
-        'ublog-2015_for-yasi_3rdweek': 'ublog: 3rd week',
+        'ublog-2015_for-yasi_2ndweek': '2015 April 2nd week',
+        'ublog-2015_for-yasi_3rdweek': '2015 April 3rd week',
+        '2017-02-13': '2017 February',
     }
 
     @app.before_request
