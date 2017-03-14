@@ -7,6 +7,8 @@ eggs/
 parts/
 src/
 
+.pypy/
+
 flock.egg-info/
 flock-conf/flock_conf.egg-info/
 flock-web/flock_web.egg-info/

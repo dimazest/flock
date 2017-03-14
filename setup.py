@@ -30,7 +30,11 @@ setup(
         'click-log',
         'poultry',
         'sqlalchemy',
+        'SQLAlchemy-Searchable',
         'flock-conf',
+        'simhash',
+
+        'ark-twokenize-py',
     ],
     entry_points={
         'console_scripts': [

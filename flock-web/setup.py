@@ -36,11 +36,16 @@ setup(
         'flask',
         'Flask-SQLAlchemy',
         'Flask-Cache',
-        'flask-twitter-oembedder',
         'flask-iniconfig',
         'Flask-Humanize',
         'flask-debugtoolbar',
         'paginate_sqlalchemy',
+        'celery',
+        'gensim',
+        'hdbscan',
+        'flask-login',
+        'WTForms',
+        'flask_wtf',
     ],
     entry_points={
         'console_scripts': [

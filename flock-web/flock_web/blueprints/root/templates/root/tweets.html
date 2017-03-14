@@ -1,59 +1,226 @@
-{% extends "base.html" %}
-
-{% macro render_features(tweet) %}
-  <div class="highlight">
-<pre>
-{
-{%- for feature_name, feature_values in tweet.features.items() %}
-  "<a href="{{ restricted_url('.features', feature_name=feature_name) }}">{{ feature_name }}</a>": [
-  {%- for feature_value in feature_values %}
-    {%- if feature_value.__class__.__name__ == 'str' %}
-      "<a href="{{ restricted_url('.tweets', **{feature_name: feature_value}) }}">{{ feature_value }}</a>",
-    {%- else %}
-      {{ feature_value|tojson }},
-    {%- endif %}
-  {%- endfor%}
-  ],
-{%- endfor %}
-}
-</pre>
-
-      <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-raw-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseExample">
-        Raw data
-      </button>
-      <div class="collapse" id="tweet-features-raw-{{ tweet.tweet_id }}">
-        <pre>{{ tweet.features|tojson(indent=2) }}</pre>
-      </div>
-  </div>
-{% endmacro %}
-
-{% macro render_tweets(tweets) %}
-  <div class="card-columns">
-    {%- for tweet in tweets %}
-      <div class="card">
-        <div class="card-header">
-          <ul class="nav nav-pills card-header-pills float-xs-left">
-            <li class="nav-item">
-              <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#tweet-features-{{ tweet.tweet_id }}" aria-expanded="false" aria-controls="collapseFeatures" aria-pressed="false">Features</button>
-            </li>
-          </ul>
-        </div>
-        {{ oembed_tweet(tweet.tweet_id, omit_script=True) }}
-        <div class="card-block collapse" id="tweet-features-{{ tweet.tweet_id }}">
-          {{ render_features(tweet) }}
-        </div>
-      </div>
-    {%- endfor %}
-  </div>
-{% endmacro %}
+{% extends "root/base.html" %}
+{% import "root/macro.html" as m %}
 
 {% block content %}
 
-  There are {{ page.item_count|humanize('intcomma') }} tweets.
+  <div class="row">
 
-  {{ render_pagination(page) }}
-  {{ render_tweets(page.items) }}
-  {{ render_pagination(page) }}
+    <div class="col-xl-4 col-md-6 bg-faded sidebar bd-links">
+
+      {% if tweet_count %}
+        <p>
+          {# There are {{ page.item_count|humanize('intcomma') }} tweets.   #}
+          There are {{ tweet_count|humanize('intcomma') }} tweets.
+        </p>
+      {% endif %}
+
+      <form class="sidebar-element" action="{{ url_for('.tweets') }}" method="get">
+          <div class="row" id="sidebar-search-box">
+            <div class="col-10">
+              <input type="text" class="form-control" placeholder="Search" name="q" {% if query %} value="{{ query }}" {% endif %}>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-outline-success my-2 my-sm-0 w-100" type="submit">Search</button>
+            </div>
+          </div>
+          {% for k, v in query_form_hidden_fields %}
+            <input type="hidden" name="{{ k }}" value="{{ v }}">
+          {% endfor %}
+      </form>
+
+
+      {# {{ render_pagination(page) }} #}
+
+      <div id="clusters">
+        {% if clusters %}
+          {{ m.render_clusters(clusters, selected_cluster=selected_cluster) }}
+        {% else %}
+          <p>
+            <div id='clustering_progress_container' class="progress" style="display: none;">
+              <div id='clustering_progress' class="progress-bar" role="progressbar"></div>
+            </div>
+            <button id="start-clustering-task" class="btn btn-outline-success w-100">Cluster</button>
+
+            {# <form class="sidebar-element" action="{{ url_for('.cluster') }}" method="post"> #}
+            {#   <input type="hidden" name="redirect" value="yes"> #}
+            {#   <input type="hidden" name="selection_args" value="{{ selection_args }}"> #}
+            {#   <input type="hidden" name="from_url" value="{{ restricted_url('.tweets') }}"> #}
+            {#   <button class="btn btn-outline-secondary my-2 my-sm-0 w-100" type="submit">Cluster (POST)</button> #}
+            {# </form> #}
+          </p>
+        {% endif %}
+      </div>
+
+      {% for feature_name, features, active_features in stats %}
+        <div class="card sidebar-element">
+          {# <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name=feature_name) }}">{{ feature_name }}</a></h3> #}
+          <h3 class="card-header">{{ feature_name }}</h3>
+          <div class="card-columns feature-stats-container">
+            {% for feature, count in features  %}
+              <div class="card">
+                <div class="list-group list-group-flush">
+                  <a class="list-group-item list-group-item-action flex-column align-items-start feature-stats-item feature-item {{ 'active' if feature in active_features}}" href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}, cluster=None)  }}">
+                    {{ feature }} ({{ count|humanize('intword') }})
+                  </a>
+                </div>
+              </div>
+
+              {# <a class="btn btn-outline-danger btn-sm" href="{{ restricted_url('.tweets', include={feature_name: '-{}'.format(feature)}, exclude={feature_name: feature}) }}" role="button"> #}
+              {#   <i class="fa fa-times" aria-hidden="true"></i> #}
+              {# </a> #}
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+
+    <main class="col-xl-8 offset-xl-4">
+
+      {# {{ render_tweets(page.items) }} #}
+      {{ m.render_tweets(tweets, topic=selected_topic, show_images=show_images, relevance_judgments=relevance_judgments) }}
+
+    </main>
+
+  </div>
+
+{% endblock content %}
+
+{% block navbar_extra %}
+
+  <form class="form-inline" action="{{ url_for('.tweets') }}" method="get">
+
+    <div class="form-check mb-2 mr-sm-3 mb-sm-0">
+      <label class="form-check-hide-images">
+        <input class="form-check-input" type="checkbox" name="show_images" {% if show_images %}checked{% endif %}><span class="navbar-text">Show images</span>
+      </label>
+    </div>
+
+    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+      <label class="mr-sm-2 navbar-text" for="inlineFilterSelect">Filter</label>
+      <select name="filter" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFilterSelect">
+        {% for filter_value, filter_option in [('none', 'None'), ('pmi', 'PMI')] %}
+          <option value="{{ filter_value }}" {% if filter_value == selected_filter %}selected{% endif %}>{{ filter_option }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    {% for k, v in filter_form_hidden_fields %}
+      <input type="hidden" name="{{ k }}" value="{{ v }}">
+    {% endfor %}
+
+    <button type="submit" class="btn btn-outline-success my-2 my-sm-0 mr-5">Update settings</button>
+  </form>
+
+  <form class="form-inline" action="{{ url_for('main.topic_post') }}" method="post" >
+    <label class="mr-sm-2 navbar-text" for="inlineTopicSelect">Topic</label>
+    <select name="topic_id" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineTopicSelect">
+      <option value="__none__" {% if not topic %}selected{% endif %}></option>
+      <option value="-1" style="font-weight: bold;">New ({{ g.query }})</option>
+      {% for topic in topics %}
+        <option value="{{ topic.id }}" {% if topic.id == selected_topic.id %}selected{% endif %}>{{ topic.title }}</option>
+      {% endfor %}
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    </select>
+
+    <input type="hidden" name="selection_args" value="{{  selection_for_topic_args }}">
+    <input type="hidden" name="return_to_collection" value="{{ collection }}">
+
+    <button type="submit" class="btn btn-success my-2 my-sm-0 mr-5">Assign to a topic</button>
+  </form>
+
+  {% block navbar_extra_root %}
+  {% endblock navbar_extra_root %}
+
+{% endblock navbar_extra %}
+
+{% block extra_scripts %}
+  <script>
+   function start_clustering_task() {
+       $.post({
+           url: '{{ url_for('.cluster') }}',
+           data: {
+               selection_args: '{{ selection_args|safe }}',
+               from_url: '{{ restricted_url('.tweets')|safe }}',
+           },
+           success: function(data, status, request) {
+               var status_url = request.getResponseHeader('Location');
+               status_url = status_url + '?' + window.location.search.slice(1);
+
+               update_progress(status_url);
+           },
+           error: function() {
+               console.log('Unexpected error');
+           }
+       });
+   }
+
+   function update_progress(status_url){
+       $.getJSON(status_url, function(data){
+           $('#clustering_progress_container').show();
+           $('#start-clustering-task').hide();
+
+           if (data['state'] == 'PROGRESS') {
+               var progress = data['info']['current'] / data['info']['total'] * 100;
+               $('#clustering_progress').attr('style', 'width:' + progress + '%;');
+               $('#clustering_progress').html(data['info']['status']);
+
+           }
+           else if (data['state'] == 'SUCCESS') {
+               $('#clustering_progress_container').hide();
+               $('#clusters').html(data['cluster_html_snippet'])
+               return;
+           }
+           setTimeout(function(){update_progress(status_url);}, 2000);
+       });
+   }
+
+   function reset_tabindex(times=10){
+       $('*').attr('tabindex', -1);
+       $('.btn-group[data-toggle=buttons] .btn').attr('tabindex', 0)
+
+       if (times > 0) {
+           setTimeout(function(){reset_tabindex(times - 1)}, 500);
+       }
+   }
+
+   $(document).ready(function() {
+       $('#start-clustering-task').click(start_clustering_task);
+
+       {# reset_tabindex(); #}
+
+       $('.btn-group[data-toggle=buttons] .btn').keydown(function(e) {
+           if (e.which == 13 || e.which == 32) {
+               $(this).click()
+           }
+       })
+   });
+
+   function send_relevance(element, tweet_id, topic_id, judgment){
+       console.log(tweet_id, topic_id, judgment);
+
+       $.post({
+           url: '{{ url_for('main.relevance') }}',
+           data: {
+               tweet_id: tweet_id,
+               topic_id: topic_id,
+               judgment: judgment,
+               selection_args: '{{  selection_for_topic_args|safe }}'
+           },
+           success: function(data, status, request) {
+               console.log('Everything is fine');
+               /* $('main').prepend('<div class="alert alert-success" role="alert" style="width: "40%;"">A new query was assigned to the current topic.</div>');*/
+           },
+           error: function() {
+               console.log('Unexpected error');
+               alert('Could not update the judgment. The page will be refreshed.')
+               location.reload();
+           }
+       });
+
+   }
+  </script>
 
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-{% endblock %}
+
+  {% endblock extra_scripts %}

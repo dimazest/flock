@@ -1,20 +1,26 @@
-from flask import render_template, Blueprint, request, redirect, url_for, g
+import json
 
-from sqlalchemy import func, select, Table, Column, Integer, String, and_, sql
-from sqlalchemy.sql.expression import text, and_
+from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify
+import flask_login
+
+from sqlalchemy import func, select, Table, Column, Integer, String, sql
+from sqlalchemy.sql.expression import text, and_, or_, not_, join, column
+from sqlalchemy.orm.exc import NoResultFound
 from paginate_sqlalchemy import SqlalchemySelectPage, SqlalchemyOrmPage
-
 import crosstab
+
+from celery.execute import send_task
 
 from flock import model
 from flock_web.app import db, url_for_other_page
-
+import flock_web.queries  as q
+import flock_web.model as fw_model
 
 bp_root = Blueprint(
     'root', __name__,
     static_folder='static',
     template_folder='templates',
-    url_prefix='/<collection>'
+    url_prefix='/c/<collection>'
     )
 
 
@@ -27,72 +33,149 @@ def add_collection(endpoint, values):
 def pull_collection(endpoint, values):
     g.collection = values.pop('collection')
 
+    g.query = request.args.get('q')
+    g.filter = request.args.get('filter', 'pmi')
+    g.show_images = request.args.get('show_images') == 'on'
+
+    g.filter_args = sorted(
+        (k, sorted(vs))
+        for k, vs in request.args.lists()
+        if not k.startswith('_') and k not in ('q', 'filter', 'show_images', 'cluster', 'topic')
+    )
+
+    g.selection_args = {
+        'collection': g.collection,
+        'query': g.query,
+        'filter': g.filter,
+        'filter_args': g.filter_args,
+    }
+
+    g.clustered_selection = db.session.query(model.ClusteredSelection).filter_by(celery_status='completed', **g.selection_args).one_or_none()
+
+    g.cluster = request.args.get('cluster')
+    if g.cluster:
+        assert g.clustered_selection is not None
+
+
+    topic_id = request.args.get('topic', None, type=int)
+    if topic_id is not None:
+        g.topic = db.session.query(fw_model.Topic).get(topic_id)
+    else:
+        g.topic = None
 
 @bp_root.route('/')
+@flask_login.login_required
 def index():
-    return redirect(url_for('.tweets'))
 
+    _story_id = request.args.get('story', type=int)
+    story = None
+    if _story_id is not None:
+        story = db.session.query(model.Story).get(int(_story_id))
 
-def feature_query_args():
-    feature_query = request.args.copy()
-    return feature_query
+    stories = (
+        db.session.query(model.Story)
+        .filter(model.Story.collection == g.collection)
+        .all()
+    )
+
+    if story is not None:
+        tweets = (
+            db.session.query(model.Tweet)
+            .join(model.tweet_story)
+            .filter(model.tweet_story.c._story_id == story._id)
+            .order_by(model.tweet_story.c.rank)
+        )
+    else:
+        tweets = []
+
+    return render_template(
+        'root/index.html',
+        endpoint='.index',
+        collection=g.collection,
+        stories=stories,
+        selected_story=story,
+        tweets=tweets,
+    )
 
 
 @bp_root.route('/tweets')
+@flask_login.login_required
 def tweets():
-    page_num = int(request.args.get('_page', 1))
-    items_per_page = int(request.args.get('_items_per_page', 20))
+    page_num = request.args.get('_page', 1, type=int)
+    items_per_page = request.args.get('_items_per_page', 100, type=int)
 
-    feature_query = feature_query_args()
+    tweets, tweet_count, feature_filter_args = q.build_tweet_query(g.collection, g.query, g.filter, g.filter_args, cluster=g.cluster, clustered_selection=g.clustered_selection)
 
-    tweets = (
-        db.session.query(model.Tweet)
-        .filter(model.Tweet.collection == g.collection)
-        .filter(*(model.Tweet.features.contains({k: [v]}) for k, v in feature_query.items() if not k.startswith('_')))
-        .order_by(model.Tweet.created_at, model.Tweet.tweet_id)
-    )
+    # page = SqlalchemyOrmPage(
+    #     tweets,
+    #     page=page_num,
+    #     items_per_page=items_per_page,
+    #     url_maker=url_for_other_page,
+    # )
 
-    page = SqlalchemyOrmPage(
-        tweets,
-        page=page_num, items_per_page=items_per_page,
-        url_maker=url_for_other_page,
-    )
+    if g.clustered_selection:
+        clusters = q.build_cluster_query(g.clustered_selection._id)
+
+    else:
+        clusters = None
+
+    selection_for_topic_args = {'cluster': g.cluster, **g.selection_args}
+    del selection_for_topic_args['collection']
+
+    stat_tasks = [
+        (
+            f,
+            g.celery.send_task(
+                'flock_web.tasks.stats_for_feature',
+                kwargs={
+                    'feature_name': f,
+                    'feature_filter_args': feature_filter_args,
+                    'query': g.query,
+                    'collection': g.collection,
+                    'filter_': g.filter,
+                    'clustered_selection': g.clustered_selection,
+                    'cluster': g.cluster,
+                },
+            ),
+            request.args.getlist(f),
+        )
+        for f in ['screen_names', 'hashtags', 'user_mentions']
+    ]
 
     return render_template(
         'root/tweets.html',
-        page=page,
+        tweets=tweets.all(),
+        tweet_count=tweet_count,
+        # page=page,
+        stats=[(feature_name, t.get(), args) for feature_name, t, args in stat_tasks],
+        query=g.query,
+        query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
+        filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
+        selection_args=json.dumps(g.selection_args),
+        selection_for_topic_args=json.dumps(selection_for_topic_args),
+        topics=flask_login.current_user.topics,
+        selected_filter=g.filter,
+        clusters=clusters,
+        selected_cluster=g.cluster,
+        collection=g.collection,
+        show_images=g.show_images,
+        endpoint='.tweets',
+        selected_topic=g.topic,
+        relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
     )
 
 
 @bp_root.route('/tweets/<feature_name>')
+@flask_login.login_required
 def features(feature_name):
     other_feature = request.args.get('_other', None)
     unstack = request.args.get('_unstack', None) if other_feature is not None else None
     other_feature_values = None
 
     page_num = int(request.args.get('_page', 1))
-    items_per_page = int(request.args.get('_items_per_page', 20))
+    items_per_page = int(request.args.get('_items_per_page', 100))
 
-    feature_query = feature_query_args()
-
-    features_to_filter = [model.Tweet.features.contains({k: [v]}) for k, v in feature_query.items() if not k.startswith('_')]
-    feature_select = (
-        select(['feature', func.count()])
-        .select_from(
-            text(
-                ('tweet, ' if not features_to_filter else '') +
-                'jsonb_array_elements_text(tweet.features->:feature) as feature'
-            ).bindparams(feature=feature_name)
-        )
-        .where(
-            and_(
-                sql.literal_column('collection') == g.collection,
-                *features_to_filter,
-            )
-        )
-        .group_by('feature')
-        .order_by(func.count().desc())
-    )
+    feature_select = stats_for_feature(feature_name, g.feature_filter_args)
 
     page = SqlalchemySelectPage(
         db.session, feature_select,
@@ -181,3 +264,70 @@ def features(feature_name):
         page=page,
         items=items,
     )
+
+
+@bp_root.route('/cluster', methods=['POST'])
+@flask_login.login_required
+def cluster():
+    selection_args = json.loads(request.form['selection_args'])
+    from_url = request.form['from_url']
+
+    try:
+        clustered_selection = db.session.query(model.ClusteredSelection).filter_by(**selection_args).one()
+    except NoResultFound:
+        task_id = g.celery.send_task('flock_web.tasks.cluster_selection', kwargs={'selection_args': selection_args}).id
+    else:
+        task_id = clustered_selection.celery_id
+
+    task = g.celery.AsyncResult(task_id)
+
+    location = url_for('.cluster_status', task_id=task_id)
+    if not 'redirect' in request.form:
+        return jsonify({'Location': location, 'info': task.info}), 202, {'Location': location}
+    else:
+        return redirect(location)
+
+
+@bp_root.route('/cluster/status/<task_id>')
+@flask_login.login_required
+def cluster_status(task_id):
+    task = g.celery.AsyncResult(task_id)
+    if task.state == 'PENDING':
+        response = {
+            'state': task.state,
+            'info': {
+                'current': 0,
+                'total': 1,
+            },
+            'status': 'Pending...'
+        }
+    elif task.state != 'FAILURE':
+        response = {
+            'state': task.state,
+            'info': task.info,
+        }
+    else:
+        response = {
+            'state': task.state,
+            'current': 1,
+            'total': 1,
+            'status': str(task.info),  # this is the exception raised
+        }
+
+    cluster_html_snippet = None
+    if task.state == 'SUCCESS':
+        try:
+            clustered_selection = db.session.query(model.ClusteredSelection).filter_by(celery_id=task_id).one()
+        except NoResultFound:
+            pass
+        else:
+            clusters = q.build_cluster_query(clustered_selection._id)
+
+            cluster_html_snippet = render_template(
+                'root/cluster_snippet.html',
+                clusters=clusters,
+            )
+
+    response['cluster_html_snippet'] = cluster_html_snippet
+
+    return jsonify(response)

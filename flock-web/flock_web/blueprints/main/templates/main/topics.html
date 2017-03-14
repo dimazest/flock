@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% import "main/macro.html" as m %}
+
+
+{% block content %}
+
+  <h1>Topics ({{ topics.count() }})</h1>
+
+  {{ m.render_topic_queries_table(topics, show_topics=True) }}
+
+{% endblock content %}

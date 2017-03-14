@@ -1,0 +1,54 @@
+{% macro render_tweets(tweets, topic=None, show_images=False, relevance_judgments=None) %}
+  <div class="card-columns tweet-selection">
+    {%- for tweet in tweets %}
+      <div class='card tweet-outer'>
+        <blockquote class="twitter-tweet card-blockquote" {% if not show_images %} data-cards="hidden" {% endif %}>
+          <div class="card custom-tweet">
+            <div class="card-block">
+              <header>
+                <p class="twitter-user-name">{{ tweet.features.repr.user__name }}</p>
+                <small class="text-muted">@{{ tweet.features.repr.user__screen_name }}</small>
+              </header>
+              <blockquote class="card-blockquote">
+                <p dir="ltr" lang="{{ tweet.features.repr.lang }}" class="card-text">
+                  {{ tweet.features.repr.text }}
+                </p>
+                <small>
+                  <a href="https://twitter.com/{{ tweet.features.repr.user__screen_name }}/status/{{ tweet.tweet_id }}">{{ tweet.created_at }}</a>
+                </small>
+              </blockquote>
+            </div>
+          </div>
+        </blockquote>
+        {% if topic %}
+          {% set j = relevance_judgments.get(tweet.tweet_id, 0) %}
+          <div class="tweet-outer-meta btn-group btn-block ml-1" data-toggle="buttons">
+            <label class="btn btn-outline-success mb-0 {% if j == 1 %}active{% endif %}" style="width: 33%"  onclick="send_relevance(this, '{{ tweet.tweet_id }}', {{ topic.id}}, 1)">
+              <input type="radio" name="relevance" id="1" autocomplete="off" {% if j == 1 %}checked{% endif %}>Relevant
+            </label>
+            <label class="btn btn-outline-secondary mb-0 {% if j == 0 %}active{% endif %}" style="width: 33%" onclick="send_relevance(this, '{{ tweet.tweet_id}}', {{ topic.id }}, 0)">
+              <input type="radio" name="relevance" id="0" autocomplete="off" {% if j == 0 %}checked{% endif %}>Unjudged
+            </label>
+            <label class="btn btn-outline-danger mb-0  {% if j == -1 %}active{% endif %}" style="width: 33%" onclick="send_relevance(this, '{{ tweet.tweet_id}}', {{ topic.id }}, -1)">
+              <input type="radio" name="relevance" id="-1" autocomplete="off"  {% if j == -1 %}checked{% endif %}>Irrelevant
+            </label>
+          </div>
+        {% endif %}
+      </div>
+    {%- endfor %}
+  </div>
+{% endmacro %}
+
+
+{% macro render_clusters(clusters, selected_cluster=None) %}
+  <div class="card sidebar-element">
+    <h3 class="card-header">Clusters</h3>
+    <div class="list-group list-group-flush">
+      {% for cluster, tweet_count in clusters %}
+        <a href="{{ restricted_url('.tweets', cluster=cluster if cluster != selected_cluster else None) }}" class="list-group-item list-group-item-action flex-column align-items-start feature-item {{ 'active' if cluster == selected_cluster}}">
+          <p class="mb-0">{{ cluster  }} ({{ tweet_count|humanize('intword') }})</p>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+{% endmacro %}

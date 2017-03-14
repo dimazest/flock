@@ -79,3 +79,16 @@ class Expander:
             result[key] = sorted(result[key])
 
         return result
+
+
+    def reverse_user_labels(self):
+        clusters = {}
+
+        for expanded_user in self.user_labels().values():
+            user, = (u for u in expanded_user if u[0] == '@' and u[1] != '@')
+            categories = (u for u in expanded_user if u.startswith('@@'))
+
+            for category in categories:
+                clusters.setdefault(category, set()).add(user)
+
+        return clusters

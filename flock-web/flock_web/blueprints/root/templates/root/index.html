@@ -1,0 +1,43 @@
+{% extends "root/base.html" %}
+{% import "root/macro.html" as m %}
+
+
+{% block content %}
+
+  <div class="jumbotron">
+    <form action="{{ url_for('.tweets') }}" method="get">
+      <div class="row justify-content-md-center" id="sidebar-search-box">
+        <div class="col-5">
+          <input type="text" class="form-control form-control-lg" placeholder="Search" name="q" {% if query %} value="{{ query }}" {% endif %}>
+        </div>
+        <div class="col-3 col-lg-2">
+          <button class="btn btn-success btn-lg my-2 my-sm-0" type="submit" style="width: 100%;">Search</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col-xl-4">
+      {% if stories|count %}
+        <div class="card sidebar-element">
+          <h3 class="card-header">Stories</h3>
+          <div class="list-group list-group-flush">
+            {% for story in stories %}
+              <a href="{{ url_for('.index', story=story._id if story != selected_story else None) }}" class="list-group-item list-group-item-action flex-column align-items-start feature-item {{ 'active' if story == selected_story}}">
+                <p class="mb-0">{{ story.title  }} ({{ story.tweets|count|humanize('intword') }})</p>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+    <div class="col-xl-8">
+            {{ m.render_tweets(tweets) }}
+    </div>
+  </div>
+
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+{% endblock content%}

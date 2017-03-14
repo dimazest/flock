@@ -1,3 +1,4 @@
+import base64
 import logging
 import os
 
@@ -26,6 +27,8 @@ class Config:
                 for k, v in sorted(ex.get_distinct_users().items())
             )
         )
+
+        self.options['SECRET_KEY'] = base64.b64encode(os.urandom(24)).decode('utf-8')
 
     def install(self):
         return ()
