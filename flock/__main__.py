@@ -54,12 +54,12 @@ def initdb(session):
 
     model.metadata.create_all(tables=tables)
 
-    for index in model.indexes:
-        try:
-            index.create(session.bind)
-        except ProgrammingError:
-            # XXX: log error
-            pass
+    # for index in model.indexes:
+    #     try:
+    #         index.create(session.bind)
+    #     except ProgrammingError:
+    #         # XXX: log error
+    #         pass
 
 
 @cli.command()

@@ -56,11 +56,13 @@ feature_scores = sa.Table(
 class Tweet(Base):
     __tablename__ = 'tweet'
     __table_args__ = (
-        sa.Index('idx_tweet_created_at_tweet_id', 'created_at', 'tweet_id'),
+        sa.Index('ix_tweet_created_at_tweet_id', 'created_at', 'tweet_id'),
+        sa.Index('ix_tweet_features', 'features', postgresql_using='gin'),
+        sa.Index('ix_tweet_collection_created_at_tweet_id', 'collection', 'created_at', 'tweet_id'),
     )
 
     tweet_id = sa.Column(sa.BigInteger, nullable=False, primary_key=True)
-    collection = sa.Column(sa.String, nullable=False, primary_key=True)
+    collection = sa.Column(sa.String, nullable=False, primary_key=True, index=True)
 
     # tweet = Column(pg.JSONB, nullable=False)
     text = sa.Column(sa.UnicodeText)
@@ -142,11 +144,11 @@ tweet_cluster = sa.Table(
 
 
 indexes = [
-    sa.Index(
-        'idx_tweet_features',
-        Tweet.features,
-        postgresql_using='gin',
-    ),
+    # sa.Index(
+    #     'idx_tweet_features',
+    #     Tweet.features,
+    #     postgresql_using='gin',
+    # ),
 
 #     sa.Index(
 #         'idx_tweet_features_screen_names',
