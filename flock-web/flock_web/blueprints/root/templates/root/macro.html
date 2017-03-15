@@ -1,6 +1,6 @@
-{% macro render_tweets(tweets, topic=None, show_images=False, relevance_judgments=None) %}
+{% macro render_tweets(tweets, topic=None, show_images=False, relevance_judgments=None, show_alert=True) %}
 
-  {% if not tweets %}
+  {% if show_alert and not tweets %}
     <div class="alert alert-danger" role="alert">
       <h4 class="mb=0">Nothing has been found!</h4>
     </div>
