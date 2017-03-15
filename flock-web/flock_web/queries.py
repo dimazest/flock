@@ -43,7 +43,7 @@ def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=Tr
     tweets = (
         tweets
         .filter(*feature_filter_args)
-        # # .filter(model.Tweet.features['filter', 'is_retweet'].astext == 'false' )
+        .filter(model.Tweet.features['filter', 'is_retweet'].astext == 'false' )
         # # .filter(model.Tweet.representative == None)
     )
 
