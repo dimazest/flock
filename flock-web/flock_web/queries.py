@@ -21,7 +21,7 @@ def build_feature_filter(filter_args):
     return feature_filter_args
 
 
-def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=True, story=None, cluster=None, clustered_selection=None, count=False):
+def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=True, story=None, cluster=None, clustered_selection_id=None, count=False):
     feature_filter_args = build_feature_filter(filter_args)
 
     tweets = db.session.query(model.Tweet)
@@ -58,14 +58,14 @@ def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=Tr
             .order_by(None).order_by(ts.c.rank)
         )
     elif cluster is not None:
-        assert clustered_selection
+        assert clustered_selection_id
 
         tweets = (
             tweets
             .join(model.tweet_cluster)
             .filter(
                 model.tweet_cluster.c.label == cluster,
-                model.tweet_cluster.c._clustered_selection_id == clustered_selection._id,
+                model.tweet_cluster.c._clustered_selection_id == clustered_selection_id,
             )
         )
 
@@ -94,7 +94,7 @@ def build_cluster_query(clustered_selection_id):
     )
 
 
-def stats_for_feature_query(feature_name, query, collection, filter_, clustered_selection, cluster, filter_args):
+def stats_for_feature_query(feature_name, query, collection, filter_, clustered_selection_id, cluster, filter_args):
     feature_filter_args = build_feature_filter(filter_args)
 
     if feature_filter_args or query:
@@ -126,7 +126,7 @@ def stats_for_feature_query(feature_name, query, collection, filter_, clustered_
                         [
                             model.Tweet.tweet_id == model.tweet_cluster.c.tweet_id,
                             model.Tweet.collection == model.tweet_cluster.c.collection,
-                            model.tweet_cluster.c._clustered_selection_id == clustered_selection._id,
+                            model.tweet_cluster.c._clustered_selection_id == clustered_selection_id,
                             model.tweet_cluster.c.label == cluster,
                         ]
                         if cluster else []

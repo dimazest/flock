@@ -50,11 +50,12 @@ def pull_collection(endpoint, values):
         'filter_args': g.filter_args,
     }
 
-    g.clustered_selection = db.session.query(model.ClusteredSelection).filter_by(celery_status='completed', **g.selection_args).one_or_none()
+    clustered_selection = db.session.query(model.ClusteredSelection).filter_by(celery_status='completed', **g.selection_args).one_or_none()
+    g.clustered_selection_id = None if clustered_selection is None else clustered_selection._id
 
     g.cluster = request.args.get('cluster')
     if g.cluster:
-        assert g.clustered_selection is not None
+        assert g.clustered_selection_id is not None
 
 
     topic_id = request.args.get('topic', None, type=int)
@@ -114,7 +115,7 @@ def tweets():
                 'filter_': g.filter,
                 'filter_args': g.filter_args,
                 'cluster': g.cluster,
-                'clustered_selection': g.clustered_selection,
+                'clustered_selection_id': g.clustered_selection_id,
                 'count': count
             },
         ) for count in (False, True)
@@ -127,8 +128,8 @@ def tweets():
     #     url_maker=url_for_other_page,
     # )
 
-    if g.clustered_selection:
-        clusters = q.build_cluster_query(g.clustered_selection._id)
+    if g.clustered_selection_id:
+        clusters = q.build_cluster_query(g.clustered_selection_id)
 
     else:
         clusters = None
@@ -147,7 +148,7 @@ def tweets():
                     'query': g.query,
                     'collection': g.collection,
                     'filter_': g.filter,
-                    'clustered_selection': g.clustered_selection,
+                    'clustered_selection_id': g.clustered_selection_id,
                     'cluster': g.cluster,
                 },
             ),
