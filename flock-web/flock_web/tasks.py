@@ -64,7 +64,11 @@ def cluster_selection(self, selection_args):
 
     with flask_app.app_context():
 
-        clustered_selection = model.ClusteredSelection(celery_id=self.request.id, celery_status='started', **selection_args)
+        update_state(1, 3, status='Started.')
+
+        filter_ = selection_args.pop('filter', None)
+
+        clustered_selection = model.ClusteredSelection(celery_id=self.request.id, celery_status='started', filter=filter_, **selection_args)
         db.session.add(clustered_selection)
         try:
             db.session.commit()
@@ -73,9 +77,10 @@ def cluster_selection(self, selection_args):
             logger.info('A duplicate task.')
             return {'current': 1, 'total': 1, 'status': 'A duplicate task.'}
 
-        update_state(1, 3, status='Started.')
 
-        tweets, tweet_count, feature_filter_args = q.build_tweet_query(possibly_limit=False, **selection_args)
+        update_state(2, 3, status='Started.')
+
+        tweets = q.build_tweet_query(possibly_limit=False, filter_=filter_, **selection_args)
 
         # doc2vec_model = Doc2Vec(
         #     size=100,
@@ -174,3 +179,21 @@ def stats_for_feature(**query_kwargs):
         return db.session.query(
             q.stats_for_feature_query(**query_kwargs).limit(12).alias()
         ).all()
+
+
+@celery.task
+def tweets(count=False, **query_kwargs):
+    with flask_app.app_context():
+        result = q.build_tweet_query(count=count, **query_kwargs)
+
+        if count:
+            return result
+        else:
+            return [
+                {
+                    'tweet_id': t.tweet_id,
+                    'features': t.features,
+                    'created_at': t.created_at,
+                }
+                for t in result
+            ]

@@ -142,6 +142,7 @@
            data: {
                selection_args: '{{ selection_args|safe }}',
                from_url: '{{ restricted_url('.tweets')|safe }}',
+               csrf_token: '{{ csrf_token() }}',
            },
            success: function(data, status, request) {
                var status_url = request.getResponseHeader('Location');
@@ -164,11 +165,13 @@
                var progress = data['info']['current'] / data['info']['total'] * 100;
                $('#clustering_progress').attr('style', 'width:' + progress + '%;');
                $('#clustering_progress').html(data['info']['status']);
-
            }
            else if (data['state'] == 'SUCCESS') {
                $('#clustering_progress_container').hide();
                $('#clusters').html(data['cluster_html_snippet'])
+               return;
+           } else if (data['state'] == 'FAILURE') {
+               alert('Clustering error.')
                return;
            }
            setTimeout(function(){update_progress(status_url);}, 2000);

@@ -50,11 +50,12 @@ def pull_collection(endpoint, values):
         'filter_args': g.filter_args,
     }
 
-    g.clustered_selection = db.session.query(model.ClusteredSelection).filter_by(celery_status='completed', **g.selection_args).one_or_none()
+    clustered_selection = db.session.query(model.ClusteredSelection).filter_by(celery_status='completed', **g.selection_args).one_or_none()
+    g.clustered_selection_id = None if clustered_selection is None else clustered_selection._id
 
     g.cluster = request.args.get('cluster')
     if g.cluster:
-        assert g.clustered_selection is not None
+        assert g.clustered_selection_id is not None
 
 
     topic_id = request.args.get('topic', None, type=int)
@@ -62,6 +63,7 @@ def pull_collection(endpoint, values):
         g.topic = db.session.query(fw_model.Topic).get(topic_id)
     else:
         g.topic = None
+
 
 @bp_root.route('/')
 @flask_login.login_required
@@ -104,7 +106,20 @@ def tweets():
     page_num = request.args.get('_page', 1, type=int)
     items_per_page = request.args.get('_items_per_page', 100, type=int)
 
-    tweets, tweet_count, feature_filter_args = q.build_tweet_query(g.collection, g.query, g.filter, g.filter_args, cluster=g.cluster, clustered_selection=g.clustered_selection)
+    tweets, tweet_count = (
+        g.celery.send_task(
+            'flock_web.tasks.tweets',
+            kwargs={
+                'collection': g.collection,
+                'query': g.query,
+                'filter_': g.filter,
+                'filter_args': g.filter_args,
+                'cluster': g.cluster,
+                'clustered_selection_id': g.clustered_selection_id,
+                'count': count
+            },
+        ) for count in (False, True)
+    )
 
     # page = SqlalchemyOrmPage(
     #     tweets,
@@ -113,8 +128,8 @@ def tweets():
     #     url_maker=url_for_other_page,
     # )
 
-    if g.clustered_selection:
-        clusters = q.build_cluster_query(g.clustered_selection._id)
+    if g.clustered_selection_id:
+        clusters = q.build_cluster_query(g.clustered_selection_id)
 
     else:
         clusters = None
@@ -129,11 +144,11 @@ def tweets():
                 'flock_web.tasks.stats_for_feature',
                 kwargs={
                     'feature_name': f,
-                    'feature_filter_args': feature_filter_args,
+                    'filter_args': g.filter_args,
                     'query': g.query,
                     'collection': g.collection,
                     'filter_': g.filter,
-                    'clustered_selection': g.clustered_selection,
+                    'clustered_selection_id': g.clustered_selection_id,
                     'cluster': g.cluster,
                 },
             ),
@@ -144,8 +159,8 @@ def tweets():
 
     return render_template(
         'root/tweets.html',
-        tweets=tweets.all(),
-        tweet_count=tweet_count,
+        tweets=tweets.get(),
+        tweet_count=tweet_count.get(),
         # page=page,
         stats=[(feature_name, t.get(), args) for feature_name, t, args in stat_tasks],
         query=g.query,
