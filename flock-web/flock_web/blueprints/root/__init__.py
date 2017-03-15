@@ -63,6 +63,7 @@ def pull_collection(endpoint, values):
     else:
         g.topic = None
 
+
 @bp_root.route('/')
 @flask_login.login_required
 def index():
@@ -104,7 +105,20 @@ def tweets():
     page_num = request.args.get('_page', 1, type=int)
     items_per_page = request.args.get('_items_per_page', 100, type=int)
 
-    tweets, tweet_count, feature_filter_args = q.build_tweet_query(g.collection, g.query, g.filter, g.filter_args, cluster=g.cluster, clustered_selection=g.clustered_selection)
+    tweets, tweet_count = (
+        g.celery.send_task(
+            'flock_web.tasks.tweets',
+            kwargs={
+                'collection': g.collection,
+                'query': g.query,
+                'filter_': g.filter,
+                'filter_args': g.filter_args,
+                'cluster': g.cluster,
+                'clustered_selection': g.clustered_selection,
+                'count': count
+            },
+        ) for count in (False, True)
+    )
 
     # page = SqlalchemyOrmPage(
     #     tweets,
@@ -129,7 +143,7 @@ def tweets():
                 'flock_web.tasks.stats_for_feature',
                 kwargs={
                     'feature_name': f,
-                    'feature_filter_args': feature_filter_args,
+                    'filter_args': g.filter_args,
                     'query': g.query,
                     'collection': g.collection,
                     'filter_': g.filter,
@@ -144,8 +158,8 @@ def tweets():
 
     return render_template(
         'root/tweets.html',
-        tweets=tweets.all(),
-        tweet_count=tweet_count,
+        tweets=tweets.get(),
+        tweet_count=tweet_count.get(),
         # page=page,
         stats=[(feature_name, t.get(), args) for feature_name, t, args in stat_tasks],
         query=g.query,

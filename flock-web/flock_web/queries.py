@@ -5,8 +5,7 @@ from flock import model
 from .app import db
 
 
-def build_tweet_query(collection, query, filter, filter_args, possibly_limit=True, story=None, cluster=None, clustered_selection=None):
-
+def build_feature_filter(filter_args):
     feature_filter_args = []
 
     positive_include = [(k, [v for v in vs if not v.startswith('-')]) for k, vs, in filter_args]
@@ -19,9 +18,15 @@ def build_tweet_query(collection, query, filter, filter_args, possibly_limit=Tru
     if negative_include:
         feature_filter_args.append(and_(*(not_(model.Tweet.features.contains({k: [v]})) for k, v in negative_include)))
 
+    return feature_filter_args
+
+
+def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=True, story=None, cluster=None, clustered_selection=None, count=False):
+    feature_filter_args = build_feature_filter(filter_args)
+
     tweets = db.session.query(model.Tweet)
 
-    if filter == 'none':
+    if filter_ == 'none':
         tweets = (
             tweets
             .filter(model.Tweet.collection == collection)
@@ -64,17 +69,16 @@ def build_tweet_query(collection, query, filter, filter_args, possibly_limit=Tru
             )
         )
 
-    if query or feature_filter_args:
-        tweet_count = tweets.count()
+    # if query or feature_filter_args:
+    if count:
+        return tweets.count()
 
-        tweets = tweets.order_by(model.Tweet.created_at, model.Tweet.tweet_id)
-    else:
-        tweet_count = None
+    tweets = tweets.order_by(model.Tweet.created_at, model.Tweet.tweet_id)
 
     if possibly_limit and story is None:
         tweets = tweets.limit(100)
 
-    return tweets, tweet_count, feature_filter_args
+    return tweets
 
 
 def build_cluster_query(clustered_selection_id):
@@ -90,7 +94,9 @@ def build_cluster_query(clustered_selection_id):
     )
 
 
-def stats_for_feature_query(feature_name, query, collection, filter_, clustered_selection, cluster, feature_filter_args=()):
+def stats_for_feature_query(feature_name, query, collection, filter_, clustered_selection, cluster, filter_args):
+    feature_filter_args = build_feature_filter(filter_args)
+
     if feature_filter_args or query:
         feature = text(
             'select collection, tweet_id, feature_value from tweet, jsonb_array_elements_text(tweet.features->:feature) as feature_value'

@@ -174,3 +174,21 @@ def stats_for_feature(**query_kwargs):
         return db.session.query(
             q.stats_for_feature_query(**query_kwargs).limit(12).alias()
         ).all()
+
+
+@celery.task
+def tweets(count=False, **query_kwargs):
+    with flask_app.app_context():
+        result = q.build_tweet_query(count=count, **query_kwargs)
+
+        if count:
+            return result
+        else:
+            return [
+                {
+                    'tweet_id': t.tweet_id,
+                    'features': t.features,
+                    'created_at': t.created_at,
+                }
+                for t in result
+            ]
