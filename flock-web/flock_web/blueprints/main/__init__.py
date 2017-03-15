@@ -222,6 +222,7 @@ def topics_json():
                 ('relevant_count', topic.judgment_count(1)),
                 ('irrelevant_count', topic.judgment_count(-1)),
                 ('queries', len(topic.queries)),
+                ('user', {'first_name': topic.user.first_name, 'last_name': topic.user.last_name}),
             ]
         )
         for topic in topics
