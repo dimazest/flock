@@ -139,6 +139,7 @@ def tweets():
 
     stat_tasks = [
         (
+            f_name,
             f_alias,
             g.celery.send_task(
                 'flock_web.tasks.stats_for_feature',
@@ -162,7 +163,7 @@ def tweets():
         tweets=tweets.get(),
         tweet_count=tweet_count.get(),
         # page=page,
-        stats=[(feature_name, t.get(), args) for feature_name, t, args in stat_tasks],
+        stats=[(f_name, f_alias, t.get(), args) for f_name, f_alias, t, args in stat_tasks],
         query=g.query,
         query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
         filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),

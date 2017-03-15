@@ -51,10 +51,10 @@
         {% endif %}
       </div>
 
-      {% for feature_name, features, active_features in stats %}
+      {% for feature_name, feature_alias, features, active_features in stats %}
         <div class="card sidebar-element">
           {# <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name=feature_name) }}">{{ feature_name }}</a></h3> #}
-          <h3 class="card-header">{{ feature_name }}</h3>
+          <h3 class="card-header">{{ feature_alias }}</h3>
           <div class="card-columns feature-stats-container">
             {% for feature, count in features  %}
               <div class="card">
