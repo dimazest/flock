@@ -25,13 +25,16 @@ bp_main = Blueprint(
 @flask_login.login_required
 def welcome():
 
-    size = func.count()
+    # size = func.count()
     collections = db.session.query(
         model.Tweet.collection,
-        size,
+        # size,
         # func.min(model.Tweet.created_at),
         # func.max(model.Tweet.created_at),
-    ).group_by(model.Tweet.collection).order_by(size.desc())
+    ).group_by(model.Tweet.collection).order_by(
+        model.Tweet.collection,
+        # size.desc()
+    )
 
 
     return render_template(
