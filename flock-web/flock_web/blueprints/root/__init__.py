@@ -139,11 +139,11 @@ def tweets():
 
     stat_tasks = [
         (
-            f,
+            f_alias,
             g.celery.send_task(
                 'flock_web.tasks.stats_for_feature',
                 kwargs={
-                    'feature_name': f,
+                    'feature_name': f_name,
                     'filter_args': g.filter_args,
                     'query': g.query,
                     'collection': g.collection,
@@ -152,9 +152,9 @@ def tweets():
                     'cluster': g.cluster,
                 },
             ),
-            request.args.getlist(f),
+            request.args.getlist(f_name),
         )
-        for f in ['screen_names', 'hashtags', 'user_mentions']
+        for f_name, f_alias in [('screen_names', 'Users'), ('hashtags', 'Hashtags'), ('user_mentions', 'User mentions')]
     ]
 
     return render_template(
