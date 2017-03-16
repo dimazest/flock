@@ -109,6 +109,7 @@ def stats_for_feature_query(feature_name, query, collection, filter_, clustered_
                     feature.c.collection == collection,
                     feature.c.collection == model.Tweet.collection,
                     feature.c.tweet_id == model.Tweet.tweet_id,
+                    model.Tweet.features['filter', 'is_retweet'].astext == 'false',
                     (
                         text(
                             "tweet.search_vector @@ to_tsquery('pg_catalog.english', :search_vector)"
