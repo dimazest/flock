@@ -78,96 +78,98 @@ def cluster_selection(self, selection_args):
             return {'current': 1, 'total': 1, 'status': 'A duplicate task.'}
 
 
-        update_state(2, 3, status='Started.')
 
         tweets = q.build_tweet_query(possibly_limit=False, filter_=filter_, **selection_args)
 
-        # doc2vec_model = Doc2Vec(
-        #     size=100,
-        #     sample=1e-5,
-        #     negative=15,
-        #     alpha=0.025,
-        #     min_alpha=0.025,
-        #     workers=8,
-        #     min_count=10,
-        # )
-
-        # EPOCH_NUM = 25
-        # TOTAL = 1 + EPOCH_NUM + 2
-
-        # update_state(1, TOTAL, step='Building vocabulary.')
-        # doc2vec_model.build_vocab(sentences(tweets))
-
-        # epochs = Epochs(doc2vec_model, lambda: sentences(tweets))
-
-        # for s in range(EPOCH_NUM):
-        #     next(epochs)
-        #     update_state(s + 1, TOTAL, status='Training word vectors.')
-
-        # doc2vec_model.docvecs.init_sims(replace=True)
-        # doc2vec_model.init_sims(replace=True)
-
-        # doctags = [doctag for doctag in doc2vec_model.docvecs.doctags.keys() if doctag.startswith('id:')]
-        # tweet_vectors = doc2vec_model.docvecs[doctags]
-
-        # update_state(1 + EPOCH_NUM + 1, TOTAL, status='Calculating nearest neighbors.')
-        # neigh = neighbors.NearestNeighbors(
-        #     metric='euclidean',
-        #     radius=0.9,
-        #     #algorithm='brute',
-        #     n_jobs=8,
-        # )
-
-        # neigh.fit(tweet_vectors)
-        # A = neigh.radius_neighbors_graph(mode='distance',)
-
-        # update_state(1 + EPOCH_NUM + 2, TOTAL, status='DBSCAN.')
-        # dbscan = cluster.DBSCAN(
-        #     min_samples=3,
-        #     metric='precomputed',
-        #     eps=0.8,
-        #     #     algorithm='kd_tree',
-        #     n_jobs=-1,
-        # )
-
-        # dbscan.fit(A)
-
         insert_stmt = pg.insert(model.tweet_cluster)
 
-        update_state(2, 3, status='Retrieving tweets.')
-        import random
-        for tweet in tweets:
-            db.session.execute(
-                insert_stmt.values(
-                    [
-                        {
-                            'tweet_id': tweet.tweet_id,
-                            'collection': selection_args['collection'],
-                            '_clustered_selection_id': clustered_selection._id,
-                            'label': random.choice('ABCDEFG'),
-                        }
-                    ]
+        if flask_app.config.get('MOCK_CLUSTERING'):
+            update_state(2, 3, status='Mocked clustering.')
+
+            import random
+            for tweet in tweets:
+                db.session.execute(
+                    insert_stmt.values(
+                        [
+                            {
+                                'tweet_id': tweet.tweet_id,
+                                'collection': selection_args['collection'],
+                                '_clustered_selection_id': clustered_selection._id,
+                                'label': random.choice('ABCDEFG'),
+                            }
+                        ]
+                    )
                 )
+
+        else:
+            doc2vec_model = Doc2Vec(
+                size=100,
+                sample=1e-5,
+                negative=15,
+                alpha=0.025,
+                min_alpha=0.025,
+                workers=8,
+                min_count=10,
             )
 
-        # for doctag, label in zip(doctags, dbscan.labels_):
-        #     tweet_id = int(doctag[3:])
+            EPOCH_NUM = 25
+            TOTAL = 1 + EPOCH_NUM + 2
 
-        #     db.session.execute(
-        #         insert_stmt.values(
-        #             [
-        #                 {
-        #                     'tweet_id': tweet_id,
-        #                     'collection': selection_args['collection'],
-        #                     '_clustered_selection_id': clustered_selection._id,
-        #                     'label': str(label),
-        #                 }
-        #             ]
-        #         )
-        #     )
+            update_state(1, TOTAL, step='Building vocabulary.')
+            doc2vec_model.build_vocab(sentences(tweets))
 
-        clustered_selection.celery_status = 'completed'
-        db.session.commit()
+            epochs = Epochs(doc2vec_model, lambda: sentences(tweets))
+
+            for s in range(EPOCH_NUM):
+                next(epochs)
+                update_state(s + 1, TOTAL, status='Training word vectors.')
+
+            doc2vec_model.docvecs.init_sims(replace=True)
+            doc2vec_model.init_sims(replace=True)
+
+            doctags = [doctag for doctag in doc2vec_model.docvecs.doctags.keys() if doctag.startswith('id:')]
+            tweet_vectors = doc2vec_model.docvecs[doctags]
+
+            update_state(1 + EPOCH_NUM + 1, TOTAL, status='Calculating nearest neighbors.')
+            neigh = neighbors.NearestNeighbors(
+                metric='euclidean',
+                radius=0.9,
+                algorithm='brute',
+                n_jobs=8,
+            )
+
+            neigh.fit(tweet_vectors)
+            A = neigh.radius_neighbors_graph(mode='distance',)
+
+            update_state(1 + EPOCH_NUM + 2, TOTAL, status='DBSCAN.')
+            dbscan = cluster.DBSCAN(
+                min_samples=3,
+                metric='precomputed',
+                eps=0.8,
+                #     algorithm='kd_tree',
+                n_jobs=-1,
+            )
+
+            dbscan.fit(A)
+
+            for doctag, label in zip(doctags, dbscan.labels_):
+                tweet_id = int(doctag[3:])
+
+                db.session.execute(
+                    insert_stmt.values(
+                        [
+                            {
+                                'tweet_id': tweet_id,
+                                'collection': selection_args['collection'],
+                                '_clustered_selection_id': clustered_selection._id,
+                                'label': str(label),
+                            }
+                        ]
+                    )
+                )
+
+                clustered_selection.celery_status = 'completed'
+                db.session.commit()
 
     # return {'current': 10, 'total': 10, 'status': 'Task completed!', 'total_labels': len(set(dbscan.labels_))}
     return {'current': 10, 'total': 10, 'status': 'Task completed!', 'total_labels': None}
