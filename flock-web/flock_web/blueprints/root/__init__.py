@@ -167,7 +167,7 @@ def tweets():
         for f_name, f_alias in [('screen_names', 'Users'), ('hashtags', 'Hashtags'), ('user_mentions', 'User mentions')]
     ]
 
-    return Response(
+    response = Response(
         stream_with_context(
             stream_template(
                 'root/tweets.html',
@@ -192,6 +192,10 @@ def tweets():
             )
         )
     )
+
+    response.headers['X-Accel-Buffering'] = 'no'
+
+    return response
 
 
 @bp_root.route('/tweets/<feature_name>')
