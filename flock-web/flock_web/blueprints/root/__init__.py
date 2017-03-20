@@ -1,6 +1,6 @@
 import json
 
-from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify
+from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, current_app, Response, stream_with_context
 import flask_login
 
 from sqlalchemy import func, select, Table, Column, Integer, String, sql
@@ -101,6 +101,14 @@ def index():
     )
 
 
+def stream_template(template_name, **context):
+    current_app.update_template_context(context)
+    t = current_app.jinja_env.get_template(template_name)
+    rv = t.stream(context)
+    rv.enable_buffering(5)
+    return rv
+
+
 @bp_root.route('/tweets')
 @flask_login.login_required
 def tweets():
@@ -159,26 +167,30 @@ def tweets():
         for f_name, f_alias in [('screen_names', 'Users'), ('hashtags', 'Hashtags'), ('user_mentions', 'User mentions')]
     ]
 
-    return render_template(
-        'root/tweets.html',
-        tweets=tweets.get(),
-        tweet_count=tweet_count.get(),
-        # page=page,
-        stats=[(f_name, f_alias, t.get(), args) for f_name, f_alias, t, args in stat_tasks],
-        query=g.query,
-        query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
-        filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
-        selection_args=json.dumps(g.selection_args),
-        selection_for_topic_args=json.dumps(selection_for_topic_args),
-        topics=flask_login.current_user.topics,
-        selected_filter=g.filter,
-        clusters=clusters,
-        selected_cluster=g.cluster,
-        collection=g.collection,
-        show_images=g.show_images,
-        endpoint='.tweets',
-        selected_topic=g.topic,
-        relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
+    return Response(
+        stream_with_context(
+            stream_template(
+                'root/tweets.html',
+                tweets=tweets,
+                tweet_count=tweet_count,
+                # page=page,
+                stats=list(stat_tasks),
+                query=g.query,
+                query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
+                filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
+                selection_args=json.dumps(g.selection_args),
+                selection_for_topic_args=json.dumps(selection_for_topic_args),
+                topics=flask_login.current_user.topics,
+                selected_filter=g.filter,
+                clusters=clusters,
+                selected_cluster=g.cluster,
+                collection=g.collection,
+                show_images=g.show_images,
+                endpoint='.tweets',
+                selected_topic=g.topic,
+                relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
+            )
+        )
     )
 
 

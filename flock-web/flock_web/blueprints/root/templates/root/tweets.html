@@ -7,10 +7,10 @@
 
     <div class="col-xl-4 col-md-6 bg-faded sidebar bd-links">
 
-      {% if tweet_count %}
+      {% if tweet_count.get() %}
         <p>
           {# There are {{ page.item_count|humanize('intcomma') }} tweets.   #}
-          There are {{ tweet_count|humanize('intcomma') }} tweets.
+          There are {{ tweet_count.get()|humanize('intcomma') }} tweets.
         </p>
       {% endif %}
 
@@ -56,7 +56,7 @@
           {# <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name=feature_name) }}">{{ feature_name }}</a></h3> #}
           <h3 class="card-header">{{ feature_alias }}</h3>
           <div class="card-columns feature-stats-container">
-            {% for feature, count in features  %}
+            {% for feature, count in features.get() %}
               <div class="card">
                 <div class="list-group list-group-flush">
                   <a class="list-group-item list-group-item-action flex-column align-items-start feature-stats-item feature-item {{ 'active' if feature in active_features}}" href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}, cluster=None)  }}">
@@ -78,7 +78,7 @@
     <main class="col-xl-8 offset-xl-4">
 
       {# {{ render_tweets(page.items) }} #}
-      {{ m.render_tweets(tweets, topic=selected_topic, show_images=show_images, relevance_judgments=relevance_judgments) }}
+      {{ m.render_tweets(tweets.get(), topic=selected_topic, show_images=show_images, relevance_judgments=relevance_judgments) }}
 
     </main>
 
