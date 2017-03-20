@@ -25,7 +25,7 @@ def runserver(filename):
 @cli.command()
 @click.option('--session', default='postgresql:///twitter', callback=create_session)
 def initdb(session):
-    metadata.create_all(tables=[o.__table__ for o in [model.User, model.Topic, model.TopicQuery, model.RelevanceJudgment]])
+    metadata.create_all(tables=[o.__table__ for o in [model.User, model.Topic, model.TopicQuery, model.RelevanceJudgment, model.TaskResult]])
 
 
 if __name__ == '__main__':

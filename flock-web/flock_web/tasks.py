@@ -1,9 +1,11 @@
 import os
 import logging
 import itertools
+import functools
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects import postgresql as pg
+from celery.result import AsyncResult
 
 from gensim.models.doc2vec import LabeledSentence, Doc2Vec
 from sklearn import cluster, preprocessing, neighbors, metrics
@@ -12,6 +14,7 @@ import hdbscan
 from flock_web.app import create_app, db
 from flock import model
 from flock_web import queries as q
+from flock_web import model as fw_model
 
 
 flask_app, celery = create_app(os.environ['FLOCK_CONFIG'], return_celery=True)
@@ -61,7 +64,6 @@ def cluster_selection(self, selection_args):
             }
         )
 
-
     with flask_app.app_context():
 
         update_state(1, 3, status='Started.')
@@ -76,8 +78,6 @@ def cluster_selection(self, selection_args):
             db.session.rollback()
             logger.info('A duplicate task.')
             return {'current': 1, 'total': 1, 'status': 'A duplicate task.'}
-
-
 
         tweets = q.build_tweet_query(possibly_limit=False, filter_=filter_, **selection_args)
 
@@ -175,27 +175,59 @@ def cluster_selection(self, selection_args):
     return {'current': 10, 'total': 10, 'status': 'Task completed!', 'total_labels': None}
 
 
-@celery.task
-def stats_for_feature(**query_kwargs):
-    with flask_app.app_context():
-        return db.session.query(
-            q.stats_for_feature_query(**query_kwargs).limit(12).alias()
-        ).all()
+def cached_task(func):
 
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        with flask_app.app_context():
 
-@celery.task
-def tweets(count=False, **query_kwargs):
-    with flask_app.app_context():
-        result = q.build_tweet_query(count=count, **query_kwargs)
+            task_result = fw_model.TaskResult(name=self.name, celery_id=self.request.id, celery_status='started', args=args, kwargs=kwargs)
+            db.session.add(task_result)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+                logger.info('A duplicate task.')
 
-        if count:
+                task_result = db.session.query(fw_model.TaskResult).filter_by(name=self.name, args=args, kwargs=kwargs).one()
+
+                if task_result.celery_status == 'completed':
+                    return tak_result.result
+
+            result = func(self, *args, **kwargs)
+
+            task_result.result = result
+            task_result.celery_status = 'competed'
+            task_result.celery_id = self.request.id
+
+            db.session.commit()
+
             return result
-        else:
-            return [
-                {
-                    'tweet_id': t.tweet_id,
-                    'features': t.features,
-                    'created_at': t.created_at,
-                }
-                for t in result
-            ]
+
+    return wrapper
+
+
+@celery.task(bind=True)
+@cached_task
+def stats_for_feature(self, **query_kwargs):
+    return db.session.query(
+        q.stats_for_feature_query(**query_kwargs).limit(12).alias()
+    ).all()
+
+
+@celery.task(bind=True)
+@cached_task
+def tweets(self, count=False, **query_kwargs):
+    result = q.build_tweet_query(count=count, **query_kwargs)
+
+    if count:
+        return result
+    else:
+        return [
+            {
+                'tweet_id': t.tweet_id,
+                'features': t.features,
+                'created_at': t.created_at.isoformat(),
+            }
+            for t in result
+        ]

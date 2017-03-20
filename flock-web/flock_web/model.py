@@ -74,3 +74,19 @@ class RelevanceJudgment(Base):
     )
 
     judgment = sa.Column(sa.Integer, nullable=False)
+
+
+class TaskResult(Base):
+    __tablename__ = 'task_result'
+    __table_args__ = (
+        sa.UniqueConstraint('name', 'args', 'kwargs'),
+    )
+
+    _id = sa.Column(sa.Integer, primary_key=True)
+    celery_id = sa.Column(sa.String, unique=True)
+    celery_status = sa.Column(sa.String)
+
+    name = sa.Column(sa.String, nullable=False)
+    args = sa.Column(pg.JSONB)
+    kwargs = sa.Column(pg.JSONB)
+    result = sa.Column(pg.JSONB)
