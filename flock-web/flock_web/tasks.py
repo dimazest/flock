@@ -192,12 +192,12 @@ def cached_task(func):
                 task_result = db.session.query(fw_model.TaskResult).filter_by(name=self.name, args=args, kwargs=kwargs).one()
 
                 if task_result.celery_status == 'completed':
-                    return tak_result.result
+                    return task_result.result
 
             result = func(self, *args, **kwargs)
 
             task_result.result = result
-            task_result.celery_status = 'competed'
+            task_result.celery_status = 'completed'
             task_result.celery_id = self.request.id
 
             db.session.commit()
