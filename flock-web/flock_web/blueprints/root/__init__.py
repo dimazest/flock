@@ -16,6 +16,7 @@ from flock_web.app import db, url_for_other_page
 import flock_web.queries  as q
 import flock_web.model as fw_model
 
+
 bp_root = Blueprint(
     'root', __name__,
     static_folder='static',
@@ -116,7 +117,7 @@ def tweets():
                 'filter_args': g.filter_args,
                 'cluster': g.cluster,
                 'clustered_selection_id': g.clustered_selection_id,
-                'count': count
+                'count': count,
             },
         ) for count in (False, True)
     )
