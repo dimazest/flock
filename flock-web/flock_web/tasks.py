@@ -209,10 +209,16 @@ def cached_task(func):
 
 @celery.task(bind=True)
 @cached_task
-def stats_for_feature(self, **query_kwargs):
-    return db.session.query(
-        q.stats_for_feature_query(**query_kwargs).limit(12).alias()
-    ).all()
+def stats_for_feature(self, feature_name, feature_alias, active_features, **query_kwargs):
+    return {
+        'data': db.session.query(
+            q.stats_for_feature_query(feature_name=feature_name, **query_kwargs).limit(12).alias()
+        ).all(),
+        'task_name': self.name,
+        'feature_name': feature_name,
+        'feature_alias': feature_alias,
+        'active_features': active_features,
+    }
 
 
 @celery.task(bind=True)
@@ -221,13 +227,21 @@ def tweets(self, count=False, **query_kwargs):
     result = q.build_tweet_query(count=count, **query_kwargs)
 
     if count:
-        return result
+        return {
+            'data': result,
+            'count': count,
+            'task_name': self.name,
+        }
     else:
-        return [
-            {
-                'tweet_id': t.tweet_id,
-                'features': t.features,
-                'created_at': t.created_at.isoformat(),
-            }
-            for t in result
-        ]
+        return {
+            'data': [
+                {
+                    'tweet_id': t.tweet_id,
+                    'features': t.features,
+                    'created_at': t.created_at.isoformat(),
+                }
+                for t in result
+            ],
+            'count': count,
+            'task_name': self.name,
+        }

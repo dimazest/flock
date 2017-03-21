@@ -1,6 +1,6 @@
 import json
 
-from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, current_app, Response, stream_with_context
+from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, current_app, Response, stream_with_context, get_template_attribute
 import flask_login
 
 from sqlalchemy import func, select, Table, Column, Integer, String, sql
@@ -115,7 +115,7 @@ def tweets():
     page_num = request.args.get('_page', 1, type=int)
     items_per_page = request.args.get('_items_per_page', 100, type=int)
 
-    tweets, tweet_count = (
+    tweet_task, tweet_count = (
         g.celery.send_task(
             'flock_web.tasks.tweets',
             kwargs={
@@ -149,11 +149,12 @@ def tweets():
     stat_tasks = [
         (
             f_name,
-            f_alias,
             g.celery.send_task(
                 'flock_web.tasks.stats_for_feature',
                 kwargs={
                     'feature_name': f_name,
+                    'feature_alias': f_alias,
+                    'active_features': request.args.getlist(f_name),
                     'filter_args': g.filter_args,
                     'query': g.query,
                     'collection': g.collection,
@@ -162,7 +163,6 @@ def tweets():
                     'cluster': g.cluster,
                 },
             ),
-            request.args.getlist(f_name),
         )
         for f_name, f_alias in [('screen_names', 'Users'), ('hashtags', 'Hashtags'), ('user_mentions', 'User mentions')]
     ]
@@ -171,10 +171,10 @@ def tweets():
         stream_with_context(
             stream_template(
                 'root/tweets.html',
-                tweets=tweets,
+                tweet_task=tweet_task,
                 tweet_count=tweet_count,
                 # page=page,
-                stats=list(stat_tasks),
+                stats=stat_tasks,
                 query=g.query,
                 query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
                 filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
@@ -188,7 +188,7 @@ def tweets():
                 show_images=g.show_images,
                 endpoint='.tweets',
                 selected_topic=g.topic,
-                relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
+                # relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
             )
         )
     )
@@ -364,3 +364,40 @@ def cluster_status(task_id):
     response['cluster_html_snippet'] = cluster_html_snippet
 
     return jsonify(response)
+
+
+@bp_root.route('/tasks/<task_id>')
+@flask_login.login_required
+def task_result(task_id):
+    task = g.celery.AsyncResult(task_id)
+
+    result = {'state': task.state}
+
+    if task.successful():
+
+        if task.result.get('task_name') == 'flock_web.tasks.tweets':
+
+            if task.result['count']:
+                render_tweet_count = get_template_attribute('root/macro.html', 'render_tweet_count')
+                result['html'] = render_tweet_count(task.result['data'])
+            else:
+                render_tweets = get_template_attribute('root/macro.html', 'render_tweets')
+
+                result['html'] = render_tweets(
+                    topic=g.topic,
+                    tweets=task.result['data'],
+                    show_images=g.show_images,
+                    relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
+                )
+        elif task.result.get('task_name') == 'flock_web.tasks.stats_for_feature':
+            render_stats = get_template_attribute('root/macro.html', 'render_stats')
+
+            result['data'] = task.result
+            result['html'] = render_stats(
+                feature_name=task.result['feature_name'],
+                feature_alias=task.result['feature_alias'],
+                features=task.result['data'],
+                active_features=task.result['active_features'],
+            )
+
+    return jsonify(result)

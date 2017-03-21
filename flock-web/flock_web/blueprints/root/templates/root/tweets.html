@@ -7,12 +7,7 @@
 
     <div class="col-xl-4 col-md-6 bg-faded sidebar bd-links">
 
-      {% if tweet_count.get() %}
-        <p>
-          {# There are {{ page.item_count|humanize('intcomma') }} tweets.   #}
-          There are {{ tweet_count.get()|humanize('intcomma') }} tweets.
-        </p>
-      {% endif %}
+        <div id="tweet_count"></div>
 
       <form class="sidebar-element" action="{{ url_for('.tweets') }}" method="get">
           <div class="row" id="sidebar-search-box">
@@ -51,89 +46,68 @@
         {% endif %}
       </div>
 
-      {% for feature_name, feature_alias, features, active_features in stats %}
-        <div class="card sidebar-element">
-          {# <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name=feature_name) }}">{{ feature_name }}</a></h3> #}
-          <h3 class="card-header">{{ feature_alias }}</h3>
-          <div class="card-columns feature-stats-container">
-            {% for feature, count in features.get() %}
-              <div class="card">
-                <div class="list-group list-group-flush">
-                  <a class="list-group-item list-group-item-action flex-column align-items-start feature-stats-item feature-item {{ 'active' if feature in active_features}}" href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}, cluster=None)  }}">
-                    {{ feature }} ({{ count|humanize('intword') }})
-                  </a>
-                </div>
-              </div>
-
-              {# <a class="btn btn-outline-danger btn-sm" href="{{ restricted_url('.tweets', include={feature_name: '-{}'.format(feature)}, exclude={feature_name: feature}) }}" role="button"> #}
-              {#   <i class="fa fa-times" aria-hidden="true"></i> #}
-              {# </a> #}
-            {% endfor %}
-          </div>
-        </div>
-      {% endfor %}
+      <div id="screen_names_stats"></div>
+      <div id="hashtags_stats"></div>
+      <div id="user_mentions_stats"></div>
 
     </div>
 
     <main class="col-xl-8 offset-xl-4">
-
-      {# {{ render_tweets(page.items) }} #}
-      {{ m.render_tweets(tweets.get(), topic=selected_topic, show_images=show_images, relevance_judgments=relevance_judgments) }}
-
+        <div id="tweets"></div>
     </main>
 
   </div>
 
-{% endblock content %}
+  {% endblock content %}
 
-{% block navbar_extra %}
+  {% block navbar_extra %}
 
   <form class="form-inline" action="{{ url_for('.tweets') }}" method="get">
 
-    <div class="form-check mb-2 mr-5 mb-sm-0">
-      <label class="form-check-hide-images">
-        <input class="form-check-input" type="checkbox" name="show_images" {% if show_images %}checked{% endif %} onchange="this.form.submit()">
-        <span class="navbar-text">Show images</span>
-      </label>
-    </div>
+      <div class="form-check mb-2 mr-5 mb-sm-0">
+          <label class="form-check-hide-images">
+              <input class="form-check-input" type="checkbox" name="show_images" {% if show_images %}checked{% endif %} onchange="this.form.submit()">
+              <span class="navbar-text">Show images</span>
+          </label>
+      </div>
 
-    <div class="input-group mb-2 mb-sm-0 mr-5">
-      <label class="mr-sm-2 navbar-text" for="inlineFilterSelect">Filter</label>
-      <select name="filter" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFilterSelect" onchange="this.form.submit()">
-        {% for filter_value, filter_option in [('none', 'None'), ('pmi', 'PMI')] %}
-          <option value="{{ filter_value }}" {% if filter_value == selected_filter %}selected{% endif %}>{{ filter_option }}</option>
-        {% endfor %}
-      </select>
-    </div>
+      <div class="input-group mb-2 mb-sm-0 mr-5">
+          <label class="mr-sm-2 navbar-text" for="inlineFilterSelect">Filter</label>
+          <select name="filter" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFilterSelect" onchange="this.form.submit()">
+              {% for filter_value, filter_option in [('none', 'None'), ('pmi', 'PMI')] %}
+              <option value="{{ filter_value }}" {% if filter_value == selected_filter %}selected{% endif %}>{{ filter_option }}</option>
+              {% endfor %}
+          </select>
+      </div>
 
-    {% for k, v in filter_form_hidden_fields %}
+      {% for k, v in filter_form_hidden_fields %}
       <input type="hidden" name="{{ k }}" value="{{ v }}">
-    {% endfor %}
+      {% endfor %}
   </form>
 
   <form class="form-inline" action="{{ url_for('main.topic_post') }}" method="post" >
-    <label class="mr-sm-2 navbar-text" for="inlineTopicSelect">Topic</label>
-    <select name="topic_id" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineTopicSelect" onchange="this.form.submit()">
-      <option value="__none__" {% if not topic %}selected{% endif %}></option>
-      <option value="-1" style="font-weight: bold;">New ({{ g.query }})</option>
-      {% for topic in topics %}
-        <option value="{{ topic.id }}" {% if topic.id == selected_topic.id %}selected{% endif %}>{{ topic.title }}</option>
-      {% endfor %}
+      <label class="mr-sm-2 navbar-text" for="inlineTopicSelect">Topic</label>
+      <select name="topic_id" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineTopicSelect" onchange="this.form.submit()">
+          <option value="__none__" {% if not topic %}selected{% endif %}></option>
+          <option value="-1" style="font-weight: bold;">New ({{ g.query }})</option>
+          {% for topic in topics %}
+          <option value="{{ topic.id }}" {% if topic.id == selected_topic.id %}selected{% endif %}>{{ topic.title }}</option>
+          {% endfor %}
+      </select>
+
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    </select>
+      <input type="hidden" name="selection_args" value="{{  selection_for_topic_args }}">
+      <input type="hidden" name="return_to_collection" value="{{ collection }}">
 
-    <input type="hidden" name="selection_args" value="{{  selection_for_topic_args }}">
-    <input type="hidden" name="return_to_collection" value="{{ collection }}">
-
-    <button type="submit" class="btn btn-success my-2 my-sm-0 mr-5">Assign to a topic</button>
+      <button type="submit" class="btn btn-success my-2 my-sm-0 mr-5">Assign to a topic</button>
   </form>
 
   {% block navbar_extra_root %}
   {% endblock navbar_extra_root %}
 
-{% endblock navbar_extra %}
+  {% endblock navbar_extra %}
 
-{% block extra_scripts %}
+  {% block extra_scripts %}
   <script>
    function start_clustering_task() {
        $.post({
@@ -186,16 +160,55 @@
        }
    }
 
+   function get_task(destination, url, request_data, load_tweets, delay=300){
+       $.get({
+           url: url,
+           data: request_data,
+           success: function(data, status, request){
+               if (data['state'] == 'SUCCESS'){
+                   $(destination).html(data['html']);
+                   if (load_tweets && (typeof twttr !== 'undefined')) {
+                       twttr.widgets.load();
+                   }
+               } else {
+                   setTimeout(function(){get_task(destination, url, request_data, load_tweets, delay*1.2)}, delay);
+               }
+           }
+       });
+   }
+
    $(document).ready(function() {
        $('#start-clustering-task').click(start_clustering_task);
 
        {# reset_tabindex(); #}
 
+       get_task(
+           '#tweets',
+           '{{ url_for('.task_result', task_id=tweet_task.id) }}',
+           {show_images: '{{ 'on' if show_images else '' }}', topic: '{{ selected_topic.id or ''}}'},
+           true
+       );
+
+       {% for f_name, task in stats %}
+       get_task(
+           '#{{ f_name }}_stats',
+           '{{ restricted_url('.task_result', task_id=task.id)|safe }}',
+           {},
+           false
+       );
+       {% endfor %}
+       get_task(
+           '#tweet_count',
+           '{{ url_for('.task_result', task_id=tweet_count.id) }}',
+           {},
+           false
+       )
+
        $('.btn-group[data-toggle=buttons] .btn').keydown(function(e) {
            if (e.which == 13 || e.which == 32) {
                $(this).click()
            }
-       })
+       });
    });
 
    function send_relevance(element, tweet_id, topic_id, judgment){
@@ -207,7 +220,7 @@
                tweet_id: tweet_id,
                topic_id: topic_id,
                judgment: judgment,
-               selection_args: '{{  selection_for_topic_args|safe }}'
+               selection_args: '{{ selection_for_topic_args|safe }}'
            },
            success: function(data, status, request) {
                console.log('Everything is fine');
