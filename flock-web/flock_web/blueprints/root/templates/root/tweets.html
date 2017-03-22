@@ -85,7 +85,13 @@
         {% for feature_name, features, active_features in stats %}
           <div class="card">
             {# <h3 class="card-header"><a href="{{ restricted_url('.features', feature_name=feature_name) }}">{{ feature_name }}</a></h3> #}
-            <h3 class="card-header">{{ feature_name }}</h3>
+            <div class="card-header">
+                <form class="form-inline" action="http://localhost:5000/hour/tweets" method="get">
+                  {{ feature_name }}
+                  <input class="mr-1" type="text" id="{{feature_name}}" name="{{feature_name}}">
+                  <input class="btn btn-outline-info btn-sm" type="submit" value="Submit"></input>
+                </form>
+            </div>
             <div class="card-columns feature-stats-container">
               {% for feature, count in features  %}
                 <div class="card feature-stats list-group-item list-group-item-action flex-column align-items-start {{ 'active' if feature in active_features}}">
