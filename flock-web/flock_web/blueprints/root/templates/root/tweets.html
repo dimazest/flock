@@ -53,7 +53,9 @@
     </div>
 
     <main class="col-xl-8 offset-xl-4">
-        <div id="tweets"></div>
+        <div id="tweets">
+            <h1>Loading...</h1>
+        </div>
     </main>
 
   </div>
@@ -235,7 +237,7 @@
 
    }
 
-   window.paceOptions = {
+   paceOptions = {
        elements: {
            selectors: ['#tweet_count p', '#screen_names_stats div', '#hashtags_stats div', '#user_mentions_stats div', 'iframe.twitter-tweet-rendered,#tweets .alert']
        }
