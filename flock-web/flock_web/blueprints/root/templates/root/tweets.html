@@ -1,6 +1,8 @@
 {% extends "root/base.html" %}
 {% import "root/macro.html" as m %}
 
+{% block title %} {{ query }} | {{ config.COLLECTION_ALIAS.get(collection, collection)}} {% endblock %}
+
 {% block content %}
 
   <div class="row">
