@@ -7,7 +7,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Collection</th>
+      {# <th>Collection</th> #}
       {# <th>Size</th> #}
       {# <th>From</th> #}
       {# <th>Duration</th> #}
@@ -17,7 +17,7 @@
     {%- for (collection, ) in collections %}
       <tr>
         <td>
-          <a href="{{ url_for('root.index', collection=collection) }}">{{ collection }}</a>
+          <a href="{{ url_for('root.index', collection=collection) }}">{{ config.COLLECTION_ALIAS.get(collection, collection) }}</a>
         </td>
         {# <td>{{ size|humanize('intcomma') }}</td> #}
         {# <td>{{ earliest|humanize('naturaldate') }}</td> #}
