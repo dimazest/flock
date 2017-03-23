@@ -74,9 +74,9 @@
       </div>
 
       <div class="input-group mb-2 mb-sm-0 mr-5">
-          <label class="mr-sm-2 navbar-text" for="inlineFilterSelect">Filter</label>
+          <label class="mr-sm-2 navbar-text" for="inlineFilterSelect">Filtering</label>
           <select name="filter" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFilterSelect" onchange="this.form.submit()">
-              {% for filter_value, filter_option in [('none', 'None'), ('pmi', 'PMI')] %}
+              {% for filter_value, filter_option in [('none', 'Disabled'), ('pmi', 'Enabled')] %}
               <option value="{{ filter_value }}" {% if filter_value == selected_filter %}selected{% endif %}>{{ filter_option }}</option>
               {% endfor %}
           </select>
@@ -88,6 +88,7 @@
   </form>
 
   <form class="form-inline" action="{{ url_for('main.topic_post') }}" method="post" >
+
       <label class="mr-sm-2 navbar-text" for="inlineTopicSelect">Topic</label>
       <select name="topic_id" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineTopicSelect" onchange="this.form.submit()">
           <option value="__none__" {% if not topic %}selected{% endif %}></option>
@@ -101,7 +102,7 @@
       <input type="hidden" name="selection_args" value="{{  selection_for_topic_args }}">
       <input type="hidden" name="return_to_collection" value="{{ collection }}">
 
-      <button type="submit" class="btn btn-success my-2 my-sm-0 mr-5">Assign to a topic</button>
+      {# <button type="submit" class="btn btn-success my-2 my-sm-0 mr-5">Assign to a topic</button> #}
   </form>
 
   {% block navbar_extra_root %}
