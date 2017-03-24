@@ -380,12 +380,19 @@ def task_result(task_id):
         elif task.result.get('task_name') == 'flock_web.tasks.stats_for_feature':
             render_stats = get_template_attribute('root/macro.html', 'render_stats')
 
+            features = task.result['data']
+            selected_feature_names = set(name for name, _ in features)
+            active_feature_names = set(task.result['active_features'])
+
+            missing_feature_names = active_feature_names - selected_feature_names
+            features = features + [(name, 0) for name in missing_feature_names]
+
             result['data'] = task.result
             result['html'] = render_stats(
                 feature_name=task.result['feature_name'],
                 feature_alias=task.result['feature_alias'],
-                features=task.result['data'],
-                active_features=task.result['active_features'],
+                features=features,
+                active_feature_names=active_feature_names,
                 collection=g.collection,
                 hidden_fields=[(k, v) for k, v in request.args.items(multi=True) if not k.startswith('_')],
             )

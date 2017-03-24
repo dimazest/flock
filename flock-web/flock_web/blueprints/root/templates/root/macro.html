@@ -61,7 +61,7 @@
 {% endmacro %}
 
 
-{% macro render_stats(feature_name, feature_alias, features, active_features, collection, hidden_fields) %}
+{% macro render_stats(feature_name, feature_alias, features, active_feature_names, collection, hidden_fields) %}
   <div class="card sidebar-element">
     <div class="card-header container">
       <div class="row justify-content-between">
@@ -85,7 +85,7 @@
       {% for feature, count in features %}
         <div class="card">
           <div class="list-group list-group-flush">
-            <a class="list-group-item list-group-item-action flex-column align-items-start feature-stats-item feature-item {{ 'active' if feature in active_features}}" href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_features else {}, exclude={} if feature not in active_features else {feature_name: feature}, cluster=None)  }}">
+            <a class="list-group-item list-group-item-action flex-column align-items-start feature-stats-item feature-item {{ 'active' if feature in active_feature_names}}" href="{{ restricted_url('.tweets', include={feature_name: feature} if feature not in active_feature_names else {}, exclude={} if feature not in active_features else {feature_name: feature}, cluster=None)  }}">
               {{ feature }} ({{ count|humanize('intcomma') }})
             </a>
           </div>
