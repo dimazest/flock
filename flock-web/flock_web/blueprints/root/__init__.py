@@ -386,6 +386,8 @@ def task_result(task_id):
                 feature_alias=task.result['feature_alias'],
                 features=task.result['data'],
                 active_features=task.result['active_features'],
+                collection=g.collection,
+                hidden_fields=[(k, v) for k, v in request.args.items(multi=True) if not k.startswith('_')],
             )
 
     return jsonify(result)
