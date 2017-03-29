@@ -74,11 +74,11 @@
           <li class="nav-item mr-5">
             <a class="nav-link btn btn-info" href="{{ url_for('main.topics')  }}">Topics</a>
           </li>
-          <li class="nav-item mr-3 navbar-text">
-            {# <a class="nav-link" href="{{ url_for('main.topics') }}"> #}
+          <li class="nav-item mr-3">
+            <a class="nav-link" href="{{ url_for('main.user') }}">
             <i class="fa fa-user" aria-hidden="true"></i>
             {{ current_user.first_name }} {{ current_user.last_name }}
-            {# </a> #}
+            </a>
           </li>
           <li class="nav-item">
             <a class="nav-link btn btn-outline-danger" href="{{ url_for('main.logout')  }}">Logout</a>

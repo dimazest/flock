@@ -263,3 +263,13 @@ def relevance():
     db.session.commit()
 
     return jsonify(result)
+
+
+@bp_main.route('/user')
+@flask_login.login_required
+def user():
+    return render_template(
+        'main/user.html',
+        actions=db.session.query(fw_model.UserAction).filter_by(user=flask_login.current_user).order_by(fw_model.UserAction.timestamp)
+    )
+

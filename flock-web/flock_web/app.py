@@ -11,13 +11,13 @@ from flask_iniconfig import INIConfig
 from flask_sqlalchemy import get_debug_queries
 from flask_humanize import Humanize
 from flask_debugtoolbar import DebugToolbarExtension
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_wtf.csrf import CSRFProtect
 
 from werkzeug.datastructures import MultiDict
 
 from flock.model import metadata
-from flock_web.model import User
+import flock_web.model as fw_model
 
 
 cache = Cache()
@@ -89,7 +89,7 @@ def make_celery(app):
 
 @lm.user_loader
 def user_loader(user_id):
-    return db.session.query(User).get(user_id)
+    return db.session.query(fw_model.User).get(user_id)
 
 
 def create_app(config_file, return_celery=False):
@@ -132,9 +132,25 @@ def create_app(config_file, return_celery=False):
     }
 
     @app.before_request
-    def before_request():
+    def link_celery():
         from flask import g
         g.celery = celery
+
+    @app.before_request
+    def track_user():
+        if not request.endpoint or request.endpoint.startswith(('_debug_toolbar', 'root.task_result', 'static')):
+            return
+
+        action = fw_model.UserAction(
+            user=current_user if current_user.is_authenticated else None,
+            endpoint=request.endpoint,
+            view_args=request.view_args,
+            collection=getattr(g, 'collection', None),
+            request_args=dict(request.args.lists()),
+        )
+
+        db.session.add(action)
+        db.session.commit()
 
     @app.after_request
     def after_request(response):

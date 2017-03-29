@@ -90,3 +90,18 @@ class TaskResult(Base):
     args = sa.Column(pg.JSONB)
     kwargs = sa.Column(pg.JSONB)
     result = sa.Column(pg.JSONB)
+
+
+class UserAction(Base):
+    __tablename__ = 'user_action'
+
+    id = sa.Column(sa.Integer, primary_key=True)
+
+    timestamp = sa.Column(sa.DateTime, default=sa.func.now())
+    user_id = sa.Column(sa.Integer, sa.ForeignKey('user.id'), nullable=False)
+    user = sa.orm.relationship('User', backref='actions')
+
+    endpoint = sa.Column(pg.JSONB)
+    view_args = sa.Column(pg.JSONB)
+    collection = sa.Column(sa.String(100))
+    request_args = sa.Column(pg.JSONB)
