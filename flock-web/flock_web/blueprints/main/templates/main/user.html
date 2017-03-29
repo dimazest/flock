@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %} User {{ super() }} {% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-md-center">
+    <div class="col col-5">
+
+        <h1>Actions</h1>
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Timestamp</th>
+              <th>User</th>
+              <th>Endpoint</th>
+              <th>Collection</th>
+              <th>View arguments</th>
+              <th>Request arguments</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%for action in actions%}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ action.timestamp.isoformat() }}</td>
+                <td>{{ action.user_id }}</td>
+                <td>{{ action.endpoint}}</td>
+                <td>{{ action.collection }}</td>
+                <td><pre>{{ action.view_args|tojson(indent=2) }}</pre></td>
+                <td><pre>{{ action.request_args|tojson(indent=2) }}</pre></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock content %}
