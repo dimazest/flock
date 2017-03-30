@@ -101,7 +101,7 @@ class UserAction(Base):
     user_id = sa.Column(sa.Integer, sa.ForeignKey('user.id'), nullable=False)
     user = sa.orm.relationship('User', backref='actions')
 
-    endpoint = sa.Column(pg.JSONB)
+    endpoint = sa.Column(sa.String(100))
     view_args = sa.Column(pg.JSONB)
     collection = sa.Column(sa.String(100))
     request_args = sa.Column(pg.JSONB)
