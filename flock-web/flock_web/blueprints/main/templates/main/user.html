@@ -19,6 +19,7 @@
               <th>Collection</th>
               <th>View arguments</th>
               <th>Request arguments</th>
+              <th>Request form</th>
             </tr>
           </thead>
           <tbody>
@@ -28,9 +29,10 @@
                 <td>{{ action.timestamp.isoformat() }}</td>
                 <td>{{ action.user_id }}</td>
                 <td>{{ action.endpoint}}</td>
-                <td>{{ action.collection }}</td>
+                <td>{{ action.collection or '' }}</td>
                 <td><pre>{{ action.view_args|tojson(indent=2) }}</pre></td>
                 <td><pre>{{ action.request_args|tojson(indent=2) }}</pre></td>
+                <td><pre>{{ action.request_form|tojson(indent=2) }}</pre></td>
               </tr>
             {% endfor %}
           </tbody>

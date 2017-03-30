@@ -105,3 +105,4 @@ class UserAction(Base):
     view_args = sa.Column(pg.JSONB)
     collection = sa.Column(sa.String(100))
     request_args = sa.Column(pg.JSONB)
+    request_form = sa.Column(pg.JSONB)

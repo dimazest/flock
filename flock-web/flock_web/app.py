@@ -1,4 +1,5 @@
 import os
+import json
 
 import sqlalchemy as sa
 from celery import Celery
@@ -138,8 +139,12 @@ def create_app(config_file, return_celery=False):
 
     @app.before_request
     def track_user():
-        if not request.endpoint or request.endpoint.startswith(('_debug_toolbar', 'root.task_result', 'static')):
+        if not request.endpoint or request.endpoint.startswith(('_debug_toolbar', 'root.task_result', 'static', 'main.user')):
             return
+
+        request_form = dict(request.form.lists())
+        if request.endpoint == 'main.relevance':
+            request_form['selection_args'] = json.loads(request_form['selection_args'][0])
 
         action = fw_model.UserAction(
             user=current_user if current_user.is_authenticated else None,
@@ -147,6 +152,7 @@ def create_app(config_file, return_celery=False):
             view_args=request.view_args,
             collection=getattr(g, 'collection', None),
             request_args=dict(request.args.lists()),
+            request_form=request_form,
         )
 
         db.session.add(action)
