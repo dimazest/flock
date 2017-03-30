@@ -143,8 +143,9 @@ def create_app(config_file, return_celery=False):
             return
 
         request_form = dict(request.form.lists())
+
         if request.endpoint == 'main.relevance':
-            request_form['selection_args'] = json.loads(request_form['selection_args'][0])
+            request_form['selection_args'] = [json.loads(arg) for arg in request_form['selection_args']]
 
         action = fw_model.UserAction(
             user=current_user if current_user.is_authenticated else None,
