@@ -9,20 +9,26 @@
 
     <div class="col-xl-4 col-md-6 bg-faded sidebar bd-links">
 
-        <div id="tweet_count"></div>
+      {% if g.topic %}
+        <div class="alert alert-info" role="alert">
+          <strong>Topic: </strong> <a href="{{url_for('main.topic', topic_id=g.topic.id)}}" class="alert-link">"{{ g.topic.title }}"</a>.
+        </div>
+      {% endif %}
+
+      <div id="tweet_count"></div>
 
       <form class="sidebar-element" action="{{ url_for('.tweets') }}" method="get">
-          <div class="row" id="sidebar-search-box">
-            <div class="col-10">
-              <input type="text" class="form-control" placeholder="Search" name="q" {% if query %} value="{{ query }}" {% endif %}>
-            </div>
-            <div class="col-2">
-                <button class="btn btn-outline-success my-2 my-sm-0 w-100" type="submit">Search</button>
-            </div>
+        <div class="row" id="sidebar-search-box">
+          <div class="col-10">
+            <input type="text" class="form-control" placeholder="Search" name="q" {% if query %} value="{{ query }}" {% endif %}>
           </div>
-          {% for k, v in query_form_hidden_fields %}
-            <input type="hidden" name="{{ k }}" value="{{ v }}">
-          {% endfor %}
+          <div class="col-2">
+            <button class="btn btn-outline-success my-2 my-sm-0 w-100" type="submit">Search</button>
+          </div>
+        </div>
+        {% for k, v in query_form_hidden_fields %}
+          <input type="hidden" name="{{ k }}" value="{{ v }}">
+        {% endfor %}
       </form>
 
 
