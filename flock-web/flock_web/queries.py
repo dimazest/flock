@@ -48,7 +48,7 @@ def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=Tr
     )
 
     if query:
-        tweets = search(tweets, query, sort=True)
+        tweets = search(tweets, query, sort=not count)
 
     if story is not None:
         ts = model.tweet_story.alias()
@@ -69,7 +69,6 @@ def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=Tr
             )
         )
 
-    # if query or feature_filter_args:
     if count:
         return tweets.count()
 
