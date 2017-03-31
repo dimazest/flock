@@ -230,7 +230,7 @@
                tweet_id: tweet_id,
                topic_id: topic_id,
                judgment: judgment,
-               selection_args: '{{ selection_for_topic_args|safe }}'
+               selection_args: JSON.stringify({{ selection_for_topic_args|safe }})
            },
            success: function(data, status, request) {
                console.log('Everything is fine');
