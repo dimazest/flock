@@ -1,6 +1,6 @@
 import json
 
-from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, get_template_attribute, Response
+from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context
 import flask_login
 
 from sqlalchemy import func, select, Table, Column, Integer, String, sql
@@ -184,6 +184,32 @@ def tweets():
     )
     response.headers['X-Accel-Buffering'] = 'no'
     return response
+
+
+@bp_root.route('/tweets.jsonl')
+def tweets_json():
+    tweets = q.build_tweet_query(
+        collection=g.collection,
+        query=g.query,
+        filter_=g.filter,
+        filter_args=g.filter_args,
+        possibly_limit=False,
+        cluster=g.cluster,
+        clustered_selection_id=g.clustered_selection_id,
+    )
+
+    def generate():
+        for t in tweets:
+            yield json.dumps(
+                {
+                    'tweet_id': t.tweet_id,
+                    'text': t.text,
+                    'tokens': t.features['tokenizer'],
+                }
+            ) + '\r\n'
+
+    return Response(stream_with_context(generate()), mimetype='text/plain')
+
 
 
 @bp_root.route('/tweets/<feature_name>')

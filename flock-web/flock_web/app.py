@@ -139,7 +139,7 @@ def create_app(config_file, return_celery=False):
 
     @app.before_request
     def track_user():
-        if not request.endpoint or request.endpoint.startswith(('_debug_toolbar', 'root.task_result', 'static', 'main.user')):
+        if  not current_user.is_authenticated or not request.endpoint or request.endpoint.startswith(('_debug_toolbar', 'root.task_result', 'static', 'main.user')):
             return
 
         request_form = dict(request.form.lists())
@@ -148,7 +148,7 @@ def create_app(config_file, return_celery=False):
             request_form['selection_args'] = [json.loads(arg) for arg in request_form['selection_args']]
 
         action = fw_model.UserAction(
-            user=current_user if current_user.is_authenticated else None,
+            user=current_user,
             endpoint=request.endpoint,
             view_args=request.view_args,
             collection=getattr(g, 'collection', None),
