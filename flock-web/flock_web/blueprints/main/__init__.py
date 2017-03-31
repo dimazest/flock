@@ -5,7 +5,7 @@ from urllib.parse import urlparse, urljoin
 from flask import render_template, Blueprint, redirect, url_for, flash, session, abort, request, render_template_string, jsonify, current_app
 import flask_login
 
-from sqlalchemy import func
+import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql as pg
 
 from flock import model
@@ -194,17 +194,27 @@ def topic(topic_id=None):
     topic = db.session.query(fw_model.Topic).get(topic_id)
     assert topic.user == flask_login.current_user
 
+    tweets = db.session.query(model.Tweet).filter(
+        model.Tweet.tweet_id.in_(
+            sa.select([fw_model.RelevanceJudgment.tweet_id])
+            .where(fw_model.RelevanceJudgment.topic_id==topic.id)
+            .where(fw_model.RelevanceJudgment.judgment==1)
+        )
+    ).distinct(model.Tweet.tweet_id).all()
+
     form = TopicForm(
         title=topic.title,
         description=topic.description,
         narrative=topic.narrative,
         topic_id=topic.id,
+        tweets=tweets,
     )
 
     return render_template(
         'main/topic.html',
         form=form,
         topic=topic,
+        tweets=tweets,
     )
 
 

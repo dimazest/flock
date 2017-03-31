@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "main/macro.html" as m %}
+{% import "root/macro.html" as rm %}
 
 {% block title %} {{ form.title.data }} {% endblock %}
 
@@ -43,8 +44,18 @@
 
         {{ m.render_topic_queries_table([topic], show_topics=False) }}
 
+        <h2>Tweets</h2>
+
+        {{ rm.render_tweets(tweets, show_images=True, show_alert=False) }}
+
     </div>
 </div>
 
 
 {% endblock content %}
+
+{% block extra_scripts %}
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+{% endblock extra_scripts %}
