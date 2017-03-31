@@ -4,7 +4,9 @@
     <div class="alert alert-danger" role="alert">
       <h4 class="mb=0">Nothing has been found!</h4>
     </div>
-  {% else %}
+  {% endif %}
+
+  {% if tweets %}
     <div class="card-columns tweet-selection">
       {%- for tweet in tweets %}
         <div class='card tweet-outer'>
