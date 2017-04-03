@@ -10,7 +10,7 @@
     <div class="card-columns tweet-selection">
       {%- for tweet in tweets %}
         <div class='card tweet-outer'>
-          <blockquote class="twitter-tweet card-blockquote" {% if not show_images %} data-cards="hidden" {% endif %}>
+          <blockquote class="twitter-tweet card-blockquote" data-dnt="true" {% if not show_images %}data-cards="hidden"{% endif %}>
             <div class="card custom-tweet">
               <div class="card-block">
                 <header>
