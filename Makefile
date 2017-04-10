@@ -1,5 +1,6 @@
 PRODUCE = bin/python src/produce/produce
 POULTRY = bin/poultry
+TWARC = bin/twarc
 
 UBLOG_15_APRIL = tweets/hydrate/2015-04-04.through.2014-04-10
 UBLOG_15_APRIL_EN = ${UBLOG_15_APRIL}_EN
@@ -25,5 +26,8 @@ ${UBLOG_15_APRIL_EN}/%:
 # Filters the English tweets from the Ublog 2015 April collection into a separate collection.
 ublogen: $(patsubst ${UBLOG_15_APRIL}/%,${UBLOG_15_APRIL_EN}/%,$(wildcard ${UBLOG_15_APRIL}/*.gz))
 
-tweets/%:
-	time ${PRODUCE} $@
+tweets/share/%.txt: tweets/select/%.gz
+	zcat $< | ${POULTRY} show -t {t.id} > $@
+
+tweets/hydrate/%.gz: tweets/share/%.txt
+	cat $< | ${TWARC} hydrate - | gzip > $@ 
