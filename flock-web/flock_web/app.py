@@ -139,13 +139,21 @@ def create_app(config_file, return_celery=False):
 
     @app.before_request
     def track_user():
-        if  not current_user.is_authenticated or not request.endpoint or request.endpoint.startswith(('_debug_toolbar', 'root.task_result', 'static', 'main.user')):
+        if  not current_user.is_authenticated or not request.endpoint or request.endpoint.startswith(
+                (
+                    '_debug_toolbar', 'root.task_result', 'static', 'main.user',
+                    'root.cluster_status',
+                )
+        ):
             return
 
         request_form = dict(request.form.lists())
 
         if request.endpoint == 'main.relevance':
             request_form['selection_args'] = [json.loads(arg) for arg in request_form['selection_args']]
+
+        if 'csrf_token' in request_form:
+            del request_form['csrf_token']
 
         action = fw_model.UserAction(
             user=current_user,
