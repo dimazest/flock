@@ -205,6 +205,7 @@ def tweets_json():
                     'tweet_id': t.tweet_id,
                     'text': t.text,
                     'tokens': t.features['tokenizer'],
+                    'created_at': t.created_at.isoformat(),
                 }
             ) + '\r\n'
 
