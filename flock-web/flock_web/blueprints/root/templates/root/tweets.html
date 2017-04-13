@@ -34,29 +34,29 @@
 
       {# {{ render_pagination(page) }} #}
 
-      <div id="clusters">
-        {% if clusters %}
-          {{ m.render_clusters(clusters, selected_cluster=selected_cluster) }}
-        {% else %}
-          <p>
-            <div id='clustering_progress_container' class="progress" style="display: none;">
-              <div id='clustering_progress' class="progress-bar" role="progressbar"></div>
-            </div>
-            <button id="start-clustering-task" class="btn btn-outline-success w-100">Cluster</button>
-
-            {# <form class="sidebar-element" action="{{ url_for('.cluster') }}" method="post"> #}
-            {#   <input type="hidden" name="redirect" value="yes"> #}
-            {#   <input type="hidden" name="selection_args" value="{{ selection_args }}"> #}
-            {#   <input type="hidden" name="from_url" value="{{ restricted_url('.tweets') }}"> #}
-            {#   <button class="btn btn-outline-secondary my-2 my-sm-0 w-100" type="submit">Cluster (POST)</button> #}
-            {# </form> #}
-          </p>
-        {% endif %}
-      </div>
-
       <div id="screen_names_stats"></div>
       <div id="hashtags_stats"></div>
       <div id="user_mentions_stats"></div>
+
+      <div id="clusters">
+          {% if clusters %}
+          {{ m.render_clusters(clusters, selected_cluster=selected_cluster) }}
+          {% else %}
+          <p>
+              <div id='clustering_progress_container' class="progress" style="display: none;">
+                  <div id='clustering_progress' class="progress-bar" role="progressbar"></div>
+              </div>
+              <button id="start-clustering-task" class="btn btn-outline-success w-100">Cluster</button>
+
+              {# <form class="sidebar-element" action="{{ url_for('.cluster') }}" method="post"> #}
+                  {#   <input type="hidden" name="redirect" value="yes"> #}
+                  {#   <input type="hidden" name="selection_args" value="{{ selection_args }}"> #}
+                  {#   <input type="hidden" name="from_url" value="{{ restricted_url('.tweets') }}"> #}
+                  {#   <button class="btn btn-outline-secondary my-2 my-sm-0 w-100" type="submit">Cluster (POST)</button> #}
+                  {# </form> #}
+          </p>
+          {% endif %}
+      </div>
 
     </div>
 
@@ -123,7 +123,7 @@
        $.post({
            url: '{{ url_for('.cluster') }}',
            data: {
-               selection_args: '{{ selection_args|safe }}',
+               selection_args: JSON.stringify({{ selection_args|safe }}),
                from_url: '{{ restricted_url('.tweets')|safe }}',
                csrf_token: '{{ csrf_token() }}',
            },
@@ -151,7 +151,8 @@
            }
            else if (data['state'] == 'SUCCESS') {
                $('#clustering_progress_container').hide();
-               $('#clusters').html(data['cluster_html_snippet'])
+               $('#clusters').html(data['html'])
+
                return;
            } else if (data['state'] == 'FAILURE') {
                alert('Clustering error.')

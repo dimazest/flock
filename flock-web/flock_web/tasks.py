@@ -5,11 +5,12 @@ import functools
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects import postgresql as pg
+
 from celery.result import AsyncResult
 
-from gensim.models.doc2vec import LabeledSentence, Doc2Vec
-from sklearn import cluster, preprocessing, neighbors, metrics
-import hdbscan
+import pandas as pd
+import numpy as np
+from sklearn import cluster, preprocessing, metrics
 
 from flock_web.app import create_app, db
 from flock import model
@@ -21,158 +22,6 @@ flask_app, celery = create_app(os.environ['FLOCK_CONFIG'], return_celery=True)
 
 
 logger = logging.getLogger(__name__)
-
-
-def sentences(tweets):
-
-    for i, tweet in enumerate(tweets, start=1):
-        if not tweet.features['doc2vec']:
-            logger.warning('Empty features for tweet %s.', tweet.tweet_id)
-            continue
-
-        yield LabeledSentence(**tweet.features['doc2vec'])
-
-    logger.info('%s tweets were selected from the DB.', i)
-
-
-def Epochs(model, sentences):
-    epoch = 0
-    while True:
-        logger.info('Epoch {}. Alpha {:.3f}'.format(epoch, model.alpha))
-        epoch += 1
-        model.train(sentences())
-        model.alpha = max(model.alpha - 0.001, 0.001)
-        model.min_alpha = model.alpha
-
-        yield
-
-
-@celery.task(bind=True)
-def cluster_selection(self, selection_args):
-
-    def update_state(current, total, status=None, state='PROGRESS', **extra_meta):
-        if status is None:
-            status = '{} out of {}.'.format(current, total)
-
-        self.update_state(
-            state=state,
-            meta={
-                'status': status,
-                'current': current,
-                'total': total,
-                **extra_meta,
-            }
-        )
-
-    with flask_app.app_context():
-
-        update_state(1, 3, status='Started.')
-
-        filter_ = selection_args.pop('filter', None)
-
-        clustered_selection = model.ClusteredSelection(celery_id=self.request.id, celery_status='started', filter=filter_, **selection_args)
-        db.session.add(clustered_selection)
-        try:
-            db.session.commit()
-        except IntegrityError:
-            db.session.rollback()
-            logger.info('A duplicate task.')
-            return {'current': 1, 'total': 1, 'status': 'A duplicate task.'}
-
-        tweets = q.build_tweet_query(possibly_limit=False, filter_=filter_, **selection_args)
-
-        insert_stmt = pg.insert(model.tweet_cluster)
-
-        if flask_app.config.get('MOCK_CLUSTERING'):
-            update_state(2, 3, status='Mocked clustering.')
-
-            import random
-            for tweet in tweets:
-                db.session.execute(
-                    insert_stmt.values(
-                        [
-                            {
-                                'tweet_id': tweet.tweet_id,
-                                'collection': selection_args['collection'],
-                                '_clustered_selection_id': clustered_selection._id,
-                                'label': random.choice('ABCDEFG'),
-                            }
-                        ]
-                    )
-                )
-
-        else:
-            doc2vec_model = Doc2Vec(
-                size=100,
-                sample=1e-5,
-                negative=15,
-                alpha=0.025,
-                min_alpha=0.025,
-                workers=8,
-                min_count=10,
-            )
-
-            EPOCH_NUM = 25
-            TOTAL = 1 + EPOCH_NUM + 2
-
-            update_state(1, TOTAL, step='Building vocabulary.')
-            doc2vec_model.build_vocab(sentences(tweets))
-
-            epochs = Epochs(doc2vec_model, lambda: sentences(tweets))
-
-            for s in range(EPOCH_NUM):
-                next(epochs)
-                update_state(s + 1, TOTAL, status='Training word vectors.')
-
-            doc2vec_model.docvecs.init_sims(replace=True)
-            doc2vec_model.init_sims(replace=True)
-
-            doctags = [doctag for doctag in doc2vec_model.docvecs.doctags.keys() if doctag.startswith('id:')]
-            tweet_vectors = doc2vec_model.docvecs[doctags]
-
-            update_state(1 + EPOCH_NUM + 1, TOTAL, status='Calculating nearest neighbors.')
-            neigh = neighbors.NearestNeighbors(
-                metric='euclidean',
-                radius=0.9,
-                algorithm='brute',
-                n_jobs=8,
-            )
-
-            neigh.fit(tweet_vectors)
-            A = neigh.radius_neighbors_graph(mode='distance',)
-
-            update_state(1 + EPOCH_NUM + 2, TOTAL, status='DBSCAN.')
-            dbscan = cluster.DBSCAN(
-                min_samples=3,
-                metric='precomputed',
-                eps=0.8,
-                #     algorithm='kd_tree',
-                n_jobs=-1,
-            )
-
-            dbscan.fit(A)
-
-            for doctag, label in zip(doctags, dbscan.labels_):
-                tweet_id = int(doctag[3:])
-
-                db.session.execute(
-                    insert_stmt.values(
-                        [
-                            {
-                                'tweet_id': tweet_id,
-                                'collection': selection_args['collection'],
-                                '_clustered_selection_id': clustered_selection._id,
-                                'label': str(label),
-                            }
-                        ]
-                    )
-                )
-
-                clustered_selection.celery_status = 'completed'
-                db.session.commit()
-
-    # return {'current': 10, 'total': 10, 'status': 'Task completed!', 'total_labels': len(set(dbscan.labels_))}
-    return {'current': 10, 'total': 10, 'status': 'Task completed!', 'total_labels': None}
 
 
 def cached_task(func):
@@ -205,6 +54,98 @@ def cached_task(func):
             return result
 
     return wrapper
+
+
+@celery.task(bind=True)
+@cached_task
+def cluster_selection(self, selection_args, min_token_freq=30, min_trending_score=3, dbscan_min_samples=2, min_cluster_size=2):
+
+    def update_state(current, total, status=None, state='PROGRESS', **extra_meta):
+        if status is None:
+            status = '{} out of {}.'.format(current, total)
+
+        self.update_state(
+            state=state,
+            meta={
+                'status': status,
+                'current': current,
+                'total': total,
+                **extra_meta,
+            }
+        )
+
+    update_state(1, 7, status='Started...')
+
+    filter_ = selection_args.pop('filter', None)
+
+    update_state(2, 7, status='Querying the database...')
+    tweets = q.build_tweet_query(possibly_limit=False, filter_=filter_, **selection_args)
+
+    def tokens(tweets):
+        for tweet in tweets:
+            for token in tweet.features['tokenizer']['tokens']:
+                if not token.startswith('http'):
+                    yield tweet.tweet_id, tweet.created_at, token
+
+    token_stream = pd.DataFrame.from_records(tokens(tweets), columns=['tweet_id', 'created_at', 'token'])
+    token_stream.drop_duplicates(inplace=True)
+
+    update_state(3, 7, status='Counting tokens...')
+    token_counts = token_stream['token'].value_counts()
+
+    filtered_token_stream = pd.DataFrame(token_stream[(token_counts[token_stream['token']] > min_token_freq).values])
+    filtered_token_stream['count'] = 1
+
+    tweet_token_matrix = filtered_token_stream.set_index(['created_at', 'tweet_id', 'token']).unstack('token', fill_value=0)['count']
+
+    window_counts = tweet_token_matrix.resample('1D', level='created_at').sum().fillna(0)
+
+    update_state(4, 7, status='Calculating trending scores...')
+    scores = (
+        (window_counts - window_counts.expanding(axis='rows', min_periods=1).mean()) /
+        window_counts.expanding(axis='rows', min_periods=1).std()
+    )
+
+    update_state(5, 7, status='Detecting trending words...')
+    trending_words = scores.max(axis='rows').sort_values(ascending=False)
+    trending_words = trending_words[trending_words > min_trending_score]
+
+    trending_token_tweet_matrix = tweet_token_matrix[trending_words.index].T
+    trending_token_tweet_matrix = trending_token_tweet_matrix.loc[:, (trending_token_tweet_matrix.max(axis='rows') > 0).values]
+
+    update_state(6, 7, status='Trending word similarity...')
+    trending_words_pairwise_distances = metrics.pairwise.pairwise_distances(trending_token_tweet_matrix.values, metric='cosine')
+
+    dbscan = cluster.DBSCAN(
+        min_samples=dbscan_min_samples,
+        metric='precomputed',
+        eps=0.8,
+    )
+    dbscan.fit(trending_words_pairwise_distances)
+
+    result = []
+    for label in set(dbscan.labels_):
+        if label > 0:
+            size = trending_token_tweet_matrix.loc[trending_words.loc[dbscan.labels_ == label].index].min(axis='rows').sum()
+
+            if size < min_cluster_size:
+                continue
+
+            tokens = trending_words.iloc[np.argwhere(dbscan.labels_ == label).flatten()].index
+
+            result.append(
+                (
+                    list(tokens),
+                    int(size)
+                ),
+        )
+
+    result = sorted(result, key=lambda i: (len(i[0]), i[1]), reverse=True)
+
+    return {
+        'data': result,
+        'task_name': self.name,
+    }
 
 
 @celery.task(bind=True)

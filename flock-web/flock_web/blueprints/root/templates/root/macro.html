@@ -49,20 +49,6 @@
 {% endmacro %}
 
 
-{% macro render_clusters(clusters, selected_cluster=None) %}
-  <div class="card sidebar-element">
-    <h3 class="card-header">Clusters</h3>
-    <div class="list-group list-group-flush">
-      {% for cluster, tweet_count in clusters %}
-        <a href="{{ restricted_url('.tweets', cluster=cluster if cluster != selected_cluster else None) }}" class="list-group-item list-group-item-action flex-column align-items-start feature-item {{ 'active' if cluster == selected_cluster}}">
-          <p class="mb-0">{{ cluster  }} ({{ tweet_count|humanize('intword') }})</p>
-        </a>
-      {% endfor %}
-    </div>
-  </div>
-{% endmacro %}
-
-
 {% macro render_stats(feature_name, feature_alias, features, active_feature_names, collection, hidden_fields) %}
   <div class="card sidebar-element">
     <div class="card-header container">
