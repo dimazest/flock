@@ -84,7 +84,7 @@ def cluster_selection(self, selection_args):
     def tokens(tweets):
         for tweet in tweets:
             for token in tweet.features['tokenizer']['tokens']:
-                if not token.startswith('http'):
+                if not token.startswith('http') and len(token) > 2:
                     yield tweet.tweet_id, tweet.created_at, token
 
     token_stream = pd.DataFrame.from_records(tokens(tweets), columns=['tweet_id', 'created_at', 'token'])
