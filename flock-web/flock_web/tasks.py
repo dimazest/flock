@@ -89,11 +89,17 @@ def cluster_selection(self, selection_args):
 
     token_stream = pd.DataFrame.from_records(tokens(tweets), columns=['tweet_id', 'created_at', 'token'])
     token_stream.drop_duplicates(inplace=True)
+    token_stream = token_stream[token_stream['created_at'] > '2017-03-01'] # XXX update
 
     number_of_tweets = len(token_stream['tweet_id'].drop_duplicates())
 
+    if number_of_tweets > 400_000:
+        min_token_freq = 200
+        min_trending_score = 3
+        dbscan_min_samples = 3
+        min_cluster_size = 2
     if number_of_tweets > 100_000:
-        min_token_freq = 60
+        min_token_freq = 100
         min_trending_score = 3
         dbscan_min_samples = 3
         min_cluster_size = 2
@@ -104,7 +110,7 @@ def cluster_selection(self, selection_args):
         min_cluster_size=2
 
     update_state(3, 7, status='Counting tokens...')
-    token_counts = token_stream['token'].value_counts()
+    token_counts = token_stream['token'].value_counts(sort=False)
 
     filtered_token_stream = pd.DataFrame(token_stream[(token_counts[token_stream['token']] > min_token_freq).values])
     filtered_token_stream['count'] = 1
