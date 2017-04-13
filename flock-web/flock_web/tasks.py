@@ -92,16 +92,16 @@ def cluster_selection(self, selection_args):
 
     number_of_tweets = len(token_stream['tweet_id'].drop_duplicates())
 
-    if number_of_tweets < 100_000:
-        min_token_freq=30,
-        min_trending_score=3,
-        dbscan_min_samples=2,
-        min_cluster_size=2
+    if number_of_tweets > 100_000:
+        min_token_freq = 60
+        min_trending_score = 3
+        dbscan_min_samples = 3
+        min_cluster_size = 2
     else:
-        min_token_freq=60,
-        min_trending_score=3,
-        dbscan_min_samples=3,
-        min_cluster_size=3
+        min_token_freq=30,
+        min_trending_score=3
+        dbscan_min_samples=2
+        min_cluster_size=2
 
     update_state(3, 7, status='Counting tokens...')
     token_counts = token_stream['token'].value_counts()
