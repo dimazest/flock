@@ -205,6 +205,7 @@ def tweets_json():
                     'tweet_id': t.tweet_id,
                     'text': t.text,
                     'tokens': t.features['tokenizer'],
+                    'language': t.features['languages'][0],
                 }
             ) + '\r\n'
 
@@ -317,7 +318,6 @@ def features(feature_name):
 @flask_login.login_required
 def cluster():
     selection_args = json.loads(request.form['selection_args'])
-    from_url = request.form['from_url']
 
     try:
         clustered_selection = db.session.query(model.ClusteredSelection).filter_by(**selection_args).one()
@@ -329,7 +329,7 @@ def cluster():
     task = g.celery.AsyncResult(task_id)
 
     location = url_for('.cluster_status', task_id=task_id)
-    if not 'redirect' in request.form:
+    if 'redirect' not in request.form:
         return jsonify({'Location': location, 'info': task.info}), 202, {'Location': location}
     else:
         return redirect(location)
