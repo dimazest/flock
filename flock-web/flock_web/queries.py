@@ -70,7 +70,7 @@ def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=Tr
         )
 
     if count:
-        return tweets.count()
+        return db.session.scalar(tweets.selectable.with_only_columns([func.count()]))
 
     tweets = tweets.order_by(model.Tweet.created_at, model.Tweet.tweet_id)
 

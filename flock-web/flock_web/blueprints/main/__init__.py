@@ -41,6 +41,7 @@ def welcome():
     return render_template(
         'main/welcome.html',
         collections=collections,
+        current_app=current_app,
     )
 
 from flask_wtf import FlaskForm
@@ -105,6 +106,10 @@ class TopicForm(FlaskForm):
     description = wtf.TextAreaField('Description')
     narrative = wtf.TextAreaField('Narrative')
 
+    difficulty = wtf.RadioField('How easy was it to develop this topic?', choices=[('easy', 'Easy'), ('moderate', 'Moderate'), ('difficult', 'Difficult')])
+    inspiration = wtf.StringField('What was the inspiration for this topic?')
+    notes = wtf.TextAreaField('General comment.')
+
     topic_id = wtf.HiddenField()
 
 
@@ -134,7 +139,18 @@ def topic(topic_id=None):
 
             form = TopicForm()
             if form.validate_on_submit():
-                form.populate_obj(topic)
+                topic.title = form.title.data
+                topic.description = form.description.data
+                topic.narrative = form.narrative.data
+
+                if topic.questionnaire is None:
+                    topic.questionnaire = fw_model.TopicQuestionnaire()
+
+                topic.questionnaire.answer = {
+                    'difficulty': form.difficulty.data,
+                    'inspiration': form.inspiration.data,
+                    'notes': form.notes.data,
+                }
 
         else:
             # New topic is requested
@@ -189,6 +205,7 @@ def topic(topic_id=None):
             return render_template(
                 'main/topics.html',
                 topics=topics,
+                current_app=current_app,
             )
 
     topic = db.session.query(fw_model.Topic).get(topic_id)
@@ -208,6 +225,10 @@ def topic(topic_id=None):
         narrative=topic.narrative,
         topic_id=topic.id,
         tweets=tweets,
+
+        difficulty=topic.questionnaire.answer.get('difficulty') if topic.questionnaire is not None else None,
+        inspiration=topic.questionnaire.answer.get('inspiration')  if topic.questionnaire is not None else None,
+        notes=topic.questionnaire.answer.get('notes')  if topic.questionnaire is not None else None,
     )
 
     return render_template(
@@ -215,6 +236,7 @@ def topic(topic_id=None):
         form=form,
         topic=topic,
         tweets=tweets,
+        current_app=current_app,
     )
 
 

@@ -6,50 +6,74 @@
 
 {% block content %}
 
-<div class="row justify-content-md-center">
+  <div class="row justify-content-md-center">
     <div class="col col-5">
 
-        <h1>Topic</h1>
+      <h1>Topic</h1>
 
-        <form method="POST" action="{{ url_for('.topic_post') }}">
+      <form method="POST" action="{{ url_for('.topic_post') }}">
 
-            {{ form.hidden_tag() }}
+        {{ form.hidden_tag() }}
 
-            <div class="form-group row">
-                {{ form.title.label(class="col-2 col-form-label") }}
-                <div class="col-10">
-                    {{ form.title(size=200, class_="form-control", placeholder="Title") }}
-                </div>
-            </div>
-            <div class="form-group row">
-                {{ form.description.label(class="col-2 col-form-label") }}
-                <div class="col-10">
-                    {{ form.description(rows=3, class_="form-control", placeholder="A sentence.") }}
-                </div>
-            </div>
+        <div class="form-group row">
+          {{ form.title.label(class="col-2 col-form-label") }}
+          <div class="col-10">
+            {{ form.title(size=200, class_="form-control", placeholder="Title") }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ form.description.label(class="col-2 col-form-label") }}
+          <div class="col-10">
+            {{ form.description(rows=3, class_="form-control", placeholder="A sentence.") }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ form.narrative.label(class="col-2 col-form-label") }}
+          <div class="col-10">
+            {{ form.narrative(rows=5, class_="form-control", placeholder="A paragraph.") }}
+          </div>
+        </div>
 
-            <div class="form-group row">
-                {{ form.narrative.label(class="col-2 col-form-label") }}
-                <div class="col-10">
-                    {{ form.narrative(rows=5, class_="form-control", placeholder="A paragraph.") }}
-                </div>
-            </div>
+        <h2>Questionnaire</h2>
 
-            <div class="form-group offset-sm-2 col-sm-10">
-                <button class="btn btn-lg btn-primary" type="submit">Submit</button>
-            </div>
-        </form>
+        <div class="form-group row">
+          {{ form.difficulty.label(class="col-2 col-form-label") }}
+          <div class="col-10 form-check form-check-inline">
+            {% for subfield in form.difficulty %}
+              <label class="form-check-label">
+                {{ subfield(class_="form-check-input") }} {{ subfield.label }}
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ form.inspiration.label(class="col-2 col-form-label") }}
+          <div class="col-10">
+            {{ form.inspiration(size=200, class_="form-control", placeholder="Own interest, Google search (provide a URL) or one of the stories.") }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ form.notes.label(class="col-2 col-form-label") }}
+          <div class="col-10">
+            {{ form.notes(rows=5, class_="form-control") }}
+          </div>
+        </div>
 
-        <h2>Queries</h2>
+        <div class="form-group offset-sm-2 col-sm-10">
+          <button class="btn btn-lg btn-primary" type="submit">Submit</button>
+        </div>
+      </form>
 
-        {{ m.render_topic_queries_table([topic], show_topics=False) }}
+      <h2>Queries</h2>
 
-        <h2>Tweets</h2>
+      {{ m.render_topic_queries_table([topic], show_topics=False, current_app=current_app) }}
 
-        {{ rm.render_tweets(tweets, show_images=True, show_alert=False) }}
+      <h2>Tweets</h2>
+
+      {{ rm.render_tweets(tweets, show_images=True, show_alert=False) }}
 
     </div>
-</div>
+  </div>
 
 
 {% endblock content %}

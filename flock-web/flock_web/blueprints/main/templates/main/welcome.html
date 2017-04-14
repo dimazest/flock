@@ -17,7 +17,7 @@
     {%- for (collection, ) in collections %}
       <tr>
         <td>
-          <a href="{{ url_for('root.index', collection=collection) }}">{{ config.COLLECTION_ALIAS.get(collection, collection) }}</a>
+          <a href="{{ url_for('root.index', collection=collection) }}">{{ current_app.config.get('collection:{}'.format(collection), {}).get('title', collection) }}</a>
         </td>
         {# <td>{{ size|humanize('intcomma') }}</td> #}
         {# <td>{{ earliest|humanize('naturaldate') }}</td> #}

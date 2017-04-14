@@ -1,6 +1,6 @@
 import json
 
-from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context
+from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context, current_app
 import flask_login
 
 from sqlalchemy import func, select, Table, Column, Integer, String, sql
@@ -98,6 +98,7 @@ def index():
         stories=stories,
         selected_story=story,
         tweets=tweets,
+        current_app=current_app,
     )
 
 
@@ -180,6 +181,7 @@ def tweets():
             endpoint='.tweets',
             selected_topic=g.topic,
             # relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
+            current_app=current_app,
         ),
     )
     response.headers['X-Accel-Buffering'] = 'no'
@@ -206,11 +208,11 @@ def tweets_json():
                     'text': t.text,
                     'tokens': t.features['tokenizer'],
                     'language': t.features['languages'][0],
+                    'created_at': t.created_at.isoformat(),
                 }
             ) + '\r\n'
 
     return Response(stream_with_context(generate()), mimetype='text/plain')
-
 
 
 @bp_root.route('/tweets/<feature_name>')
@@ -319,20 +321,10 @@ def features(feature_name):
 def cluster():
     selection_args = json.loads(request.form['selection_args'])
 
-    try:
-        clustered_selection = db.session.query(model.ClusteredSelection).filter_by(**selection_args).one()
-    except NoResultFound:
-        task_id = g.celery.send_task('flock_web.tasks.cluster_selection', kwargs={'selection_args': selection_args}).id
-    else:
-        task_id = clustered_selection.celery_id
+    task = g.celery.send_task('flock_web.tasks.cluster_selection', kwargs={'selection_args': selection_args})
 
-    task = g.celery.AsyncResult(task_id)
-
-    location = url_for('.cluster_status', task_id=task_id)
-    if 'redirect' not in request.form:
-        return jsonify({'Location': location, 'info': task.info}), 202, {'Location': location}
-    else:
-        return redirect(location)
+    location = url_for('.task_result', task_id=task.id)
+    return jsonify({'Location': location, 'info': task.info}), 202, {'Location': location}
 
 
 @bp_root.route('/cluster/status/<task_id>')
@@ -422,5 +414,41 @@ def task_result(task_id):
                 collection=g.collection,
                 hidden_fields=[(k, v) for k, v in request.args.items(multi=True) if not k.startswith('_')],
             )
+        elif task.result.get('task_name') == 'flock_web.tasks.cluster_selection':
+            result['data'] = task.result,
+            result['html'] = render_template(
+                'root/cluster_snippet.html',
+                clusters=task.result['data'],
+            )
+
+        else:
+            result.update(
+                {
+                    'status': str(task.info),
+                }
+            )
+
+    elif task.state == 'PENDING':
+        result.update(
+            {
+                'info': {
+                    'current': 0,
+                    'total': 1,
+                },
+                'status': 'Pending...'
+            }
+        )
+    elif task.state != 'FAILURE':
+        result.update(
+            {
+                'info': getattr(task, 'info', {}),
+            }
+        )
+    else:
+        result.update(
+            {
+                'str_info': str(task.info),
+            }
+        )
 
     return jsonify(result)

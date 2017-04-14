@@ -35,6 +35,8 @@ class Topic(Base):
     user_id = sa.Column(sa.Integer, sa.ForeignKey('user.id'), nullable=False)
     user = sa.orm.relationship('User', backref='topics')
 
+    questionnaire = sa.orm.relationship('TopicQuestionnaire', uselist=False)
+
     def judgment_count(self, value):
         return len([j for j in self.judgments if j.judgment == value])
 
@@ -58,6 +60,15 @@ class TopicQuery(Base):
     @property
     def filter_args_dict(self):
         return dict(self.filter_args) if self.filter_args is not None else {}
+
+
+class TopicQuestionnaire(Base):
+    __tablename__ = 'topic_questionnaire'
+
+    topic_id = sa.Column(sa.Integer, sa.ForeignKey('topic.id'), nullable=False, primary_key=True)
+    topic = sa.orm.relationship('Topic')
+
+    answer = sa.Column(pg.JSONB)
 
 
 class RelevanceJudgment(Base):

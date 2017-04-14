@@ -10,7 +10,7 @@
     <div class="card-columns tweet-selection">
       {%- for tweet in tweets %}
         <div class='card tweet-outer'>
-          <blockquote class="twitter-tweet card-blockquote" {% if not show_images %} data-cards="hidden" {% endif %}>
+          <blockquote class="twitter-tweet card-blockquote" data-dnt="true" {% if not show_images %}data-cards="hidden"{% endif %}>
             <div class="card custom-tweet">
               <div class="card-block">
                 <header>
@@ -46,20 +46,6 @@
       {%- endfor %}
     </div>
   {% endif %}
-{% endmacro %}
-
-
-{% macro render_clusters(clusters, selected_cluster=None) %}
-  <div class="card sidebar-element">
-    <h3 class="card-header">Clusters</h3>
-    <div class="list-group list-group-flush">
-      {% for cluster, tweet_count in clusters %}
-        <a href="{{ restricted_url('.tweets', cluster=cluster if cluster != selected_cluster else None) }}" class="list-group-item list-group-item-action flex-column align-items-start feature-item {{ 'active' if cluster == selected_cluster}}">
-          <p class="mb-0">{{ cluster  }} ({{ tweet_count|humanize('intword') }})</p>
-        </a>
-      {% endfor %}
-    </div>
-  </div>
 {% endmacro %}
 
 

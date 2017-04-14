@@ -94,7 +94,7 @@ def user_loader(user_id):
 
 
 def create_app(config_file, return_celery=False):
-    app = Flask(__name__)
+    app = Flask(__name__.split('.')[0])
 
     ini_config.init_app(app)
     app.config.from_inifile(config_file)
@@ -104,6 +104,8 @@ def create_app(config_file, return_celery=False):
             app.config['SECRET_KEY'] = os.urandom(24)
         else:
             app.config['SECRET_KEY'] = '__DEBUG__'
+
+    app.config['WTF_CSRF_TIME_LIMIT'] = int(app.config['WTF_CSRF_TIME_LIMIT'])
 
     cache.init_app(app)
     db.init_app(app)
@@ -126,11 +128,6 @@ def create_app(config_file, return_celery=False):
     celery = make_celery(app)
 
     app.config['COLLECTIONS'] = app.config['COLLECTIONS'].split()
-    app.config['COLLECTION_ALIAS'] = {
-        'ublog-2015_for-yasi_2ndweek': '2015 April 2nd week',
-        'ublog-2015_for-yasi_3rdweek': '2015 April 3rd week',
-        '2017-02-13': '2017 February',
-    }
 
     @app.before_request
     def link_celery():
@@ -139,13 +136,21 @@ def create_app(config_file, return_celery=False):
 
     @app.before_request
     def track_user():
-        if  not current_user.is_authenticated or not request.endpoint or request.endpoint.startswith(('_debug_toolbar', 'root.task_result', 'static', 'main.user')):
+        if  not current_user.is_authenticated or not request.endpoint or request.endpoint.startswith(
+                (
+                    '_debug_toolbar', 'root.task_result', 'static', 'main.user',
+                    'root.cluster_status',
+                )
+        ):
             return
 
         request_form = dict(request.form.lists())
 
         if request.endpoint == 'main.relevance':
             request_form['selection_args'] = [json.loads(arg) for arg in request_form['selection_args']]
+
+        if 'csrf_token' in request_form:
+            del request_form['csrf_token']
 
         action = fw_model.UserAction(
             user=current_user,

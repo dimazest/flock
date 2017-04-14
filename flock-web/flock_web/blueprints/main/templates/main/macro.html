@@ -1,4 +1,4 @@
-{% macro render_topic_queries_table(topics, show_topics=True) %}
+{% macro render_topic_queries_table(topics, current_app, show_topics=True) %}
 
   <table class="table table-striped">
     <thead>
@@ -9,7 +9,7 @@
         <th>Features</th>
         {% for collection in config.COLLECTIONS %}
           <th>
-            {{ config.COLLECTION_ALIAS.get(collection, collection) }}
+            {{ current_app.config.get('collection:{}'.format(collection), {}).get('title', collection) }}
           </th>
         {% endfor %}
       </tr>

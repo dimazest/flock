@@ -41,11 +41,11 @@ setup(
         'flask-debugtoolbar',
         'paginate_sqlalchemy',
         'celery',
-        'gensim',
-        'hdbscan',
         'flask-login',
         'WTForms',
         'flask_wtf',
+        'scikit-learn',
+        'pandas',
     ],
     entry_points={
         'console_scripts': [
