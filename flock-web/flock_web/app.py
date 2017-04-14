@@ -94,7 +94,7 @@ def user_loader(user_id):
 
 
 def create_app(config_file, return_celery=False):
-    app = Flask(__name__)
+    app = Flask(__name__.split('.')[0])
 
     ini_config.init_app(app)
     app.config.from_inifile(config_file)
