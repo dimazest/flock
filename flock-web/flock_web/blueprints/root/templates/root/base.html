@@ -4,7 +4,7 @@
 {% for c in config.COLLECTIONS %}
   <li class="nav-item {% if c == collection %}active{% endif %}">
     <a class="nav-link" href="{{ restricted_url(endpoint, collection=c, story=None, cluster=None) if c != collection else url_for('.tweets', collection=collection) }}">
-      {{ config.COLLECTION_ALIAS.get(c, c) }}
+      {{ current_app.config.get('collection:{}'.format(c),{}).get('title', c) }}
     </a>
   </li>
 {% endfor %}

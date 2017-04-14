@@ -105,6 +105,8 @@ def create_app(config_file, return_celery=False):
         else:
             app.config['SECRET_KEY'] = '__DEBUG__'
 
+    app.config['WTF_CSRF_TIME_LIMIT'] = int(app.config['WTF_CSRF_TIME_LIMIT'])
+
     cache.init_app(app)
     db.init_app(app)
     sa.orm.configure_mappers()
@@ -126,11 +128,6 @@ def create_app(config_file, return_celery=False):
     celery = make_celery(app)
 
     app.config['COLLECTIONS'] = app.config['COLLECTIONS'].split()
-    app.config['COLLECTION_ALIAS'] = {
-        'ublog-2015_for-yasi_2ndweek': '2015 April 2nd week',
-        'ublog-2015_for-yasi_3rdweek': '2015 April 3rd week',
-        '2017-02-13': '2017 February',
-    }
 
     @app.before_request
     def link_celery():

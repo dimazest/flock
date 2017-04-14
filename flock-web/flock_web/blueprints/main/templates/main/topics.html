@@ -7,6 +7,6 @@
 
   <h1>Topics ({{ topics.count() }})</h1>
 
-  {{ m.render_topic_queries_table(topics, show_topics=True) }}
+  {{ m.render_topic_queries_table(topics, show_topics=True, current_app=current_app) }}
 
 {% endblock content %}

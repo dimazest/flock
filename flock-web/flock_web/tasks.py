@@ -89,7 +89,8 @@ def cluster_selection(self, selection_args):
 
     token_stream = pd.DataFrame.from_records(tokens(tweets), columns=['tweet_id', 'created_at', 'token'])
     token_stream.drop_duplicates(inplace=True)
-    token_stream = token_stream[token_stream['created_at'] > '2017-03-01'] # XXX update
+    collection = selection_args['collection']
+    token_stream = token_stream[token_stream['created_at'] > flask_app.config.get(f'collection:{collection}')['start_date']]
 
     number_of_tweets = len(token_stream['tweet_id'].drop_duplicates())
 

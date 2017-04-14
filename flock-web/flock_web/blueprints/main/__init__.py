@@ -41,6 +41,7 @@ def welcome():
     return render_template(
         'main/welcome.html',
         collections=collections,
+        current_app=current_app,
     )
 
 from flask_wtf import FlaskForm
@@ -204,6 +205,7 @@ def topic(topic_id=None):
             return render_template(
                 'main/topics.html',
                 topics=topics,
+                current_app=current_app,
             )
 
     topic = db.session.query(fw_model.Topic).get(topic_id)
@@ -234,6 +236,7 @@ def topic(topic_id=None):
         form=form,
         topic=topic,
         tweets=tweets,
+        current_app=current_app,
     )
 
 

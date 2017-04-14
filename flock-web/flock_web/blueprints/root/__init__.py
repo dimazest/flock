@@ -1,6 +1,6 @@
 import json
 
-from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context
+from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context, current_app
 import flask_login
 
 from sqlalchemy import func, select, Table, Column, Integer, String, sql
@@ -98,6 +98,7 @@ def index():
         stories=stories,
         selected_story=story,
         tweets=tweets,
+        current_app=current_app,
     )
 
 
@@ -180,6 +181,7 @@ def tweets():
             endpoint='.tweets',
             selected_topic=g.topic,
             # relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
+            current_app=current_app,
         ),
     )
     response.headers['X-Accel-Buffering'] = 'no'
