@@ -2,7 +2,7 @@
     <h3 class="card-header">Clusters</h3>
     <div class="list-group list-group-flush">
         {% for terms, tweet_count in clusters %}
-        <a href="{{ restricted_url('.tweets', q=g.query + ' ' + ' '.join(terms)) }}" class="list-group-item list-group-item-action flex-column align-items-start feature-item">
+        <a href="{{ restricted_url('.tweets', q='{} {}'.format('({})'.format(g.query) if g.query else '', ' '.join(terms))) }}" class="list-group-item list-group-item-action flex-column align-items-start feature-item">
             <p class="mb-0">{{ ' '.join(terms)  }} ({{ tweet_count|humanize('intword') }})</p>
         </a>
         {% endfor %}
