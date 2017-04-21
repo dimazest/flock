@@ -52,6 +52,27 @@ feature_scores = sa.Table(
     sa.Column('score', sa.Float),
 )
 
+screen_names = sa.Table(
+    'screen_names', metadata,
+    sa.Column('collection', sa.String),
+    sa.Column('tweet_id', sa.BigInteger),
+    sa.Column('screen_name', sa.String),
+)
+
+hashtags = sa.Table(
+    'hashtags', metadata,
+    sa.Column('collection', sa.String),
+    sa.Column('tweet_id', sa.BigInteger),
+    sa.Column('hashtag', sa.String),
+)
+
+user_mentions = sa.Table(
+    'user_mentions', metadata,
+    sa.Column('collection', sa.String),
+    sa.Column('tweet_id', sa.BigInteger),
+    sa.Column('user_mention', sa.String),
+)
+
 
 class Tweet(Base):
     __tablename__ = 'tweet'
