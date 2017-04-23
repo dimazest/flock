@@ -96,17 +96,27 @@ def cluster_selection(self, selection_args):
 
     if number_of_tweets > 400_000:
         min_token_freq = 200
-        min_trending_score = 3
+        min_trending_score = 2
+        dbscan_min_samples = 3
+        min_cluster_size = 2
+    if number_of_tweets > 200_000:
+        min_token_freq = 100
+        min_trending_score = 2
         dbscan_min_samples = 3
         min_cluster_size = 2
     if number_of_tweets > 100_000:
-        min_token_freq = 100
-        min_trending_score = 3
-        dbscan_min_samples = 3
+        min_token_freq = 40
+        min_trending_score = 1.5
+        dbscan_min_samples = 2
         min_cluster_size = 2
+    if number_of_tweets > 10_000:
+        min_token_freq=10,
+        min_trending_score=1.5
+        dbscan_min_samples=2
+        min_cluster_size=2
     else:
-        min_token_freq=30,
-        min_trending_score=3
+        min_token_freq=3,
+        min_trending_score=1.5
         dbscan_min_samples=2
         min_cluster_size=2
 
@@ -132,6 +142,12 @@ def cluster_selection(self, selection_args):
 
     trending_token_tweet_matrix = tweet_token_matrix[trending_words.index].T
     trending_token_tweet_matrix = trending_token_tweet_matrix.loc[:, (trending_token_tweet_matrix.max(axis='rows') > 0).values]
+
+    if not len(trending_token_tweet_matrix):
+        return {
+            'data': [],
+            'task_name': self.name,
+        }
 
     update_state(6, 7, status='Trending word similarity...')
     trending_words_pairwise_distances = metrics.pairwise.pairwise_distances(trending_token_tweet_matrix.values, metric='cosine')

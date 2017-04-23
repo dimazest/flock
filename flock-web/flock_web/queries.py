@@ -96,10 +96,21 @@ def build_cluster_query(clustered_selection_id):
 def stats_for_feature_query(feature_name, query, collection, filter_, clustered_selection_id, cluster, filter_args):
     feature_filter_args = build_feature_filter(filter_args)
 
+    extracted_features = {
+        'screen_names': (model.screen_names, 'screen_name'),
+        'hashtags': (model.hashtags, 'hashtag'),
+        'user_mentions': (model.user_mentions, 'user_mention'),
+    }
+
     if feature_filter_args or query:
-        feature = text(
-            'select collection, tweet_id, feature_value from tweet, jsonb_array_elements_text(tweet.features->:feature) as feature_value'
-        ).columns(column('collection'), column('tweet_id'), column('feature_value')).bindparams(feature=feature_name).alias()
+
+        if feature_name in extracted_features:
+            table, feature_column = extracted_features[feature_name]
+            feature = select([table.c.collection, table.c.tweet_id, table.c[feature_column].label('feature_value')]).alias()
+        else:
+            feature = text(
+                'select collection, tweet_id, feature_value from tweet, jsonb_array_elements_text(tweet.features->:feature) as feature_value'
+            ).columns(column('collection'), column('tweet_id'), column('feature_value')).bindparams(feature=feature_name).alias()
 
         feature = (
             select([feature.c.feature_value, func.count().label('count')])
