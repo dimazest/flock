@@ -38,6 +38,11 @@ select collection, 'user_mentions' as feature_name, feature_value, count(*) coun
 from tweet, jsonb_array_elements_text(features->'user_mentions') feature_value
 where (tweet_id, collection) in (select * from filtered_tweets)
 group by collection, feature_value
+union all
+select collection, 'languages' as feature_name, feature_value, count(*) count
+from tweet, jsonb_array_elements_text(features->'languages') feature_value
+where (tweet_id, collection) in (select * from filtered_tweets)
+group by collection, feature_value
 order by count desc
 
 with no data;
