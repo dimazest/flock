@@ -30,4 +30,4 @@ tweets/share/%.txt: tweets/select/%.gz
 	zcat $< | ${POULTRY} show -t {t.id} > $@
 
 tweets/hydrate/%.gz: tweets/share/%.txt
-	cat $< | ${TWARC} hydrate - | gzip > $@ 
+	cat $< | ${TWARC} hydrate - | gzip > $@
