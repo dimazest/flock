@@ -4,5 +4,5 @@ from tweet, jsonb_array_elements(features->'hashtags') hashtag
 order by collection, tweet_id
 with no data;
 
-create index on feature_counts (collection, tweet_id, hashtag);
+create index on hashtags (collection, tweet_id, hashtag);
 
