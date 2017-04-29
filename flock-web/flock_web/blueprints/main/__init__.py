@@ -106,7 +106,7 @@ class TopicForm(FlaskForm):
     description = wtf.TextAreaField('Description')
     narrative = wtf.TextAreaField('Narrative')
 
-    difficulty = wtf.RadioField('How easy was it to develop this topic?', choices=[('easy', 'Easy'), ('moderate', 'Moderate'), ('difficult', 'Difficult')])
+    difficulty = wtf.RadioField('How easy was it to develop this topic?', [validators.Optional()], choices=[('easy', 'Easy'), ('moderate', 'Moderate'), ('difficult', 'Difficult')])
     inspiration = wtf.StringField('What was the inspiration for this topic?')
     notes = wtf.TextAreaField('General comment.')
 
