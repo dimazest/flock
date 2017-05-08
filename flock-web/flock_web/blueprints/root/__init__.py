@@ -16,6 +16,7 @@ from flock_web.app import db, url_for_other_page
 import flock_web.queries  as q
 import flock_web.model as fw_model
 
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 bp_root = Blueprint(
     'root', __name__,
@@ -207,10 +208,13 @@ def tweets_json():
         possibly_limit=False,
         cluster=g.cluster,
         clustered_selection_id=g.clustered_selection_id,
-    )
+    ).all()
+
+    vectorizer = TfidfVectorizer(binary=True)
+    vectors = vectorizer.fit_transform(t.text for t in tweets)
 
     def generate():
-        for t in tweets:
+        for t, v in zip(tweets, vectors):
             yield json.dumps(
                 {
                     'tweet_id': t.tweet_id,
@@ -218,6 +222,7 @@ def tweets_json():
                     'tokens': t.features['tokenizer'],
                     'language': t.features['languages'][0],
                     'created_at': t.created_at.isoformat(),
+                    'vector': v.toarray().flatten().tolist(),
                 }
             ) + '\r\n'
 
