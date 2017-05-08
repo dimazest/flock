@@ -35,6 +35,7 @@ def pull_collection(endpoint, values):
     g.collection = values.pop('collection')
 
     g.query = request.args.get('q')
+    g.query_type = 'multiword' if g.query is not None and ' ' in g.query else 'singleword'
     g.filter = request.args.get('filter', 'pmi')
     g.show_images = request.args.get('show_images') == 'on'
 
@@ -120,6 +121,7 @@ def tweets():
                 'clustered_selection_id': g.clustered_selection_id,
                 'count': count,
             },
+           queue=f'tweets_{g.query_type}',
         ) for count in (False, True)
     )
 
@@ -155,6 +157,7 @@ def tweets():
                     'clustered_selection_id': g.clustered_selection_id,
                     'cluster': g.cluster,
                 },
+                queue=f'stats_for_feature_{g.query_type}',
             ),
         )
         for f_name, f_alias in [('screen_names', 'Users'), ('hashtags', 'Hashtags'), ('user_mentions', 'User mentions')]
@@ -321,7 +324,11 @@ def features(feature_name):
 def cluster():
     selection_args = json.loads(request.form['selection_args'])
 
-    task = g.celery.send_task('flock_web.tasks.cluster_selection', kwargs={'selection_args': selection_args})
+    task = g.celery.send_task(
+        'flock_web.tasks.cluster_selection',
+        kwargs={'selection_args': selection_args},
+        queue=f'cluster_{g.query_type}'
+    )
 
     location = url_for('.task_result', task_id=task.id)
     return jsonify({'Location': location, 'info': task.info}), 202, {'Location': location}

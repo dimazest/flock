@@ -24,7 +24,7 @@ def build_feature_filter(filter_args):
 def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=True, story=None, cluster=None, clustered_selection_id=None, count=False):
     feature_filter_args = build_feature_filter(filter_args)
 
-    tweets = db.session.query(model.Tweet)
+    tweets = db.session.query(model.Tweet).without_no_load_balance_comment()
 
     if filter_ == 'none':
         tweets = (
@@ -90,7 +90,7 @@ def build_cluster_query(clustered_selection_id):
             .order_by(model.tweet_cluster.c.label)
             .alias()
         )
-    )
+    ).without_no_load_balance_comment()
 
 
 def stats_for_feature_query(feature_name, query, collection, filter_, clustered_selection_id, cluster, filter_args):
