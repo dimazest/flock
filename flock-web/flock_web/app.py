@@ -1,15 +1,15 @@
 import os
 import json
+import re
 
 import sqlalchemy as sa
 from celery import Celery
 
 from flask import Flask, request, url_for, g
 
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy, get_debug_queries, BaseQuery
 from flask_cache import Cache
 from flask_iniconfig import INIConfig
-from flask_sqlalchemy import get_debug_queries
 from flask_humanize import Humanize
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_login import LoginManager, current_user
@@ -21,8 +21,35 @@ from flock.model import metadata
 import flock_web.model as fw_model
 
 
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.sql.expression import Select
+from sqlalchemy.orm.query import _generative
+
+
+@compiles(Select)
+def compile(element, compiler, **kw):
+    s = compiler.visit_select(element, **kw)
+    if hasattr(element, '_apply_no_load_balance_comment'):
+        s = re.sub(r'^SELECT ', '/*NO LOAD BALANCE*/ SELECT ', s)
+    return s
+
+
+class PrefixedQuery(BaseQuery):
+    _apply_no_load_balance_comment = True
+
+    @_generative()
+    def without_no_load_balance_comment(self):
+        self._apply_no_load_balance_comment = False
+
+    def _compile_context(self, *arg, **kw):
+        context = BaseQuery._compile_context(self, *arg, **kw)
+        if self._apply_no_load_balance_comment:
+            context.statement._apply_no_load_balance_comment = True
+        return context
+
+
 cache = Cache()
-db = SQLAlchemy(metadata=metadata)
+db = SQLAlchemy(metadata=metadata, query_class=PrefixedQuery)
 ini_config = INIConfig()
 humanise = Humanize()
 toolbar = DebugToolbarExtension()
@@ -73,9 +100,10 @@ def restricted_url(endpoint=None, include=None, exclude=None, **single_args):
 
 
 def make_celery(app):
-    celery = Celery(app.import_name,
-                    backend=app.config['CELERY_RESULT_BACKEND'],
-                    broker=app.config['CELERY_BROKER_URL'],
+    celery = Celery(
+        app.import_name,
+        backend=app.config['CELERY_RESULT_BACKEND'],
+        broker=app.config['CELERY_BROKER_URL'],
     )
     celery.conf.update(app.config)
     TaskBase = celery.Task

@@ -190,7 +190,7 @@ def stats_for_feature(self, feature_name, feature_alias, active_features, **quer
     return {
         'data': db.session.query(
             q.stats_for_feature_query(feature_name=feature_name, **query_kwargs).limit(12).alias()
-        ).all(),
+        ).without_no_load_balance_comment().all(),
         'task_name': self.name,
         'feature_name': feature_name,
         'feature_alias': feature_alias,
