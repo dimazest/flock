@@ -1,6 +1,6 @@
 import json
 
-from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context, current_app
+from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context, current_app, flash
 import flask_login
 
 from sqlalchemy import func, select, Table, Column, Integer, String, sql
@@ -106,6 +106,12 @@ def index():
 @bp_root.route('/tweets')
 @flask_login.login_required
 def tweets():
+
+    if not g.query:
+        flash('Please enter a query.')
+
+        return (redirect(url_for('.index')))
+
     page_num = request.args.get('_page', 1, type=int)
     items_per_page = request.args.get('_items_per_page', 100, type=int)
 
