@@ -18,20 +18,20 @@ import flock_web.model as fw_model
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-bp_root = Blueprint(
-    'root', __name__,
+bp_collection = Blueprint(
+    'collection', __name__,
     static_folder='static',
     template_folder='templates',
     url_prefix='/c/<collection>'
     )
 
 
-@bp_root.url_defaults
+@bp_collection.url_defaults
 def add_collection(endpoint, values):
     values.setdefault('collection', getattr(g, 'collection', None))
 
 
-@bp_root.url_value_preprocessor
+@bp_collection.url_value_preprocessor
 def pull_collection(endpoint, values):
     g.collection = values.pop('collection')
 
@@ -68,7 +68,7 @@ def pull_collection(endpoint, values):
         g.topic = None
 
 
-@bp_root.route('/')
+@bp_collection.route('/')
 @flask_login.login_required
 def index():
 
@@ -94,7 +94,7 @@ def index():
         tweets = []
 
     return render_template(
-        'root/index.html',
+        'collection/index.html',
         endpoint='.index',
         collection=g.collection,
         stories=stories,
@@ -104,7 +104,7 @@ def index():
     )
 
 
-@bp_root.route('/tweets')
+@bp_collection.route('/tweets')
 @flask_login.login_required
 def tweets():
 
@@ -172,7 +172,7 @@ def tweets():
 
     response = Response(
         render_template(
-            'root/tweets.html',
+            'collection/tweets.html',
             tweet_task=tweet_task,
             tweet_count=tweet_count,
             # page=page,
@@ -198,7 +198,7 @@ def tweets():
     return response
 
 
-@bp_root.route('/tweets.jsonl')
+@bp_collection.route('/tweets.jsonl')
 def tweets_json():
     tweets = q.build_tweet_query(
         collection=g.collection,
@@ -229,7 +229,7 @@ def tweets_json():
     return Response(stream_with_context(generate()), mimetype='text/plain')
 
 
-@bp_root.route('/tweets/<feature_name>')
+@bp_collection.route('/tweets/<feature_name>')
 @flask_login.login_required
 def features(feature_name):
     other_feature = request.args.get('_other', None)
@@ -321,7 +321,7 @@ def features(feature_name):
         items = db.session.execute(stmt)
 
     return render_template(
-        'root/features.html',
+        'collection/features.html',
         feature_name=feature_name,
         other_feature_name=other_feature,
         other_feature_values=other_feature_values,
@@ -330,7 +330,7 @@ def features(feature_name):
     )
 
 
-@bp_root.route('/cluster', methods=['POST'])
+@bp_collection.route('/cluster', methods=['POST'])
 @flask_login.login_required
 def cluster():
     selection_args = json.loads(request.form['selection_args'])
@@ -345,7 +345,7 @@ def cluster():
     return jsonify({'Location': location, 'info': task.info}), 202, {'Location': location}
 
 
-@bp_root.route('/cluster/status/<task_id>')
+@bp_collection.route('/cluster/status/<task_id>')
 @flask_login.login_required
 def cluster_status(task_id):
     task = g.celery.AsyncResult(task_id)
@@ -381,7 +381,7 @@ def cluster_status(task_id):
             clusters = q.build_cluster_query(clustered_selection._id)
 
             cluster_html_snippet = render_template(
-                'root/cluster_snippet.html',
+                'collection/cluster_snippet.html',
                 clusters=clusters,
             )
 
@@ -390,7 +390,7 @@ def cluster_status(task_id):
     return jsonify(response)
 
 
-@bp_root.route('/tasks/<task_id>')
+@bp_collection.route('/tasks/<task_id>')
 @flask_login.login_required
 def task_result(task_id):
     task = g.celery.AsyncResult(task_id)
@@ -402,10 +402,10 @@ def task_result(task_id):
         if task.result.get('task_name') == 'flock_web.tasks.tweets':
 
             if task.result['count']:
-                render_tweet_count = get_template_attribute('root/macro.html', 'render_tweet_count')
+                render_tweet_count = get_template_attribute('collection/macro.html', 'render_tweet_count')
                 result['html'] = render_tweet_count(task.result['data'])
             else:
-                render_tweets = get_template_attribute('root/macro.html', 'render_tweets')
+                render_tweets = get_template_attribute('collection/macro.html', 'render_tweets')
 
                 result['html'] = render_tweets(
                     topic=g.topic,
@@ -414,7 +414,7 @@ def task_result(task_id):
                     relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
                 )
         elif task.result.get('task_name') == 'flock_web.tasks.stats_for_feature':
-            render_stats = get_template_attribute('root/macro.html', 'render_stats')
+            render_stats = get_template_attribute('collection/macro.html', 'render_stats')
 
             features = task.result['data']
             selected_feature_names = set(name for name, _ in features)
@@ -435,7 +435,7 @@ def task_result(task_id):
         elif task.result.get('task_name') == 'flock_web.tasks.cluster_selection':
             result['data'] = task.result,
             result['html'] = render_template(
-                'root/cluster_snippet.html',
+                'collection/cluster_snippet.html',
                 clusters=task.result['data'],
             )
 

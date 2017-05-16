@@ -129,7 +129,7 @@ def topic(topic_id=None):
         if topic_id is None:
             collection = request.form['return_to_collection']
             query = fw_model.TopicQuery(**selection_args)
-            redirect_to = url_for('root.tweets', collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, **query.filter_args_dict)
+            redirect_to = url_for('collection.tweets', collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, **query.filter_args_dict)
 
             return redirect(redirect_to)
 
@@ -168,7 +168,7 @@ def topic(topic_id=None):
 
             if 'return_to_collection' in request.form:
                 collection = request.form['return_to_collection']
-                redirect_to = url_for('root.tweets', topic=topic.id, collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, **query.filter_args_dict)
+                redirect_to = url_for('collection.tweets', topic=topic.id, collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, **query.filter_args_dict)
 
             new_query_created = True
 
@@ -304,4 +304,3 @@ def user():
         'main/user.html',
         actions=db.session.query(fw_model.UserAction).filter_by(user=flask_login.current_user).order_by(fw_model.UserAction.timestamp)
     )
-

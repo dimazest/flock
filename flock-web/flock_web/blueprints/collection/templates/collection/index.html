@@ -1,5 +1,5 @@
-{% extends "root/base.html" %}
-{% import "root/macro.html" as m %}
+{% extends "collection/base.html" %}
+{% import "collection/macro.html" as m %}
 
 {% block title %} {{ current_app.config.get('collection:{}'.format(collection), {}).get('title', collection) }} {% endblock %}
 
