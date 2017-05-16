@@ -147,8 +147,8 @@ def create_app(config_file, return_celery=False):
     from .blueprints.main import bp_main
     app.register_blueprint(bp_main)
 
-    from .blueprints.root import bp_root
-    app.register_blueprint(bp_root)
+    from .blueprints.collection import bp_collection
+    app.register_blueprint(bp_collection)
 
     app.jinja_env.globals['url_for_other_page'] = url_for_other_page
     app.jinja_env.globals['restricted_url'] = restricted_url
@@ -166,8 +166,8 @@ def create_app(config_file, return_celery=False):
     def track_user():
         if  not current_user.is_authenticated or not request.endpoint or request.endpoint.startswith(
                 (
-                    '_debug_toolbar', 'root.task_result', 'static', 'main.user',
-                    'root.cluster_status',
+                    '_debug_toolbar', 'collection.task_result', 'static', 'main.user',
+                    'collection.cluster_status',
                 )
         ):
             return
@@ -182,11 +182,15 @@ def create_app(config_file, return_celery=False):
 
         action = fw_model.UserAction(
             user=current_user,
+            url=request.url,
             endpoint=request.endpoint,
             view_args=request.view_args,
             collection=getattr(g, 'collection', None),
             request_args=dict(request.args.lists()),
             request_form=request_form,
+            headers={
+                'Referer': request.headers['Referer']
+            },
         )
 
         db.session.add(action)
