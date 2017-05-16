@@ -182,11 +182,15 @@ def create_app(config_file, return_celery=False):
 
         action = fw_model.UserAction(
             user=current_user,
+            url=request.url,
             endpoint=request.endpoint,
             view_args=request.view_args,
             collection=getattr(g, 'collection', None),
             request_args=dict(request.args.lists()),
             request_form=request_form,
+            headers={
+                'Referer': request.headers['Referer']
+            },
         )
 
         db.session.add(action)
