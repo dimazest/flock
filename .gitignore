@@ -24,6 +24,11 @@ tweets/select
 tweets/filter
 tweets/hydrate
 tweets/db
+.stories_*
+.tweets_*
+
+views/*.created
+views/*.refreshed
 
 # Juupyter
 .ipynb_checkpoints/
@@ -33,3 +38,5 @@ __pycache__/
 TAGS
 .projectile
 *.DS_Store
+
+node_modules
