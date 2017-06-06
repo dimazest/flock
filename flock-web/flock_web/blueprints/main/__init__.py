@@ -106,7 +106,20 @@ class TopicForm(FlaskForm):
     description = wtf.TextAreaField('Description')
     narrative = wtf.TextAreaField('Narrative')
 
-    difficulty = wtf.RadioField('How easy was it to develop this topic?', [validators.Optional()], choices=[('easy', 'Easy'), ('moderate', 'Moderate'), ('difficult', 'Difficult')])
+    difficulty = wtf.RadioField(
+        'How easy was it to develop this topic?',
+        [validators.Optional()],
+        choices=[('easy', 'Easy'), ('moderate', 'Moderate'), ('difficult', 'Difficult')],
+    )
+    familiarity = wtf.RadioField(
+        'How familiar are you with the topi?',
+        [validators.Optional()],
+        choices=[
+            ('VIN', 'Familiar, I was checking a specific piece of information.'),
+            ('CIN', 'Familiar, but I was interested in gaining new knowledge about the topic.'),
+            ('MIN', 'Unfamiliar, the search was in more or less unknown knowledge area.'),
+        ],
+    )
     inspiration = wtf.StringField('What was the inspiration for this topic?')
     notes = wtf.TextAreaField('General comment.')
 
@@ -148,6 +161,7 @@ def topic(topic_id=None):
 
                 topic.questionnaire.answer = {
                     'difficulty': form.difficulty.data,
+                    'familiarity': form.familiarity.data,
                     'inspiration': form.inspiration.data,
                     'notes': form.notes.data,
                 }

@@ -47,6 +47,16 @@
           </div>
         </div>
         <div class="form-group row">
+          {{ form.familiarity.label(class="col-2 col-form-label") }}
+          <div class="col-10 form-check form-check-inline">
+            {% for subfield in form.familiarity %}
+              <label class="form-check-label">
+                {{ subfield(class_="form-check-input") }} {{ subfield.label }}
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="form-group row">
           {{ form.inspiration.label(class="col-2 col-form-label") }}
           <div class="col-10">
             {{ form.inspiration(size=200, class_="form-control", placeholder="Own interest, Google search (provide a URL) or one of the stories.") }}
