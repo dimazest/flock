@@ -241,7 +241,7 @@ def topic(topic_id=None):
         tweets=tweets,
 
         difficulty=topic.questionnaire.answer.get('difficulty') if topic.questionnaire is not None else None,
-        familiarity=topic.questionnaire.answer.get('familiarity') if topic.qustionnaire is not None else None,
+        familiarity=topic.questionnaire.answer.get('familiarity') if topic.questionnaire is not None else None,
         inspiration=topic.questionnaire.answer.get('inspiration')  if topic.questionnaire is not None else None,
         notes=topic.questionnaire.answer.get('notes')  if topic.questionnaire is not None else None,
     )
