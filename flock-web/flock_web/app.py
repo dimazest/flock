@@ -190,7 +190,7 @@ def create_app(config_file, return_celery=False):
             request_form=request_form,
             headers={
                 'Referer': request.headers['Referer']
-            },
+            } if 'Referer' in request.headers else {},
         )
 
         db.session.add(action)
