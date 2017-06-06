@@ -112,7 +112,7 @@ class TopicForm(FlaskForm):
         choices=[('easy', 'Easy'), ('moderate', 'Moderate'), ('difficult', 'Difficult')],
     )
     familiarity = wtf.RadioField(
-        'How familiar are you with the topi?',
+        'How familiar are you with the topic?',
         [validators.Optional()],
         choices=[
             ('VIN', 'Familiar, I was checking a specific piece of information.'),
