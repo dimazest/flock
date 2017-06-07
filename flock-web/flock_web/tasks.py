@@ -79,7 +79,7 @@ def cluster_selection(self, selection_args):
     filter_ = selection_args.pop('filter', None)
 
     update_state(2, 7, status='Querying the database...')
-    tweets = q.build_tweet_query(possibly_limit=False, filter_=filter_, **selection_args)
+    tweets = q.build_tweet_query(possibly_limit=False, filter_=filter_, **selection_args).limit(400_000)
 
     def tokens(tweets):
         for tweet in tweets:
@@ -94,7 +94,7 @@ def cluster_selection(self, selection_args):
 
     number_of_tweets = len(token_stream['tweet_id'].drop_duplicates())
 
-    if number_of_tweets > 400_000:
+    if number_of_tweets > 300_000:
         min_token_freq = 200
         min_trending_score = 2
         dbscan_min_samples = 3
