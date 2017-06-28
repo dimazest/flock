@@ -470,3 +470,12 @@ def task_result(task_id):
         )
 
     return jsonify(result)
+
+
+@bp_collection.route('/eval/topics/<topic_id>/cluster')
+@flask_login.login_required
+def eval_topic_cluster(topic_id=None):
+
+    return render_template(
+        'collection/eval_topic_cluster.html',
+    )
