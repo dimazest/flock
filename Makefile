@@ -29,5 +29,8 @@ ublogen: $(patsubst ${UBLOG_15_APRIL}/%,${UBLOG_15_APRIL_EN}/%,$(wildcard ${UBLO
 tweets/share/%.txt: tweets/select/%.gz
 	zcat $< | ${POULTRY} show -t {t.id} > $@
 
+tweets/hydrate/RTS16/qrelsfile.gz: rts/2016/eval_qrelsfile
+	cat $< | cut -d' ' -f3 | ${TWARC} hydrate - | gzip > $@
+
 tweets/hydrate/%.gz: tweets/share/%.txt
 	cat $< | ${TWARC} hydrate - | gzip > $@
