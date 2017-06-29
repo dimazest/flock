@@ -9,7 +9,6 @@ from poultry import readline_dir
 
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql as pg
-from sqlalchemy.exc import ProgrammingError
 
 from . import model
 
@@ -88,7 +87,7 @@ def export(clusters, source):
     result = '\n\n'.join(
         template.format(
             source=s,
-            conditions = ' or '.join("'{} ' in ttext".format(u) for u in users)
+            conditions=' or '.join("'{} ' in ttext".format(u) for u in users)
         )
         for s, users in clusters.items() if not source or s in source
     )

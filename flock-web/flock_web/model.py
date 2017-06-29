@@ -1,8 +1,6 @@
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql as pg
 
-from werkzeug.datastructures import ImmutableMultiDict
-
 import flask_login
 
 from flock.model import Base
@@ -24,9 +22,13 @@ class User(Base, flask_login.UserMixin):
 
 
 class Topic(Base):
-    __tablename__ ='topic'
+    __tablename__ = 'topic'
 
     id = sa.Column(sa.Integer, primary_key=True)
+
+    # alter table topic add column rts_id varchar(10);
+    # alter table topic add constraint rts_id_unique unique (rts_id);
+    rts_id = sa.Column(sa.String(10), nullable=True, unique=True)
 
     title = sa.Column(sa.String(500), nullable=False)
     description = sa.Column(sa.String(1000), nullable=True)
