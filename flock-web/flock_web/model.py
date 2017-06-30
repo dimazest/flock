@@ -26,10 +26,6 @@ class Topic(Base):
 
     id = sa.Column(sa.Integer, primary_key=True)
 
-    # alter table topic add column rts_id varchar(10);
-    # alter table topic add constraint rts_id_unique unique (rts_id);
-    rts_id = sa.Column(sa.String(10), nullable=True, unique=True)
-
     title = sa.Column(sa.String(500), nullable=False)
     description = sa.Column(sa.String(1000), nullable=True)
     narrative = sa.Column(sa.String(1000), nullable=True)
@@ -41,6 +37,18 @@ class Topic(Base):
 
     def judgment_count(self, value):
         return len([j for j in self.judgments if j.judgment == value])
+
+
+class EvalTopic(Base):
+    __tablename__ = 'eval_topic'
+
+    id = sa.Column(sa.Integer, primary_key=True)
+    rts_id = sa.Column(sa.String(10), unique=True, nullable=False)
+
+    title = sa.Column(sa.String(500), nullable=False)
+
+    user_id = sa.Column(sa.Integer, sa.ForeignKey('user.id'), nullable=False)
+    user = sa.orm.relationship('User', backref='eval_topics')
 
 
 class TopicQuery(Base):

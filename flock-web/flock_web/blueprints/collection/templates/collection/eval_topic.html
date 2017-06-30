@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% import "main/macro.html" as m %} {% import "collection/macro.html" as rm %} {# {% block title %} {{ form.title.data }} {% endblock %} #} {% block content %}
+
+<div class="row">
+
+    <div class="col-xl-4 col-md-6 bg-faded sidebar bd-links">
+
+        <div class="row justify-content-md-center">
+            <div class="col col-12">
+
+                <h1>Evaluation topic {{ eval_topic.rts_id}}</h1>
+
+                <form>
+                    <div class="form-group row">
+                        <label class="col-2 col-form-label">Title</label>
+                        <div class="col-10">
+                            <input class="form-control" type="text" placeholder="{{ eval_topic.title }}" readonly>
+                        </div>
+                    </div>
+                </form>
+
+                {# {{ rm.render_tweets(tweets, show_images=True, show_alert=False) }} #}
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock content %} {% block extra_scripts %}
+
+<script>
+    ! function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (!d.getElementById(id)) {
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }
+    }(document, "script", "twitter-wjs");
+</script>
+
+{% endblock extra_scripts %}
