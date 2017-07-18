@@ -23,18 +23,21 @@
                     </div>
                 </form>
 
-                {# {{ rm.render_tweets(tweets, show_images=True, show_alert=False) }} #}
-
             </div>
         </div>
     </div>
 
+    <main class="col-xl-8 col-md-6 offset-xl-4">
+        {{ rm.render_tweets(tweet_by_id.values()) }}
+    </main>
+
+
 </div>
 
+{% endblock content %}
 
 {% block extra_scripts %}
 
-{% endblock content %}
 <script>
     ! function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];

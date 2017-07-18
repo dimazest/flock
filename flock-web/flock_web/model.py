@@ -44,11 +44,31 @@ class EvalTopic(Base):
 
     id = sa.Column(sa.Integer, primary_key=True)
     rts_id = sa.Column(sa.String(10), unique=True, nullable=False)
+    collection = sa.Column(sa.String(100), nullable=False)
 
     title = sa.Column(sa.String(500), nullable=False)
 
     user_id = sa.Column(sa.Integer, sa.ForeignKey('user.id'), nullable=False)
     user = sa.orm.relationship('User', backref='eval_topics')
+
+    def relevant_count(self):
+        return len([j for j in self.judgments if j.judgment > 0])
+
+
+class EvalRelevanceJudgment(Base):
+    __tablename__ = 'eval_relevance_judgment'
+
+    eval_topic_id = sa.Column(sa.Integer, sa.ForeignKey('eval_topic.id'), nullable=False, primary_key=True)
+    eval_topic = sa.orm.relationship('EvalTopic', backref='judgments')
+
+    tweet_id = sa.Column(
+        sa.BigInteger,
+        # sa.ForeignKey('tweet.tweet_id'),
+        nullable=False,
+        primary_key=True,
+    )
+
+    judgment = sa.Column(sa.Integer, nullable=False)
 
 
 class TopicQuery(Base):

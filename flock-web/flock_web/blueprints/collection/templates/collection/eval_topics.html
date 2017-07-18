@@ -5,19 +5,23 @@
 
 {% block content %}
 
-  <h1>Evaluation topics ({{ user.eval_topics|count }})</h1>
+  <h1>Evaluation topics ({{ user_eval_topics.count() }})</h1>
 
   <table class="table table-striped">
     <thead>
       <tr>
         <th>ID</th>
+        <th>All tweets</th>
+        <th>Relevant tweets</th>
       </tr>
     </thead>
     <tbody>
-      {%- for eval_topic in user.eval_topics %}
+      {%- for eval_topic in user_eval_topics %}
         <tr>
           {# <td>{{ eval_topic.rts_id }}</td> #}
-          <td><a href="{{ url_for('.eval_topic', rts_id=eval_topic.rts_id) }}">{{ eval_topic.title }}</a></td>
+          <td>{{ eval_topic.title }}</td>
+          <td><a href="{{ url_for('.eval_topic', rts_id=eval_topic.rts_id) }}">{{ eval_topic.judgments|count }}</a></td>
+          <td>{{ eval_topic.relevant_count() }}</td>
         </tr>
       {%- endfor %}
     </tbody>

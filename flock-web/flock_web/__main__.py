@@ -34,6 +34,7 @@ def initdb(session):
         tables=[
             o.__table__ for o in [
                 fw_model.User, fw_model.Topic, fw_model.TopicQuery, fw_model.RelevanceJudgment, fw_model.TaskResult, fw_model.UserAction, fw_model.TopicQuestionnaire,
+                fw_model.EvalTopic, fw_model.EvalRelevanceJudgment,
             ]
         ]
     )
@@ -41,9 +42,9 @@ def initdb(session):
 
 @cli.command()
 @click.option('--session', default='postgresql:///twitter', callback=create_session)
-@click.option('--collection')
 @click.option('--assr_topic_file', type=click.File())
-def insert_eval_topics(session, collection, assr_topic_file):
+@click.option('--collection')
+def insert_eval_topics(session, assr_topic_file, collection):
 
     for line in assr_topic_file:
         rts_topic_id, assessor_user_name = line.split()
@@ -59,12 +60,38 @@ def insert_eval_topics(session, collection, assr_topic_file):
             logger.warning('A new user %s is created.', assessor_user_name)
 
         session.add(
-            fw_model.Topic(
+            fw_model.EvalTopic(
                 rts_id=rts_topic_id,
+                collection=collection,
                 title=rts_topic_id,
                 user=assessor,
             )
         )
+
+    session.commit()
+
+
+@cli.command()
+@click.option('--session', default='postgresql:///twitter', callback=create_session)
+@click.option('--collection')
+@click.option('--qrels_file', type=click.File())
+def insert_eval_relevance_judgements(session, collection, qrels_file):
+
+    for line in qrels_file:
+        rts_topic_id, _, tweet_id, judgment = line.split()
+        tweet_id = int(tweet_id)
+        judgment = int(judgment)
+
+        eval_topic = session.query(fw_model.EvalTopic).filter_by(rts_id=rts_topic_id, collection=collection).one_or_none()
+
+        if eval_topic is None:
+            if collection == 'RTS16':
+                logger.warning("Evaluation topic %s doesn't exist in collection %s!", rts_topic_id, collection)
+                continue
+            else:
+                raise ValueError(f"Evaluation topic {rts_topic_id} doesn't exist in collection {collection}!")
+
+        eval_topic.judgments.append(fw_model.EvalRelevanceJudgment(tweet_id=tweet_id, judgment=judgment))
 
     session.commit()
 

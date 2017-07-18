@@ -346,9 +346,56 @@ def task_result(task_id):
     return jsonify(result)
 
 
+@bp_collection.route('/eval/topics')
+@flask_login.login_required
+def user_eval_topics():
+
+    user_eval_topics = db.session.query(fw_model.EvalTopic).filter_by(user=flask_login.current_user, collection=g.collection)
+
+    return render_template(
+        'collection/eval_topics.html',
+        user_eval_topics=user_eval_topics,
+    )
+
+
+@bp_collection.route('/eval/topics/<rts_id>')
+@flask_login.login_required
+def eval_topic(rts_id):
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=rts_id, collection=g.collection).one()
+
+    tweet_by_id = {
+        j.tweet_id: {
+            'tweet_id': j.tweet_id,
+            'features': {
+                'repr': {
+                    'text': j.tweet_id,
+                    'user__screen_name': 'MISSING TWEET',
+                }
+            },
+        }
+        for j in eval_topic.judgments
+    }
+
+    for tweet in (
+            db.session.query(model.Tweet)
+            .filter(
+                model.Tweet.collection == g.collection,
+                model.Tweet.tweet_id.in_(tweet_by_id.keys()),
+            )
+
+    ):
+        tweet_by_id[tweet.tweet_id] = tweet
+
+    return render_template(
+        'collection/eval_topic.html',
+        eval_topic=eval_topic,
+        tweet_by_id=tweet_by_id,
+    )
+
+
 @bp_collection.route('/eval/topics/<topic_id>/cluster')
 @flask_login.login_required
-def eval_topic_cluster(topic_id=None):
+def eval_topic_cluster(topic_id):
 
     return render_template(
         'collection/eval_topic_cluster.html',
