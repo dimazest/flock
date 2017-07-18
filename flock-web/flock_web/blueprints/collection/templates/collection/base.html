@@ -2,10 +2,10 @@
 
 {% block navbar_body %}
 {% for c in config.COLLECTIONS %}
-  <li class="nav-item {% if c == collection %}active{% endif %}">
-    <a class="nav-link" href="{{ restricted_url(endpoint, collection=c, story=None, cluster=None) if c != collection else url_for(endpoint, collection=collection, show_images='on' if g.show_images else '', filter=g.filter, q=g.query) }}">
-      {{ current_app.config.get('collection:{}'.format(c),{}).get('title', c) }}
+<li class="nav-item {% if c == g.collection %}active{% endif %}">
+    <a class="nav-link" href="{{ restricted_url(request.endpoint, collection=c) if c != collection else url_for(request.endpoint, collection=collection, show_images='on' if g.show_images else '', filter=g.filter, q=g.query) }}">
+        {{ config.get('collection:{}'.format(c),{}).get('title', c) }}
     </a>
-  </li>
+</li>
 {% endfor %}
 {% endblock navbar_body %}

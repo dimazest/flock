@@ -1,19 +1,13 @@
 import json
 
-from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context, current_app, flash
+from flask import render_template, Blueprint, request, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context, flash
 import flask_login
 
-from sqlalchemy import func, select, Table, Column, Integer, String, sql
-from sqlalchemy.sql.expression import text, and_, or_, not_, join, column
 from sqlalchemy.orm.exc import NoResultFound
-from paginate_sqlalchemy import SqlalchemySelectPage, SqlalchemyOrmPage
-import crosstab
-
-from celery.execute import send_task
 
 from flock import model
-from flock_web.app import db, url_for_other_page
-import flock_web.queries  as q
+from flock_web.app import db
+import flock_web.queries as q
 import flock_web.model as fw_model
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -60,7 +54,6 @@ def pull_collection(endpoint, values):
     if g.cluster:
         assert g.clustered_selection_id is not None
 
-
     topic_id = request.args.get('topic', None, type=int)
     if topic_id is not None:
         g.topic = db.session.query(fw_model.Topic).get(topic_id)
@@ -95,12 +88,10 @@ def index():
 
     return render_template(
         'collection/index.html',
-        endpoint='.index',
         collection=g.collection,
         stories=stories,
         selected_story=story,
         tweets=tweets,
-        current_app=current_app,
     )
 
 
@@ -113,8 +104,8 @@ def tweets():
 
         return (redirect(url_for('.index')))
 
-    page_num = request.args.get('_page', 1, type=int)
-    items_per_page = request.args.get('_items_per_page', 100, type=int)
+    # page_num = request.args.get('_page', 1, type=int)
+    # items_per_page = request.args.get('_items_per_page', 100, type=int)
 
     tweet_task, tweet_count = (
         g.celery.send_task(
@@ -128,16 +119,9 @@ def tweets():
                 'clustered_selection_id': g.clustered_selection_id,
                 'count': count,
             },
-           queue=f'tweets_{g.query_type}',
+            queue=f'tweets_{g.query_type}',
         ) for count in (False, True)
     )
-
-    # page = SqlalchemyOrmPage(
-    #     tweets,
-    #     page=page_num,
-    #     items_per_page=items_per_page,
-    #     url_maker=url_for_other_page,
-    # )
 
     if g.clustered_selection_id:
         clusters = q.build_cluster_query(g.clustered_selection_id)
@@ -175,23 +159,14 @@ def tweets():
             'collection/tweets.html',
             tweet_task=tweet_task,
             tweet_count=tweet_count,
-            # page=page,
             stats=stat_tasks,
-            query=g.query,
             query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
             filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
             selection_args=json.dumps(g.selection_args),
             selection_for_topic_args=json.dumps(selection_for_topic_args),
             topics=flask_login.current_user.topics,
-            selected_filter=g.filter,
             clusters=clusters,
-            selected_cluster=g.cluster,
-            collection=g.collection,
-            show_images=g.show_images,
-            endpoint='.tweets',
-            selected_topic=g.topic,
             # relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
-            current_app=current_app,
         ),
     )
     response.headers['X-Accel-Buffering'] = 'no'
@@ -227,107 +202,6 @@ def tweets_json():
             ) + '\r\n'
 
     return Response(stream_with_context(generate()), mimetype='text/plain')
-
-
-@bp_collection.route('/tweets/<feature_name>')
-@flask_login.login_required
-def features(feature_name):
-    other_feature = request.args.get('_other', None)
-    unstack = request.args.get('_unstack', None) if other_feature is not None else None
-    other_feature_values = None
-
-    page_num = int(request.args.get('_page', 1))
-    items_per_page = int(request.args.get('_items_per_page', 100))
-
-    feature_select = stats_for_feature(feature_name, g.feature_filter_args)
-
-    page = SqlalchemySelectPage(
-        db.session, feature_select,
-        page=page_num, items_per_page=items_per_page,
-        url_maker=url_for_other_page,
-    )
-    items = page.items
-
-    if other_feature is not None:
-        feature_column = sql.literal_column('feature', String)
-        other_feature_column = sql.literal_column('other_feature', String)
-        stmt = (
-            select(
-                [feature_column, other_feature_column, func.count()]
-            )
-            .select_from(
-                text(
-                    'tweet, '
-                    'jsonb_array_elements_text(tweet.features->:feature) as feature, '
-                    'jsonb_array_elements_text(tweet.features->:other_feature) as other_feature'
-                ).bindparams(feature=feature_name, other_feature=other_feature)
-            ).where(
-                and_(
-                    sql.literal_column('collection') == g.collection,
-                    feature_column.in_(
-                        feature_select
-                        .with_only_columns(['feature'])
-                        .offset((page_num - 1) * items_per_page)
-                        .limit(items_per_page)
-                    )
-                )
-            )
-            .group_by(feature_column, other_feature_column)
-        )
-
-        items = db.session.execute(stmt.order_by(func.count().desc()))
-
-    if unstack:
-        other_feature_values_select = (
-            select([other_feature_column.distinct()])
-            .select_from(stmt.alias())
-        )
-        other_feature_values = [
-            v for v, in
-            db.session.execute(other_feature_values_select.order_by(other_feature_column))
-        ]
-
-        from sqlalchemy import MetaData
-        ret_types = Table(
-            '_t_', MetaData(),
-            Column('feature', String),
-            extend_existing=True,
-            *[Column(v, Integer) for v in other_feature_values]
-        )
-
-        row_total = crosstab.row_total(
-            [ret_types.c[v] for v in other_feature_values]
-        ).label('total')
-
-        stmt = (
-            select(
-                [
-                    '*', row_total,
-                ]
-            )
-            .select_from(
-                crosstab.crosstab(
-                    stmt,
-                    ret_types,
-                    categories=other_feature_values_select,
-                )
-            )
-            .order_by(
-                row_total.desc(),
-                ret_types.c.feature,
-            )
-        )
-
-        items = db.session.execute(stmt)
-
-    return render_template(
-        'collection/features.html',
-        feature_name=feature_name,
-        other_feature_name=other_feature,
-        other_feature_values=other_feature_values,
-        page=page,
-        items=items,
-    )
 
 
 @bp_collection.route('/cluster', methods=['POST'])

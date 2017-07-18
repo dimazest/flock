@@ -1,4 +1,9 @@
-{% extends "base.html" %} {% import "main/macro.html" as m %} {% import "collection/macro.html" as rm %} {# {% block title %} {{ form.title.data }} {% endblock %} #} {% block content %}
+{% extends "base.html" %}
+{% import "main/macro.html" as m %}
+{% import "collection/macro.html" as rm %}
+{# {% block title %} {{ form.title.data }} {% endblock %} #}
+
+{% block content %}
 
 <div class="row">
 
@@ -27,8 +32,9 @@
 </div>
 
 
-{% endblock content %} {% block extra_scripts %}
+{% block extra_scripts %}
 
+{% endblock content %}
 <script>
     ! function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];

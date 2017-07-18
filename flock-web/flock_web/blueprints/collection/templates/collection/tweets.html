@@ -1,7 +1,7 @@
 {% extends "collection/base.html" %}
 {% import "collection/macro.html" as m %}
 
-{% block title %} {{ query }} | {{ current_app.config.get('collection:{}'.format(collection), {}).get('title', collection) }} {% endblock %}
+{% block title %} {{ g.query }} | {{ config.get('collection:{}'.format(g.collection), {}).get('title', g.collection) }} {% endblock %}
 
 
 {% block content %}
@@ -21,7 +21,7 @@
       <form class="sidebar-element" action="{{ url_for('.tweets') }}" method="get">
         <div class="row" id="sidebar-search-box">
           <div class="col-10">
-            <input type="text" class="form-control" placeholder="Search" name="q" {% if query %} value="{{ query }}" {% endif %}>
+            <input type="text" class="form-control" placeholder="Search" name="q" {% if g.query %} value="{{ g.query }}" {% endif %}>
           </div>
           <div class="col-2">
             <button class="btn btn-outline-success my-2 my-sm-0 w-100" type="submit">Search</button>
@@ -32,31 +32,17 @@
         {% endfor %}
       </form>
 
-
-      {# {{ render_pagination(page) }} #}
-
       <div id="screen_names_stats"></div>
       <div id="hashtags_stats"></div>
       <div id="user_mentions_stats"></div>
 
       <div id="clusters">
-          {% if clusters %}
-          {{ m.render_clusters(clusters, selected_cluster=selected_cluster) }}
-          {% else %}
-          <p>
-              <div id='clustering_progress_container' class="progress" style="display: none;">
-                  <div id='clustering_progress' class="progress-bar" role="progressbar"></div>
-              </div>
-              <button id="start-clustering-task" class="btn btn-outline-success w-100">Cluster</button>
-
-              {# <form class="sidebar-element" action="{{ url_for('.cluster') }}" method="post"> #}
-                  {#   <input type="hidden" name="redirect" value="yes"> #}
-                  {#   <input type="hidden" name="selection_args" value="{{ selection_args }}"> #}
-                  {#   <input type="hidden" name="from_url" value="{{ restricted_url('.tweets') }}"> #}
-                  {#   <button class="btn btn-outline-secondary my-2 my-sm-0 w-100" type="submit">Cluster (POST)</button> #}
-                  {# </form> #}
-          </p>
-          {% endif %}
+        <p>
+          <div id='clustering_progress_container' class="progress" style="display: none;">
+            <div id='clustering_progress' class="progress-bar" role="progressbar"></div>
+          </div>
+          <button id="start-clustering-task" class="btn btn-outline-success w-100">Cluster</button>
+        </p>
       </div>
 
     </div>
@@ -77,7 +63,7 @@
 
     <div class="form-check mb-2 mr-5 mb-sm-0">
       <label class="form-check-hide-images">
-        <input class="form-check-input" type="checkbox" name="show_images" {% if show_images %}checked{% endif %} onchange="this.form.submit()">
+        <input class="form-check-input" type="checkbox" name="show_images" {% if g.show_images %}checked{% endif %} onchange="this.form.submit()">
         <span class="navbar-text">Show images</span>
       </label>
     </div>
@@ -86,7 +72,7 @@
       <label class="mr-sm-2 navbar-text" for="inlineFilterSelect">Filtering</label>
       <select name="filter" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFilterSelect" onchange="this.form.submit()">
         {% for filter_value, filter_option in [('none', 'Disabled'), ('pmi', 'Enabled')] %}
-          <option value="{{ filter_value }}" {% if filter_value == selected_filter %}selected{% endif %}>{{ filter_option }}</option>
+          <option value="{{ filter_value }}" {% if filter_value == g.filter %}selected{% endif %}>{{ filter_option }}</option>
         {% endfor %}
       </select>
     </div>
@@ -103,13 +89,13 @@
       <option value="__none__" {% if not topic %}selected{% endif %}></option>
       <option value="-1" style="font-weight: bold;">New ({{ g.query }})</option>
       {% for topic in topics %}
-        <option value="{{ topic.id }}" {% if topic.id == selected_topic.id %}selected{% endif %}>{{ topic.title }}</option>
+        <option value="{{ topic.id }}" {% if topic.id == g.topic.id %}selected{% endif %}>{{ topic.title }}</option>
       {% endfor %}
     </select>
 
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <input type="hidden" name="selection_args" value="{{  selection_for_topic_args }}">
-    <input type="hidden" name="return_to_collection" value="{{ collection }}">
+    <input type="hidden" name="return_to_collection" value="{{ g.collection }}">
 
   </form>
 
@@ -197,7 +183,7 @@
        get_task(
            '#tweets',
            '{{ url_for('.task_result', task_id=tweet_task.id) }}',
-           {show_images: '{{ 'on' if show_images else '' }}', topic: '{{ selected_topic.id or ''}}'},
+           {show_images: '{{ 'on' if g.show_images else '' }}', topic: '{{ g.topic.id or ''}}'},
            true
        );
 

@@ -85,7 +85,6 @@ def restricted_url(endpoint=None, include=None, exclude=None, **single_args):
             args.setlist(k, [v for v in args.getlist(k) if v != to_exclude])
 
     other_args = {}
-    collection = g.collection if hasattr(g, 'collection') else None
     for k, v in single_args.items():
         if k in ('collection', 'task_id'):
             other_args[k] = v
