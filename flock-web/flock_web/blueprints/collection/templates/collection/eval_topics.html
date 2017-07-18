@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% import "collection/macro.html" as m %}
+
+{% block title %} Evaluation Topics {% endblock %}
+
+{% block content %}
+
+  <h1>Evaluation topics ({{ user.eval_topics|count }})</h1>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for eval_topic in user.eval_topics %}
+        <tr>
+          {# <td>{{ eval_topic.rts_id }}</td> #}
+          <td><a href="{{ url_for('.eval_topic', rts_id=eval_topic.rts_id) }}">{{ eval_topic.title }}</a></td>
+        </tr>
+      {%- endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

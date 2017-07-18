@@ -1,3 +1,11 @@
+old/
+*.inserted
+*.found
+*.initialized
+*.#
+
+yarn.lock
+
 # Buildout
 .mr.developer.cfg
 .installed.cfg
@@ -9,7 +17,7 @@ src/
 
 .pypy/
 
-flock.egg-info/
+*.egg-info/
 flock-conf/flock_conf.egg-info/
 flock-web/flock_web.egg-info/
 
