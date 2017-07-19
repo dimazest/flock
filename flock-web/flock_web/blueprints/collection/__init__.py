@@ -386,10 +386,14 @@ def eval_topic(rts_id):
     ):
         tweet_by_id[tweet.tweet_id] = tweet
 
+
+    eval_relevance_judgments = {j.tweet_id: j.judgment for j in eval_topic.judgments}
+
     return render_template(
         'collection/eval_topic.html',
         eval_topic=eval_topic,
         tweet_by_id=tweet_by_id,
+        eval_relevance_judgments=eval_relevance_judgments,
     )
 
 

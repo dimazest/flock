@@ -28,7 +28,7 @@
     </div>
 
     <main class="col-xl-8 col-md-6 offset-xl-4">
-        {{ rm.render_tweets(tweet_by_id.values()) }}
+        {{ rm.render_tweets(tweet_by_id.values(), eval_relevance_judgments=eval_relevance_judgments) }}
     </main>
 
 
