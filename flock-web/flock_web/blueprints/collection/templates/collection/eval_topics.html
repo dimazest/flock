@@ -21,7 +21,7 @@
           {# <td>{{ eval_topic.rts_id }}</td> #}
           <td>{{ eval_topic.title }}</td>
           <td><a href="{{ url_for('.eval_topic', rts_id=eval_topic.rts_id) }}">{{ eval_topic.judgments|count }}</a></td>
-          <td>{{ eval_topic.relevant_count() }}</td>
+          <td><a href="{{ url_for('.cluster_eval_topic', rts_id=eval_topic.rts_id) }}">{{ eval_topic.relevant_count() }}</a></td>
         </tr>
       {%- endfor %}
     </tbody>

@@ -386,7 +386,6 @@ def eval_topic(rts_id):
     ):
         tweet_by_id[tweet.tweet_id] = tweet
 
-
     eval_relevance_judgments = {j.tweet_id: j.judgment for j in eval_topic.judgments}
 
     return render_template(
@@ -397,9 +396,9 @@ def eval_topic(rts_id):
     )
 
 
-@bp_collection.route('/eval/topics/<topic_id>/cluster')
+@bp_collection.route('/eval/topics/<rts_id>/cluster')
 @flask_login.login_required
-def eval_topic_cluster(topic_id):
+def cluster_eval_topic(rts_id):
 
     return render_template(
         'collection/eval_topic_cluster.html',
