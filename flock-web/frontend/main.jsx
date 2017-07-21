@@ -5,47 +5,6 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 
-/* import todoApp from './reducers'*/
-/* import App from './components/App'*/
-
-/* let store = createStore(
- *     todoApp,
- *     {
- *         visibilityFilter: 'SHOW_ALL',
- *         todos: [
- *             {
- *                 text: 'Consider using Redux',
- *                 completed: true,
- *                 id: -1
- *             },
- *             {
- *                 text: 'Keep all state in a single tree',
- *                 completed: false,
- *                 id: -2
- *             }
- *         ]
- *     }
- * 
- * )
- * */
-
-/* render(
- *     <div>
- *         <div className="row">
- *             <div className="col-6 bg-faded sidebar bd-links">
- *                 <Provider store={store}>
- *                     <App />
- *                 </Provider>
- *             </div>
- *         </div>
- *         <main className="col-6 offset-6">
- *             Hello form React!
- *         </main>
- *     </div>,
- *     document.getElementById('main-content')
- * );*/
-
-
 /* Action types */
 
 const ADD_CLUSTER = 'ADD_CLUSTER'
@@ -86,14 +45,31 @@ const initialState = {
             {id: -2, gloss: "Cluster B"},
             {id: -3, gloss: "Cluster C"}
         ],
-        activeClusterID: -2,
+        activeClusterID: -1,
         visibleClusterID: null
     },
     tweets: {
-        [-1]: ['-1_A', '-1_B', '-1_C'],
-        [-2]: ['-2_A', '-2_B', '-2_C', '-2_D'],
-        [-3]: ['-3_A', '-3_B'],
-        null: ['A', 'B', 'C', 'D']
+        [-1]: [
+            {id: '888434623822393344', text: 'Gene Kelly on the streets of London, 1955'},
+            {id: '-1A', text: 'Deleted: -1A'},
+            {id: '-1B', text: 'Deleted -1B'}
+        ],
+        [-2]: [
+            {id: '-2A', text: 'Deleted: -2A'},
+            {id: '888463839746019328', text: "It's EXACTLY one month until peak #eclipse2017 in the DC area! Where will you be at 2:21pm on 8/21?"},
+            {id: '-2B', text: 'Deleted -2B'}
+        ],
+        [-3]: [
+            {id: '-3A', text: 'Deleted: -3A'},
+            {id: '888068879595048965', text: "Main kit laid out for @TheLondonTri bike checked and ready to go. Just need to sort my @ScienceinSport #fuelling now."},
+            {id: '-3B', text: 'Deleted -3B'}
+        ],
+        null: [
+            {id: '21', text: 'just setting up my twttr'},
+            {id: '761974145169195008', text: 'The Flight Club Weekender Presents Brunch Social #londonrestaurant #londonbars #londonfood'},
+            {id: '760409556530896896', text: 'Rail disruption in the East #Midlands: how you can still reach #London by train ...http://www.itv.com/news/central/2016-08-02/rail-disruption-in-the-east-midlands-all-you-need-to-know/ …'},
+            {id: '760772202136469504', text: 'Sous Chef Rosette Restaurant #London #AArosette Apply Here http://chefjob.co/CSM3810AA  Please Share / RT'}
+        ]
     }
 }
 
@@ -251,25 +227,19 @@ const ClusterListContainer = connect(
     )
 )(ClusterList)
 
-const Tweet = ({ tweet_id }) => (
-    <li>
-        {tweet_id}
-    </li>
-)
-Tweet.propTypes = {
-    tweet_id: PropTypes.string.isRequired
-}
+/* import TweetEmbed from './tweet-embed'*/
+import TweetEmbed from 'react-tweet-embed'
 
 const TweetList = ({ tweets, visibleClusterID=null }) => (
-    <ul>
-        {
-            (tweets[visibleClusterID] || []).map(
+    <div>{(
+            tweets[visibleClusterID] || []).map(
                 tweet => (
-                    <Tweet key={tweet} tweet_id={tweet} />
+                    <TweetEmbed
+                        key={tweet.id} id={tweet.id}
+                    />
                 )
-            )
-        }
-    </ul>
+            )}
+    </div>
 )
 TweetList.propTypes = {
     tweets: PropTypes.objectOf(PropTypes.array),
@@ -283,10 +253,10 @@ const App = () => (
         <div className="col-6 bg-faded sidebar bd-links">
             <AddCluster />
             <ClusterListContainer />
-       </div>
-       <main className="col-6 offset-6">
-           <TweetListContainer />
-       </main>
+        </div>
+        <main className="col-6 offset-6">
+            <TweetListContainer />
+        </main>
     </div>
 )
 
