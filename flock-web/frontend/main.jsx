@@ -11,6 +11,13 @@ const ADD_CLUSTER = 'ADD_CLUSTER'
 const ACTIVATE_CLUSTER = 'ACTIVATE_CLUSTER'
 const SHOW_CLUSTER = 'SHOW_CLUSTER'
 
+/* Helpers */
+
+function tweetCluster(tweets, clusterID) {
+    return tweets[clusterID] || []
+}
+
+
 /* Action creators*/
 
 function addCluster(gloss){
@@ -116,20 +123,23 @@ window.store = store;
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-let AddCluster = ({ dispatch }) => {
+let AddCluster = ({tweets, visibleClusterID, dispatch }) => {
     let input
+
+    const ct = tweetCluster(tweets, visibleClusterID)
+    const firstTweetText = (ct.length > 0) ? ct[0].text : ''
 
     return (
         <div className="mb-4">
-            <form
-                onSubmit={
+        <form
+        onSubmit={
                     e => {
                         e.preventDefault()
                         if (!input.value.trim()) {
                             return
                         }
                         dispatch(addCluster(input.value))
-                        input.value = ''
+                        input.value = firstTweetText
                     }
                 }
             >
@@ -142,6 +152,8 @@ let AddCluster = ({ dispatch }) => {
                             ref={node => {
                                     input = node
                             }}
+                            value={firstTweetText}
+                            onChange={() => {}}
                         />
                     </div>
                     <div className="col-2">
@@ -154,7 +166,7 @@ let AddCluster = ({ dispatch }) => {
         </div>
     )
 }
-AddCluster = connect()(AddCluster)
+AddCluster = connect(state => ({tweets: state.tweets, visibleClusterID: state.clusters.visibleClusterID}))(AddCluster)
 
 const Cluster = ({ onActivateClick, onShowClick, gloss, active=false, visible=false }) => (
     <li
@@ -231,8 +243,7 @@ import TweetEmbed from './tweet-embed'
 /* import TweetEmbed from 'react-tweet-embed'*/
 
 const TweetList = ({ tweets, visibleClusterID=null }) => (
-    <div>{(
-            tweets[visibleClusterID] || []).map(
+    <div>{tweetCluster(tweets, visibleClusterID).map(
                 tweet => (
                     <TweetEmbed
                         key={tweet.id} {...tweet}

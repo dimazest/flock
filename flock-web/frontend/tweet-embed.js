@@ -1,3 +1,5 @@
+/* https://github.com/capaj/react-tweet-embed/blob/master/tweet-embed.js */
+
 import React from 'react'
 import PropTypes from 'prop-types'
 
