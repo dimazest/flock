@@ -113,8 +113,8 @@ const tweetClusterApp = combineReducers({clusters, tweets})
 
 let store = createStore(
     tweetClusterApp,
-    /* window.STATE_FROM_SERVER*/
-    initialState,
+    window.initialState,
+    /* initialState,*/
 )
 window.store = store;
 
@@ -131,8 +131,8 @@ let AddCluster = ({tweets, visibleClusterID, dispatch }) => {
 
     return (
         <div className="mb-4">
-        <form
-        onSubmit={
+            <form
+                onSubmit={
                     e => {
                         e.preventDefault()
                         if (!input.value.trim()) {
@@ -152,8 +152,7 @@ let AddCluster = ({tweets, visibleClusterID, dispatch }) => {
                             ref={node => {
                                     input = node
                             }}
-                            value={firstTweetText}
-                            onChange={() => {}}
+                            defaultValue={firstTweetText}
                         />
                     </div>
                     <div className="col-2">
@@ -221,7 +220,7 @@ ClusterList.propTypes = {
                     }
                 ).isRequired
             ).isRequired,
-            activeClusterID: PropTypes.number.isRequired,
+            activeClusterID: PropTypes.number,
             shownClusterID: PropTypes.number,
         }
     ),

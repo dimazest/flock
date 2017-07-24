@@ -4,6 +4,7 @@ from sqlalchemy.dialects import postgresql as pg
 import flask_login
 
 from flock.model import Base
+from flock import model
 
 
 class User(Base, flask_login.UserMixin):
@@ -53,6 +54,61 @@ class EvalTopic(Base):
 
     def relevant_count(self):
         return len([j for j in self.judgments if j.judgment > 0])
+
+    def tweet_by_id(self, relevant_only=False):
+        session = sa.inspect(self).session
+
+        tweet_by_id = {
+            j.tweet_id: model.Tweet(
+                    tweet_id=j.tweet_id,
+                    features={
+                        'repr': {
+                            'text': 'MISSING: {}'.format(j.tweet_id),
+                            'user__screen_name': 'Unknown',
+                            'user__name': 'unknown',
+                        },
+                    },
+                    created_at='unknown',
+                )
+            for j in self.judgments
+            if not relevant_only or j.judgment > 0
+        }
+
+        for tweet in (
+                session.query(model.Tweet)
+                .filter(
+                    model.Tweet.collection == self.collection,
+                    model.Tweet.tweet_id.in_(tweet_by_id.keys()),
+                )
+
+        ):
+            tweet_by_id[tweet.tweet_id] = tweet
+
+        return tweet_by_id
+
+    def state(self):
+        state = {
+            'clusters': {
+                'clusters': [
+                    # {'id': -1, 'gloss': "Cluster A"},
+                ],
+                'activeClusterID': None,
+                'visibleClusterID': None,
+            },
+            'tweets': {
+                None: [
+                    {
+                        'id': str(t.tweet_id),
+                        'text': t.features['repr']['text'],
+                        'screen_name': t.features['repr']['user__screen_name'],
+                        'user_name': t.features['repr']['user__name'],
+                        'created_at': t.created_at,
+                    } for t in self.tweet_by_id(relevant_only=True).values()
+                ]
+            }
+        }
+
+        return state
 
 
 class EvalRelevanceJudgment(Base):
