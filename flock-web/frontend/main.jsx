@@ -227,15 +227,15 @@ const ClusterListContainer = connect(
     )
 )(ClusterList)
 
-/* import TweetEmbed from './tweet-embed'*/
-import TweetEmbed from 'react-tweet-embed'
+import TweetEmbed from './tweet-embed'
+/* import TweetEmbed from 'react-tweet-embed'*/
 
 const TweetList = ({ tweets, visibleClusterID=null }) => (
     <div>{(
             tweets[visibleClusterID] || []).map(
                 tweet => (
                     <TweetEmbed
-                        key={tweet.id} id={tweet.id}
+                        key={tweet.id} {...tweet}
                     />
                 )
             )}
