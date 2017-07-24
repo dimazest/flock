@@ -37,6 +37,7 @@ def initdb(session):
             o.__table__ for o in [
                 fw_model.User, fw_model.Topic, fw_model.TopicQuery, fw_model.RelevanceJudgment, fw_model.TaskResult, fw_model.UserAction,
                 fw_model.TopicQuestionnaire, fw_model.EvalTopic, fw_model.EvalRelevanceJudgment, fw_model.EvalCluster,
+                fw_model.EvalClusterAssignment,
             ]
         ]
     )
@@ -50,7 +51,13 @@ def insert_eval_topics(session, assr_topic_file, collection):
 
     for line in assr_topic_file:
         rts_topic_id, assessor_user_name = line.split()
-        rts_topic_id = f'RTS{rts_topic_id}'
+
+        try:
+            int(rts_topic_id)
+        except ValueError:
+            pass
+        else:
+            rts_topic_id = f'RTS{rts_topic_id}'
 
         assessor = session.query(fw_model.User).filter_by(first_name=assessor_user_name).one_or_none()
 
@@ -105,21 +112,48 @@ def insert_eval_relevance_judgements(session, collection, qrels_file):
 def insert_eval_cluster_glosses(session, collection, cluster_glosses_file):
     stmt = sa.insert(fw_model.EvalCluster.__table__)
 
-    rts_topic_id_to_topic_id = {t.rts_id: t.id for t in session.query(fw_model.EvalTopic).filter_by(collection=collection)}
-
     for line in cluster_glosses_file:
-        rts_topic_id, rts_eval_cluster_id, gloss = line.split(maxsplit=2)
+        eval_topic_rts_id, rts_id, gloss = line.split(maxsplit=2)
         gloss = gloss.strip()
 
-        if rts_topic_id not in rts_topic_id_to_topic_id:
-            logger.warning('A missing RTS topic %s in the collection %s.', rts_topic_id, collection)
+        # if rts_topic_id not in rts_topic_id_to_topic_id:
+            # logger.warning('A missing RTS topic %s in the collection %s.', rts_topic_id, collection)
+            # continue
+
+        session.execute(
+            stmt.values(
+                eval_topic_rts_id=eval_topic_rts_id,
+                eval_topic_collection=collection,
+                rts_id=rts_id,
+                gloss=gloss,
+            )
+        )
+
+    session.commit()
+
+
+@cli.command()
+@click.option('--session', default='postgresql:///twitter', callback=create_session)
+@click.option('--collection')
+@click.option('--clusters_file', type=click.File())
+def insert_eval_clusters(session, collection, clusters_file):
+    stmt = sa.insert(fw_model.EvalClusterAssignment.__table__)
+
+    for line in clusters_file:
+        eval_topic_rts_id, eval_cluster_rts_id, tweet_id = line.split()
+
+        try:
+            tweet_id = int(tweet_id)
+        except ValueError:
+            logger.warning('Invalid tweet id: %s', tweet_id)
             continue
 
         session.execute(
             stmt.values(
-                rts_eval_cluster_id=rts_eval_cluster_id,
-                eval_topic_id=rts_topic_id_to_topic_id[rts_topic_id],
-                gloss=gloss,
+                eval_topic_rts_id=eval_topic_rts_id,
+                eval_topic_collection=collection,
+                eval_cluster_rts_id=eval_cluster_rts_id,
+                tweet_id=tweet_id,
             )
         )
 

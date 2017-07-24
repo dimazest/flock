@@ -43,9 +43,8 @@ class Topic(Base):
 class EvalTopic(Base):
     __tablename__ = 'eval_topic'
 
-    id = sa.Column(sa.Integer, primary_key=True)
-    rts_id = sa.Column(sa.String(10), unique=True, nullable=False)
-    collection = sa.Column(sa.String(100), nullable=False)
+    rts_id = sa.Column(sa.String(10), primary_key=True)
+    collection = sa.Column(sa.String(100), primary_key=True)
 
     title = sa.Column(sa.String(500), nullable=False)
 
@@ -87,25 +86,39 @@ class EvalTopic(Base):
         return tweet_by_id
 
     def state(self):
+        tweet_by_id = self.tweet_by_id(relevant_only=True)
+
+        def tweet_to_json(tweets):
+            return [
+                {
+                    'id': str(t.tweet_id),
+                    'text': t.features['repr']['text'],
+                    'screen_name': t.features['repr']['user__screen_name'],
+                    'user_name': t.features['repr']['user__name'],
+                    'created_at': t.created_at,
+                }
+                for t in tweets
+            ]
+
+        tweets = {}
+        for cluster in self.clusters:
+            tweets[cluster.rts_id] = tweet_to_json(tweet_by_id.pop(a.tweet_id) for a in cluster.assignments)
+
+        tweets[-1] = tweet_to_json(tweet_by_id.values())
+
         state = {
             'clusters': {
                 'clusters': [
-                    {'id': c.id, 'gloss': c.gloss} for c in self.clusters
+                    {
+                        'id': c.rts_id,
+                        'gloss': c.gloss,
+                    }
+                    for c in self.clusters
                 ],
                 'activeClusterID': None,
                 'visibleClusterID': None,
             },
-            'tweets': {
-                None: [
-                    {
-                        'id': str(t.tweet_id),
-                        'text': t.features['repr']['text'],
-                        'screen_name': t.features['repr']['user__screen_name'],
-                        'user_name': t.features['repr']['user__name'],
-                        'created_at': t.created_at,
-                    } for t in self.tweet_by_id(relevant_only=True).values()
-                ]
-            }
+            'tweets': tweets,
         }
 
         return state
@@ -113,33 +126,60 @@ class EvalTopic(Base):
 
 class EvalRelevanceJudgment(Base):
     __tablename__ = 'eval_relevance_judgment'
+    __table_args__ = (
+        sa.ForeignKeyConstraint(['eval_topic_rts_id', 'collection'], ['eval_topic.rts_id', 'eval_topic.collection']),
+    )
 
-    eval_topic_id = sa.Column(sa.Integer, sa.ForeignKey('eval_topic.id'), nullable=False, primary_key=True)
-    eval_topic = sa.orm.relationship('EvalTopic', backref='judgments')
+    eval_topic_rts_id = sa.Column(sa.String,  primary_key=True)
+    collection = sa.Column(sa.String, primary_key=True)
 
     tweet_id = sa.Column(
         sa.BigInteger,
         # sa.ForeignKey('tweet.tweet_id'),
-        nullable=False,
         primary_key=True,
     )
 
     judgment = sa.Column(sa.Integer, nullable=False)
 
+    eval_topic = sa.orm.relationship('EvalTopic', backref='judgments')
+
 
 class EvalCluster(Base):
     __tablename__ = 'eval_cluster'
     __table_args__ = (
-        sa.UniqueConstraint('rts_eval_cluster_id', 'eval_topic_id'),
+            sa.ForeignKeyConstraint(['eval_topic_rts_id', 'eval_topic_collection'], ['eval_topic.rts_id', 'eval_topic.collection']),
     )
 
-    id = sa.Column(sa.Integer, primary_key=True)
-    rts_eval_cluster_id = sa.Column(sa.Integer, nullable=True)
-
-    eval_topic_id = sa.Column(sa.Integer, sa.ForeignKey('eval_topic.id'), nullable=False)
-    eval_topic = sa.orm.relationship('EvalTopic', backref='clusters')
+    eval_topic_rts_id = sa.Column(sa.String, primary_key=True)
+    eval_topic_collection = sa.Column(sa.String, primary_key=True)
+    rts_id = sa.Column(sa.Integer, primary_key=True)
 
     gloss = sa.Column(sa.String, nullable=False)
+
+    eval_topic = sa.orm.relationship('EvalTopic', backref='clusters')
+
+
+class EvalClusterAssignment(Base):
+    __tablename__ = 'eval_cluster_assignment'
+    __table_args__ = (
+        sa.ForeignKeyConstraint(
+            ['eval_topic_rts_id', 'eval_topic_collection', 'eval_cluster_rts_id'],
+            ['eval_cluster.eval_topic_rts_id', 'eval_cluster.eval_topic_collection', 'eval_cluster.rts_id'],
+        ),
+    )
+
+    eval_topic_rts_id = sa.Column(sa.String, primary_key=True)
+    eval_topic_collection = sa.Column(sa.String, primary_key=True)
+    eval_cluster_rts_id = sa.Column(sa.Integer, primary_key=True)
+
+    # Ideally, it should point to EvalRelevanceJudgment.
+    tweet_id = sa.Column(
+        sa.BigInteger,
+        # sa.ForeignKey('tweet.tweet_id'),
+        primary_key=True
+    )
+
+    eval_cluster = sa.orm.relationship('EvalCluster', backref='assignments')
 
 
 class TopicQuery(Base):

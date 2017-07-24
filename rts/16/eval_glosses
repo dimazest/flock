@@ -45,7 +45,7 @@ RTS6	6	Phelps comparison
 RTS6	7	badminton Thai olympics
 RTS6	8	Gma dies celebrating
 RTS6	9	1st Thai medal
-RTS6	10	Boxer Chatchai Butdee wins 
+RTS6	10	Boxer Chatchai Butdee wins
 RTS6	11	Post Olympic friendlies
 RTS6	14	Analytics for Olympic performance
 RTS6	15	Opening ceremony
@@ -82,10 +82,10 @@ RTS10	30	All Americans shld apologize
 RTS10	31	Nanjing massacre #s higher to justify A-bombing
 RTS10	32	Soviets now release film of N&H post-bombings
 RTS10	33	Kyoto off bomb list, historical bkgd
-RTS10	34	Intl Physicians vs War 
+RTS10	34	Intl Physicians vs War
 RTS10	35	H. ceremonies varied
 RTS10	37	philosophical negativism after H/N
-RTS10	38	50th anniv of H draws intl 
+RTS10	38	50th anniv of H draws intl
 RTS10	39	Fatalities in # and pix
 RTS10	40	Caroline Kennedy misses memorial
 RTS10	42	Trump advisor suggests peace on Muslims via a-bomb
@@ -103,7 +103,7 @@ RTS10	56	Justifiers of H/N morally repugnant
 RTS10	57	Abe condemned for inaction
 RTS10	58	Einstein urged a-bomb
 RTS10	59	Abortion ends more than H/n
-RTS10	60	Sanction America 
+RTS10	60	Sanction America
 RTS10	62	Manhattan Project philosophical questioning
 RTS10	63	consequences of a-bomb explosions
 RTS10	64	Truman drops bomb
@@ -114,11 +114,11 @@ RTS10	68	animated history of time/place
 RTS10	69	Atom bomb as metaphor
 RTS10	70	One year after H/N
 RTS10	72	RIP/ prayers for N/H
-RTS10	73	Necessity?  H/N bombings 
+RTS10	73	Necessity?  H/N bombings
 RTS10	75	Pumpkin bombs
 RTS13	1	Prime includes 1-2 day shipping; big comeon
 RTS13	2	Plane to speed Am deliveries
-RTS13	3	Students--Amazon Prime free 6 mo 
+RTS13	3	Students--Amazon Prime free 6 mo
 RTS13	5	Same-day grocery delivery
 RTS13	6	IoT button makes re-order fast
 RTS13	7	Lunch delivery
@@ -146,9 +146,12 @@ RTS19	1	quality award
 RTS21	1	Video Is Simply Spectacular
 RTS21	2	work at spaceX
 RTS21	3	not good next to major population centre
-RTS21	4	SpaceX cannot 
+RTS21	4	SpaceX cannot
 RTS21	5	Spaceflight isn’t easy
 RTS21	6	leadership and innovation of America's commercial space industry
+RTS21 7 SOME OTHER CLUSTER RTS21-7
+RTS21 8 SOME OTHER CLUSTER RTS21-8
+RTS21 9 <SOME OTHER CLUSTER RTS21-9>
 RTS24	1	Banking bedlam
 RTS24	2	Accurate price forecast
 RTS24	3	Bank of Englad rate cut
@@ -190,7 +193,7 @@ RTS27	10	subway warning
 RTS27	11	absurd ways of truouble
 RTS27	12	rumors
 RTS27	13	guidelines
-RTS28	1	General Praise for Titan X 
+RTS28	1	General Praise for Titan X
 RTS28	2	Concern About Price and/or Performance
 RTS28	3	Expensive But Worth It
 RTS31	1	Curvy giant screen
@@ -205,7 +208,7 @@ RTS31	9	Curved display
 RTS31	10	Need to know
 RTS31	11	Upgrade comparison
 RTS31	12	Comparison Apple iPhone
-RTS31	13	hardware 
+RTS31	13	hardware
 RTS31	14	India launch
 RTS31	15	Hands on
 RTS31	16	Compare  competition
@@ -215,7 +218,7 @@ RTS32	3	Athletes Should Take a Look at How the Locals Live
 RTS32	4	US Basketball Team Living on Cruise Ship to Avoid Poor Housing
 RTS32	5	Athlete Andrew Bogut's Complaints
 RTS32	6	Aussie Olympic Chief Dismisses Bogut's Complaints
-RTS32	7	US Team Asked Not to Criticize Conditions 
+RTS32	7	US Team Asked Not to Criticize Conditions
 RTS32	8	Aussie Team Refuses to Live in Unfinished Housing
 RTS32	9	Czech Team Housing: Water Flowing Down Stairs
 RTS32	10	Canadian Athletes Abandon Housing for Hotel
@@ -252,11 +255,12 @@ RTS37	17	whistleblowers
 RTS37	18	sanctuary - pens
 RTS37	19	dolphins
 RTS37	20	walrus
-RTS37	21	how Seaworld tried to get better 
+RTS37	21	how Seaworld tried to get better
 RTS43	1	11-yr-old
 RTS43	2	Mike Pence Encouraged Tolerance Toward Muslims
 RTS43	3	Mike Pence endorsing Paul Ryan.
 RTS43	4	Mike Pence asked his permission to endorse Paul Ryan
+RTS43 5 <SOME OTHER CLUSTER RTS43-5>
 RTS43	6	Khan family
 RTS43	7	military mom's right to criticize Trump
 RTS43	8	 clarifier-in-chief
@@ -271,7 +275,14 @@ RTS43	16	A match made in hell:
 RTS43	17	400-million-payment-to-iran
 RTS43	18	Trump backs Ryan
 RTS43	19	he's going against Trump's endorsements
-RTS43	20	Mike Pence was a major Iraq War backer 
+RTS43	20	Mike Pence was a major Iraq War backer
+RTS43 21 <SOME OTHER CLUSTER RTS43-21>
+RTS43 22 <SOME OTHER CLUSTER RTS43-22>
+RTS43 23 <SOME OTHER CLUSTER RTS43-23>
+RTS43 24 <SOME OTHER CLUSTER RTS43-24>
+RTS43 25 <SOME OTHER CLUSTER RTS43-25>
+RTS43 26 <SOME OTHER CLUSTER RTS43-26>
+RTS43 27 <SOME OTHER CLUSTER RTS43-27>
 MB226	1	Hershey lodge
 MB226	2	Dining
 MB229	1	California
@@ -296,7 +307,7 @@ MB229	20	Medical benefits
 MB229	21	Ohio
 MB229	22	Veterans
 MB229	23	Georgia
-MB229	24	Daughters 
+MB229	24	Daughters
 MB229	25	New Jersey - PTSD
 MB229	26	Health risks
 MB229	27	Oregon
@@ -313,12 +324,12 @@ MB229	37	medical for dogs
 MB230	1	Negative Comment Regarding Greyhound Being Hours Late
 MB239	1	Carriage fire
 MB239	2	Proper staffing
-MB239	3	Guards 
+MB239	3	Guards
 MB239	4	Unsafe windows, backward trains
 MB254	1	Books
 MB254	2	Physical exercise
 MB256	1	Tweets to Pope not getting through
-MB256	2	New Pope tweets 
+MB256	2	New Pope tweets
 MB256	3	Pope visits St. Francis of Assissi church
 MB256	4	PopeF has 3 million Instagram followers
 MB256	5	Twitter suspension for reply to Pope's Rio tweet
@@ -340,37 +351,37 @@ MB258	5	Best Romantic Restaurants in NYC
 MB258	6	Least Hygenic But Still Delcious Restaurants in NYC
 MB258	7	Recommendation List of Specific Greek Restaurants in NYC
 MB258	8	Recommendation List of "Best Hidden Garden" Restaurants in NYC
-MB265	1	Aqua Amazon 
+MB265	1	Aqua Amazon
 MB265	2	Alaska lost
 MB265	3	Heart attack
-MB265	4	Sinking collision 
+MB265	4	Sinking collision
 MB267	1	UN warns of escalating tension; casualties hit highest since last August
 MB267	2	Ukraine regime killing civilians
 MB267	3	Ukraine volunteer unit troops commit atrosities
 MB267	4	Ukraine has joined the growing list of Western rape & pillage victims
-MB267	5	Western fear of providing weapons to Ukraine might lead Kremlin not to fear using more force. 
+MB267	5	Western fear of providing weapons to Ukraine might lead Kremlin not to fear using more force.
 MB267	6	Russia land forces reinforcement in Crimea
-MB267	7	Civilian casualties rise as fighting continues in east Ukraine 
+MB267	7	Civilian casualties rise as fighting continues in east Ukraine
 MB267	8	Russian attacks against forces in Ukraine
-MB267	9	several Russian citizens are among those "Ukrainian saboteurs" 
+MB267	9	several Russian citizens are among those "Ukrainian saboteurs"
 MB267	10	DPR Fighters Upgrade weapons
 MB267	11	Ukraine 'terrorist attacks' in Crimea foiled
 MB267	12	War is about to start in Ukraine
-MB267	13	Combat training exercises of Russian Occupation Forces 
+MB267	13	Combat training exercises of Russian Occupation Forces
 MB267	14	Ukraine is fighting for a better future
-MB267	15	The Russian government is "seriously concerned" by an uptick in fighting 
+MB267	15	The Russian government is "seriously concerned" by an uptick in fighting
 MB267	16	Will the Russians Try Another Land Grab in Ukraine
 MB267	17	Ukraine denies Ukranian special forces tried to enter Crimea
 MB267	18	Russian Troop Buildup Along Ukraine Border Raises War Fears
 MB267	19	Russian military jamming comms
 MB267	20	Ukraine closes border
-MB267	21	Russian Security Council Meets Over Tighter Crimea Security: 
+MB267	21	Russian Security Council Meets Over Tighter Crimea Security:
 MB267	22	Moscow has legal right to bomb "terrorist targets"
 MB267	23	Russian army control Ukraine's border
 MB267	24	Ukraine could try to regain the Crimea by military means
 MB267	25	Russian unit movements near Ukraine
 MB267	26	Trains used to reinforce Russians
-MB267	27	russian military unveil data on #MH17 (civilian airline) incident over #Ukraine 
+MB267	27	russian military unveil data on #MH17 (civilian airline) incident over #Ukraine
 MB267	28	Russian helicopters flying over the non-occupied territory of #Ukraine
 MB267	29	Ukraine reinforces border.
 MB267	30	Ukraine lie about Russian aggression in Ukraine, get more weapons
@@ -379,8 +390,9 @@ MB267	32	Ukrainian leader wounded in car bombing
 MB267	33	Russian Officials in Crimea Shut Off the Internet at the Ukrainian Border
 MB267	34	Russian "brothers" firing from BMP
 MB267	35	Russia illegally sent thousands of troops into Eastern Ukraine
-MB267	36	Transnistria and Russia troops had a joint anti-terrorist exercise 
+MB267	36	Transnistria and Russia troops had a joint anti-terrorist exercise
 MB267	37	Has Russia Won In Ukraine
+MB267 38 <SOME OTHER CLUSTER MB267-38>
 MB267	39	blame Ukraine while waging war agst Ukraine
 MB267	40	Ukraine ready to turn to UN over Russian accusations of Crimea plot
 MB267	41	Training Ukrain Army
@@ -393,12 +405,17 @@ MB267	47	Ukraine has the right to kill your soldiers in #Ukraine that includes #
 MB267	48	US government has seen nothing so far that corroborates Russian allegations of a “Crimea incursion
 MB267	49	Militants in eastern Ukraine shot dead Russian officer
 MB267	50	Ukraine notified of whereabouts of 45 out of 107 Ukrainians held captive
-MB267	52	Ukrainian security forces shelled the village of Kominternove 
+MB267 51 <SOME OTHER CLUSTER MB267-51>
+MB267	52	Ukrainian security forces shelled the village of Kominternove
 MB267	53	Russian troops have stopped traffic from Crimea to rest of Ukraine
 MB267	54	Russia' accusations of terrorism by Ukraine will be used for new, more intense repression in Crimea
-MB267	56	NATO Concerned By Tensions Between Russia and Ukraine, 
-MB267	57	Why is there renewed tension in Ukraine? 
+MB267 55 <SOME OTHER CLUSTER MB267-55>
+MB267	56	NATO Concerned By Tensions Between Russia and Ukraine,
+MB267	57	Why is there renewed tension in Ukraine?
 MB267	58	Russia should have protected both Crimea and eastern Ukrain
+MB267 59 <SOME OTHER CLUSTER MB267-59>
+MB267 60 <SOME OTHER CLUSTER MB267-60>
+MB267 61 <SOME OTHER CLUSTER MB267-61>
 MB276	1	Queen Elizabeth
 MB276	2	Northern Ireland
 MB276	3	Italy
@@ -437,9 +454,9 @@ MB320	4	Skating Through Icebergs
 MB320	5	cruise to #Alaska - outstanding destination.
 MB320	6	Alaska to boast of over 1 million cruise visitors
 MB320	7	Princess Cruises Summer Sale
-MB320	8	Catch and cook your own fish on an Alaska cruise 
+MB320	8	Catch and cook your own fish on an Alaska cruise
 MB320	9	79-year-old woman on cruise gets lost, spends night
-MB320	10	Alaska By Cruise Ship 
+MB320	10	Alaska By Cruise Ship
 MB320	11	CRYSTAL SERENITY NORTHWEST PASSAGE
 MB320	12	I took a cruise to Alaska and didn't hate it!
 MB332	1	Recommendation by Music Label/Agent; Poss Biased
@@ -458,7 +475,7 @@ MB351	7	wine from piedmont
 MB358	1	Amazon comments
 MB358	2	Short tweets
 MB358	3	Sleep
-MB358	4	Apple 
+MB358	4	Apple
 MB358	5	Mountain climbing
 MB358	6	Calorie tracking
 MB358	7	Activity tracking
@@ -466,18 +483,28 @@ MB361	1	adults with disabilities
 MB361	2	camp bonfire
 MB361	3	Canada camp
 MB361	4	Video of campers
-MB362	1	waiter at Outback sit on the floor 
+MB362	1	waiter at Outback sit on the floor
 MB362	2	Can you believe Ashton invented the outback restaurant?
 MB362	3	Rain delays become Bloomin' Tuesdays
 MB362	4	Grab your squad and meet us for lunch
 MB362	5	go to Outback
+MB362 6 <SOME OTHER CLUSTER MB362-6>
 MB362	7	Live music every Tuesday night at Outback
 MB362	8	Outback Steakhouses are packed watching this game
 MB362	9	Sagging sales challenge Outback Steakhouse
 MB362	10	 just checked in at Outback Steakhouse with PLUSPlaces Download
-MB362	11	win a $50 Outback GC 
+MB362	11	win a $50 Outback GC
+MB362 12 <SOME OTHER CLUSTER MB362-12>
+MB362 13 <SOME OTHER CLUSTER MB362-13>
+MB362 14 <SOME OTHER CLUSTER MB362-14>
+MB362 15 <SOME OTHER CLUSTER MB362-15>
+MB362 16 <SOME OTHER CLUSTER MB362-16>
+MB362 17 <SOME OTHER CLUSTER MB362-17>
+MB362 18 <SOME OTHER CLUSTER MB362-18>
+MB362 19 <SOME OTHER CLUSTER MB362-19>
+MB362 20 <SOME OTHER CLUSTER MB362-20>
 MB363	1	Walgreens
-MB363	2	Uniform Shop Back to School 
+MB363	2	Uniform Shop Back to School
 MB363	3	Light in the Box
 MB363	4	Back to School Supplies at Staples
 MB363	5	Target
@@ -493,13 +520,13 @@ MB363	14	lean & tooka packs
 MB363	15	Pencil Case
 MB363	16	Goodwill
 MB363	17	DollarGeneral
-MB363	18	Vera Bradley backpack 
+MB363	18	Vera Bradley backpack
 MB363	19	ChoctawOS
-MB363	20	Stationery Supplies 
-MB363	21	huffmanpta 
+MB363	20	Stationery Supplies
+MB363	21	huffmanpta
 MB363	22	Swagbucks
 MB363	23	topdeal
-MB363	24	BA School Supplies 
+MB363	24	BA School Supplies
 MB363	25	Blippo Kawaii Shop
 MB363	26	Bopyo
 MB363	27	Amazon Prime Day has upended the whole concept of back-to-school sales
@@ -509,14 +536,16 @@ MB363	30	Laamash
 MB363	31	Office Depot
 MB365	1	battery status used to track
 MB365	2	Avonte's Law
-MB365	3	Illinois Bans Stingray 
+MB365	3	Illinois Bans Stingray
 MB365	4	Canada Used Stingray
-MB365	5	RI requiring a warrant for phone location data 
+MB365	5	RI requiring a warrant for phone location data
 MB365	6	Ind. warrant for location data
 MB365	7	NYPD is Spying on Your Cell Phone
 MB365	8	U.S. judge throws out NY stingray
 MB365	9	Vancouver police admit using Stingray
 MB365	10	Edmonton police admit to owning a Stingray
+MB365 11 <SOME OTHER CLUSTER MB365-11>
+MB365 12 <SOME OTHER CLUSTER MB365-12>
 MB371	1	Mercedes bus
 MB371	2	commercial truck
 MB371	3	Google CTO executive depart
@@ -589,31 +618,32 @@ MB382	6	fall clothes
 MB382	7	quality products
 MB382	8	Feltman Bros
 MB391	1	if you believe in global warming and polar ice melting
-MB391	2	tampering of temperature data 
+MB391	2	tampering of temperature data
 MB391	3	Alaskans witness collapsing mountains
 MB391	4	climate change is changing how we talk about weather
-MB391	5	 Ice Sheet Melt caused by Heat from Earth's Core 
+MB391	5	 Ice Sheet Melt caused by Heat from Earth's Core
 MB391	6	disappearing sea ice effect on polar bears
-MB391	7	NASA Map Shows Greenland Melting 
-MB391	8	GRACE ice mass 
+MB391	7	NASA Map Shows Greenland Melting
+MB391	8	GRACE ice mass
 MB391	9	Rio2016 OpeningCeremony
-MB391	10	 sea levels are stable 
-MB391	11	sea ice losses are accelerating 
+MB391	10	 sea levels are stable
+MB391	11	sea ice losses are accelerating
 MB391	12	When the Greenland & Antarctic ice sheets melt, sea levels will rise to the Statue of Liberty
-MB391	13	Melting Greenland ice sheet will soon unearth military base 
+MB391	13	Melting Greenland ice sheet will soon unearth military base
 MB391	14	Library For Ice
-MB391	15	Exploring melt features on lower Rainbow Glacier 
-MB391	16	Global Warming Skeptic Receives Subpoena From Mass. Attorney General 
+MB391	15	Exploring melt features on lower Rainbow Glacier
+MB391	16	Global Warming Skeptic Receives Subpoena From Mass. Attorney General
 MB391	17	Antarctic sea ice is increasing dramatically
 MB391	18	our knowledge of ice changes
 MB391	19	walrus calves are at heightened risk
-MB391	20	Arctic sea life in danger 
+MB391	20	Arctic sea life in danger
 MB391	21	Pinatubo eruption masked acceleration i
-MB391	22	Arctic research vessel 
+MB391	22	Arctic research vessel
 MB391	23	Ship of fools; waiting for the ice to melt
 MB391	24	Record-breaking temperatures in the Arctic
 MB391	25	Why is the Arctic climate and ice cover so variable?
 MB391	26	What the Earth Would Look Like If All The Ice Melted
+MB391 27 <SOME OTHER CLUSTER MB391-27>
 MB392	1	California
 MB392	2	Idaho
 MB392	3	Montana
@@ -697,18 +727,39 @@ MB436	5	Ogden $5000
 MB436	6	tipped twice
 MB436	7	McDonalds
 MB436	8	reduced 15%
-MB438	1	Key west 
+MB438	1	Key west
 MB440	1	co-must-secure-amina-al-jefferys-safe-return-from-saudi-arabia
 MB440	2	Princess Reema Appointed as the Vice President for Women's Affairs.
 MB440	3	support stop enslaving women in Saudi
+MB440 4 <SOME OTHER CLUSTER MB440-4>
+MB440 5 <SOME OTHER CLUSTER MB440-5>
+MB440 6 <SOME OTHER CLUSTER MB440-6>
 MB440	7	Hillary Clinton, taking money from Saudi
 MB440	8	 Saudi Arabia  Olympic team
 MB440	9	 Women BANNED from Dunkin' Donuts in Saudi Arabia -
+MB440 10 <SOME OTHER CLUSTER MB440-10>
+MB440 11 <SOME OTHER CLUSTER MB440-11>
 MB440	12	Prince Salman. Saudi Arabia is NOT ready for women drivers.
 MB440	13	car driving for women has finally been accepted
-MB440	16	When saudi men see a hashtag about women's rights 
+MB440 14 <SOME OTHER CLUSTER MB440-14>
+MB440 15 <SOME OTHER CLUSTER MB440-15>
+MB440	16	When saudi men see a hashtag about women's rights
+MB440 17 <SOME OTHER CLUSTER MB440-17>
+MB440 18 <SOME OTHER CLUSTER MB440-18>
 MB440	19	WomensDay
+MB440 20 <SOME OTHER CLUSTER MB440-20>
+MB440 21 <SOME OTHER CLUSTER MB440-21>
+MB440 22 <SOME OTHER CLUSTER MB440-22>
+MB440 23 <SOME OTHER CLUSTER MB440-23>
+MB440 24 <SOME OTHER CLUSTER MB440-24>
 MB440	25	Saudi Arabia were led out by a woman driver at the Olympics opening ceremony
 MB440	26	first female flight crew lands in Saudi Arabia
-MB440	29	Women International Basketball Federation to rule 
+MB440 27 <SOME OTHER CLUSTER MB440-27>
+MB440 28 <SOME OTHER CLUSTER MB440-28>
+MB440	29	Women International Basketball Federation to rule
+MB440 30 <SOME OTHER CLUSTER MB440-30>
+MB440 31 <SOME OTHER CLUSTER MB440-31>
 MB440	32	Under Sharia Law, Saudi woman received 100 lashes for the crime of being raped.
+MB440 33 <SOME OTHER CLUSTER MB440-33>
+MB440 34 <SOME OTHER CLUSTER MB440-34>
+MB440 35 <SOME OTHER CLUSTER MB440-35>
