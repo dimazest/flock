@@ -208,7 +208,6 @@ def find_near_matches(session, collection, index_size, probability_index_near_ma
     from simhash import Simhash, SimhashIndex
     logging.getLogger().setLevel(logging.CRITICAL)
 
-
     tweet_id_simhash_value = session.execute(
         sa.select([model.Tweet.tweet_id, model.Tweet.features['filter','simhash']])
         .where(model.Tweet.collection == collection)

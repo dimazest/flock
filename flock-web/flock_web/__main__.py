@@ -3,6 +3,8 @@ import logging
 import click
 import click_log
 
+import sqlalchemy as sa
+
 from flock.__main__ import create_session
 from flock.model import metadata
 
@@ -33,8 +35,8 @@ def initdb(session):
     metadata.create_all(
         tables=[
             o.__table__ for o in [
-                fw_model.User, fw_model.Topic, fw_model.TopicQuery, fw_model.RelevanceJudgment, fw_model.TaskResult, fw_model.UserAction, fw_model.TopicQuestionnaire,
-                fw_model.EvalTopic, fw_model.EvalRelevanceJudgment,
+                fw_model.User, fw_model.Topic, fw_model.TopicQuery, fw_model.RelevanceJudgment, fw_model.TaskResult, fw_model.UserAction,
+                fw_model.TopicQuestionnaire, fw_model.EvalTopic, fw_model.EvalRelevanceJudgment, fw_model.EvalCluster,
             ]
         ]
     )
@@ -92,6 +94,34 @@ def insert_eval_relevance_judgements(session, collection, qrels_file):
                 raise ValueError(f"Evaluation topic {rts_topic_id} doesn't exist in collection {collection}!")
 
         eval_topic.judgments.append(fw_model.EvalRelevanceJudgment(tweet_id=tweet_id, judgment=judgment))
+
+    session.commit()
+
+
+@cli.command()
+@click.option('--session', default='postgresql:///twitter', callback=create_session)
+@click.option('--collection')
+@click.option('--cluster_glosses_file', type=click.File())
+def insert_eval_cluster_glosses(session, collection, cluster_glosses_file):
+    stmt = sa.insert(fw_model.EvalCluster.__table__)
+
+    rts_topic_id_to_topic_id = {t.rts_id: t.id for t in session.query(fw_model.EvalTopic).filter_by(collection=collection)}
+
+    for line in cluster_glosses_file:
+        rts_topic_id, rts_eval_cluster_id, gloss = line.split(maxsplit=2)
+        gloss = gloss.strip()
+
+        if rts_topic_id not in rts_topic_id_to_topic_id:
+            logger.warning('A missing RTS topic %s in the collection %s.', rts_topic_id, collection)
+            continue
+
+        session.execute(
+            stmt.values(
+                rts_eval_cluster_id=rts_eval_cluster_id,
+                eval_topic_id=rts_topic_id_to_topic_id[rts_topic_id],
+                gloss=gloss,
+            )
+        )
 
     session.commit()
 

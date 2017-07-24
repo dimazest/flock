@@ -90,7 +90,7 @@ class EvalTopic(Base):
         state = {
             'clusters': {
                 'clusters': [
-                    # {'id': -1, 'gloss': "Cluster A"},
+                    {'id': c.id, 'gloss': c.gloss} for c in self.clusters
                 ],
                 'activeClusterID': None,
                 'visibleClusterID': None,
@@ -125,6 +125,21 @@ class EvalRelevanceJudgment(Base):
     )
 
     judgment = sa.Column(sa.Integer, nullable=False)
+
+
+class EvalCluster(Base):
+    __tablename__ = 'eval_cluster'
+    __table_args__ = (
+        sa.UniqueConstraint('rts_eval_cluster_id', 'eval_topic_id'),
+    )
+
+    id = sa.Column(sa.Integer, primary_key=True)
+    rts_eval_cluster_id = sa.Column(sa.Integer, nullable=True)
+
+    eval_topic_id = sa.Column(sa.Integer, sa.ForeignKey('eval_topic.id'), nullable=False)
+    eval_topic = sa.orm.relationship('EvalTopic', backref='clusters')
+
+    gloss = sa.Column(sa.String, nullable=False)
 
 
 class TopicQuery(Base):
