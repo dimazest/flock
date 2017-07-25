@@ -37,7 +37,7 @@ function receiveBackend(backend){
     }
 }
 
-function addCluster(clusterID, gloss) {
+function addCluster(gloss) {
     return function (dispatch) {
         dispatch(requestAddCluster(gloss))
 
@@ -148,8 +148,6 @@ function tweetClusterApp(state={}, action) {
     }
 }
 
-
-/* window.initialState.tweets[null] = window.initialState.unassignedTweets*/
 window.initialState = {
     'backend': {
         ...window.BACKEND,
@@ -187,7 +185,7 @@ let TopicInfo= ({ topic }) => {
 }
 TopicInfo = connect(state => ({topic: state.backend.topic}))(TopicInfo)
 
-let AddCluster = ({tweets, visibleClusterID, newClusterName, topicID, dispatch }) => {
+let AddCluster = ({tweets, visibleClusterID, newClusterName, dispatch }) => {
     let input
 
     return (
@@ -199,7 +197,7 @@ let AddCluster = ({tweets, visibleClusterID, newClusterName, topicID, dispatch }
                         if (!newClusterName.trim()) {
                             return
                         }
-                        dispatch(addCluster(topicID, newClusterName))
+                        dispatch(addCluster(newClusterName))
                     }
                 }
             >
@@ -234,7 +232,6 @@ AddCluster = connect(
     state => (
         {
             tweets: state.backend.tweets,
-            topicID: state.backend.topic.id,
             visibleClusterID: state.frontend.visibleClusterID,
             newClusterName: state.frontend.newClusterName,
         }
@@ -323,11 +320,18 @@ import TweetEmbed from './tweet-embed'
 
 const TweetList = ({ tweets, visibleClusterID=null }) => (
     <div>{tweetCluster(tweets, visibleClusterID).map(
-            tweet => (
+        tweet => (
+        <div className="row" key={tweet.id}>
+            <div className="col-1" style={{margin: '10px'}}>
+                <button className="btn btn-primary" style={{height: '100%'}}>Assign</button>
+            </div>
+            <div className="col ml-1">
                 <TweetEmbed
-                    key={tweet.id} {...tweet}
+                    {...tweet}
                 />
-            )
+            </div>
+        </div>
+        )
     )}
     </div>
 )
