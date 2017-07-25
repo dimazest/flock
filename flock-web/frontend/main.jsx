@@ -115,15 +115,6 @@ function tweetClusterApp(state={}, action) {
                 ...state,
                 backend: action.backend,
             }
-            /* case ADD_CLUSTER:
-             *     return {
-             *         ...state,
-             *         clusters: {
-             *             ...state.clusters,
-             *             clusters: [...state.clusters.clusters, {gloss: action.gloss, id: state.clusters.clusters.length, size: 0}],
-             *             activeClusterID: state.clusters.clusters.length,
-             *         },
-             *     }*/
         case ACTIVATE_CLUSTER:
             return {
                 ...state,
@@ -133,13 +124,13 @@ function tweetClusterApp(state={}, action) {
                 },
             }
         case SHOW_CLUSTER: {
-            const _tweets = tweetCluster(state.backend.tweets, action.visibleClusterID)
-
+            const visibleClusterID = action.visibleClusterID === state.frontend.visibleClusterID ? null : action.visibleClusterID
             return {
                 ...state,
                 frontend: {
-                    visibleClusterID: action.visibleClusterID === state.frontend.visibleClusterID ? null : action.visibleClusterID,
-                    newClusterName: clusterNewName(state.backend.tweets, action.visibleClusterID)
+                    ...state.frontend,
+                    visibleClusterID: visibleClusterID,
+                    newClusterName: clusterNewName(state.backend.tweets, visibleClusterID),
                 },
             }
         }
@@ -255,16 +246,16 @@ const Cluster = ({ onActivateClick, onShowClick, gloss, size, active=false, visi
         className={"list-group-item " + (active ? "active " : "") + "justify-content-between"}
         onClick={onActivateClick}
     >
-        <a className={"btn " + (visible ? "btn-success active " : "btn-info")} role="button"
-           onClick={
-               e => {
-                   e.stopPropagation()
-                   onShowClick()
-               }
-           }
+        <button className={"btn " + (visible ? "btn-info active " : "btn-outline-info")}
+                onClick={
+                    e => {
+                        e.stopPropagation()
+                        onShowClick()
+                    }
+                }
         >
             {visible ? "Show Unclustered" : `${size} tweets`}
-        </a>
+        </button>
         <span className="ml-2">{gloss}</span>
     </li>
 )
