@@ -38,7 +38,7 @@ function receiveBackend(backend){
 }
 
 function addCluster(gloss) {
-    return function (dispatch) {
+    return dispatch => {
         dispatch(requestAddCluster(gloss))
 
         return fetch(
@@ -77,6 +77,12 @@ function addCluster(gloss) {
 
                 }
             )
+    }
+}
+
+function assignTweet(tweet_id, cluster_id) {
+    return dispatch => {
+        console.log(`Assign tweet ${tweet_id} to cluster ${cluster_id}`)
     }
 }
 
@@ -267,21 +273,21 @@ Cluster.propTypes = {
 
 let ClusterList = ({ clusters, activeClusterID, visibleClusterID, onActivateClick, onShowClick }) => (
     <div style={{overflowY: 'scroll', maxHeight: '90%'}}>
-    <ul className="list-group">
-    {
-        clusters.map(
-            cluster => (
-                <Cluster key={cluster.id} gloss={cluster.gloss} size={cluster.size}
-                         onActivateClick={() => onActivateClick(cluster.id)}
-                         active={cluster.id === activeClusterID}
-                         onShowClick={() => onShowClick(cluster.id)}
-                         visible={cluster.id === visibleClusterID}
-                />
-            )
-        )
-    }
-    </ul>
-        </div>
+        <ul className="list-group">
+            {
+                clusters.map(
+                    cluster => (
+                        <Cluster key={cluster.id} gloss={cluster.gloss} size={cluster.size}
+                                 onActivateClick={() => onActivateClick(cluster.id)}
+                                 active={cluster.id === activeClusterID}
+                                 onShowClick={() => onShowClick(cluster.id)}
+                                 visible={cluster.id === visibleClusterID}
+                        />
+                    )
+                )
+            }
+        </ul>
+    </div>
 )
 ClusterList.propTypes = {
     clusters: PropTypes.arrayOf(
@@ -318,26 +324,39 @@ ClusterList = connect(
 import TweetEmbed from './tweet-embed'
 /* import TweetEmbed from 'react-tweet-embed'*/
 
-const TweetList = ({ tweets, visibleClusterID=null }) => (
-    <div>{tweetCluster(tweets, visibleClusterID).map(
-        tweet => (
-        <div className="row" key={tweet.id}>
-            <div className="col-1" style={{margin: '10px'}}>
-                <button className="btn btn-primary" style={{height: '100%'}}>Assign</button>
-            </div>
-            <div className="col ml-1">
-                <TweetEmbed
-                    {...tweet}
-                />
-            </div>
+const ClusteredTweet = ({ tweet, onAssignClick, disabled }) => (
+    <div className="row" key={tweet.id}>
+        <div className="col-1" style={{margin: '10px'}}>
+            <button className="btn btn-primary" style={{height: '100%'}} onClick={onAssignClick} disabled={disabled}>Assign</button>
         </div>
-        )
-    )}
+        <div className="col ml-1">
+            <TweetEmbed{...tweet} />
+        </div>
+    </div>
+)
+ClusteredTweet.propTypes = {
+    tweet: PropTypes.object.isRequired,
+    onAssignClick: PropTypes.func,
+    disabled: PropTypes.bool,
+}
+
+const TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID=null }) => (
+    <div>
+        {tweetCluster(tweets, visibleClusterID).map(tweet => (
+            <ClusteredTweet
+                key={tweet.id}
+                tweet={tweet}
+                onAssignClick={() => onAssignClick(tweet.id, activeClusterID)}
+                disabled={activeClusterID === null}
+            />
+        ))}
     </div>
 )
 TweetList.propTypes = {
     tweets: PropTypes.objectOf(PropTypes.array),
-    visibleClusterID: PropTypes.number
+    onAssignClick: PropTypes.func.isRequired,
+    visibleClusterID: PropTypes.number,
+    activeClusterID: PropTypes.number,
 }
 
 const TweetListContainer = connect(
@@ -345,8 +364,14 @@ const TweetListContainer = connect(
         {
             tweets: state.backend.tweets,
             visibleClusterID: state.frontend.visibleClusterID,
+            activeClusterID: state.frontend.activeClusterID,
         }
-    )
+    ),
+    dispatch => (
+        {
+            onAssignClick: (tweetID, activeClusterID) => {dispatch(assignTweet(tweetID, activeClusterID))}
+        }
+    ),
 )(TweetList)
 
 const App = () => (
