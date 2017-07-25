@@ -4,7 +4,9 @@
 
 {% block extra_scripts %}
 <script>
- window.initialState = {{ state|tojson }}
+ window.BACKEND = {{ state|tojson }};
+ window.CSRF_TOKEN = '{{ csrf_token() }}';
+ window.ADD_CLUSTER_URL = '{{ url_for('.cluster_eval_topic_new_cluster', rts_id=eval_topic.rts_id)|safe }}';
 </script>
 <script src="{{ url_for('static', filename='bundle.js') }}"></script>
 {% endblock extra_scripts %}

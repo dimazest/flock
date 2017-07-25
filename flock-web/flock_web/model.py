@@ -104,21 +104,27 @@ class EvalTopic(Base):
         for cluster in self.clusters:
             tweets[cluster.rts_id] = tweet_to_json(tweet_by_id.pop(a.tweet_id) for a in cluster.assignments)
 
-        tweets[-1] = tweet_to_json(tweet_by_id.values())
+        unassigned_tweets = tweet_to_json(tweet_by_id.values())
 
         state = {
-            'clusters': {
-                'clusters': [
+            'clusters': sorted(
+                (
                     {
                         'id': c.rts_id,
                         'gloss': c.gloss,
+                        'size': len(tweets[c.rts_id])
                     }
                     for c in self.clusters
-                ],
-                'activeClusterID': None,
-                'visibleClusterID': None,
-            },
+                ),
+                key=lambda c: c['id'],
+                reverse=True,
+            ),
             'tweets': tweets,
+            'unassignedTweets': unassigned_tweets,
+            'topic': {
+                'title': self.title,
+                'id': self.rts_id,
+            },
         }
 
         return state
@@ -152,7 +158,7 @@ class EvalCluster(Base):
 
     eval_topic_rts_id = sa.Column(sa.String, primary_key=True)
     eval_topic_collection = sa.Column(sa.String, primary_key=True)
-    rts_id = sa.Column(sa.Integer, primary_key=True)
+    rts_id = sa.Column(sa.Integer, sa.Sequence('eval_cluster__rts_id'), primary_key=True)
 
     gloss = sa.Column(sa.String, nullable=False)
 

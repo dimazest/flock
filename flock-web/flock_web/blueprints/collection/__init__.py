@@ -382,7 +382,26 @@ def cluster_eval_topic(rts_id):
     return render_template(
         'collection/eval_topic_cluster.html',
         state=eval_topic.state(),
+        eval_topic=eval_topic,
     )
+
+
+@bp_collection.route('/eval/topics/<rts_id>/cluster/new', methods=['POST'])
+@flask_login.login_required
+def cluster_eval_topic_new_cluster(rts_id):
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=rts_id, collection=g.collection).one()
+
+    eval_cluster = fw_model.EvalCluster(
+        gloss=request.get_json()['gloss'],
+        eval_topic=eval_topic,
+    )
+
+    db.session.commit()
+
+    state = eval_topic.state()
+    state['newClusterID'] = eval_cluster.rts_id
+
+    return jsonify(state)
 
 
 @bp_collection.route('/eval/topics/<rts_id>/cluster.json')
