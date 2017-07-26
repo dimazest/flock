@@ -308,10 +308,10 @@ AddCluster = connect(
     )
 )(AddCluster)
 
-const Cluster = ({ onActivateClick, onShowClick, gloss, size, active=false, visible=false }) => (
+const Cluster = ({ onActivateClick, onActivateAndAssignClick, onShowClick, gloss, size, active=false, visible=false }) => (
     <li
         className={"list-group-item " + (active ? "active " : "") + "justify-content-between"}
-        onClick={onActivateClick}
+        onClick={onActivateAndAssignClick}
     >
         <button className={"btn " + (visible ? "btn-info active " : "btn-outline-info")}
                 onClick={
@@ -323,11 +323,16 @@ const Cluster = ({ onActivateClick, onShowClick, gloss, size, active=false, visi
         >
             {visible ? "Show Unclustered" : `${size} tweets`}
         </button>
-        <span className="ml-2">{gloss}</span>
+        <span className="ml-2" style={{width: '60%'}}>{gloss}</span>
+        <div>
+            <button className="btn btn-secondary  mr-1" onClick={e => {e.stopPropagation(); onActivateClick()}}>Select</button>
+            <button className="btn btn-primary" onClick={onActivateAndAssignClick}>Assign</button>
+        </div>
     </li>
 )
 Cluster.propTypes = {
     onActivateClick: PropTypes.func.isRequired,
+    onActivateAndAssignClick: PropTypes.func.isRequired,
     onShowClick: PropTypes.func.isRequired,
     gloss: PropTypes.string.isRequired,
     size: PropTypes.number.isRequired,
@@ -335,14 +340,15 @@ Cluster.propTypes = {
     visible: PropTypes.bool
 }
 
-let ClusterList = ({ clusters, activeClusterID, activeTweetID, visibleClusterID, onActivateClick, onShowClick }) => (
+let ClusterList = ({ clusters, activeClusterID, activeTweetID, visibleClusterID, onActivateClick, onActivateAndAssignClick, onShowClick }) => (
     <div style={{overflowY: 'scroll', maxHeight: '90%'}}>
         <ul className="list-group">
             {
                 clusters.map(
                     cluster => (
                         <Cluster key={cluster.id} gloss={cluster.gloss} size={cluster.size}
-                                 onActivateClick={() => onActivateClick(activeTweetID, cluster.id)}
+                                 onActivateClick={() => onActivateClick(cluster.id)}
+                                 onActivateAndAssignClick={() => onActivateAndAssignClick(activeTweetID, cluster.id)}
                                  active={cluster.id === activeClusterID}
                                  onShowClick={() => onShowClick(cluster.id)}
                                  visible={cluster.id === visibleClusterID}
@@ -366,6 +372,7 @@ ClusterList.propTypes = {
     activeTweetID: PropTypes.string,
     visibleClusterID: PropTypes.number,
     onActivateClick: PropTypes.func.isRequired,
+    onActivateAndAssignClick: PropTypes.func.isRequired,
     onShowClick: PropTypes.func.isRequired
 }
 
@@ -381,7 +388,8 @@ ClusterList = connect(
     ),
     dispatch => (
         {
-            onActivateClick: (activeTweetID, activeClusterID) => {dispatch(assignTweet(activeTweetID, activeClusterID))},
+            onActivateClick: activeClusterID => {dispatch(activateCluster(activeClusterID))},
+            onActivateAndAssignClick: (activeTweetID, activeClusterID) => {dispatch(assignTweet(activeTweetID, activeClusterID))},
             onShowClick: id => {dispatch(showCluster(id))},
         }
     )
