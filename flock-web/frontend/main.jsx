@@ -25,12 +25,20 @@ const REQUEST_ADD_CLUSTER = 'REQUEST_ADD_CLUSTER'
 function requestAddCluster(gloss){
     return {
         type: REQUEST_ADD_CLUSTER,
-        gloss
+        gloss,
     }
 }
 
 const RECEIVE_BACKEND = 'RECEIVE_BACKEND'
 function receiveBackend(backend){
+    backend = {
+        ...backend,
+        tweets: {
+            ...backend.tweets,
+            null: backend.unassignedTweets,
+        },
+    }
+
     return {
         type: RECEIVE_BACKEND,
         backend,
@@ -50,9 +58,7 @@ function addCluster(gloss) {
                     'X-CSRFToken': window.CSRF_TOKEN,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    gloss: gloss,
-                })
+                body: JSON.stringify({gloss})
             },
         )
             .then(
@@ -61,28 +67,49 @@ function addCluster(gloss) {
             )
             .then(
                 json => {
-                    dispatch(
-                        receiveBackend(
-                            {
-                                ...json,
-                                tweets: {
-                                    ...json.tweets,
-                                    null: json.unassignedTweets,
-                                },
-                            },
-                        )
-                    )
-
+                    dispatch(receiveBackend(json))
                     dispatch(activateCluster(json.newClusterID))
-
                 }
             )
     }
 }
 
+const REQUEST_ASSIGN_TWEET = 'REQUEST_ASSIGN_TWEET'
+function requestAssignTweet(tweet_id, cluster_id) {
+    console.log(`Request assign tweet ${tweet_id} to cluster ${cluster_id}`)
+
+    return {
+        type: REQUEST_ASSIGN_TWEET,
+        tweet_id,
+        cluster_id,
+    }
+}
+
 function assignTweet(tweet_id, cluster_id) {
     return dispatch => {
-        console.log(`Assign tweet ${tweet_id} to cluster ${cluster_id}`)
+        dispatch(requestAssignTweet(tweet_id, cluster_id))
+
+        return fetch(
+            window.ASSIGN_TWEET_TO_CLUSTER_URL,
+            {
+                credentials: 'include',
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': window.CSRF_TOKEN,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({tweet_id, cluster_id})
+            },
+        )
+            .then(
+                response => response.json(),
+                error => console.log('An error occured', error)
+            )
+            .then(
+                json => {
+                    dispatch(receiveBackend(json))
+                }
+            )
     }
 }
 

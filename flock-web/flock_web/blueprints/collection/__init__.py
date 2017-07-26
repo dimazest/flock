@@ -4,6 +4,7 @@ from flask import render_template, Blueprint, request, url_for, g, redirect, jso
 import flask_login
 
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.dialects import postgresql
 
 from flock import model
 from flock_web.app import db
@@ -400,6 +401,33 @@ def cluster_eval_topic_new_cluster(rts_id):
 
     state = eval_topic.state()
     state['newClusterID'] = eval_cluster.rts_id
+
+    return jsonify(state)
+
+
+@bp_collection.route('/eval/topics/<eval_topic_rts_id>/cluster/assign_tweet', methods=['POST'])
+@flask_login.login_required
+def assign_tweet_to_eval_cluster(eval_topic_rts_id):
+    assignment = request.get_json()
+
+    t = fw_model.EvalClusterAssignment.__table__
+
+    insert_stmt = postgresql.insert(t).values(
+        eval_topic_rts_id=eval_topic_rts_id,
+        eval_topic_collection=g.collection,
+        tweet_id=int(assignment['tweet_id']),
+        eval_cluster_rts_id=assignment['cluster_id'],
+    )
+    insert_stmt = insert_stmt.on_conflict_do_update(
+        constraint=t.primary_key,
+        set_={'eval_cluster_rts_id': insert_stmt.excluded.eval_cluster_rts_id},
+    )
+
+    db.session.execute(insert_stmt)
+    db.session.commit()
+
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=eval_topic_rts_id, collection=g.collection).one()
+    state = eval_topic.state()
 
     return jsonify(state)
 

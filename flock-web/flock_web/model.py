@@ -176,14 +176,14 @@ class EvalClusterAssignment(Base):
 
     eval_topic_rts_id = sa.Column(sa.String, primary_key=True)
     eval_topic_collection = sa.Column(sa.String, primary_key=True)
-    eval_cluster_rts_id = sa.Column(sa.Integer, primary_key=True)
-
     # Ideally, it should point to EvalRelevanceJudgment.
     tweet_id = sa.Column(
         sa.BigInteger,
         # sa.ForeignKey('tweet.tweet_id'),
         primary_key=True
     )
+
+    eval_cluster_rts_id = sa.Column(sa.Integer)
 
     eval_cluster = sa.orm.relationship('EvalCluster', backref='assignments')
 
