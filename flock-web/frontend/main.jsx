@@ -19,6 +19,12 @@ function clusterNewName(tweets, clusterID){
     return tw.length > 0 ? tw[0].text : ''
 }
 
+function clusterFirstTweetID(tweets, clusterID) {
+    const tw = tweetCluster(tweets, clusterID)
+
+    return tw.length > 0 ? tw[0].id : null
+}
+
 /* Actions */
 
 const REQUEST_ADD_CLUSTER = 'REQUEST_ADD_CLUSTER'
@@ -129,7 +135,6 @@ function activateTweet(tweet_id){
     }
 }
 
-
 const ACTIVATE_CLUSTER = 'ACTIVATE_CLUSTER'
 function activateCluster(activeClusterID){
     return {
@@ -164,6 +169,11 @@ function tweetClusterApp(state={}, action) {
             return {
                 ...state,
                 backend: action.backend,
+                frontend: {
+                    ...state.frontend,
+                    activeTweetID: clusterFirstTweetID(action.backend.tweets, state.frontend.visibleClusterID),
+                    newClusterName: clusterNewName(action.backend.tweets, state.frontend.visibleClusterID),
+                }
             }
         case ACTIVATE_CLUSTER:
             return {
@@ -188,7 +198,7 @@ function tweetClusterApp(state={}, action) {
                 frontend: {
                     ...state.frontend,
                     visibleClusterID: visibleClusterID,
-                    activeTweetID: null,
+                    activeTweetID: clusterFirstTweetID(state.backend.tweets, visibleClusterID),
                     newClusterName: clusterNewName(state.backend.tweets, visibleClusterID),
                 },
             }
@@ -217,7 +227,7 @@ window.initialState = {
     },
     'frontend': {
         activeClusterID: null,
-        activeTweetID: null,
+        activeTweetID: clusterFirstTweetID({null: window.BACKEND.unassignedTweets}, null),
         visibleClusterID: null,
         newClusterName: clusterNewName({null: window.BACKEND.unassignedTweets}, null),
     }
