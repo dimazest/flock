@@ -45,7 +45,7 @@
           {% if eval_relevance_judgments %}
             {% set j = eval_relevance_judgments.get(tweet.tweet_id, -1) %}
             <div class="tweet-outer-meta ml-0">
-              {% if j > 0 %}
+              {% if j  and j > 0 %}
                 <a href="#" class="btn btn-success disabled w-100" role="button" aria-disabled="true">Relevant</a>
               {% elif j == 0 %}
                 <a href="#" class="btn btn-danger disabled w-100" role="button" aria-disabled="true">Irrelevant</a>

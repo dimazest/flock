@@ -51,8 +51,14 @@ class EvalTopic(Base):
     user_id = sa.Column(sa.Integer, sa.ForeignKey('user.id'), nullable=False)
     user = sa.orm.relationship('User', backref='eval_topics')
 
+    def tweet_count(self, judged_only=False):
+        return len([j for j in self.judgments if not judged_only or j.judgment is not None])
+
     def relevant_count(self):
-        return len([j for j in self.judgments if j.judgment > 0])
+        return len([j for j in self.judgments if j.judgment and j.judgment > 0])
+
+    def clustered_count(self):
+        return len([1 for c in self.clusters for a in c.assignments])
 
     def tweet_by_id(self, relevant_only=False):
         session = sa.inspect(self).session
@@ -145,7 +151,7 @@ class EvalRelevanceJudgment(Base):
         primary_key=True,
     )
 
-    judgment = sa.Column(sa.Integer, nullable=False)
+    judgment = sa.Column(sa.Integer, nullable=True)
 
     eval_topic = sa.orm.relationship('EvalTopic', backref='judgments')
 

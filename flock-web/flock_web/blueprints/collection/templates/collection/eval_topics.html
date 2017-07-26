@@ -11,8 +11,10 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>All tweets</th>
-        <th>Relevant tweets</th>
+        <th>Total</th>
+        <th>Judged</th>
+        <th>Relevant</th>
+        <th>Clustered</th>
       </tr>
     </thead>
     <tbody>
@@ -20,8 +22,29 @@
         <tr>
           {# <td>{{ eval_topic.rts_id }}</td> #}
           <td>{{ eval_topic.title }}</td>
-          <td><a href="{{ url_for('.eval_topic', rts_id=eval_topic.rts_id) }}">{{ eval_topic.judgments|count }}</a></td>
-          <td><a href="{{ url_for('.cluster_eval_topic', rts_id=eval_topic.rts_id) }}">{{ eval_topic.relevant_count() }}</a></td>
+          {% set total_count = eval_topic.tweet_count() %}
+          <td>{{ total_count }}</td>
+          {% set judged_count = eval_topic.tweet_count(judged_only=True) %}
+          <td>
+            <a
+              href="{{ url_for('.eval_topic', rts_id=eval_topic.rts_id) }}"
+              class="btn {{ "btn-secondary" if total_count == judged_count else "btn-danger"}}"
+              >
+              {{ judged_count }}
+            </a>
+          </td>
+          {% set relevant_count = eval_topic.relevant_count() %}
+          <td>{{ relevant_count }}</td>
+          {% set clustered_count = eval_topic.clustered_count() %}
+          <td>
+            <a
+              href="{{ url_for('.cluster_eval_topic', rts_id=eval_topic.rts_id) }}"
+              class="btn {{ "btn-secondary" if relevant_count == clustered_count else "btn-danger"}}"
+              >
+              {{ clustered_count }}
+            </a>
+          </td>
+          {# <td>{{ eval_topic.clustered_count() }}</td> #}
         </tr>
       {%- endfor %}
     </tbody>
