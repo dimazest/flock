@@ -313,18 +313,20 @@ const Cluster = ({ onActivateClick, onActivateAndAssignClick, onShowClick, gloss
         className={"list-group-item " + (active ? "active " : "") + "justify-content-between"}
         onClick={onActivateAndAssignClick}
     >
-        <button className={"btn " + (visible ? "btn-info active " : "btn-outline-info")}
-                onClick={
-                    e => {
-                        e.stopPropagation()
-                        onShowClick()
-                    }
-                }
-        >
-            {visible ? "Show Unclustered" : `${size} tweets`}
-        </button>
-        <span className="ml-2" style={{width: '60%'}}>{gloss}</span>
+        <span className="ml-2" style={{width: '65%'}}>{gloss}</span>
         <div>
+            <button className="btn btn-warning  mr-1" onClick={e => {e.stopPropagation(); }}>Rename</button>
+            <button className="btn btn-danger  mr-1" onClick={e => {e.stopPropagation(); }}>Delete</button>
+            <button className="mr-1 btn btn-info"
+                    onClick={
+                        e => {
+                            e.stopPropagation()
+                            onShowClick()
+                        }
+                    }
+            >
+                {visible ? "Show Unclustered" : `Show (${size})`}
+            </button>
             <button className="btn btn-secondary  mr-1" onClick={e => {e.stopPropagation(); onActivateClick()}}>Select</button>
             <button className="btn btn-primary" onClick={onActivateAndAssignClick}>Assign</button>
         </div>
@@ -452,12 +454,12 @@ const TweetListContainer = connect(
 
 const App = () => (
     <div className="row">
-        <div className="col-6 bg-faded sidebar bd-links">
+        <div className="col-8 bg-faded sidebar bd-links">
             <TopicInfo />
             <AddCluster />
             <ClusterList />
         </div>
-        <main className="col-6 offset-6">
+        <main className="col offset-8">
             <TweetListContainer />
         </main>
     </div>
