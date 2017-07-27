@@ -580,6 +580,7 @@ function tweetJudgeApp(state={}, action) {
                 frontend: {
                     ...state.frontend,
                     tweetFilter: action.judgment === state.frontend.tweetFilter ? 'all' : action.judgment,
+                    tweetsShown: Math.min(30, state.backend.tweets.length),
                 }
             }
         }
