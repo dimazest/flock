@@ -239,7 +239,7 @@ let AddCluster = ({tweets, visibleClusterID, newClusterName, dispatch }) => {
                 }
             >
                 <div className="row">
-                    <div className="col-10">
+                    <div className="col">
                         <input
                             type="text"
                             className="form-control"
@@ -255,7 +255,7 @@ let AddCluster = ({tweets, visibleClusterID, newClusterName, dispatch }) => {
                             }
                         />
                     </div>
-                    <div className="col-2">
+                    <div className="col-2" style={{minWidth: "164px"}}>
                         <button className="btn btn-outline-success my-2 my-sm-0 w-100" type="submit">
                             Add Cluster
                         </button>
@@ -277,11 +277,10 @@ AddCluster = connect(
 
 const Cluster = ({ onActivateClick, onActivateAndAssignClick, onShowClick, gloss, size, active=false, visible=false }) => (
     <li
-        className={"list-group-item " + (active ? "active " : "") + "justify-content-between"}
-        onClick={onActivateAndAssignClick}
+        className={"list-group-item " + (active ? "active " : "")}
     >
-        <span className="ml-2" style={{width: '65%'}}>{gloss}</span>
-        <div className="btn-group">
+        <div className="col">{gloss}</div>
+        <div className="btn-group col-9 col-lg-6 justify-content-end" style={{minWidth: "453px"}}>
             <button className="btn btn-warning" onClick={e => {e.stopPropagation(); }}>Rename</button>
             <button className="btn btn-danger" onClick={e => {e.stopPropagation(); }}>Delete</button>
             <button className="btn btn-info"
@@ -475,12 +474,12 @@ function tweetClusterApp(state={}, action) {
 
 const ClusterApp = () => (
     <div className="row">
-        <div className="col-8 bg-faded sidebar bd-links">
+        <div className="col-6 bg-faded sidebar bd-links">
             <TopicInfo />
             <AddCluster />
             <ClusterList />
         </div>
-        <main className="col offset-8">
+        <main className="col offset-6">
             <TweetList />
         </main>
     </div>
@@ -595,10 +594,10 @@ TweetJudgmentList = connect(
 
 const JudgeApp = () => (
     <div className="row">
-        <div className="col-4 bg-faded sidebar bd-links">
+        <div className="col-6 bg-faded sidebar bd-links">
             <TopicInfo />
         </div>
-        <main className="col offset-4">
+        <main className="col offset-6">
             <TweetJudgmentList />
         </main>
     </div>
