@@ -184,6 +184,14 @@ function receiveTweetsAndJudgments(tweetsAndJudgments) {
     }
 }
 
+const FILTER_TWEETS = 'FILTER_TWEETS'
+function filterTweets(judgment) {
+    return {
+        type: FILTER_TWEETS,
+        judgment,
+    }
+}
+
 function judgeTweet(tweet_id, judgment){
     return dispatch => {
         dispatch(requestJudgeTweet(tweet_id, judgment))
@@ -566,51 +574,80 @@ function tweetJudgeApp(state={}, action) {
                     ...action.tweetsAndJudgments,
                 }
             }
+        case FILTER_TWEETS: {
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    tweetFilter: action.judgment === state.frontend.tweetFilter ? 'all' : action.judgment,
+                }
+            }
+        }
         default:
             return state
     }
 }
-const JudgedTweet = ({tweet, judgment, onJudgmentClick}) => (
-    <div className="card tweet-outer">
-        <TweetEmbed{...tweet} />
-        <div className="tweet-outer-meta btn-group btn-block justify-content-center">
-            <button className={`btn btn-${(judgment > 1) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(tweet.id, 2)}>Very</button>
-            <button className={`btn btn-${(judgment > 0) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(tweet.id, 1)}>Relevant</button>
-            <button className={`btn btn-${(judgment === null) ? "" : "outline-"}primary`}  onClick={() => onJudgmentClick(tweet.id, null)}>Unjudged</button>
-            <button className={`btn btn-${(judgment == 0) ? "" : "outline-"}danger`}  onClick={() => onJudgmentClick(tweet.id, 0)}>Irrelevant</button>
-        </div>
+
+const JudgmentButtons = ({judgment, onJudgmentClick}) => (
+    <div className="tweet-outer-meta btn-group btn-block justify-content-center">
+        <button className={`btn btn-${(judgment > 1) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(2)}>Very</button>
+        <button className={`btn btn-${(judgment > 0) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(1)}>Relevant</button>
+        <button className={`btn btn-${(judgment === null) ? "" : "outline-"}primary`}  onClick={() => onJudgmentClick(null)}>Unjudged</button>
+        <button className={`btn btn-${(judgment == 0) ? "" : "outline-"}danger`}  onClick={() => onJudgmentClick(0)}>Irrelevant</button>
     </div>
 )
 
+const JudgedTweet = ({tweet, judgment, onJudgmentClick}) => (
+    <div className="card tweet-outer">
+        <TweetEmbed{...tweet} />
+        <JudgmentButtons judgment={judgment} onJudgmentClick={judgment => onJudgmentClick(tweet.id, judgment)} />
+    </div>
+)
+
+let TweetFilter = props => (
+    <JudgmentButtons {...props} />
+)
+
+TweetFilter = connect(
+    state => ({judgment: state.frontend.tweetFilter}),
+    dispatch => ({
+        onJudgmentClick: (judgment => {dispatch(filterTweets(judgment))})
+    }),
+)(TweetFilter)
+
 import InfiniteScroll from 'redux-infinite-scroll';
 
-let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentClick}) => (
-    <InfiniteScroll
-        children={tweets.slice(0, tweetsShown).map(tweet => (
-            <JudgedTweet
-                key={tweet.id}
-                    tweet={tweet}
-                    judgment={judgments[tweet.id]}
-                    onJudgmentClick={onJudgmentClick}
-            />
-        ))}
-        loadMore={showMore}
-        hasMore={tweets.length > tweetsShown}
-        elementIsScrollable={false}
+let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentClick, tweetFilter}) => {
+    const filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id] === tweetFilter))
+
+    return <InfiniteScroll
+    children={filteredTweets.slice(0, tweetsShown).map(tweet => (
+        <JudgedTweet
+            key={tweet.id}
+            tweet={tweet}
+            judgment={judgments[tweet.id]}
+            onJudgmentClick={onJudgmentClick}
+        />
+    ))}
+    loadMore={showMore}
+    hasMore={filteredTweets.length > tweetsShown}
+    elementIsScrollable={false}
     />
-)
+}
 TweetJudgmentList.propTypes = {
     tweets: PropTypes.array,
     tweetsShown: PropTypes.number,
     showMore: PropTypes.func,
     judgments: PropTypes.object,
     onJudgmentClick: PropTypes.func,
+    tweetFilter: PropTypes.isRequired,
 }
 TweetJudgmentList = connect(
     state => ({
         tweets: state.backend.tweets,
         tweetsShown: state.frontend.tweetsShown,
         judgments: state.backend.judgments,
+        tweetFilter: state.frontend.tweetFilter,
     }),
     dispatch => ({
         showMore: (
@@ -626,6 +663,8 @@ const JudgeApp = () => (
     <div className="row">
         <div className="col-6 bg-faded sidebar bd-links">
             <TopicInfo />
+            <h2>Tweet filter</h2>
+            <TweetFilter />
         </div>
         <main className="col offset-6">
             <TweetJudgmentList />
@@ -640,6 +679,7 @@ window.judge = () => {
         },
         frontend: {
             tweetsShown: Math.min(30, window.BACKEND.tweets.length),
+            tweetFilter: 'all',
         },
     }
 
