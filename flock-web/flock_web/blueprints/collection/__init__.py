@@ -363,15 +363,11 @@ def user_eval_topics():
 @flask_login.login_required
 def eval_topic(rts_id):
     eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=rts_id, collection=g.collection).one()
-    tweet_by_id = eval_topic.tweet_by_id()
-
-    eval_relevance_judgments = {j.tweet_id: j.judgment for j in eval_topic.judgments}
 
     return render_template(
         'collection/eval_topic.html',
         eval_topic=eval_topic,
-        tweet_by_id=tweet_by_id,
-        eval_relevance_judgments=eval_relevance_judgments,
+        state=eval_topic.judge_state(),
     )
 
 
@@ -411,7 +407,6 @@ def assign_tweet_to_eval_cluster(eval_topic_rts_id):
     assignment = request.get_json()
 
     t = fw_model.EvalClusterAssignment.__table__
-
     insert_stmt = postgresql.insert(t).values(
         eval_topic_rts_id=eval_topic_rts_id,
         eval_topic_collection=g.collection,
@@ -432,9 +427,27 @@ def assign_tweet_to_eval_cluster(eval_topic_rts_id):
     return jsonify(state)
 
 
-@bp_collection.route('/eval/topics/<rts_id>/cluster.json')
+@bp_collection.route('/eval/topics/<eval_topic_rts_id>/judge_tweet', methods=['POST'])
 @flask_login.login_required
-def cluster_eval_topic_json(rts_id):
-    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=rts_id, collection=g.collection).one()
+def judge_tweet(eval_topic_rts_id):
+    judgment = request.get_json()
 
-    return jsonify(eval_topic.state())
+    t = fw_model.EvalRelevanceJudgment.__table__
+    insert_stmt = postgresql.insert(t).values(
+        eval_topic_rts_id=eval_topic_rts_id,
+        collection=g.collection,
+        tweet_id=int(judgment['tweet_id']),
+        judgment=int(judgment['judgment']) if judgment['judgment'] is not None else None,
+    )
+    insert_stmt = insert_stmt.on_conflict_do_update(
+        constraint=t.primary_key,
+        set_={'judgment': insert_stmt.excluded.judgment},
+    )
+
+    db.session.execute(insert_stmt)
+    db.session.commit()
+
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=eval_topic_rts_id, collection=g.collection).one()
+    state = eval_topic.judge_state()
+
+    return jsonify(state)

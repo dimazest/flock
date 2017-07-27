@@ -3,12 +3,14 @@
 {% block content %}{% endblock content %}
 
 {% block extra_scripts %}
+<script src="{{ url_for('static', filename='bundle.js') }}"></script>
 <script>
  window.BACKEND = {{ state|tojson }};
  window.CSRF_TOKEN = '{{ csrf_token() }}';
  window.ADD_CLUSTER_URL = '{{ url_for('.cluster_eval_topic_new_cluster', rts_id=eval_topic.rts_id) }}';
  window.ASSIGN_TWEET_TO_CLUSTER_URL = '{{ url_for('.assign_tweet_to_eval_cluster', eval_topic_rts_id=eval_topic.rts_id) }}';
+
+ window.cluster();
 </script>
-<script src="{{ url_for('static', filename='bundle.js') }}"></script>
 {% endblock extra_scripts %}
 

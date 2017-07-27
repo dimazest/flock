@@ -159,93 +159,60 @@ function chnageNewClusterName(newClusterName){
     }
 }
 
-/* Reducers*/
+const SHOW_MORE_JUDGMENT_TWEETS = 'SHOW_MORE_JUDGMENT_TWEETS'
+function showMoreJudgmentTweets(){
+    return {type: SHOW_MORE_JUDGMENT_TWEETS}
+}
 
-import { combineReducers } from 'redux'
 
-function tweetClusterApp(state={}, action) {
-    switch (action.type) {
-        case RECEIVE_BACKEND:
-            return {
-                ...state,
-                backend: action.backend,
-                frontend: {
-                    ...state.frontend,
-                    activeTweetID: clusterFirstTweetID(action.backend.tweets, state.frontend.visibleClusterID),
-                    newClusterName: clusterNewName(action.backend.tweets, state.frontend.visibleClusterID),
-                }
-            }
-        case ACTIVATE_CLUSTER:
-            return {
-                ...state,
-                frontend: {
-                    ...state.frontend,
-                    activeClusterID: action.activeClusterID,
-                },
-            }
-        case ACTIVATE_TWEET:
-            return {
-                ...state,
-                frontend: {
-                    ...state.frontend,
-                    activeTweetID: action.tweet_id,
-                }
-            }
-        case SHOW_CLUSTER: {
-            const visibleClusterID = action.visibleClusterID === state.frontend.visibleClusterID ? null : action.visibleClusterID
-            return {
-                ...state,
-                frontend: {
-                    ...state.frontend,
-                    visibleClusterID: visibleClusterID,
-                    activeTweetID: clusterFirstTweetID(state.backend.tweets, visibleClusterID),
-                    newClusterName: clusterNewName(state.backend.tweets, visibleClusterID),
-                },
-            }
-        }
-        case CHANGE_NEW_CLUSTER_NAME:{
-            return {
-                ...state,
-                frontend: {
-                    ...state.frontend,
-                    newClusterName: action.newClusterName,
-                },
-            }
-        }
-        default:
-            return state
+const REQUEST_JUDGE_TWEET = 'REQUEST_JUDGE_TWEET'
+function requestJudgeTweet(tweet_id, judgment){
+    console.log(`Judge tweet ${tweet_id}: ${judgment}`)
+
+    return {
+        type: REQUEST_JUDGE_TWEET,
+        tweet_id,
+        judgment,
     }
 }
 
-window.initialState = {
-    'backend': {
-        ...window.BACKEND,
-        tweets: {
-            ...window.BACKEND.tweets,
-            null: window.BACKEND.unassignedTweets,
-        },
-    },
-    'frontend': {
-        activeClusterID: null,
-        activeTweetID: clusterFirstTweetID({null: window.BACKEND.unassignedTweets}, null),
-        visibleClusterID: null,
-        newClusterName: clusterNewName({null: window.BACKEND.unassignedTweets}, null),
+const RECEIVE_TWEETS_AND_JUDGMENTS = 'RECEIVE_TWEETS_AND_JUDGMENTS'
+function receiveTweetsAndJudgments(tweetsAndJudgments) {
+    return {
+        type: RECEIVE_TWEETS_AND_JUDGMENTS,
+        tweetsAndJudgments
     }
 }
 
-const loggerMiddleware = createLogger()
+function judgeTweet(tweet_id, judgment){
+    return dispatch => {
+        dispatch(requestJudgeTweet(tweet_id, judgment))
 
-let store = createStore(
-    tweetClusterApp,
-    window.initialState,
-    applyMiddleware(
-        thunkMiddleware,
-        loggerMiddleware,
-    ),
-)
-window.store = store;
+        return fetch(
+            window.JUDGE_TWEET_URL,
+            {
+                credentials: 'include',
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': window.CSRF_TOKEN,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({tweet_id, judgment})
+            },
+        )
+            .then(
+                response => response.json(),
+                error => console.log('An error occured', error)
+            )
+            .then(
+                json => {
+                    dispatch(receiveTweetsAndJudgments(json))
+                }
+            )
+    }
+}
 
-/* Presentational Components */
+/* Components */
 
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -314,10 +281,10 @@ const Cluster = ({ onActivateClick, onActivateAndAssignClick, onShowClick, gloss
         onClick={onActivateAndAssignClick}
     >
         <span className="ml-2" style={{width: '65%'}}>{gloss}</span>
-        <div>
-            <button className="btn btn-warning  mr-1" onClick={e => {e.stopPropagation(); }}>Rename</button>
-            <button className="btn btn-danger  mr-1" onClick={e => {e.stopPropagation(); }}>Delete</button>
-            <button className="mr-1 btn btn-info"
+        <div className="btn-group">
+            <button className="btn btn-warning" onClick={e => {e.stopPropagation(); }}>Rename</button>
+            <button className="btn btn-danger" onClick={e => {e.stopPropagation(); }}>Delete</button>
+            <button className="btn btn-info"
                     onClick={
                         e => {
                             e.stopPropagation()
@@ -327,7 +294,7 @@ const Cluster = ({ onActivateClick, onActivateAndAssignClick, onShowClick, gloss
             >
                 {visible ? "Show Unclustered" : `Show (${size})`}
             </button>
-            <button className="btn btn-secondary  mr-1" onClick={e => {e.stopPropagation(); onActivateClick()}}>Select</button>
+            <button className="btn btn-secondary" onClick={e => {e.stopPropagation(); onActivateClick()}}>Select</button>
             <button className="btn btn-primary" onClick={onActivateAndAssignClick}>Assign</button>
         </div>
     </li>
@@ -416,17 +383,17 @@ ClusteredTweet.propTypes = {
     active: PropTypes.bool,
 }
 
-const TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID=null, activeTweetID=null }) => (
+let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID=null, activeTweetID=null }) => (
     <div>
-    {tweetCluster(tweets, visibleClusterID).map(tweet => (
-        <ClusteredTweet
-            key={tweet.id}
-            tweet={tweet}
-            onAssignClick={() => onAssignClick(tweet.id, activeClusterID)}
-            active={tweet.id === activeTweetID}
-        />
-    ))}
-        </div>
+        {tweetCluster(tweets, visibleClusterID).map(tweet => (
+            <ClusteredTweet
+                key={tweet.id}
+                tweet={tweet}
+                onAssignClick={() => onAssignClick(tweet.id, activeClusterID)}
+                active={tweet.id === activeTweetID}
+            />
+        ))}
+    </div>
 )
 TweetList.propTypes = {
     tweets: PropTypes.objectOf(PropTypes.array),
@@ -436,7 +403,7 @@ TweetList.propTypes = {
     activeTweetID: PropTypes.string,
 }
 
-const TweetListContainer = connect(
+TweetList = connect(
     state => (
         {
             tweets: state.backend.tweets,
@@ -452,7 +419,61 @@ const TweetListContainer = connect(
     ),
 )(TweetList)
 
-const App = () => (
+function tweetClusterApp(state={}, action) {
+    switch (action.type) {
+        case RECEIVE_BACKEND:
+            return {
+                ...state,
+                backend: action.backend,
+                frontend: {
+                    ...state.frontend,
+                    activeTweetID: clusterFirstTweetID(action.backend.tweets, state.frontend.visibleClusterID),
+                    newClusterName: clusterNewName(action.backend.tweets, state.frontend.visibleClusterID),
+                }
+            }
+        case ACTIVATE_CLUSTER:
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    activeClusterID: action.activeClusterID,
+                },
+            }
+        case ACTIVATE_TWEET:
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    activeTweetID: action.tweet_id,
+                }
+            }
+        case SHOW_CLUSTER: {
+            const visibleClusterID = action.visibleClusterID === state.frontend.visibleClusterID ? null : action.visibleClusterID
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    visibleClusterID: visibleClusterID,
+                    activeTweetID: clusterFirstTweetID(state.backend.tweets, visibleClusterID),
+                    newClusterName: clusterNewName(state.backend.tweets, visibleClusterID),
+                },
+            }
+        }
+        case CHANGE_NEW_CLUSTER_NAME:{
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    newClusterName: action.newClusterName,
+                },
+            }
+        }
+        default:
+            return state
+    }
+}
+
+const ClusterApp = () => (
     <div className="row">
         <div className="col-8 bg-faded sidebar bd-links">
             <TopicInfo />
@@ -460,14 +481,150 @@ const App = () => (
             <ClusterList />
         </div>
         <main className="col offset-8">
-            <TweetListContainer />
+            <TweetList />
         </main>
     </div>
 )
 
-render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
-    document.getElementById('main-content')
-);
+
+window.cluster = () => {
+    window.initialState = {
+        'backend': {
+            ...window.BACKEND,
+            tweets: {
+                ...window.BACKEND.tweets,
+                null: window.BACKEND.unassignedTweets,
+            },
+        },
+        'frontend': {
+            activeClusterID: null,
+            activeTweetID: clusterFirstTweetID({null: window.BACKEND.unassignedTweets}, null),
+            visibleClusterID: null,
+            newClusterName: clusterNewName({null: window.BACKEND.unassignedTweets}, null),
+        }
+    }
+
+    let store = createStore(
+        tweetClusterApp,
+        window.initialState,
+        applyMiddleware(thunkMiddleware, createLogger()),
+    )
+    window.store = store;
+
+    render(
+        <Provider store={store}>
+            <ClusterApp />
+        </Provider>,
+        document.getElementById('main-content')
+    )
+}
+
+function tweetJudgeApp(state={}, action) {
+    switch (action.type) {
+        case SHOW_MORE_JUDGMENT_TWEETS:
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    tweetsShown: Math.min(state.frontend.tweetsShown + 10, state.backend.tweets.length),
+                }
+            }
+        case RECEIVE_TWEETS_AND_JUDGMENTS:
+            return {
+                ...state,
+                backend: {
+                    ...state.backend,
+                    ...action.tweetsAndJudgments,
+                }
+            }
+        default:
+            return state
+    }
+}
+const JudgedTweet = ({tweet, judgment, onJudgmentClick}) => (
+    <div className="card tweet-outer">
+        <TweetEmbed{...tweet} />
+        <div className="tweet-outer-meta btn-group btn-block justify-content-center">
+            <button className={`btn btn-${(judgment > 1) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(tweet.id, 2)}>Very</button>
+            <button className={`btn btn-${(judgment > 0) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(tweet.id, 1)}>Relevant</button>
+            <button className={`btn btn-${(judgment === null) ? "" : "outline-"}primary`}  onClick={() => onJudgmentClick(tweet.id, null)}>Unjudged</button>
+            <button className={`btn btn-${(judgment == 0) ? "" : "outline-"}danger`}  onClick={() => onJudgmentClick(tweet.id, 0)}>Irrelevant</button>
+        </div>
+    </div>
+)
+
+import InfiniteScroll from 'redux-infinite-scroll';
+
+let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentClick}) => (
+    <InfiniteScroll
+        children={tweets.slice(0, tweetsShown).map(tweet => (
+            <JudgedTweet
+                key={tweet.id}
+                    tweet={tweet}
+                    judgment={judgments[tweet.id]}
+                    onJudgmentClick={onJudgmentClick}
+            />
+        ))}
+        loadMore={showMore}
+        hasMore={tweets.length > tweetsShown}
+        elementIsScrollable={false}
+    />
+)
+TweetJudgmentList.propTypes = {
+    tweets: PropTypes.array,
+    tweetsShown: PropTypes.number,
+    showMore: PropTypes.func,
+    judgments: PropTypes.object,
+    onJudgmentClick: PropTypes.func,
+}
+TweetJudgmentList = connect(
+    state => ({
+        tweets: state.backend.tweets,
+        tweetsShown: state.frontend.tweetsShown,
+        judgments: state.backend.judgments,
+    }),
+    dispatch => ({
+        showMore: (
+            () => {dispatch(showMoreJudgmentTweets())}
+        ),
+        onJudgmentClick: (
+            (tweet_id, judgment) => {dispatch(judgeTweet(tweet_id, judgment))}
+        ),
+    })
+)(TweetJudgmentList)
+
+const JudgeApp = () => (
+    <div className="row">
+        <div className="col-4 bg-faded sidebar bd-links">
+            <TopicInfo />
+        </div>
+        <main className="col offset-4">
+            <TweetJudgmentList />
+        </main>
+    </div>
+)
+
+window.judge = () => {
+    window.initialState = {
+        backend: {
+            ...window.BACKEND,
+        },
+        frontend: {
+            tweetsShown: Math.min(30, window.BACKEND.tweets.length),
+        },
+    }
+
+    let store = createStore(
+        tweetJudgeApp,
+        window.initialState,
+        applyMiddleware(thunkMiddleware, createLogger()),
+    )
+    window.store = store;
+
+    render(
+        <Provider store={store}>
+            <JudgeApp />
+        </Provider>,
+        document.getElementById('main-content')
+    )
+}

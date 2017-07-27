@@ -5,49 +5,18 @@
 
 {% block content %}
 
-<div class="row">
-
-    <div class="col-xl-4 col-md-6 bg-faded sidebar bd-links">
-
-        <div class="row justify-content-md-center">
-            <div class="col col-12">
-
-                <h1>Evaluation topic {{ eval_topic.rts_id}}</h1>
-
-                <form>
-                    <div class="form-group row">
-                        <label class="col-2 col-form-label">Title</label>
-                        <div class="col-10">
-                            <input class="form-control" type="text" placeholder="{{ eval_topic.title }}" readonly>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
-
-    <main class="col-xl-8 col-md-6 offset-xl-4">
-        {{ rm.render_tweets(tweet_by_id.values(), eval_relevance_judgments=eval_relevance_judgments) }}
-    </main>
-
-
-</div>
+<div class="row" id="main-content"></div>
 
 {% endblock content %}
 
 {% block extra_scripts %}
+ <script src="{{ url_for('static', filename='bundle.js') }}"></script>
 
-<script>
-    ! function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (!d.getElementById(id)) {
-            js = d.createElement(s);
-            js.id = id;
-            js.src = "//platform.twitter.com/widgets.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }
-    }(document, "script", "twitter-wjs");
-</script>
+ <script>
+   window.BACKEND = {{ state|tojson }};
+   window.CSRF_TOKEN = '{{ csrf_token() }}';
+   window.JUDGE_TWEET_URL = '{{ url_for('.judge_tweet', eval_topic_rts_id=eval_topic.rts_id, collection=g.collection) }}';
 
+   window.judge();
+ </script>
 {% endblock extra_scripts %}

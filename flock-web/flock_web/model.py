@@ -76,7 +76,7 @@ class EvalTopic(Base):
                     created_at='unknown',
                 )
             for j in self.judgments
-            if not relevant_only or j.judgment > 0
+            if not relevant_only or (j is not None and j.judgment > 0)
         }
 
         for tweet in (
@@ -94,7 +94,48 @@ class EvalTopic(Base):
     def state(self):
         tweet_by_id = self.tweet_by_id(relevant_only=True)
 
-        def tweet_to_json(tweets):
+        tweets_by_cluster = {}
+        for cluster in self.clusters:
+            tweets_by_cluster[cluster.rts_id] = self.tweets_to_dict(tweet_by_id.pop(a.tweet_id) for a in cluster.assignments)
+
+        state = {
+            'clusters': sorted(
+                (
+                    {
+                        'id': c.rts_id,
+                        'gloss': c.gloss,
+                        'size': len(tweets_by_cluster[c.rts_id])
+                    }
+                    for c in self.clusters
+                ),
+                key=lambda c: c['id'],
+                reverse=True,
+            ),
+            'tweets': tweets_by_cluster,
+            'unassignedTweets': self.tweets_to_dict(tweet_by_id.values()),
+            'topic': self.topic_as_dict(),
+        }
+
+        return state
+
+    def judge_state(self):
+        tweet_by_id = self.tweet_by_id()
+
+        state = {
+            'tweets': self.tweets_to_dict(tweet_by_id.values()),
+            'judgments': {str(j.tweet_id): j.judgment for j in self.judgments},
+            'topic': self.topic_as_dict(),
+        }
+
+        return state
+
+    def topic_as_dict(self):
+        return {
+            'title': self.title,
+            'id': self.rts_id,
+        }
+
+    def tweets_to_dict(self, tweets):
             return [
                 {
                     'id': str(t.tweet_id),
@@ -105,35 +146,6 @@ class EvalTopic(Base):
                 }
                 for t in tweets
             ]
-
-        tweets = {}
-        for cluster in self.clusters:
-            tweets[cluster.rts_id] = tweet_to_json(tweet_by_id.pop(a.tweet_id) for a in cluster.assignments)
-
-        unassigned_tweets = tweet_to_json(tweet_by_id.values())
-
-        state = {
-            'clusters': sorted(
-                (
-                    {
-                        'id': c.rts_id,
-                        'gloss': c.gloss,
-                        'size': len(tweets[c.rts_id])
-                    }
-                    for c in self.clusters
-                ),
-                key=lambda c: c['id'],
-                reverse=True,
-            ),
-            'tweets': tweets,
-            'unassignedTweets': unassigned_tweets,
-            'topic': {
-                'title': self.title,
-                'id': self.rts_id,
-            },
-        }
-
-        return state
 
 
 class EvalRelevanceJudgment(Base):
