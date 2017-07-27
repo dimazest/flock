@@ -131,8 +131,10 @@ class EvalTopic(Base):
 
     def topic_as_dict(self):
         return {
-            'title': self.title,
             'id': self.rts_id,
+            'title': self.title,
+            'description': getattr(self, 'description', 'SOME DESCRIPTION'),
+            'narrative': getattr(self, 'narrative', 'SOME NARRATIVE'),
         }
 
     def tweets_to_dict(self, tweets):

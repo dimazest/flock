@@ -217,9 +217,39 @@ function judgeTweet(tweet_id, judgment){
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-let TopicInfo= ({ topic }) => {
-    return <h1>Evaluation topic {topic.title}</h1>
-}
+let TopicInfo= ({ topic, full=true}) => (
+    <div>
+        <h1>Evaluation topic {topic.title}</h1>
+        {full &&
+         <div>
+             {(topic.title !== null) &&
+              <div className="row form-group">
+                  <label className="col-2 col-form-label">Title</label>
+                  <div className="col">
+                      <input className="form-control" type="text" value={topic.title} disabled={true}/>
+                  </div>
+              </div>
+             }
+             {(topic.description !== null) &&
+              <div className="row form-group">
+                  <label className="col-2 col-form-label">Description</label>
+                  <div className="col">
+                      <input className="form-control" value={topic.description} disabled={true}/>
+                  </div>
+              </div>
+             }
+             {(topic.narrative !== null) &&
+              <div className="row form-group">
+                  <label className="col-2 col-form-label">Narrative</label>
+                  <div className="col">
+                      <textarea className="form-control" type="text" value={topic.narrative} disabled={true}/>
+                  </div>
+              </div>
+             }
+         </div>
+        }
+    </div>
+)
 TopicInfo = connect(state => ({topic: state.backend.topic}))(TopicInfo)
 
 let AddCluster = ({tweets, visibleClusterID, newClusterName, dispatch }) => {
@@ -475,7 +505,7 @@ function tweetClusterApp(state={}, action) {
 const ClusterApp = () => (
     <div className="row">
         <div className="col-6 bg-faded sidebar bd-links">
-            <TopicInfo />
+            <TopicInfo full={false}/>
             <AddCluster />
             <ClusterList />
         </div>
