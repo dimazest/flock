@@ -136,10 +136,11 @@ function activateTweet(tweet_id){
 }
 
 const ACTIVATE_CLUSTER = 'ACTIVATE_CLUSTER'
-function activateCluster(activeClusterID){
+function activateCluster(activeClusterID, canDeselect=false){
     return {
         type: ACTIVATE_CLUSTER,
         activeClusterID,
+        canDeselect,
     }
 }
 
@@ -437,7 +438,7 @@ ClusterList = connect(
     ),
     dispatch => (
         {
-            onActivateClick: activeClusterID => {dispatch(activateCluster(activeClusterID))},
+            onActivateClick: activeClusterID => {dispatch(activateCluster(activeClusterID, true))},
             onActivateAndAssignClick: (activeTweetID, activeClusterID) => {dispatch(assignTweet(activeTweetID, activeClusterID))},
             onShowClick: id => {dispatch(showCluster(id))},
             onDeleteClick: id => {dispatch(deleteCluster(id))},
@@ -526,7 +527,7 @@ function tweetClusterApp(state={}, action) {
                 }
             }
         case ACTIVATE_CLUSTER:
-            const activeClusterID = action.activeClusterID === state.frontend.activeClusterID ? null : action.activeClusterID
+            const activeClusterID = (action.canDeselect && action.activeClusterID === state.frontend.activeClusterID) ? null : action.activeClusterID
             return {
                 ...state,
                 frontend: {
@@ -568,7 +569,8 @@ function tweetClusterApp(state={}, action) {
                 ...state,
                 frontend: {
                     ...state.frontend,
-                    activeClusterID: (action.clusterID === state.frontend.activeClusterID) ? null : state.frontend.activeClusterID,
+                    activeClusterID: action.clusterID === state.frontend.activeClusterID ? null : state.frontend.activeClusterID,
+                    visibleClusterID: action.clusterID == state.frontend.visibleClusterID ? null : state.frontend.visibleClusterID,
                 }
             }
         }

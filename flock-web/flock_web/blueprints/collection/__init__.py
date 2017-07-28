@@ -401,6 +401,8 @@ def cluster_eval_topic(rts_id):
         eval_cluster = db.session.query(fw_model.EvalCluster).get((rts_id, g.collection, request_json['clusterID']))
 
     if request.method == 'DELETE':
+        for a in eval_cluster.assignments:
+            db.session.delete(a)
         db.session.delete(eval_cluster)
 
     db.session.commit()
