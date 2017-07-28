@@ -390,21 +390,17 @@ Cluster.propTypes = {
 
 let ClusterList = ({ clusters, activeClusterID, activeTweetID, visibleClusterID, onActivateClick, onActivateAndAssignClick, onShowClick, onDeleteClick }) => (
     <div style={{overflowY: 'scroll', maxHeight: '90%'}}>
-        <ul className="list-group">
-            {
-            clusters.map(
-            cluster => (
-            <Cluster key={cluster.id} gloss={cluster.gloss} size={cluster.size}
-                     onActivateClick={() => onActivateClick(cluster.id)}
-                     onActivateAndAssignClick={() => onActivateAndAssignClick(activeTweetID, cluster.id)}
-                     active={cluster.id === activeClusterID}
-                     onShowClick={() => onShowClick(cluster.id)}
-                     onDeleteClick={() => onDeleteClick(cluster.id)}
-                     visible={cluster.id === visibleClusterID}
-            />
-            )
-            )
-            }
+    <ul className="list-group">
+    {clusters.map(cluster => (
+        <Cluster key={cluster.id} gloss={cluster.gloss} size={cluster.size}
+                 onActivateClick={() => onActivateClick(cluster.id)}
+                 onActivateAndAssignClick={() => onActivateAndAssignClick(activeTweetID, cluster.id)}
+                 active={cluster.id === activeClusterID}
+                 onShowClick={() => onShowClick(cluster.id)}
+                 onDeleteClick={() => onDeleteClick(cluster.id)}
+                 visible={cluster.id === visibleClusterID}
+        />
+    ))}
         </ul>
     </div>
 )
