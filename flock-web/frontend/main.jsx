@@ -331,7 +331,7 @@ const Cluster = ({ onActivateClick, onActivateAndAssignClick, onShowClick, gloss
             >
                 {visible ? "Show Unclustered" : `Show (${size})`}
             </button>
-            <button className="btn btn-secondary" onClick={e => {e.stopPropagation(); onActivateClick()}}>Select</button>
+            <button className={"btn btn-secondary " + (active ? "active" : "")} onClick={e => {e.stopPropagation(); onActivateClick()}}>Select</button>
             <button className="btn btn-primary" onClick={onActivateAndAssignClick}>Assign</button>
         </div>
     </li>
@@ -426,7 +426,9 @@ let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID
 
     if (!tweetsForCluster.length) {
         if (visibleClusterID === null) {
-            return <div className={`alert alert-success`} role="alert"><strong>{`All tweets are assigned to a cluster.`}</strong></div>
+            return <div className={`alert alert-success`} role="alert">
+                <strong>{`All tweets are assigned to a cluster.`}</strong> <a href={window.TOPICS_URL} className="alert-link">Show the list of topics.</a>
+            </div>
         } else {
             return <div className={`alert alert-warning`} role="alert"><strong>{`No tweets are assigned to this cluster.`}</strong></div>
         }
@@ -480,11 +482,12 @@ function tweetClusterApp(state={}, action) {
                 }
             }
         case ACTIVATE_CLUSTER:
+            const activeClusterID = action.activeClusterID === state.frontend.activeClusterID ? null : action.activeClusterID
             return {
                 ...state,
                 frontend: {
                     ...state.frontend,
-                    activeClusterID: action.activeClusterID,
+                    activeClusterID: activeClusterID,
                 },
             }
         case ACTIVATE_TWEET:
@@ -632,6 +635,10 @@ import InfiniteScroll from 'redux-infinite-scroll';
 let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentClick, tweetFilter}) => {
     const filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id] === tweetFilter))
 
+    const doneMessage = <div className={"alert alert-success"} role="alert">
+        <strong>All tweets are judged.</strong> <a className="alert-link" href={window.TOPICS_URL}>Show the list of topics.</a>
+    </div>
+
     if (!filteredTweets.length) {
         let message = ""
         let type = "warning"
@@ -650,21 +657,24 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentCl
                 break
             }
             case null: {
-                message = "Threre are no unjudged tweets."
-                type = "success"
-                break
+                return doneMessage
             }
             default: {
                 message = "There are no tweets."
                 type = "danger"
             }
         }
-
-        return <div className={`alert alert-${type}`} role="alert"><strong>{message}</strong></div>
+        return <div className={`alert alert-${type}`} role="alert">
+            <strong>{message}</strong>
+        </div>
 
     }
 
-    return <InfiniteScroll
+    const done = !Object.values(judgments).filter((j) => (j === null)).length
+
+    return <div>
+        {done && doneMessage}
+        <InfiniteScroll
                children={filteredTweets.slice(0, tweetsShown).map(tweet => (
                    <JudgedTweet
                        key={tweet.id}
@@ -676,7 +686,8 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentCl
                loadMore={showMore}
                hasMore={filteredTweets.length > tweetsShown}
                elementIsScrollable={false}
-    />
+        />
+    </div>
 
 }
 TweetJudgmentList.propTypes = {
@@ -685,7 +696,6 @@ TweetJudgmentList.propTypes = {
     showMore: PropTypes.func,
     judgments: PropTypes.object,
     onJudgmentClick: PropTypes.func,
-    tweetFilter: PropTypes.isRequired,
 }
 TweetJudgmentList = connect(
     state => ({

@@ -16,6 +16,7 @@
    window.BACKEND = {{ state|tojson }};
    window.CSRF_TOKEN = '{{ csrf_token() }}';
    window.JUDGE_TWEET_URL = '{{ url_for('.judge_tweet', eval_topic_rts_id=eval_topic.rts_id, collection=g.collection) }}';
+   window.TOPICS_URL = '{{url_for('.user_eval_topics')}}';
 
    window.judge();
  </script>
