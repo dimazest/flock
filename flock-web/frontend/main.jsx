@@ -427,7 +427,7 @@ let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID
     if (!tweetsForCluster.length) {
         if (visibleClusterID === null) {
             return <div className={`alert alert-success`} role="alert">
-                <strong>{`All tweets are assigned to a cluster.`}</strong> <a href={window.TOPICS_URL} className="alert-link">Show the list of topics.</a>
+                <strong>{`All tweets are assigned to a cluster.`}</strong> <a href={window.TOPICS_URL} className="alert-link">Show the topic list.</a>
             </div>
         } else {
             return <div className={`alert alert-warning`} role="alert"><strong>{`No tweets are assigned to this cluster.`}</strong></div>
@@ -636,7 +636,7 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentCl
     const filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id] === tweetFilter))
 
     const doneMessage = <div className={"alert alert-success"} role="alert">
-        <strong>All tweets are judged.</strong> <a className="alert-link" href={window.TOPICS_URL}>Show the list of topics.</a>
+        <strong>All tweets are judged.</strong> <a className="alert-link" href={window.TOPICS_URL}>Show the topic list.</a>
     </div>
 
     if (!filteredTweets.length) {
