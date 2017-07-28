@@ -7,7 +7,7 @@
 <script>
  window.BACKEND = {{ state|tojson }};
  window.CSRF_TOKEN = '{{ csrf_token() }}';
- window.ADD_CLUSTER_URL = '{{ url_for('.cluster_eval_topic_new_cluster', rts_id=eval_topic.rts_id) }}';
+ window.CLUSTER_URL = '{{ url_for('.cluster_eval_topic', rts_id=eval_topic.rts_id) }}';
  window.ASSIGN_TWEET_TO_CLUSTER_URL = '{{ url_for('.assign_tweet_to_eval_cluster', eval_topic_rts_id=eval_topic.rts_id) }}';
  window.TOPICS_URL = '{{url_for('.user_eval_topics')}}';
 

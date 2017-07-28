@@ -56,7 +56,7 @@ function addCluster(gloss) {
         dispatch(requestAddCluster(gloss))
 
         return fetch(
-            window.ADD_CLUSTER_URL,
+            window.CLUSTER_URL,
             {
                 credentials: 'include',
                 method: 'POST',
@@ -156,6 +156,53 @@ function chnageNewClusterName(newClusterName){
     return {
         type: CHANGE_NEW_CLUSTER_NAME,
         newClusterName,
+    }
+}
+
+const REQUEST_DELETE_CLUSTER = 'REQUEST_DELETE_CLUSTER'
+function requestDeleteCluster(clusterID) {
+    console.log(`Request delete cluster ${clusterID}`)
+
+    return {
+        type: REQUEST_DELETE_CLUSTER,
+        clusterID,
+    }
+}
+
+const CLUSTER_DELETED = 'CLUSTER_DELETED'
+function clusterDeleted(clusterID) {
+    return {
+        type: CLUSTER_DELETED,
+        clusterID,
+    }
+}
+
+function deleteCluster(clusterID) {
+    return dispatch => {
+        dispatch(requestDeleteCluster(clusterID))
+
+        return fetch(
+            window.CLUSTER_URL,
+            {
+                credentials: 'include',
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': window.CSRF_TOKEN,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({clusterID})
+            },
+        )
+            .then(
+                response => response.json(),
+                error => console.log('An error occured.', error)
+            )
+            .then(
+                json => {
+                    dispatch(receiveBackend(json))
+                    dispatch(clusterDeleted(clusterID))
+                }
+            )
     }
 }
 
@@ -313,22 +360,15 @@ AddCluster = connect(
     )
 )(AddCluster)
 
-const Cluster = ({ onActivateClick, onActivateAndAssignClick, onShowClick, gloss, size, active=false, visible=false }) => (
+const Cluster = ({ onActivateClick, onActivateAndAssignClick, onShowClick, onDeleteClick, gloss, size, active=false, visible=false }) => (
     <li
         className={"list-group-item " + (active ? "active " : "")}
     >
         <div className="col">{gloss}</div>
         <div className="btn-group col-9 col-lg-6 justify-content-end" style={{minWidth: "453px"}}>
-            <button className="btn btn-warning" onClick={e => {e.stopPropagation(); }}>Rename</button>
-            <button className="btn btn-danger" onClick={e => {e.stopPropagation(); }}>Delete</button>
-            <button className="btn btn-info"
-                    onClick={
-                        e => {
-                            e.stopPropagation()
-                            onShowClick()
-                        }
-                    }
-            >
+            <button className="btn btn-warning" onClick={ e => {e.stopPropagation();} }>Rename</button>
+            <button className="btn btn-danger" onClick={ e => {e.stopPropagation(); onDeleteClick()} }>Delete</button>
+            <button className="btn btn-info" onClick={ e => {e.stopPropagation(); onShowClick()} }>
                 {visible ? "Show Unclustered" : `Show (${size})`}
             </button>
             <button className={"btn btn-secondary " + (active ? "active" : "")} onClick={e => {e.stopPropagation(); onActivateClick()}}>Select</button>
@@ -340,27 +380,29 @@ Cluster.propTypes = {
     onActivateClick: PropTypes.func.isRequired,
     onActivateAndAssignClick: PropTypes.func.isRequired,
     onShowClick: PropTypes.func.isRequired,
+    onDeleteClick: PropTypes.func.isRequired,
     gloss: PropTypes.string.isRequired,
     size: PropTypes.number.isRequired,
     active: PropTypes.bool,
     visible: PropTypes.bool
 }
 
-let ClusterList = ({ clusters, activeClusterID, activeTweetID, visibleClusterID, onActivateClick, onActivateAndAssignClick, onShowClick }) => (
+let ClusterList = ({ clusters, activeClusterID, activeTweetID, visibleClusterID, onActivateClick, onActivateAndAssignClick, onShowClick, onDeleteClick }) => (
     <div style={{overflowY: 'scroll', maxHeight: '90%'}}>
         <ul className="list-group">
             {
-                clusters.map(
-                    cluster => (
-                        <Cluster key={cluster.id} gloss={cluster.gloss} size={cluster.size}
-                                 onActivateClick={() => onActivateClick(cluster.id)}
-                                 onActivateAndAssignClick={() => onActivateAndAssignClick(activeTweetID, cluster.id)}
-                                 active={cluster.id === activeClusterID}
-                                 onShowClick={() => onShowClick(cluster.id)}
-                                 visible={cluster.id === visibleClusterID}
-                        />
-                    )
-                )
+            clusters.map(
+            cluster => (
+            <Cluster key={cluster.id} gloss={cluster.gloss} size={cluster.size}
+                     onActivateClick={() => onActivateClick(cluster.id)}
+                     onActivateAndAssignClick={() => onActivateAndAssignClick(activeTweetID, cluster.id)}
+                     active={cluster.id === activeClusterID}
+                     onShowClick={() => onShowClick(cluster.id)}
+                     onDeleteClick={() => onDeleteClick(cluster.id)}
+                     visible={cluster.id === visibleClusterID}
+            />
+            )
+            )
             }
         </ul>
     </div>
@@ -379,7 +421,8 @@ ClusterList.propTypes = {
     visibleClusterID: PropTypes.number,
     onActivateClick: PropTypes.func.isRequired,
     onActivateAndAssignClick: PropTypes.func.isRequired,
-    onShowClick: PropTypes.func.isRequired
+    onShowClick: PropTypes.func.isRequired,
+    onDeleteClick: PropTypes.func.isRequired,
 }
 
 ClusterList = connect(
@@ -397,6 +440,7 @@ ClusterList = connect(
             onActivateClick: activeClusterID => {dispatch(activateCluster(activeClusterID))},
             onActivateAndAssignClick: (activeTweetID, activeClusterID) => {dispatch(assignTweet(activeTweetID, activeClusterID))},
             onShowClick: id => {dispatch(showCluster(id))},
+            onDeleteClick: id => {dispatch(deleteCluster(id))},
         }
     )
 )(ClusterList)
@@ -510,13 +554,22 @@ function tweetClusterApp(state={}, action) {
                 },
             }
         }
-        case CHANGE_NEW_CLUSTER_NAME:{
+        case CHANGE_NEW_CLUSTER_NAME: {
             return {
                 ...state,
                 frontend: {
                     ...state.frontend,
                     newClusterName: action.newClusterName,
                 },
+            }
+        }
+        case CLUSTER_DELETED: {
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    activeClusterID: (action.clusterID === state.frontend.activeClusterID) ? null : state.frontend.activeClusterID,
+                }
             }
         }
         default:
@@ -636,7 +689,7 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentCl
     const filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id] === tweetFilter))
 
     const doneMessage = <div className={"alert alert-success"} role="alert">
-        <strong>All tweets are judged.</strong> <a className="alert-link" href={window.TOPICS_URL}>Show the topic list.</a>
+    <strong>All tweets are judged.</strong> <a className="alert-link" href={window.TOPICS_URL}>Show the topic list.</a>
     </div>
 
     if (!filteredTweets.length) {
@@ -675,17 +728,17 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentCl
     return <div>
         {done && doneMessage}
         <InfiniteScroll
-               children={filteredTweets.slice(0, tweetsShown).map(tweet => (
-                   <JudgedTweet
-                       key={tweet.id}
-                           tweet={tweet}
-                           judgment={judgments[tweet.id]}
-                           onJudgmentClick={onJudgmentClick}
-                   />
-               ))}
-               loadMore={showMore}
-               hasMore={filteredTweets.length > tweetsShown}
-               elementIsScrollable={false}
+            children={filteredTweets.slice(0, tweetsShown).map(tweet => (
+                <JudgedTweet
+                    key={tweet.id}
+                        tweet={tweet}
+                        judgment={judgments[tweet.id]}
+                        onJudgmentClick={onJudgmentClick}
+                />
+            ))}
+            loadMore={showMore}
+            hasMore={filteredTweets.length > tweetsShown}
+            elementIsScrollable={false}
         />
     </div>
 

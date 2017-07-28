@@ -371,32 +371,42 @@ def eval_topic(rts_id):
     )
 
 
-@bp_collection.route('/eval/topics/<rts_id>/cluster')
+@bp_collection.route('/eval/topics/<rts_id>/cluster', methods=['GET', 'POST', 'DELETE'])
 @flask_login.login_required
 def cluster_eval_topic(rts_id):
     eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=rts_id, collection=g.collection).one()
 
-    return render_template(
-        'collection/eval_topic_cluster.html',
-        state=eval_topic.state(),
-        eval_topic=eval_topic,
-    )
+    extra_state = {}
 
+    if request.method == 'GET':
+            return render_template(
+                'collection/eval_topic_cluster.html',
+                state=eval_topic.state(),
+                eval_topic=eval_topic,
+            )
 
-@bp_collection.route('/eval/topics/<rts_id>/cluster/new', methods=['POST'])
-@flask_login.login_required
-def cluster_eval_topic_new_cluster(rts_id):
-    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=rts_id, collection=g.collection).one()
+    request_json = request.get_json()
 
-    eval_cluster = fw_model.EvalCluster(
-        gloss=request.get_json()['gloss'],
-        eval_topic=eval_topic,
-    )
+    eval_cluster = None
+    if request.method == 'POST':
+        eval_cluster = fw_model.EvalCluster(
+            gloss=request_json['gloss'],
+            eval_topic=eval_topic,
+        )
+
+        db.session.flush()
+        extra_state['newClusterID'] = eval_cluster.rts_id
+
+    if eval_cluster is None:
+        eval_cluster = db.session.query(fw_model.EvalCluster).get((rts_id, g.collection, request_json['clusterID']))
+
+    if request.method == 'DELETE':
+        db.session.delete(eval_cluster)
 
     db.session.commit()
 
     state = eval_topic.state()
-    state['newClusterID'] = eval_cluster.rts_id
+    state.update(extra_state)
 
     return jsonify(state)
 
