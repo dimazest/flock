@@ -420,9 +420,20 @@ ClusteredTweet.propTypes = {
     active: PropTypes.bool,
 }
 
-let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID=null, activeTweetID=null }) => (
-    <div>
-        {tweetCluster(tweets, visibleClusterID).map(tweet => (
+let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID=null, activeTweetID=null }) => {
+
+    const tweetsForCluster = tweetCluster(tweets, visibleClusterID)
+
+    if (!tweetsForCluster.length) {
+        if (visibleClusterID === null) {
+            return <div className={`alert alert-success`} role="alert"><strong>{`All tweets are assigned to a cluster.`}</strong></div>
+        } else {
+            return <div className={`alert alert-warning`} role="alert"><strong>{`No tweets are assigned to this cluster.`}</strong></div>
+        }
+    }
+
+    return <div>
+        {tweetsForCluster.map(tweet => (
             <ClusteredTweet
                 key={tweet.id}
                 tweet={tweet}
@@ -431,7 +442,7 @@ let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID
             />
         ))}
     </div>
-)
+}
 TweetList.propTypes = {
     tweets: PropTypes.objectOf(PropTypes.array),
     onAssignClick: PropTypes.func.isRequired,
@@ -621,19 +632,52 @@ import InfiniteScroll from 'redux-infinite-scroll';
 let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentClick, tweetFilter}) => {
     const filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id] === tweetFilter))
 
+    if (!filteredTweets.length) {
+        let message = ""
+        let type = "warning"
+
+        switch (tweetFilter) {
+            case 2: {
+                message = "There are no very relevant tweets."
+                break
+            }
+            case 1: {
+                message = "There are no relevant tweets."
+                break
+            }
+            case 0: {
+                message = "There are no irrelevant tweets."
+                break
+            }
+            case null: {
+                message = "Threre are no unjudged tweets."
+                type = "success"
+                break
+            }
+            default: {
+                message = "There are no tweets."
+                type = "danger"
+            }
+        }
+
+        return <div className={`alert alert-${type}`} role="alert"><strong>{message}</strong></div>
+
+    }
+
     return <InfiniteScroll
-    children={filteredTweets.slice(0, tweetsShown).map(tweet => (
-        <JudgedTweet
-            key={tweet.id}
-            tweet={tweet}
-            judgment={judgments[tweet.id]}
-            onJudgmentClick={onJudgmentClick}
-        />
-    ))}
-    loadMore={showMore}
-    hasMore={filteredTweets.length > tweetsShown}
-    elementIsScrollable={false}
+               children={filteredTweets.slice(0, tweetsShown).map(tweet => (
+                   <JudgedTweet
+                       key={tweet.id}
+                           tweet={tweet}
+                           judgment={judgments[tweet.id]}
+                           onJudgmentClick={onJudgmentClick}
+                   />
+               ))}
+               loadMore={showMore}
+               hasMore={filteredTweets.length > tweetsShown}
+               elementIsScrollable={false}
     />
+
 }
 TweetJudgmentList.propTypes = {
     tweets: PropTypes.array,
