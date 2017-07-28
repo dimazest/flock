@@ -212,7 +212,6 @@ function showMoreJudgmentTweets(){
     return {type: SHOW_MORE_JUDGMENT_TWEETS}
 }
 
-
 const REQUEST_JUDGE_TWEET = 'REQUEST_JUDGE_TWEET'
 function requestJudgeTweet(tweet_id, judgment){
     console.log(`Judge tweet ${tweet_id}: ${judgment}`)
@@ -263,6 +262,65 @@ function judgeTweet(tweet_id, judgment){
             .then(
                 json => {
                     dispatch(receiveTweetsAndJudgments(json))
+                }
+            )
+    }
+}
+
+const START_EDITING_CLUSTER = 'START_EDITING_CLUSTER'
+function startEditingCluster(cluster) {
+    return {
+        ...cluster,
+        type: START_EDITING_CLUSTER,
+    }
+}
+
+const CANCEL_EDITING_CLUSTER = 'CANCEL_EDITING_CLUSTER'
+function cancelEditingCluster() {
+    return {type: CANCEL_EDITING_CLUSTER}
+}
+
+const CHANGE_EDITING_CLUSTER = 'CHANGE_EDITING_CLUSTER'
+function changeEditingCluster(gloss) {
+    return {
+        type: CHANGE_EDITING_CLUSTER,
+        gloss,
+    }
+}
+
+const REQUEST_SUBMIT_EDITING_CLUSTER = 'REQUEST_SUBMIT_EDITIN_CLUSTER'
+function requestSubmitEditingCluster(editingCluster) {
+    console.log(`Request submit editing cluster ${editingCluster.id}, gloss:  ${editingCluster.gloss}`)
+    return {
+        ...editingCluster,
+        type: REQUEST_SUBMIT_EDITING_CLUSTER,
+    }
+}
+
+function submitEditingCluster(editingCluster) {
+    return dispatch => {
+        dispatch(requestSubmitEditingCluster(editingCluster))
+
+        return fetch(
+            window.CLUSTER_URL,
+            {
+                credentials: 'include',
+                method: 'PUT',
+                headers: {
+                    'X-CSRFToken': window.CSRF_TOKEN,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({clusterID: editingCluster.id, gloss: editingCluster.gloss})
+            },
+        )
+            .then(
+                response => response.json(),
+                error => console.log('An error occured', error)
+            )
+            .then(
+                json => {
+                    dispatch(receiveBackend(json))
+                    dispatch(cancelEditingCluster())
                 }
             )
     }
@@ -361,46 +419,90 @@ AddCluster = connect(
     )
 )(AddCluster)
 
-const Cluster = ({ onActivateClick, onActivateAndAssignClick, onShowClick, onDeleteClick, gloss, size, active=false, visible=false }) => (
-    <li
-        className={"list-group-item " + (active ? "active " : "")}
-    >
-        <div className="col">{gloss}</div>
-        <div className="btn-group col-9 col-lg-6 justify-content-end" style={{minWidth: "453px"}}>
-            <button className="btn btn-warning" onClick={ e => {e.stopPropagation();} }>Rename</button>
-            <button className="btn btn-danger" onClick={ e => {e.stopPropagation(); onDeleteClick()} }>Delete</button>
-            <button className="btn btn-info" onClick={ e => {e.stopPropagation(); onShowClick()} }>
-                {visible ? "Show Unclustered" : `Show (${size})`}
-            </button>
-            <button className={"btn btn-secondary " + (active ? "active" : "")} onClick={e => {e.stopPropagation(); onActivateClick()}}>Select</button>
-            <button className="btn btn-primary" onClick={onActivateAndAssignClick}>Assign</button>
-        </div>
-    </li>
-)
+const Cluster = ({ onActivateClick, onActivateAndAssignClick, onShowClick, onDeleteClick, onEditClick, id, gloss, size, active, visible,
+                   editingCluster, onCancelClick, onClusterGlossChange, onSaveClusterClick }) => {
+
+                       const editing = id === editingCluster.id
+
+                       return (
+                           <li className={"list-group-item " + (active ? "active " : "")}>
+                               <div className="col">
+                                   {!editing ?
+                                    gloss :
+                                    <div className="input-group">
+                                        <textarea className="form-control" placeholder="Cluster gloss"
+                                                  value={editingCluster.gloss}
+                                                  onChange={ e => {e.preventDefault(); onClusterGlossChange(e.target.value)} }
+                                                  rows="5"
+                                        />
+                                        <span className="input-group-btn">
+                                            <button className="btn btn-success" type="button" onClick={e => {e.preventDefault(); onSaveClusterClick(editingCluster)}}>
+                                                Save
+                                            </button>
+                                        </span>
+                                        <span className="input-group-btn">
+                                            <button className="btn btn-danger" type="button" onClick={e => {e.stopPropagation(); onCancelClick()}}>Cancel</button>
+                                        </span>
+                                    </div>
+                                   }
+                               </div>
+                               <div className="btn-group col-9 col-lg-6 justify-content-end" style={{minWidth: "453px"}}>
+                                   {!editing &&
+                                    <button className={"btn btn-outline-warning" + (active ? " active" : "")} onClick={ e => {e.stopPropagation(); onEditClick()} }>Rename</button>
+                                   }
+                                   <button className={"btn btn-outline-danger" + (active ? " active" : "")} onClick={ e => {e.stopPropagation(); onDeleteClick()} }>Delete</button>
+                                   <button className={"btn btn-outline-info" + (active || visible ? " active" : "")} onClick={ e => {e.stopPropagation(); onShowClick()} }>
+                                       {visible ? "Show Unclustered" : `Show (${size})`}
+                                   </button>
+                                   <button className={"btn btn-secondary" + (active ? " active" : "")} onClick={e => {e.stopPropagation(); onActivateClick()}}>Select</button>
+                                   <button className={"btn btn-primary" + (active ? " active" : "")} onClick={onActivateAndAssignClick}>Assign</button>
+                               </div>
+                           </li>
+                       )
+                   }
 Cluster.propTypes = {
     onActivateClick: PropTypes.func.isRequired,
     onActivateAndAssignClick: PropTypes.func.isRequired,
     onShowClick: PropTypes.func.isRequired,
     onDeleteClick: PropTypes.func.isRequired,
+    onEditClick: PropTypes.func.isRequired,
     gloss: PropTypes.string.isRequired,
     size: PropTypes.number.isRequired,
-    active: PropTypes.bool,
-    visible: PropTypes.bool
+    active: PropTypes.bool.isRequired,
+    visible: PropTypes.bool.isRequired,
+    editingCluster: PropTypes.shape(
+        {
+            id: PropTypes.number,
+            gloss: PropTypes.string,
+        }
+    ).isRequired,
+    onCancelClick: PropTypes.func.isRequired,
+    onClusterGlossChange: PropTypes.func.isRequired,
+    onSaveClusterClick: PropTypes.func.isRequired,
 }
 
-let ClusterList = ({ clusters, activeClusterID, activeTweetID, visibleClusterID, onActivateClick, onActivateAndAssignClick, onShowClick, onDeleteClick }) => (
+let ClusterList = (
+    { clusters, activeClusterID, activeTweetID, visibleClusterID, onActivateClick, onActivateAndAssignClick, onShowClick, onDeleteClick, onEditClick, editingCluster, onCancelClick, onClusterGlossChange, onSaveClusterClick }
+) => (
     <div style={{overflowY: 'scroll', maxHeight: '90%'}}>
-    <ul className="list-group">
-    {clusters.map(cluster => (
-        <Cluster key={cluster.id} gloss={cluster.gloss} size={cluster.size}
-                 onActivateClick={() => onActivateClick(cluster.id)}
-                 onActivateAndAssignClick={() => onActivateAndAssignClick(activeTweetID, cluster.id)}
-                 active={cluster.id === activeClusterID}
-                 onShowClick={() => onShowClick(cluster.id)}
-                 onDeleteClick={() => onDeleteClick(cluster.id)}
-                 visible={cluster.id === visibleClusterID}
-        />
-    ))}
+        <ul className="list-group">
+            {clusters.map(cluster => (
+                <Cluster key={cluster.id}
+                         {...cluster}
+                         onActivateClick={() => onActivateClick(cluster.id)}
+                         onActivateAndAssignClick={() => onActivateAndAssignClick(activeTweetID, cluster.id)}
+                         active={cluster.id === activeClusterID}
+                         visible={cluster.id === visibleClusterID}
+                         onShowClick={() => onShowClick(cluster.id)}
+                         onDeleteClick={() => onDeleteClick(cluster.id)}
+                         onEditClick={() => onEditClick(cluster)}
+                         editingCluster={editingCluster}
+                         onCancelClick={onCancelClick}
+                         onClusterGlossChange={onClusterGlossChange}
+                         onSaveClusterClick={onSaveClusterClick}
+
+                />
+            ))}
         </ul>
     </div>
 )
@@ -420,6 +522,16 @@ ClusterList.propTypes = {
     onActivateAndAssignClick: PropTypes.func.isRequired,
     onShowClick: PropTypes.func.isRequired,
     onDeleteClick: PropTypes.func.isRequired,
+    onEditClick: PropTypes.func.isRequired,
+    editingCluster: PropTypes.shape(
+        {
+            id: PropTypes.number,
+            gloss: PropTypes.string,
+        }
+    ).isRequired,
+    onCancelClick: PropTypes.func.isRequired,
+    onClusterGlossChange: PropTypes.func.isRequired,
+    onSaveClusterClick: PropTypes.func.isRequired,
 }
 
 ClusterList = connect(
@@ -429,7 +541,7 @@ ClusterList = connect(
             activeClusterID: state.frontend.activeClusterID,
             activeTweetID: state.frontend.activeTweetID,
             visibleClusterID: state.frontend.visibleClusterID,
-
+            editingCluster: state.frontend.editingCluster,
         }
     ),
     dispatch => (
@@ -438,6 +550,10 @@ ClusterList = connect(
             onActivateAndAssignClick: (activeTweetID, activeClusterID) => {dispatch(assignTweet(activeTweetID, activeClusterID))},
             onShowClick: id => {dispatch(showCluster(id))},
             onDeleteClick: id => {dispatch(deleteCluster(id))},
+            onEditClick: editingCluster => {dispatch(startEditingCluster(editingCluster))},
+            onCancelClick: () => {dispatch(cancelEditingCluster())},
+            onClusterGlossChange: gloss => {dispatch(changeEditingCluster(gloss))},
+            onSaveClusterClick: editingCluster => {dispatch(submitEditingCluster(editingCluster))},
         }
     )
 )(ClusterList)
@@ -567,6 +683,44 @@ function tweetClusterApp(state={}, action) {
                     ...state.frontend,
                     activeClusterID: action.clusterID === state.frontend.activeClusterID ? null : state.frontend.activeClusterID,
                     visibleClusterID: action.clusterID == state.frontend.visibleClusterID ? null : state.frontend.visibleClusterID,
+                    editingCluster: action.clusterID == state.frontend.editingCluster.id ? {id: null, gloss: null} : state.frontend.editingCluster,
+                }
+            }
+        }
+        case START_EDITING_CLUSTER: {
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    editingCluster: {
+                        ...state.frontend.editingCluster,
+                        id: action.id,
+                        gloss: action.gloss,
+                    }
+                }
+            }
+        }
+        case CANCEL_EDITING_CLUSTER: {
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    editingCluster: {
+                        id: null,
+                        gloss: null,
+                    }
+                },
+            }
+        }
+        case CHANGE_EDITING_CLUSTER: {
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    editingCluster: {
+                        ...state.frontend.editingCluster,
+                        gloss: action.gloss,
+                    }
                 }
             }
         }
@@ -603,6 +757,7 @@ window.cluster = () => {
             activeTweetID: clusterFirstTweetID({null: window.BACKEND.unassignedTweets}, null),
             visibleClusterID: null,
             newClusterName: clusterNewName({null: window.BACKEND.unassignedTweets}, null),
+            editingCluster: {id: null, gloss: null},
         }
     }
 
@@ -687,7 +842,7 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentCl
     const filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id] === tweetFilter))
 
     const doneMessage = <div className={"alert alert-success"} role="alert">
-    <strong>All tweets are judged.</strong> <a className="alert-link" href={window.TOPICS_URL}>Show the topic list.</a>
+        <strong>All tweets are judged.</strong> <a className="alert-link" href={window.TOPICS_URL}>Show the topic list.</a>
     </div>
 
     if (!filteredTweets.length) {

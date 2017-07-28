@@ -371,7 +371,7 @@ def eval_topic(rts_id):
     )
 
 
-@bp_collection.route('/eval/topics/<rts_id>/cluster', methods=['GET', 'POST', 'DELETE'])
+@bp_collection.route('/eval/topics/<rts_id>/cluster', methods=['GET', 'POST', 'DELETE', 'PUT'])
 @flask_login.login_required
 def cluster_eval_topic(rts_id):
     eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=rts_id, collection=g.collection).one()
@@ -404,6 +404,9 @@ def cluster_eval_topic(rts_id):
         for a in eval_cluster.assignments:
             db.session.delete(a)
         db.session.delete(eval_cluster)
+
+    if request.method == 'PUT':
+        eval_cluster.gloss = request_json['gloss']
 
     db.session.commit()
 
