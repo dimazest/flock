@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql as pg
 
@@ -63,21 +65,24 @@ class EvalTopic(Base):
     def tweet_by_id(self, relevant_only=False):
         session = sa.inspect(self).session
 
-        tweet_by_id = {
-            j.tweet_id: model.Tweet(
+        tweet_by_id = OrderedDict(
+            (
+                j.tweet_id, model.Tweet(
                     tweet_id=j.tweet_id,
                     features={
                         'repr': {
                             'text': 'MISSING: {}'.format(j.tweet_id),
                             'user__screen_name': 'Unknown',
                             'user__name': 'unknown',
+                            # 'order': j.order,
                         },
                     },
                     created_at='unknown',
                 )
-            for j in self.judgments
+            )
+            for j in sorted(self.judgments, key=lambda j: j.position)
             if not relevant_only or (j is not None and j.judgment > 0)
-        }
+        )
 
         for tweet in (
                 session.query(model.Tweet)
@@ -166,6 +171,7 @@ class EvalRelevanceJudgment(Base):
     )
 
     judgment = sa.Column(sa.Integer, nullable=True)
+    position = sa.Column(sa.Integer)
 
     eval_topic = sa.orm.relationship('EvalTopic', backref='judgments')
 

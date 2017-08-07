@@ -454,7 +454,9 @@ const Cluster = ({ onActivateClick, onActivateAndAssignClick, onShowClick, onDel
                                    <button className={"btn btn-outline-info" + (active || visible ? " active" : "")} onClick={ e => {e.stopPropagation(); onShowClick()} }>
                                        {visible ? "Show Unclustered" : `Show (${size})`}
                                    </button>
-                                   <button className={"btn btn-secondary" + (active ? " active" : "")} onClick={e => {e.stopPropagation(); onActivateClick()}}>Select</button>
+                                   <button className={"btn btn-secondary" + (active ? " active" : "")} onClick={e => {e.stopPropagation(); onActivateClick()}}>
+                                       {active ? "Deselect" : "Select"}
+                                   </button>
                                    <button className={"btn btn-primary" + (active ? " active" : "")} onClick={onActivateAndAssignClick}>Assign</button>
                                </div>
                            </li>

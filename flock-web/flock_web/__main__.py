@@ -4,6 +4,7 @@ import click
 import click_log
 
 import sqlalchemy as sa
+from sqlalchemy.dialects import postgresql
 
 from flock.__main__ import create_session
 from flock.model import metadata
@@ -85,22 +86,32 @@ def insert_eval_topics(session, assr_topic_file, collection):
 @click.option('--collection')
 @click.option('--qrels_file', type=click.File())
 def insert_eval_relevance_judgements(session, collection, qrels_file):
+    stmt = postgresql.insert(fw_model.EvalRelevanceJudgment.__table__)
+    stmt = stmt.on_conflict_do_update(
+        constraint=fw_model.EvalRelevanceJudgment.__table__.primary_key,
+        set_={'judgment': stmt.excluded.judgment},
+    )
 
-    for line in qrels_file:
-        rts_topic_id, _, tweet_id, judgment = line.split()
+    for line_no, line in enumerate(qrels_file):
+        full_format = True
+        try:
+            eval_topic_rts_id, _, _, _,tweet_id, _, _, judgment, _ = line.split()
+        except ValueError:
+            eval_topic_rts_id, _, tweet_id, judgment = line.split()
+            full_format = False
+
         tweet_id = int(tweet_id)
-        judgment = int(judgment)
+        judgment = int(judgment) if not full_format else None
 
-        eval_topic = session.query(fw_model.EvalTopic).filter_by(rts_id=rts_topic_id, collection=collection).one_or_none()
-
-        if eval_topic is None:
-            if collection == 'RTS16':
-                logger.warning("Evaluation topic %s doesn't exist in collection %s!", rts_topic_id, collection)
-                continue
-            else:
-                raise ValueError(f"Evaluation topic {rts_topic_id} doesn't exist in collection {collection}!")
-
-        eval_topic.judgments.append(fw_model.EvalRelevanceJudgment(tweet_id=tweet_id, judgment=judgment))
+        session.execute(
+            stmt.values(
+                eval_topic_rts_id=eval_topic_rts_id,
+                collection=collection,
+                tweet_id=tweet_id,
+                judgment=judgment,
+                position=line_no,
+            )
+        )
 
     session.commit()
 
@@ -115,10 +126,6 @@ def insert_eval_cluster_glosses(session, collection, cluster_glosses_file):
     for line in cluster_glosses_file:
         eval_topic_rts_id, rts_id, gloss = line.split(maxsplit=2)
         gloss = gloss.strip()
-
-        # if rts_topic_id not in rts_topic_id_to_topic_id:
-            # logger.warning('A missing RTS topic %s in the collection %s.', rts_topic_id, collection)
-            # continue
 
         session.execute(
             stmt.values(
