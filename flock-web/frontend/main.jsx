@@ -817,6 +817,7 @@ const JudgmentButtons = ({judgment, onJudgmentClick}) => (
         <button className={`btn btn-${(judgment > 0) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(1)}>Relevant</button>
         <button className={`btn btn-${(judgment === null) ? "" : "outline-"}primary`}  onClick={() => onJudgmentClick(null)}>Unjudged</button>
         <button className={`btn btn-${(judgment == 0) ? "" : "outline-"}danger`}  onClick={() => onJudgmentClick(0)}>Irrelevant</button>
+        <button className={`btn btn-${(judgment == 'missing') ? "" : "outline-"}warning`}  onClick={() => onJudgmentClick('missing')}>Missing</button>
     </div>
 )
 

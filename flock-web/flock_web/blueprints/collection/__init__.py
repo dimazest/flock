@@ -445,18 +445,29 @@ def assign_tweet_to_eval_cluster(eval_topic_rts_id):
 @bp_collection.route('/eval/topics/<eval_topic_rts_id>/judge_tweet', methods=['POST'])
 @flask_login.login_required
 def judge_tweet(eval_topic_rts_id):
-    judgment = request.get_json()
+    data = request.get_json()
+
+    if data['judgment'] == 'missing':
+        judgment = None
+        missing = True
+    else:
+        judgment = int(data['judgment']) if data['judgment'] is not None else None
+        missing = False
 
     t = fw_model.EvalRelevanceJudgment.__table__
     insert_stmt = postgresql.insert(t).values(
         eval_topic_rts_id=eval_topic_rts_id,
         collection=g.collection,
-        tweet_id=int(judgment['tweet_id']),
-        judgment=int(judgment['judgment']) if judgment['judgment'] is not None else None,
+        tweet_id=int(data['tweet_id']),
+        judgment=judgment,
+        missing=missing,
     )
     insert_stmt = insert_stmt.on_conflict_do_update(
         constraint=t.primary_key,
-        set_={'judgment': insert_stmt.excluded.judgment},
+        set_={
+            'judgment': insert_stmt.excluded.judgment,
+            'missing': insert_stmt.excluded.missing,
+        },
     )
 
     db.session.execute(insert_stmt)

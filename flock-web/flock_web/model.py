@@ -54,7 +54,7 @@ class EvalTopic(Base):
     user = sa.orm.relationship('User', backref='eval_topics')
 
     def tweet_count(self, judged_only=False):
-        return len([j for j in self.judgments if not judged_only or j.judgment is not None])
+        return len([j for j in self.judgments if not j.missing and not judged_only or j.judgment is not None])
 
     def relevant_count(self):
         return len([j for j in self.judgments if j.judgment and j.judgment > 0])
@@ -74,14 +74,13 @@ class EvalTopic(Base):
                             'text': 'MISSING: {}'.format(j.tweet_id),
                             'user__screen_name': 'Unknown',
                             'user__name': 'unknown',
-                            # 'order': j.order,
                         },
                     },
                     created_at='unknown',
                 )
             )
             for j in sorted(self.judgments, key=lambda j: j.position)
-            if not relevant_only or (j is not None and j.judgment > 0)
+            if not relevant_only or (j.judgment is not None and j.judgment > 0)
         )
 
         for tweet in (
@@ -128,7 +127,7 @@ class EvalTopic(Base):
 
         state = {
             'tweets': self.tweets_to_dict(tweet_by_id.values()),
-            'judgments': {str(j.tweet_id): j.judgment for j in self.judgments},
+            'judgments': {str(j.tweet_id): j.judgment if not j.missing else 'missing' for j in self.judgments},
             'topic': self.topic_as_dict(),
         }
 
@@ -166,12 +165,12 @@ class EvalRelevanceJudgment(Base):
 
     tweet_id = sa.Column(
         sa.BigInteger,
-        # sa.ForeignKey('tweet.tweet_id'),
         primary_key=True,
     )
 
     judgment = sa.Column(sa.Integer, nullable=True)
     position = sa.Column(sa.Integer)
+    missing = sa.Column(sa.Boolean, default=False)
 
     eval_topic = sa.orm.relationship('EvalTopic', backref='judgments')
 
