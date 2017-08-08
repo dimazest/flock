@@ -5,6 +5,10 @@ from urllib.parse import urlparse, urljoin
 from flask import render_template, Blueprint, redirect, url_for, flash, session, abort, request, render_template_string, jsonify, current_app
 import flask_login
 
+from flask_wtf import FlaskForm
+import wtforms as wtf
+from wtforms import validators
+
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql as pg
 
@@ -12,6 +16,7 @@ from flock import model
 
 from flock_web.app import db
 from flock_web import model as fw_model
+from flock_web.model import User
 
 
 bp_main = Blueprint(
@@ -25,16 +30,7 @@ bp_main = Blueprint(
 @flask_login.login_required
 def welcome():
 
-    # # size = func.count()
-    # collections = db.session.query(
-    #     model.Tweet.collection,
-    #     # size,
-    #     # func.min(model.Tweet.created_at),
-    #     # func.max(model.Tweet.created_at),
-    # ).group_by(model.Tweet.collection).order_by(
-    #     model.Tweet.collection,
-    #     # size.desc()
-    # )
+    return redirect(url_for('collection.user_eval_topics', collection='RTS16'))
 
     collections = ((c,) for c in current_app.config['COLLECTIONS'])
 
@@ -43,11 +39,6 @@ def welcome():
         collections=collections,
         current_app=current_app,
     )
-
-from flask_wtf import FlaskForm
-import wtforms as wtf
-from wtforms import validators
-from flock_web.model import User
 
 
 class LoginForm(FlaskForm):
