@@ -11,6 +11,7 @@
     <thead>
       <tr>
         <th>ID</th>
+        <th>Title</th>
         <th>Total</th>
         <th>Judged</th>
         <th>Relevant</th>
@@ -20,7 +21,7 @@
     <tbody>
       {%- for eval_topic in user_eval_topics %}
         <tr>
-          {# <td>{{ eval_topic.rts_id }}</td> #}
+          <td>{{ eval_topic.rts_id }}</td>
           <td>{{ eval_topic.title }}</td>
           {% set total_count = eval_topic.tweet_count() %}
           <td>{{ total_count }}</td>
