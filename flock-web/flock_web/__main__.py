@@ -1,4 +1,5 @@
 import logging
+import json
 
 import click
 import click_log
@@ -75,6 +76,35 @@ def insert_eval_topics(session, assr_topic_file, collection):
                 collection=collection,
                 title=rts_topic_id,
                 user=assessor,
+            )
+        )
+
+    session.commit()
+
+
+@cli.command()
+@click.option('--session', default='postgresql:///twitter', callback=create_session)
+@click.option('--topic_file', type=click.File())
+@click.option('--collection')
+def insert_eval_topics_json(session, topic_file, collection):
+    table = fw_model.EvalTopic.__table__
+    stmt = sa.update(table)
+
+    topics = json.load(topic_file)
+    for topic in topics:
+
+        session.execute(
+            stmt
+            .where(
+                sa.and_(
+                    table.c.rts_id==topic['topid'],
+                    table.c.collection==collection,
+                ),
+            )
+            .values(
+                title=topic['title'],
+                description=topic['description'],
+                narrative=topic['narrative'],
             )
         )
 

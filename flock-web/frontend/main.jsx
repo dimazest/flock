@@ -356,7 +356,7 @@ let TopicInfo= ({ topic, full=true}) => (
               <div className="row form-group">
                   <label className="col-2 col-form-label">Narrative</label>
                   <div className="col">
-                      <textarea className="form-control" type="text" value={topic.narrative} disabled={true}/>
+                      <textarea className="form-control" type="text" value={topic.narrative} disabled={true} rows={7}/>
                   </div>
               </div>
              }

@@ -49,6 +49,8 @@ class EvalTopic(Base):
     collection = sa.Column(sa.String(100), primary_key=True)
 
     title = sa.Column(sa.String(500), nullable=False)
+    description = sa.Column(sa.String(1000), nullable=True)
+    narrative = sa.Column(sa.String(2000), nullable=True)
 
     user_id = sa.Column(sa.Integer, sa.ForeignKey('user.id'), nullable=False)
     user = sa.orm.relationship('User', backref='eval_topics')
