@@ -1,3 +1,4 @@
+import sys
 from collections import OrderedDict
 
 import sqlalchemy as sa
@@ -81,7 +82,7 @@ class EvalTopic(Base):
                     created_at='unknown',
                 )
             )
-            for j in sorted(self.judgments, key=lambda j: j.position)
+            for j in sorted(self.judgments, key=lambda j: j.position if j.position is not None else sys.maxsize)
             if not relevant_only or (j.judgment is not None and j.judgment > 0)
         )
 
@@ -129,7 +130,14 @@ class EvalTopic(Base):
 
         state = {
             'tweets': self.tweets_to_dict(tweet_by_id.values()),
-            'judgments': {str(j.tweet_id): j.judgment if not j.missing else 'missing' for j in self.judgments},
+            'judgments': {
+                str(j.tweet_id): {
+                    'assessor': j.judgment,
+                    'crowd_relevant': j.crowd_relevant,
+                    'crowd_not_relevant': j.crowd_not_relevant,
+                }
+                if not j.missing else 'missing' for j in self.judgments
+            },
             'topic': self.topic_as_dict(),
         }
 
@@ -173,6 +181,8 @@ class EvalRelevanceJudgment(Base):
     judgment = sa.Column(sa.Integer, nullable=True)
     position = sa.Column(sa.Integer)
     missing = sa.Column(sa.Boolean, default=False)
+    crowd_relevant = sa.Column(sa.Integer, default=0)
+    crowd_not_relevant = sa.Column(sa.Integer, default=0)
 
     eval_topic = sa.orm.relationship('EvalTopic', backref='judgments')
 

@@ -813,11 +813,21 @@ function tweetJudgeApp(state={}, action) {
 
 const JudgmentButtons = ({judgment, onJudgmentClick}) => (
     <div className="tweet-outer-meta btn-group btn-block justify-content-center">
-        <button className={`btn btn-${(judgment > 1) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(2)}>Very</button>
-        <button className={`btn btn-${(judgment > 0) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(1)}>Relevant</button>
-        <button className={`btn btn-${(judgment === null) ? "" : "outline-"}primary`}  onClick={() => onJudgmentClick(null)}>Unjudged</button>
-        <button className={`btn btn-${(judgment == 0) ? "" : "outline-"}danger`}  onClick={() => onJudgmentClick(0)}>Irrelevant</button>
-        <button className={`btn btn-${(judgment == 'missing') ? "" : "outline-"}warning`}  onClick={() => onJudgmentClick('missing')}>Missing</button>
+        <button className={`btn btn-${(judgment.assessor > 1) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(2)}>Very</button>
+        <button className={`btn btn-${(judgment.assessor > 0) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(1)}>
+            Relevant
+            {judgment.crowd_relevant > 0 &&
+             <span> <sup>{judgment.crowd_relevant}</sup>⁄<sub>{judgment.crowd_relevant + judgment.crowd_not_relevant}</sub></span>
+            }
+        </button>
+        <button className={`btn btn-${(judgment.assessor === null) ? "" : "outline-"}primary`}  onClick={() => onJudgmentClick(null)}>Unjudged</button>
+        <button className={`btn btn-${(judgment.assessor == 0) ? "" : "outline-"}danger`}  onClick={() => onJudgmentClick(0)}>
+            Irrelevant
+            {judgment.crowd_not_relevant > 0 &&
+             <span> <sup>{judgment.crowd_not_relevant}</sup>⁄<sub>{judgment.crowd_relevant + judgment.crowd_not_relevant}</sub></span>
+            }
+        </button>
+        <button className={`btn btn-${(judgment.assessor == 'missing') ? "" : "outline-"}warning`}  onClick={() => onJudgmentClick('missing')}>Missing</button>
     </div>
 )
 
@@ -833,7 +843,7 @@ let TweetFilter = props => (
 )
 
 TweetFilter = connect(
-    state => ({judgment: state.frontend.tweetFilter}),
+    state => ({judgment: {assessor: state.frontend.tweetFilter}}),
     dispatch => ({
         onJudgmentClick: (judgment => {dispatch(filterTweets(judgment))})
     }),
@@ -842,7 +852,7 @@ TweetFilter = connect(
 import InfiniteScroll from 'redux-infinite-scroll';
 
 let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentClick, tweetFilter}) => {
-    const filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id] === tweetFilter))
+    const filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id].assessor === tweetFilter))
 
     const doneMessage = <div className={"alert alert-success"} role="alert">
         <strong>All tweets are judged.</strong> <a className="alert-link" href={window.TOPICS_URL}>Show the topic list.</a>
@@ -879,7 +889,7 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentCl
 
     }
 
-    const done = !Object.values(judgments).filter((j) => (j === null)).length
+    const done = !Object.values(judgments).filter((j) => (j.assessor === null)).length
 
     return <div>
         {done && doneMessage}

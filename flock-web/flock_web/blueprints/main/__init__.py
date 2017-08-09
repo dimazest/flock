@@ -30,7 +30,7 @@ bp_main = Blueprint(
 @flask_login.login_required
 def welcome():
 
-    return redirect(url_for('collection.user_eval_topics', collection='RTS16'))
+    return redirect(url_for('collection.user_eval_topics', collection='RTS17'))
 
     collections = ((c,) for c in current_app.config['COLLECTIONS'])
 
