@@ -310,7 +310,7 @@ function submitEditingCluster(editingCluster) {
                     'X-CSRFToken': window.CSRF_TOKEN,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({clusterID: editingCluster.id, gloss: editingCluster.gloss})
+                body: JSON.stringify({clusterID: editingCluster.id, gloss: editingCluster.gloss}),
             },
         )
             .then(
@@ -326,6 +326,49 @@ function submitEditingCluster(editingCluster) {
     }
 }
 
+const REQUEST_SWAP_CLUSTERS = 'REQUEST_SWAP_CLUSTERS'
+function requestSwapClusters(clusterID1, clusterID2) {
+    console.log(`Swap clusters ${clusterID1} and ${clusterID2}.`)
+    return {
+        type: REQUEST_SWAP_CLUSTERS,
+        clusterID1,
+        clusterID2,
+    }
+}
+
+
+function swapClusters(clusterID1, clusterID2) {
+    return dispatch => {
+
+        if (clusterID1 === null || clusterID2 === null) {
+            return
+        }
+
+        dispatch(requestSwapClusters(clusterID1, clusterID2))
+
+        return fetch(
+            window.SWAP_CLUSTERS_URL,
+            {
+                credentials: 'include',
+                method: 'PUT',
+                headers: {
+                    'X-CSRFToken': window.CSRF_TOKEN,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({clusterID1, clusterID2}),
+            },
+        )
+            .then(
+                response => response.json(),
+                error => console.log('An error occured', error)
+            )
+            .then(
+                json => {
+                    dispatch(receiveBackend(json))
+                }
+            )
+    }
+}
 /* Components */
 
 import { connect } from 'react-redux'
@@ -420,12 +463,18 @@ AddCluster = connect(
 )(AddCluster)
 
 const Cluster = ({ onActivateClick, onActivateAndAssignClick, onShowClick, onDeleteClick, onEditClick, id, gloss, size, active, visible,
-                   editingCluster, onCancelClick, onClusterGlossChange, onSaveClusterClick }) => {
+                   editingCluster, onCancelClick, onClusterGlossChange, onSaveClusterClick, onMoveUpClick, onMoveDownClick }) => {
 
                        const editing = id === editingCluster.id
 
                        return (
                            <li className={"list-group-item " + (active ? "active " : "")}>
+                               <div className="col col-1">
+                                   <div className="btn-group-vertical">
+                                       <button type="button" disabled={!onMoveUpClick} className="btn btn-secondary" onClick={onMoveUpClick}><i className="fa fa-arrow-up" aria-hidden="true"></i></button>
+                                       <button type="button" disabled={!onMoveDownClick} className="btn btn-secondary" onClick={onMoveDownClick}><i className="fa fa-arrow-down" aria-hidden="true"></i></button>
+                                   </div>
+                               </div>
                                <div className="col">
                                    {!editing ?
                                     gloss :
@@ -481,14 +530,16 @@ Cluster.propTypes = {
     onCancelClick: PropTypes.func.isRequired,
     onClusterGlossChange: PropTypes.func.isRequired,
     onSaveClusterClick: PropTypes.func.isRequired,
+    onMoveUpClick: PropTypes.func,
+    onMoveDownClick: PropTypes.func,
 }
 
 let ClusterList = (
-    { clusters, activeClusterID, activeTweetID, visibleClusterID, onActivateClick, onActivateAndAssignClick, onShowClick, onDeleteClick, onEditClick, editingCluster, onCancelClick, onClusterGlossChange, onSaveClusterClick }
+    { clusters, activeClusterID, activeTweetID, visibleClusterID, onActivateClick, onActivateAndAssignClick, onShowClick, onDeleteClick, onEditClick, editingCluster, onCancelClick, onClusterGlossChange, onSaveClusterClick, swapClusters }
 ) => (
     <div style={{overflowY: 'scroll', maxHeight: '90%'}}>
         <ul className="list-group">
-            {clusters.map(cluster => (
+            {clusters.map((cluster, i) => (
                 <Cluster key={cluster.id}
                          {...cluster}
                          onActivateClick={() => onActivateClick(cluster.id)}
@@ -502,7 +553,8 @@ let ClusterList = (
                          onCancelClick={onCancelClick}
                          onClusterGlossChange={onClusterGlossChange}
                          onSaveClusterClick={onSaveClusterClick}
-
+                         onMoveUpClick={clusters[i - 1] ? () => {swapClusters(cluster.id,  clusters[i - 1].id)} : null}
+                         onMoveDownClick={clusters[i + 1] ? () => {swapClusters(cluster.id, clusters[i + 1].id)} : null}
                 />
             ))}
         </ul>
@@ -534,6 +586,7 @@ ClusterList.propTypes = {
     onCancelClick: PropTypes.func.isRequired,
     onClusterGlossChange: PropTypes.func.isRequired,
     onSaveClusterClick: PropTypes.func.isRequired,
+    swapClusters: PropTypes.func.isRequired,
 }
 
 ClusterList = connect(
@@ -556,6 +609,7 @@ ClusterList = connect(
             onCancelClick: () => {dispatch(cancelEditingCluster())},
             onClusterGlossChange: gloss => {dispatch(changeEditingCluster(gloss))},
             onSaveClusterClick: editingCluster => {dispatch(submitEditingCluster(editingCluster))},
+            swapClusters: (clusterID1, clusterID2) => {dispatch(swapClusters(clusterID1, clusterID2))},
         }
     )
 )(ClusterList)

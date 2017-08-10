@@ -450,6 +450,22 @@ def assign_tweet_to_eval_cluster(eval_topic_rts_id):
     return jsonify(state)
 
 
+@bp_collection.route('/eval/topics/<eval_topic_rts_id>/cluster/swap_clusters', methods=['PUT'])
+@flask_login.login_required
+def swap_clusters(eval_topic_rts_id):
+    data = request.get_json()
+
+    cluster1 = db.session.query(fw_model.EvalCluster).get((eval_topic_rts_id, g.collection, data['clusterID1']))
+    cluster2 = db.session.query(fw_model.EvalCluster).get((eval_topic_rts_id, g.collection, data['clusterID2']))
+
+    cluster1.position, cluster2.position = cluster2.position, cluster1.position
+
+    db.session.commit()
+
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=eval_topic_rts_id, collection=g.collection).one()
+    return jsonify(eval_topic.state())
+
+
 @bp_collection.route('/eval/topics/<eval_topic_rts_id>/judge_tweet', methods=['POST'])
 @flask_login.login_required
 def judge_tweet(eval_topic_rts_id):

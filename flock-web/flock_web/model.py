@@ -106,18 +106,14 @@ class EvalTopic(Base):
             tweets_by_cluster[cluster.rts_id] = self.tweets_to_dict(tweet_by_id.pop(a.tweet_id) for a in cluster.assignments)
 
         state = {
-            'clusters': sorted(
-                (
-                    {
-                        'id': c.rts_id,
-                        'gloss': c.gloss,
-                        'size': len(tweets_by_cluster[c.rts_id])
-                    }
-                    for c in self.clusters
-                ),
-                key=lambda c: c['id'],
-                reverse=True,
-            ),
+            'clusters': [
+                {
+                    'id': c.rts_id,
+                    'gloss': c.gloss,
+                    'size': len(tweets_by_cluster[c.rts_id]),
+                }
+                for c in sorted(self.clusters, key=lambda c: c.position, reverse=True)
+            ],
             'tweets': tweets_by_cluster,
             'unassignedTweets': self.tweets_to_dict(tweet_by_id.values()),
             'topic': self.topic_as_dict(),
@@ -201,6 +197,8 @@ class EvalCluster(Base):
 
     eval_topic = sa.orm.relationship('EvalTopic', backref='clusters')
 
+    position = sa.Column(sa.Integer, sa.Sequence('eval_cluster__position'))
+
 
 class EvalClusterAssignment(Base):
     __tablename__ = 'eval_cluster_assignment'
@@ -221,7 +219,6 @@ class EvalClusterAssignment(Base):
     )
 
     eval_cluster_rts_id = sa.Column(sa.Integer)
-
     eval_cluster = sa.orm.relationship('EvalCluster', backref='assignments', cascade='all, delete-orphan', single_parent=True)
 
 
