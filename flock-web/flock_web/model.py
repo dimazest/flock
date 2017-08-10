@@ -65,7 +65,7 @@ class EvalTopic(Base):
     def clustered_count(self):
         return len([1 for c in self.clusters for a in c.assignments])
 
-    def tweet_by_id(self, relevant_only=False):
+    def tweet_by_id(self, relevant_only=False, query_tweets=True):
         session = sa.inspect(self).session
 
         tweet_by_id = OrderedDict(
@@ -86,15 +86,15 @@ class EvalTopic(Base):
             if not relevant_only or (j.judgment is not None and j.judgment > 0)
         )
 
-        for tweet in (
-                session.query(model.Tweet)
-                .filter(
-                    model.Tweet.collection == self.collection,
-                    model.Tweet.tweet_id.in_(tweet_by_id.keys()),
-                )
-
-        ):
-            tweet_by_id[tweet.tweet_id] = tweet
+        if query_tweets:
+            for tweet in (
+                    session.query(model.Tweet)
+                    .filter(
+                        model.Tweet.collection == self.collection,
+                        model.Tweet.tweet_id.in_(tweet_by_id.keys()),
+                    )
+            ):
+                tweet_by_id[tweet.tweet_id] = tweet
 
         return tweet_by_id
 
@@ -122,7 +122,7 @@ class EvalTopic(Base):
         return state
 
     def judge_state(self):
-        tweet_by_id = self.tweet_by_id()
+        tweet_by_id = self.tweet_by_id(query_tweets=False)
 
         state = {
             'tweets': self.tweets_to_dict(tweet_by_id.values()),
