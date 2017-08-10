@@ -501,3 +501,45 @@ def judge_tweet(eval_topic_rts_id):
     state = eval_topic.judge_state()
 
     return jsonify(state)
+
+
+@bp_collection.route('/eval/qrelsfile')
+def qrelsfile():
+    def records():
+        judgments = db.session.query(fw_model.EvalRelevanceJudgment).filter_by(collection=g.collection)
+
+        for j in judgments:
+            yield '{j.eval_topic_rts_id} Q0 {j.tweet_id} {judgment}'.format(j=j, judgment=j.judgment if j.judgment is not None else '')
+
+    return '\n'.join(records())
+
+
+@bp_collection.route('/eval/clusters')
+def clusters():
+    def records():
+        assignments = (
+            db.session.query(fw_model.EvalClusterAssignment)
+            .join(fw_model.EvalCluster)
+            .join(fw_model.EvalTopic)
+            .filter(fw_model.EvalTopic.collection == g.collection)
+        )
+
+        for a in assignments:
+            yield '{a.eval_topic_rts_id} {a.eval_cluster_rts_id} {a.tweet_id}'.format(a=a)
+
+    return '\n'.join(records())
+
+
+@bp_collection.route('/eval/glosses')
+def glosees():
+    def records():
+        clusters = (
+            db.session.query(fw_model.EvalCluster)
+            .join(fw_model.EvalTopic)
+            .filter(fw_model.EvalTopic.collection == g.collection)
+        )
+
+        for c in clusters:
+            yield '{c.eval_topic_rts_id}\t{c.rts_id}\t{c.gloss}'.format(c=c)
+
+    return '\n'.join(records())
