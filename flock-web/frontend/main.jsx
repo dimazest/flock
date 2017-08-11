@@ -888,18 +888,18 @@ const JudgmentButtons = ({judgment, onJudgmentClick}) => (
         <button className={`btn btn-${(judgment.assessor > 1) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(2)}>Very</button>
         <button className={`btn btn-${(judgment.assessor > 0) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(1)}>
             Relevant
-            {judgment.crowd_relevant > 0 &&
+            {(judgment.crowd_relevant + judgment.crowd_not_relevant > 0) &&
              <span> <sup>{judgment.crowd_relevant}</sup>⁄<sub>{judgment.crowd_relevant + judgment.crowd_not_relevant}</sub></span>
             }
         </button>
         <button className={`btn btn-${(judgment.assessor === null) ? "" : "outline-"}primary`}  onClick={() => onJudgmentClick(null)}>Unjudged</button>
         <button className={`btn btn-${(judgment.assessor == 0) ? "" : "outline-"}danger`}  onClick={() => onJudgmentClick(0)}>
             Irrelevant
-            {judgment.crowd_not_relevant > 0 &&
+            {(judgment.crowd_relevant + judgment.crowd_not_relevant > 0)  &&
              <span> <sup>{judgment.crowd_not_relevant}</sup>⁄<sub>{judgment.crowd_relevant + judgment.crowd_not_relevant}</sub></span>
             }
-                        </button>
-                        <button className={`btn btn-${(judgment.assessor == 'missing') ? "" : "outline-"}warning`}  onClick={() => onJudgmentClick('missing')}>Missing</button>
+        </button>
+        <button className={`btn btn-${(judgment.assessor == 'missing') ? "" : "outline-"}warning`}  onClick={() => onJudgmentClick('missing')}>Missing</button>
     </div>
 )
 
