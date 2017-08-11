@@ -529,7 +529,7 @@ def qrelsfile():
 
             yield '{j.eval_topic_rts_id} Q0 {j.tweet_id} {judgment}'.format(j=j, judgment=judgment)
 
-    return Response('\n'.join(records()), 200, mimetype='text/csv')
+    return Response('\n'.join(records()), 200, mimetype='text/text')
 
 
 @bp_collection.route('/eval/clusters')
@@ -545,7 +545,7 @@ def clusters():
         for a in assignments:
             yield '{a.eval_topic_rts_id} {a.eval_cluster_rts_id} {a.tweet_id}'.format(a=a)
 
-    return '\n'.join(records())
+    return Response('\n'.join(records()), 200, mimetype='text/text')
 
 
 @bp_collection.route('/eval/glosses')
@@ -560,4 +560,5 @@ def glosees():
         for c in clusters:
             yield '{c.eval_topic_rts_id}\t{c.rts_id}\t{c.gloss}'.format(c=c)
 
-    return '\n'.join(records())
+    return Response('\n'.join(records()), 200, mimetype='text/text')
+
