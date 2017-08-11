@@ -550,7 +550,7 @@ def clusters():
 def glosees():
     def records():
         clusters = (
-            db.session.query(fw_model.evalcluster)
+            db.session.query(fw_model.EvalCluster)
             .filter_by(eval_topic_collection=g.collection)
         )
 
