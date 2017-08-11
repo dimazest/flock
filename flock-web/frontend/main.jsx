@@ -369,6 +369,14 @@ function swapClusters(clusterID1, clusterID2) {
             )
     }
 }
+
+const REVERSE_TWEETS = 'REVERSE_TWEETS'
+function reverseTweets() {
+    return {
+        type: REVERSE_TWEETS,
+    }
+}
+
 /* Components */
 
 import { connect } from 'react-redux'
@@ -857,6 +865,16 @@ function tweetJudgeApp(state={}, action) {
                     ...state.frontend,
                     tweetFilter: action.judgment === state.frontend.tweetFilter ? 'all' : action.judgment,
                     tweetsShown: Math.min(30, state.backend.tweets.length),
+                    reverseTweets: false,
+                }
+            }
+        }
+        case REVERSE_TWEETS: {
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    reverseTweets: !state.frontend.reverseTweets,
                 }
             }
         }
@@ -880,8 +898,8 @@ const JudgmentButtons = ({judgment, onJudgmentClick}) => (
             {judgment.crowd_not_relevant > 0 &&
              <span> <sup>{judgment.crowd_not_relevant}</sup>⁄<sub>{judgment.crowd_relevant + judgment.crowd_not_relevant}</sub></span>
             }
-        </button>
-        <button className={`btn btn-${(judgment.assessor == 'missing') ? "" : "outline-"}warning`}  onClick={() => onJudgmentClick('missing')}>Missing</button>
+                        </button>
+                        <button className={`btn btn-${(judgment.assessor == 'missing') ? "" : "outline-"}warning`}  onClick={() => onJudgmentClick('missing')}>Missing</button>
     </div>
 )
 
@@ -892,21 +910,32 @@ const JudgedTweet = ({tweet, judgment, onJudgmentClick}) => (
     </div>
 )
 
-let TweetFilter = props => (
-    <JudgmentButtons {...props} />
+let TweetFilter = ({onReverseClick, reverseTweets, ...props}) => (
+    <div className="row">
+        <div className="col"><JudgmentButtons {...props} onReverseClick={() => console.log('Reverse')} /></div>
+        <div className="col-3"><button className={`btn btn-secondary ${reverseTweets ? "active" : ""}`} onClick={onReverseClick}>Reverse</button></div>
+    </div>
 )
 
 TweetFilter = connect(
-    state => ({judgment: {assessor: state.frontend.tweetFilter}}),
+    state => ({
+        judgment: {assessor: state.frontend.tweetFilter},
+        reverseTweets: state.frontend.reverseTweets,
+    }),
     dispatch => ({
-        onJudgmentClick: (judgment => {dispatch(filterTweets(judgment))})
+        onJudgmentClick: (judgment => {dispatch(filterTweets(judgment))}),
+        onReverseClick: (() => {dispatch(reverseTweets())}),
     }),
 )(TweetFilter)
 
 import InfiniteScroll from 'redux-infinite-scroll';
 
-let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentClick, tweetFilter}) => {
-    const filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id].assessor === tweetFilter))
+let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentClick, tweetFilter, reverseTweets}) => {
+    let filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id].assessor === tweetFilter))
+
+    if (reverseTweets) {
+        filteredTweets = filteredTweets.reverse()
+    }
 
     const doneMessage = <div className={"alert alert-success"} role="alert">
         <strong>All tweets are judged.</strong> <a className="alert-link" href={window.TOPICS_URL}>Show the topic list.</a>
@@ -969,6 +998,7 @@ TweetJudgmentList.propTypes = {
     showMore: PropTypes.func,
     judgments: PropTypes.object,
     onJudgmentClick: PropTypes.func,
+    reverseTweets: PropTypes.bool.isRequired,
 }
 TweetJudgmentList = connect(
     state => ({
@@ -976,6 +1006,7 @@ TweetJudgmentList = connect(
         tweetsShown: state.frontend.tweetsShown,
         judgments: state.backend.judgments,
         tweetFilter: state.frontend.tweetFilter,
+        reverseTweets: state.frontend.reverseTweets,
     }),
     dispatch => ({
         showMore: (
@@ -1008,6 +1039,7 @@ window.judge = () => {
         frontend: {
             tweetsShown: Math.min(30, window.BACKEND.tweets.length),
             tweetFilter: 'all',
+            reverseTweets: false,
         },
     }
 
