@@ -128,11 +128,11 @@ class EvalTopic(Base):
             'tweets': self.tweets_to_dict(tweet_by_id.values()),
             'judgments': {
                 str(j.tweet_id): {
-                    'assessor': j.judgment,
+                    'assessor': j.judgment if not j.missing else 'missing',
                     'crowd_relevant': j.crowd_relevant,
                     'crowd_not_relevant': j.crowd_not_relevant,
                 }
-                if not j.missing else 'missing' for j in self.judgments
+                for j in self.judgments
             },
             'topic': self.topic_as_dict(),
         }
