@@ -537,9 +537,7 @@ def clusters():
     def records():
         assignments = (
             db.session.query(fw_model.EvalClusterAssignment)
-            .join(fw_model.EvalCluster)
-            .join(fw_model.EvalTopic)
-            .filter(fw_model.EvalTopic.collection == g.collection)
+            .filter_by(eval_topic_collection=g.collection)
         )
 
         for a in assignments:
@@ -552,13 +550,11 @@ def clusters():
 def glosees():
     def records():
         clusters = (
-            db.session.query(fw_model.EvalCluster)
-            .join(fw_model.EvalTopic)
-            .filter(fw_model.EvalTopic.collection == g.collection)
+            db.session.query(fw_model.evalcluster)
+            .filter_by(eval_topic_collection=g.collection)
         )
 
         for c in clusters:
             yield '{c.eval_topic_rts_id}\t{c.rts_id}\t{c.gloss}'.format(c=c)
 
     return Response('\n'.join(records()), 200, mimetype='text/text')
-
