@@ -3,6 +3,7 @@ import json
 from flask import render_template, Blueprint, request, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context, flash
 import flask_login
 
+import sqlalchemy as sa
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.dialects import postgresql
 
@@ -506,12 +507,29 @@ def judge_tweet(eval_topic_rts_id):
 @bp_collection.route('/eval/qrelsfile')
 def qrelsfile():
     def records():
-        judgments = db.session.query(fw_model.EvalRelevanceJudgment).filter_by(collection=g.collection)
-
+        judgments = (
+            db.session.query(fw_model.EvalRelevanceJudgment)
+            .filter_by(collection=g.collection)
+            .filter(
+                sa.or_(
+                    fw_model.EvalRelevanceJudgment.judgment != None,
+                    fw_model.EvalRelevanceJudgment.missing == True,
+                )
+            )
+            .order_by(
+                fw_model.EvalRelevanceJudgment.eval_topic_rts_id,
+                fw_model.EvalRelevanceJudgment.position,
+                fw_model.EvalRelevanceJudgment.tweet_id,
+            )
+        )
         for j in judgments:
-            yield '{j.eval_topic_rts_id} Q0 {j.tweet_id} {judgment}'.format(j=j, judgment=j.judgment if j.judgment is not None else '')
+            judgment = j.judgment if j.judgment is not None else ''
+            if j.missing:
+                judgment = -2
 
-    return '\n'.join(records())
+            yield '{j.eval_topic_rts_id} Q0 {j.tweet_id} {judgment}'.format(j=j, judgment=judgment)
+
+    return Response('\n'.join(records()), 200, mimetype='text/csv')
 
 
 @bp_collection.route('/eval/clusters')

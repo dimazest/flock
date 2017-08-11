@@ -127,6 +127,7 @@ def insert_eval_relevance_judgements(session, collection, qrels_file, set_positi
             set_['position'] = stmt.excluded.position
         if set_judgments:
             set_['judgment'] = stmt.excluded.judgment
+            set_['missing'] = stmt.excluded.missing
 
         stmt = stmt.on_conflict_do_update(
             constraint=fw_model.EvalRelevanceJudgment.__table__.primary_key,
@@ -135,14 +136,23 @@ def insert_eval_relevance_judgements(session, collection, qrels_file, set_positi
 
     for line_no, line in enumerate(qrels_file):
         full_format = True
+        values = line.split()
         try:
-            eval_topic_rts_id, _, _, _,tweet_id, _, _, judgment, _ = line.split()
+            eval_topic_rts_id, _, _, _,tweet_id, _, _, judgment, _ = values
         except ValueError:
-            eval_topic_rts_id, _, tweet_id, judgment = line.split()
+            if len(values) == 3:
+                eval_topic_rts_id, _, tweet_id = values
+                judgment = None
+            else:
+                eval_topic_rts_id, _, tweet_id, judgment = values
             full_format = False
 
         tweet_id = int(tweet_id)
-        judgment = int(judgment) if not full_format else None
+        judgment = int(judgment) if judgment is not None and not full_format else None
+
+        missing = judgment == -2
+        if missing:
+            judgment = None
 
         session.execute(
             stmt.values(
@@ -151,6 +161,7 @@ def insert_eval_relevance_judgements(session, collection, qrels_file, set_positi
                 tweet_id=tweet_id,
                 judgment=judgment if set_judgments else None,
                 position=line_no if set_position else None,
+                missing=missing,
             )
         )
 
