@@ -885,21 +885,29 @@ function tweetJudgeApp(state={}, action) {
 
 const JudgmentButtons = ({judgment, onJudgmentClick}) => (
     <div className="tweet-outer-meta btn-group btn-block justify-content-center">
-        <button className={`btn btn-${(judgment.assessor > 1) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(2)}>Very</button>
-        <button className={`btn btn-${(judgment.assessor > 0) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(1)}>
-            Relevant
-            {(judgment.crowd_relevant + judgment.crowd_not_relevant > 0) &&
-             <span> <sup>{judgment.crowd_relevant}</sup>⁄<sub>{judgment.crowd_relevant + judgment.crowd_not_relevant}</sub></span>
-            }
+        <button className={`btn btn-${(judgment.assessor > 1) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(2)} title="Very relevant">
+            <i className="fa fa-thumbs-up" aria-hidden="true"></i>
         </button>
-        <button className={`btn btn-${(judgment.assessor === null) ? "" : "outline-"}primary`}  onClick={() => onJudgmentClick(null)}>Unjudged</button>
-        <button className={`btn btn-${(judgment.assessor == 0) ? "" : "outline-"}danger`}  onClick={() => onJudgmentClick(0)}>
-            Irrelevant
-            {(judgment.crowd_relevant + judgment.crowd_not_relevant > 0)  &&
-             <span> <sup>{judgment.crowd_not_relevant}</sup>⁄<sub>{judgment.crowd_relevant + judgment.crowd_not_relevant}</sub></span>
-            }
+        <button className={`btn btn-${(judgment.assessor > 0) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(1)} title="Relevant">
+            <i className="fa fa-thumbs-o-up" aria-hidden="true"></i>
         </button>
-        <button className={`btn btn-${(judgment.assessor == 'missing') ? "" : "outline-"}warning`}  onClick={() => onJudgmentClick('missing')}>Missing</button>
+        {(judgment.crowd_relevant !== undefined || judgment.crowd_not_relevant !== undefined) &&
+            <button className={`btn btn-${(judgment.crowd_relevant > 0) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(1)} title="Crowd relevant">
+                <sup>{judgment.crowd_relevant}</sup>⁄<sub>{judgment.crowd_relevant + judgment.crowd_not_relevant}</sub>
+            </button>
+        }
+        <button className={`btn btn-${(judgment.assessor === null) ? "" : "outline-"}primary`}  onClick={() => onJudgmentClick(null)} title="Unjudged">
+            Unjudged
+        </button>
+        {(judgment.crowd_relevant !== undefined || judgment.crowd_not_relevant !== undefined) &&
+            <button className={`btn btn-${(judgment.crowd_not_relevant > 0) ? "" : "outline-"}danger`} onClick={() => onJudgmentClick(0)} title="Crowd not relevant">
+                <sup>{judgment.crowd_not_relevant}</sup>⁄<sub>{judgment.crowd_relevant + judgment.crowd_not_relevant}</sub>
+            </button>
+        }
+        <button className={`btn btn-${(judgment.assessor == 0) ? "" : "outline-"}danger`}  onClick={() => onJudgmentClick(0)} title="Not relevant">
+            <i className="fa fa-thumbs-o-down" aria-hidden="true"></i>
+        </button>
+        <button className={`btn btn-${(judgment.assessor == 'missing') ? "" : "outline-"}warning`}  onClick={() => onJudgmentClick('missing')} title="Missing">Missing</button>
     </div>
 )
 
