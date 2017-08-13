@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
+import InfiniteScroll from 'redux-infinite-scroll';
 
 /* Helpers */
 
@@ -207,9 +208,9 @@ function deleteCluster(clusterID) {
     }
 }
 
-const SHOW_MORE_JUDGMENT_TWEETS = 'SHOW_MORE_JUDGMENT_TWEETS'
-function showMoreJudgmentTweets(){
-    return {type: SHOW_MORE_JUDGMENT_TWEETS}
+const SHOW_MORE_TWEETS = 'SHOW_MORE_TWEETS'
+function showMoreTweets(){
+    return {type: SHOW_MORE_TWEETS}
 }
 
 const REQUEST_JUDGE_TWEET = 'REQUEST_JUDGE_TWEET'
@@ -641,7 +642,7 @@ ClusteredTweet.propTypes = {
     active: PropTypes.bool,
 }
 
-let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID=null, activeTweetID=null }) => {
+let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID=null, activeTweetID=null, tweetsShown, showMore }) => {
 
     const tweetsForCluster = tweetCluster(tweets, visibleClusterID)
 
@@ -655,8 +656,8 @@ let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID
         }
     }
 
-    return <div>
-        {tweetsForCluster.map(tweet => (
+    return <InfiniteScroll
+        children={tweetsForCluster.slice(0, tweetsShown).map(tweet => (
             <ClusteredTweet
                 key={tweet.id}
                 tweet={tweet}
@@ -664,7 +665,11 @@ let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID
                 active={tweet.id === activeTweetID}
             />
         ))}
-    </div>
+        loadMore={showMore}
+        hasMore={tweetsForCluster.length > tweetsShown}
+        elementIsScrollable={false}
+    />
+
 }
 TweetList.propTypes = {
     tweets: PropTypes.objectOf(PropTypes.array),
@@ -672,6 +677,8 @@ TweetList.propTypes = {
     visibleClusterID: PropTypes.number,
     activeClusterID: PropTypes.number,
     activeTweetID: PropTypes.string,
+    tweetsShown: PropTypes.number,
+    showMore: PropTypes.func,
 }
 
 TweetList = connect(
@@ -681,11 +688,13 @@ TweetList = connect(
             visibleClusterID: state.frontend.visibleClusterID,
             activeClusterID: state.frontend.activeClusterID,
             activeTweetID: state.frontend.activeTweetID,
+            tweetsShown: state.frontend.tweetsShown,
         }
     ),
     dispatch => (
         {
-            onAssignClick: (tweet_id, activeClusterID) => {dispatch(assignTweet(tweet_id, activeClusterID))}
+            onAssignClick: (tweet_id, activeClusterID) => {dispatch(assignTweet(tweet_id, activeClusterID))},
+            showMore: (() => {dispatch(showMoreTweets())}),
         }
     ),
 )(TweetList)
@@ -727,6 +736,7 @@ function tweetClusterApp(state={}, action) {
                     ...state.frontend,
                     visibleClusterID: visibleClusterID,
                     activeTweetID: clusterFirstTweetID(state.backend.tweets, visibleClusterID),
+                    tweetsShown: Math.min(30, tweetCluster(state.backend.tweets, visibleClusterID).length),
                     newClusterName: clusterNewName(state.backend.tweets, visibleClusterID),
                 },
             }
@@ -788,6 +798,14 @@ function tweetClusterApp(state={}, action) {
                 }
             }
         }
+        case SHOW_MORE_TWEETS:
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    tweetsShown: Math.min(state.frontend.tweetsShown + 10, tweetCluster(state.backend.tweets, state.frontend.visibleClusterID).length),
+                }
+            }
         default:
             return state
     }
@@ -819,6 +837,7 @@ window.cluster = () => {
         'frontend': {
             activeClusterID: null,
             activeTweetID: clusterFirstTweetID({null: window.BACKEND.unassignedTweets}, null),
+            tweetsShown: Math.min(30, window.BACKEND.unassignedTweets.length),
             visibleClusterID: null,
             newClusterName: clusterNewName({null: window.BACKEND.unassignedTweets}, null),
             editingCluster: {id: null, gloss: null},
@@ -842,7 +861,7 @@ window.cluster = () => {
 
 function tweetJudgeApp(state={}, action) {
     switch (action.type) {
-        case SHOW_MORE_JUDGMENT_TWEETS:
+        case SHOW_MORE_TWEETS:
             return {
                 ...state,
                 frontend: {
@@ -936,8 +955,6 @@ TweetFilter = connect(
     }),
 )(TweetFilter)
 
-import InfiniteScroll from 'redux-infinite-scroll';
-
 let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentClick, tweetFilter, reverseTweets}) => {
     let filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id].assessor === tweetFilter))
 
@@ -1017,9 +1034,7 @@ TweetJudgmentList = connect(
         reverseTweets: state.frontend.reverseTweets,
     }),
     dispatch => ({
-        showMore: (
-            () => {dispatch(showMoreJudgmentTweets())}
-        ),
+        showMore: (() => {dispatch(showMoreTweets())}),
         onJudgmentClick: (
             (tweet_id, judgment) => {dispatch(judgeTweet(tweet_id, judgment))}
         ),
