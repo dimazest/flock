@@ -896,8 +896,8 @@ const JudgmentButtons = ({judgment, onJudgmentClick}) => (
                 <sup>{judgment.crowd_relevant}</sup>⁄<sub>{judgment.crowd_relevant + judgment.crowd_not_relevant}</sub>
             </button>
         }
-        <button className={`btn btn-${(judgment.assessor === null) ? "" : "outline-"}primary`}  onClick={() => onJudgmentClick(null)} title="Unjudged">
-            Unjudged
+        <button className={`btn btn-${(judgment.assessor === null) ? "" : "outline-"}primary`}  onClick={() => onJudgmentClick(null)} title="Not judged">
+            Not judged
         </button>
         {(judgment.crowd_relevant !== undefined || judgment.crowd_not_relevant !== undefined) &&
             <button className={`btn btn-${(judgment.crowd_not_relevant > 0) ? "" : "outline-"}danger`} onClick={() => onJudgmentClick(0)} title="Crowd not relevant">
