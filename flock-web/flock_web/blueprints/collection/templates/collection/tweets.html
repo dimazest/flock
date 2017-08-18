@@ -32,6 +32,22 @@
         {% endfor %}
       </form>
 
+      {% if g.topic.queries %}
+      <div class="card">
+        <h3 class="card-header">Queries</h3>
+        <div class="list-group">
+            {% for q in g.topic.queries %}
+             <a
+               class="list-group-item {{ 'active' if q.query == g.query else '' }}"
+               href="{{ url_for('collection.tweets', collection=g.collection, q=q.query, filter=q.filter, cluster=q.cluster, topic=g.topic.id, **q.filter_args_dict) }}"
+             >{{ q.query }}</a>
+            </li>
+            {% endfor %}
+        </div>
+      </div>
+
+      {% endif %}
+
       <div id="screen_names_stats"></div>
       <div id="hashtags_stats"></div>
       <div id="user_mentions_stats"></div>
@@ -180,12 +196,14 @@
 
        {# reset_tabindex(); #}
 
+       {#
        get_task(
            '#tweets',
            '{{ url_for('.task_result', task_id=tweet_task.id) }}',
            {show_images: '{{ 'on' if g.show_images else '' }}', topic: '{{ g.topic.id or ''}}'},
            true
        );
+       #}
 
        {% for f_name, task in stats %}
        get_task(
@@ -209,30 +227,6 @@
        });
    });
 
-   function send_relevance(element, tweet_id, topic_id, judgment){
-       console.log(tweet_id, topic_id, judgment);
-
-       $.post({
-           url: '{{ url_for('main.relevance') }}',
-           data: {
-               tweet_id: tweet_id,
-               topic_id: topic_id,
-               judgment: judgment,
-               selection_args: JSON.stringify({{ selection_for_topic_args|safe }})
-           },
-           success: function(data, status, request) {
-               console.log('Everything is fine');
-               /* $('main').prepend('<div class="alert alert-success" role="alert" style="width: "40%;"">A new query was assigned to the current topic.</div>');*/
-           },
-           error: function() {
-               console.log('Unexpected error');
-               alert('Could not update the judgment. The page will be refreshed.')
-               location.reload();
-           }
-       });
-
-   }
-
    paceOptions = {
        elements: {
            selectors: ['#tweet_count p', '#screen_names_stats div', '#hashtags_stats div', '#user_mentions_stats div', 'iframe.twitter-tweet-rendered,#tweets .alert']
@@ -241,5 +235,15 @@
   </script>
 
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <script src="{{ url_for('static', filename='bundle.js') }}"></script>
+  <script>
+    window.TWEET_TASK_URL = '{{ url_for('.task_result', task_id=tweet_task.id, topic=g.topic.id if g.topic else None) }}';
 
+    window.JUDGE_TWEET_URL = '{{ url_for('main.relevance') }}';
+    window.CSRF_TOKEN = '{{ csrf_token() }}';
+
+    window.SELECTION_ARGS = {{ selection_for_topic_args|safe }};
+    window.COLLECTION = '{{ g.collection }}';
+    window.devTweets();
+  </script>
   {% endblock extra_scripts %}

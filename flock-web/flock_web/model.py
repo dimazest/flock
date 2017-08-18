@@ -27,6 +27,10 @@ class User(Base, flask_login.UserMixin):
 
 class Topic(Base):
     __tablename__ = 'topic'
+    __table_args__ = (
+            sa.ForeignKeyConstraint(['eval_topic_rts_id', 'eval_topic_collection'], ['eval_topic.rts_id', 'eval_topic.collection']),
+            sa.UniqueConstraint('eval_topic_rts_id', 'eval_topic_collection'),
+    )
 
     id = sa.Column(sa.Integer, primary_key=True)
 
@@ -36,6 +40,10 @@ class Topic(Base):
 
     user_id = sa.Column(sa.Integer, sa.ForeignKey('user.id'), nullable=False)
     user = sa.orm.relationship('User', backref='topics')
+
+    eval_topic_rts_id = sa.Column(sa.String)
+    eval_topic_collection = sa.Column(sa.String)
+    eval_topic = sa.orm.relationship('EvalTopic', backref=sa.orm.backref('topic', uselist=False))
 
     questionnaire = sa.orm.relationship('TopicQuestionnaire', uselist=False)
 
@@ -135,13 +143,15 @@ class EvalTopic(Base):
                 for j in self.judgments
             },
             'topic': self.topic_as_dict(),
+            'collection': self.collection,
         }
 
         return state
 
     def topic_as_dict(self):
         return {
-            'id': self.rts_id,
+            'rts_id': self.rts_id,
+            'topic_id': self.topic.id if self.topic else None,
             'title': self.title,
             'description': getattr(self, 'description', 'SOME DESCRIPTION'),
             'narrative': getattr(self, 'narrative', 'SOME NARRATIVE'),
@@ -179,6 +189,7 @@ class EvalRelevanceJudgment(Base):
     missing = sa.Column(sa.Boolean, default=False)
     crowd_relevant = sa.Column(sa.Integer, default=0)
     crowd_not_relevant = sa.Column(sa.Integer, default=0)
+    from_dev = sa.Column(sa.Boolean, default=False, nullable=False)
 
     eval_topic = sa.orm.relationship('EvalTopic', backref='judgments')
 

@@ -16,6 +16,7 @@
         <th>Judged</th>
         <th>Relevant</th>
         <th>Clustered</th>
+        <th>Queries</th>
       </tr>
     </thead>
     <tbody>
@@ -44,6 +45,16 @@
               >
               {{ clustered_count }}
             </a>
+          </td>
+          <td>
+            {% if eval_topic.topic %}
+            <a
+              href="{{ url_for('main.topic', topic_id=eval_topic.topic.id) }}"
+              class="btn btn-secondary"
+              >
+              Queries
+            </a>
+            {% endif %}
           </td>
           {# <td>{{ eval_topic.clustered_count() }}</td> #}
         </tr>

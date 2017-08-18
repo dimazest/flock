@@ -99,6 +99,7 @@ blockquote.twitter-tweet-error {
 .tweet-outer {
     border: none;
     max-width: 500px;
+    min-height: 150;
 }
 
 .tweet-outer-meta {

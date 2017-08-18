@@ -213,22 +213,11 @@ function showMoreTweets(){
     return {type: SHOW_MORE_TWEETS}
 }
 
-const REQUEST_JUDGE_TWEET = 'REQUEST_JUDGE_TWEET'
-function requestJudgeTweet(tweet_id, judgment){
-    console.log(`Judge tweet ${tweet_id}: ${judgment}`)
-
-    return {
-        type: REQUEST_JUDGE_TWEET,
-        tweet_id,
-        judgment,
-    }
-}
-
 const RECEIVE_TWEETS_AND_JUDGMENTS = 'RECEIVE_TWEETS_AND_JUDGMENTS'
 function receiveTweetsAndJudgments(tweetsAndJudgments) {
     return {
         type: RECEIVE_TWEETS_AND_JUDGMENTS,
-        tweetsAndJudgments
+        tweetsAndJudgments,
     }
 }
 
@@ -240,7 +229,20 @@ function filterTweets(judgment) {
     }
 }
 
-function judgeTweet(tweet_id, judgment){
+const REQUEST_JUDGE_TWEET = 'REQUEST_JUDGE_TWEET'
+function requestJudgeTweet(tweet_id, rts_id, topic_id, judgment){
+    console.log(`Judge tweet ${tweet_id} ${rts_id} ${topic_id}: ${judgment}`)
+
+    return {
+        type: REQUEST_JUDGE_TWEET,
+        tweet_id,
+        rts_id,
+        topic_id,
+        judgment,
+    }
+}
+
+function judgeTweet(tweet_id, rts_id, topic_id, judgment, selection_args, collection){
     return dispatch => {
         dispatch(requestJudgeTweet(tweet_id, judgment))
 
@@ -253,7 +255,14 @@ function judgeTweet(tweet_id, judgment){
                     'X-CSRFToken': window.CSRF_TOKEN,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({tweet_id, judgment})
+                body: JSON.stringify({
+                    tweet_id,
+                    rts_id,
+                    collection,
+                    topic_id,
+                    judgment,
+                    selection_args,
+                }),
             },
         )
             .then(
@@ -262,7 +271,11 @@ function judgeTweet(tweet_id, judgment){
             )
             .then(
                 json => {
-                    dispatch(receiveTweetsAndJudgments(json))
+                    if (json.empty) {
+                        dispatch(receiveTask(window.TWEET_TASK_URL))
+                    } else {
+                        dispatch(receiveTweetsAndJudgments(json))
+                    }
                 }
             )
     }
@@ -376,6 +389,43 @@ function reverseTweets() {
     return {
         type: REVERSE_TWEETS,
     }
+}
+
+const REQUEST_RECEIVE_TASK = 'REQUEST_RECEIVE_TASK'
+function requestReceiveTask(url) {
+    console.log(`Request task ${url}.`)
+    return {
+        type: REQUEST_RECEIVE_TASK,
+        url,
+    }
+}
+
+function receiveTask(url) {
+    return dispatch => {
+        dispatch(requestReceiveTask(url))
+
+        return fetch(
+            url,
+            {credentials: 'include'},
+
+        )
+            .then(
+                response => response.json(),
+                error => console.log('An error occured', error)
+            )
+            .then(
+                json => {
+                    if (json.state === 'SUCCESS') {
+                        dispatch(receiveTweetsAndJudgments(json.backendState))
+                    } else if (json.state === 'PENDING') {
+                        window.setTimeout(() => {dispatch(receiveTask(url))}, 1000)
+                    } else {
+                        console.log(`Could not get a task result.`)
+                    }
+                }
+            )
+    }
+
 }
 
 /* Components */
@@ -902,8 +952,13 @@ function tweetJudgeApp(state={}, action) {
     }
 }
 
-const JudgmentButtons = ({judgment, onJudgmentClick}) => (
-    <div className="tweet-outer-meta btn-group btn-block justify-content-center">
+const JudgmentButtons = ({judgment, onJudgmentClick}) => {
+    if (!judgment) {
+        judgment = {
+            assessor: null,
+        }
+    }
+    return <div className="tweet-outer-meta btn-group btn-block justify-content-center">
         <button className={`btn btn-${(judgment.assessor > 1) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(2)} title="Very relevant">
             <i className="fa fa-thumbs-up" aria-hidden="true"></i>
         </button>
@@ -928,7 +983,7 @@ const JudgmentButtons = ({judgment, onJudgmentClick}) => (
         </button>
         <button className={`btn btn-${(judgment.assessor == 'missing') ? "" : "outline-"}warning`}  onClick={() => onJudgmentClick('missing')} title="Missing">Missing</button>
     </div>
-)
+}
 
 const JudgedTweet = ({tweet, judgment, onJudgmentClick}) => (
     <div className="card tweet-outer">
@@ -955,7 +1010,7 @@ TweetFilter = connect(
     }),
 )(TweetFilter)
 
-let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentClick, tweetFilter, reverseTweets}) => {
+let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, selection_args, onJudgmentClick, tweetFilter, reverseTweets, topic, collection}) => {
     let filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id].assessor === tweetFilter))
 
     if (reverseTweets) {
@@ -1007,7 +1062,7 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, onJudgmentCl
                     key={tweet.id}
                         tweet={tweet}
                         judgment={judgments[tweet.id]}
-                        onJudgmentClick={onJudgmentClick}
+                        onJudgmentClick={(tweet_id, judgment) => onJudgmentClick(tweet_id, topic.rts_id, topic.topic_id, judgment, selection_args, collection)}
                 />
             ))}
             loadMore={showMore}
@@ -1022,21 +1077,27 @@ TweetJudgmentList.propTypes = {
     tweetsShown: PropTypes.number,
     showMore: PropTypes.func,
     judgments: PropTypes.object,
+    topic: PropTypes.object,
+    collection: PropTypes.string,
+    selection_args: PropTypes.object,
     onJudgmentClick: PropTypes.func,
     reverseTweets: PropTypes.bool.isRequired,
 }
 TweetJudgmentList = connect(
     state => ({
+        topic: state.backend.topic,
         tweets: state.backend.tweets,
         tweetsShown: state.frontend.tweetsShown,
         judgments: state.backend.judgments,
         tweetFilter: state.frontend.tweetFilter,
         reverseTweets: state.frontend.reverseTweets,
+        selection_args: state.backend.selection_args,
+        collection: state.backend.collection,
     }),
     dispatch => ({
         showMore: (() => {dispatch(showMoreTweets())}),
         onJudgmentClick: (
-            (tweet_id, judgment) => {dispatch(judgeTweet(tweet_id, judgment))}
+            (tweet_id, rts_id, topic_id, judgment, selection_args, collection) => {dispatch(judgeTweet(tweet_id, rts_id, topic_id, judgment, selection_args, collection))}
         ),
     })
 )(TweetJudgmentList)
@@ -1079,4 +1140,83 @@ window.judge = () => {
         </Provider>,
         document.getElementById('main-content')
     )
+}
+
+function devJudgeApp(state={}, action) {
+    switch (action.type) {
+        case SHOW_MORE_TWEETS:
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    tweetsShown: Math.min(state.frontend.tweetsShown + 10, state.backend.tweets.length),
+                }
+            }
+        case RECEIVE_TWEETS_AND_JUDGMENTS:
+            return {
+                ...state,
+                backend: {
+                    ...state.backend,
+                    ...action.tweetsAndJudgments,
+                }
+            }
+        case FILTER_TWEETS: {
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    tweetFilter: action.judgment === state.frontend.tweetFilter ? 'all' : action.judgment,
+                    tweetsShown: Math.min(30, state.backend.tweets.length),
+                    reverseTweets: false,
+                }
+            }
+        }
+        case REVERSE_TWEETS: {
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    reverseTweets: !state.frontend.reverseTweets,
+                }
+            }
+        }
+        default:
+            return state
+    }
+}
+
+const DevJudgeApp = () => (
+    <TweetJudgmentList />
+)
+
+window.devTweets = () => {
+    window.initialState = {
+        backend: {
+            tweets: [],
+            judgments: {},
+            selection_args: window.SELECTION_ARGS,
+            collection: window.COLLECTION,
+        },
+        frontend: {
+            tweetsShown: 0,
+            tweetFilter: 'all',
+            reverseTweets: false,
+        },
+    }
+
+    let store = createStore(
+        devJudgeApp,
+        window.initialState,
+        applyMiddleware(thunkMiddleware, createLogger()),
+    )
+    window.store = store;
+
+    render(
+        <Provider store={store}>
+            <DevJudgeApp />
+        </Provider>,
+        document.getElementById('tweets')
+    )
+
+    store.dispatch(receiveTask(window.TWEET_TASK_URL))
 }

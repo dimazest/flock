@@ -273,34 +273,90 @@ def topics_json():
 @flask_login.login_required
 def relevance():
     # XXX: this clearly needs validation.
+    data = request.get_json()
 
-    topic_id = request.form.get('topic_id', type=int)
-    tweet_id = request.form.get('tweet_id', type=int)
-    judgment = request.form.get('judgment', type=int)
+    tweet_id = int(data.get('tweet_id'))
+    judgment = data.get('judgment')
 
-    result = dict(request.form)
+    topic_id = data.get('topic_id')
+    if topic_id is not None:
+        selection_args = data.get('selection_args')
+        if selection_args:
+            query = db.session.query(fw_model.TopicQuery).filter_by(topic_id=topic_id, **selection_args).first()
+            if query is None:
+                query = fw_model.TopicQuery(topic_id=topic_id, **selection_args)
+                db.session.add(query)
+                db.session.flush()
 
-    selection_args = json.loads(request.form['selection_args']) if 'selection_args' in request.form else None
-    query = db.session.query(fw_model.TopicQuery).filter_by(topic_id=topic_id, **selection_args).first()
-    if query is None:
-        query = fw_model.TopicQuery(topic_id=topic_id, **selection_args)
-        db.session.add(query)
-        db.session.flush()
+        stmt = pg.insert(fw_model.RelevanceJudgment.__table__)
+        stmt = stmt.on_conflict_do_update(
+            index_elements=['topic_id', 'tweet_id'],
+            set_={
+                'judgment': stmt.excluded.judgment,
+            },
+        )
 
-        result['new_query_id'] = query.id
+        dev_judgment = {
+            None: 0,
+            'missing': 0,
+            0: -1,
+        }.get(judgment, judgment)
 
-    stmt = pg.insert(fw_model.RelevanceJudgment.__table__)
-    stmt = stmt.on_conflict_do_update(
-        index_elements=['topic_id', 'tweet_id'],
-        set_={
-            'judgment': stmt.excluded.judgment,
-        },
-    )
+        db.session.execute(
+            stmt.values(
+                topic_id=topic_id,
+                tweet_id=tweet_id,
+                judgment=dev_judgment,
+            )
+        )
 
-    db.session.execute(stmt, [{'topic_id': topic_id, 'tweet_id': tweet_id, 'judgment': judgment}])
+    if data['rts_id']:
+        result = eval_relevance(
+            data['rts_id'],
+            judgment,
+            data['collection'],
+            tweet_id,
+            from_dev=True,
+        )
+
+    if topic_id is not None:
+        result = {'empty': True}
+
     db.session.commit()
 
     return jsonify(result)
+
+
+def eval_relevance(eval_topic_rts_id, judgment, collection, tweet_id, from_dev):
+    if judgment == 'missing':
+        judgment = None
+        missing = True
+    else:
+        judgment = judgment if judgment is not None else None
+        missing = False
+
+    t = fw_model.EvalRelevanceJudgment.__table__
+    insert_stmt = pg.insert(t).values(
+        eval_topic_rts_id=eval_topic_rts_id,
+        collection=collection,
+        tweet_id=tweet_id,
+        judgment=judgment,
+        missing=missing,
+        from_dev=from_dev,
+    )
+    insert_stmt = insert_stmt.on_conflict_do_update(
+        constraint=t.primary_key,
+        set_={
+            'judgment': insert_stmt.excluded.judgment,
+            'missing': insert_stmt.excluded.missing,
+        },
+    )
+
+    db.session.execute(insert_stmt)
+    db.session.flush()
+
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=eval_topic_rts_id, collection=collection).one()
+    return eval_topic.judge_state()
 
 
 @bp_main.route('/user')

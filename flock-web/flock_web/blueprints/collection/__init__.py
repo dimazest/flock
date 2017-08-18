@@ -289,6 +289,42 @@ def task_result(task_id):
                     show_images=g.show_images,
                     relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
                 )
+
+                result['backendState'] = {}
+
+                if g.topic:
+                    result['backendState']['topic'] = {
+                        'title': '',
+                        'description': '',
+                        'narrative': '',
+                        'rts_id': g.topic.eval_topic.rts_id if g.topic.eval_topic else None,
+                        'topic_id': g.topic.id,
+                    }
+
+                    judgments = {
+                        str(j.tweet_id): {
+                            'assessor': j.judgment if not j.missing else 'missing',
+                            'crowd_relevant': j.crowd_relevant,
+                            'crowd_not_relevant': j.crowd_not_relevant,
+                        }
+                        for j in g.topic.eval_topic.judgments
+                    }
+                else:
+                    judgments = {}
+
+                result['backendState']['tweets'] = [
+                    {
+                        'created_at': t['created_at'],
+                        'id': str(t['tweet_id']),
+                        'screen_name': t['features']['repr']['user__screen_name'],
+                        'user_name': t['features']['repr']['user__name'],
+                        'text': t['features']['repr']['text'],
+                    }
+                    for t in task.result['data'] if str(t['tweet_id']) not in judgments
+                ]
+
+                result['backendState']['judgments'] = {}
+
         elif task.result.get('task_name') == 'flock_web.tasks.stats_for_feature':
             render_stats = get_template_attribute('collection/macro.html', 'render_stats')
 
@@ -465,43 +501,6 @@ def swap_clusters(eval_topic_rts_id):
 
     eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=eval_topic_rts_id, collection=g.collection).one()
     return jsonify(eval_topic.state())
-
-
-@bp_collection.route('/eval/topics/<eval_topic_rts_id>/judge_tweet', methods=['POST'])
-@flask_login.login_required
-def judge_tweet(eval_topic_rts_id):
-    data = request.get_json()
-
-    if data['judgment'] == 'missing':
-        judgment = None
-        missing = True
-    else:
-        judgment = int(data['judgment']) if data['judgment'] is not None else None
-        missing = False
-
-    t = fw_model.EvalRelevanceJudgment.__table__
-    insert_stmt = postgresql.insert(t).values(
-        eval_topic_rts_id=eval_topic_rts_id,
-        collection=g.collection,
-        tweet_id=int(data['tweet_id']),
-        judgment=judgment,
-        missing=missing,
-    )
-    insert_stmt = insert_stmt.on_conflict_do_update(
-        constraint=t.primary_key,
-        set_={
-            'judgment': insert_stmt.excluded.judgment,
-            'missing': insert_stmt.excluded.missing,
-        },
-    )
-
-    db.session.execute(insert_stmt)
-    db.session.commit()
-
-    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=eval_topic_rts_id, collection=g.collection).one()
-    state = eval_topic.judge_state()
-
-    return jsonify(state)
 
 
 @bp_collection.route('/eval/qrelsfile')

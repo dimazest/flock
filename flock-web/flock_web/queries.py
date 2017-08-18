@@ -43,8 +43,8 @@ def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=Tr
     tweets = (
         tweets
         .filter(*feature_filter_args)
-        .filter(model.Tweet.features['filter', 'is_retweet'].astext == 'false' )
-        # # .filter(model.Tweet.representative == None)
+        # .filter(model.Tweet.features['filter', 'is_retweet'].astext == 'false')
+        # .filter(model.Tweet.representative == None)
     )
 
     if query:
@@ -74,8 +74,8 @@ def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=Tr
 
     tweets = tweets.order_by(model.Tweet.created_at, model.Tweet.tweet_id)
 
-    if possibly_limit and story is None:
-        tweets = tweets.limit(100)
+    # if possibly_limit and story is None:
+    #     tweets = tweets.limit(100)
 
     return tweets
 
