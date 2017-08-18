@@ -448,11 +448,11 @@ let TopicInfo= ({ topic, onUpdateClick, full=true}) => (
     <div>
         <div className="row">
             <h1 className="col">Evaluation topic {topic.title}</h1>
-            <div className="col-2">
+            <div className="col-2" style={{minWidth: "164px"}}
+>
                 <button
                     type="button"
-                    className="btn btn-outline-warning w-100"
-                    style={{minWidth: "164px"}}
+                    className="btn btn-outline-warning w-100 my-2 my-sm-0"
                     onClick={onUpdateClick}
                 >Update</button>
             </div>
