@@ -107,7 +107,7 @@ class EvalTopic(Base):
         return tweet_by_id
 
     def state(self):
-        tweet_by_id = self.tweet_by_id(relevant_only=True)
+        tweet_by_id = self.tweet_by_id(relevant_only=True, query_tweets=False)
 
         tweets_by_cluster = {}
         for cluster in self.clusters:
