@@ -15,9 +15,10 @@ function tweetCluster(tweets, clusterID) {
 }
 
 function clusterNewName(tweets, clusterID){
-    const tw = tweetCluster(tweets, clusterID)
+    // const tw = tweetCluster(tweets, clusterID)
 
-    return tw.length > 0 ? tw[0].text : ''
+    // return tw.length > 0 ? tw[0].text : ''
+    return ''
 }
 
 function clusterFirstTweetID(tweets, clusterID) {
