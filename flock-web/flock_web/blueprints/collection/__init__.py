@@ -460,6 +460,11 @@ def cluster_eval_topic(rts_id):
 
     return jsonify(state)
 
+@bp_collection.route('/eval/topics/<rts_id>/cluster.json')
+@flask_login.login_required
+def cluster_eval_topic_json(rts_id):
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=rts_id, collection=g.collection).one()
+    return jsonify(eval_topic.state())
 
 @bp_collection.route('/eval/topics/<eval_topic_rts_id>/cluster/assign_tweet', methods=['POST'])
 @flask_login.login_required

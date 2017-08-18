@@ -11,7 +11,7 @@
  window.ASSIGN_TWEET_TO_CLUSTER_URL = '{{ url_for('.assign_tweet_to_eval_cluster', eval_topic_rts_id=eval_topic.rts_id) }}';
  window.TOPICS_URL = '{{ url_for('.user_eval_topics') }}';
  window.SWAP_CLUSTERS_URL = '{{ url_for('.swap_clusters', eval_topic_rts_id=eval_topic.rts_id) }}';
-
+ window.STATE_URL = '{{ url_for('.cluster_eval_topic_json', rts_id=eval_topic.rts_id) }}'
  window.cluster();
 </script>
 {% endblock extra_scripts %}

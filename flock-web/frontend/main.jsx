@@ -407,7 +407,6 @@ function receiveTask(url) {
         return fetch(
             url,
             {credentials: 'include'},
-
         )
             .then(
                 response => response.json(),
@@ -425,7 +424,18 @@ function receiveTask(url) {
                 }
             )
     }
+}
 
+function receiveState() {
+    return dispatch => {
+        return fetch(
+            window.STATE_URL,
+            {credentials: 'include'},
+        ).then(
+            response => response.json(),
+            error => console.log('Ann error occured', error),
+        ).then(json =>dispatch(receiveBackend(json)))
+    }
 }
 
 /* Components */
@@ -433,9 +443,19 @@ function receiveTask(url) {
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-let TopicInfo= ({ topic, full=true}) => (
+let TopicInfo= ({ topic, onUpdateClick, full=true}) => (
     <div>
-        <h1>Evaluation topic {topic.title}</h1>
+        <div className="row">
+            <h1 className="col">Evaluation topic {topic.title}</h1>
+            <div className="col-2">
+                <button
+                    type="button"
+                    className="btn btn-outline-warning w-100"
+                    style={{minWidth: "164px"}}
+                    onClick={onUpdateClick}
+                >Update</button>
+            </div>
+        </div>
         {full &&
          <div>
              {(topic.title !== null) &&
@@ -466,7 +486,10 @@ let TopicInfo= ({ topic, full=true}) => (
         }
     </div>
 )
-TopicInfo = connect(state => ({topic: state.backend.topic}))(TopicInfo)
+TopicInfo = connect(
+    state => ({topic: state.backend.topic}),
+    dispatch => ({onUpdateClick: () => {dispatch(receiveState())}})
+)(TopicInfo)
 
 let AddCluster = ({tweets, visibleClusterID, newClusterName, dispatch }) => {
     let input
@@ -502,7 +525,7 @@ let AddCluster = ({tweets, visibleClusterID, newClusterName, dispatch }) => {
                         />
                     </div>
                     <div className="col-2" style={{minWidth: "164px"}}>
-                        <button className="btn btn-outline-success my-2 my-sm-0 w-100" type="submit">
+                        <button className="btn btn-success my-2 my-sm-0 w-100" type="submit">
                             Add Cluster
                         </button>
                     </div>
@@ -748,6 +771,7 @@ TweetList = connect(
         }
     ),
 )(TweetList)
+
 
 function tweetClusterApp(state={}, action) {
     switch (action.type) {
