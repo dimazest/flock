@@ -1025,7 +1025,7 @@ TweetFilter = connect(
     }),
 )(TweetFilter)
 
-let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, selection_args, onJudgmentClick, tweetFilter, reverseTweets, topic, collection}) => {
+let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, selection_args, onJudgmentClick, tweetFilter, reverseTweets, topic, collection, tweetsRequested}) => {
     let filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id].assessor === tweetFilter))
 
     if (reverseTweets) {
@@ -1035,6 +1035,12 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, selection_ar
     const doneMessage = <div className={"alert alert-success"} role="alert">
         <strong>All tweets are judged.</strong> <a className="alert-link" href={window.TOPICS_URL}>Show the topic list.</a>
     </div>
+
+    if (tweetsRequested) {
+        return <div className="alert alert-info">
+            <strong>Loading tweets...</strong>
+        </div>
+    }
 
     if (!filteredTweets.length) {
         let message = ""
@@ -1067,7 +1073,8 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, selection_ar
 
     }
 
-    const done = !Object.values(judgments).filter((j) => (j.assessor === null)).length
+    const unjudgedTweets = tweets.filter(tweet => ((!judgments[tweet.id]) || judgments[tweet.id].assessor === null))
+    const done = !unjudgedTweets.length
 
     return <div>
         {done && doneMessage}
@@ -1097,6 +1104,7 @@ TweetJudgmentList.propTypes = {
     selection_args: PropTypes.object,
     onJudgmentClick: PropTypes.func,
     reverseTweets: PropTypes.bool.isRequired,
+    tweetsRequested: PropTypes.bool,
 }
 TweetJudgmentList = connect(
     state => ({
@@ -1108,6 +1116,7 @@ TweetJudgmentList = connect(
         reverseTweets: state.frontend.reverseTweets,
         selection_args: state.backend.selection_args,
         collection: state.backend.collection,
+        tweetsRequested: state.frontend.tweetsRequested,
     }),
     dispatch => ({
         showMore: (() => {dispatch(showMoreTweets())}),
@@ -1173,7 +1182,11 @@ function devJudgeApp(state={}, action) {
                 backend: {
                     ...state.backend,
                     ...action.tweetsAndJudgments,
-                }
+                },
+                frontend: {
+                    ...state.frontend,
+                    tweetsRequested: false,
+                },
             }
         case FILTER_TWEETS: {
             return {
@@ -1192,6 +1205,15 @@ function devJudgeApp(state={}, action) {
                 frontend: {
                     ...state.frontend,
                     reverseTweets: !state.frontend.reverseTweets,
+                }
+            }
+        }
+        case REQUEST_RECEIVE_TASK: {
+            return {
+                ...state,
+                frontend: {
+                    ...state.frontend,
+                    tweetsRequested: true,
                 }
             }
         }
@@ -1216,6 +1238,7 @@ window.devTweets = () => {
             tweetsShown: 0,
             tweetFilter: 'all',
             reverseTweets: false,
+            tweetsRequested: false,
         },
     }
 
@@ -1233,5 +1256,5 @@ window.devTweets = () => {
         document.getElementById('tweets')
     )
 
-    store.dispatch(receiveTask(window.STATE_URL))
+    store.dispatch(receiveTask(window.TWEET_TASK_URL))
 }
