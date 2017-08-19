@@ -241,9 +241,9 @@
 
     window.JUDGE_TWEET_URL = '{{ url_for('main.relevance') }}';
     window.CSRF_TOKEN = '{{ csrf_token() }}';
-
     window.SELECTION_ARGS = {{ selection_for_topic_args|safe }};
     window.COLLECTION = '{{ g.collection }}';
+
     window.devTweets();
   </script>
   {% endblock extra_scripts %}

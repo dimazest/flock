@@ -17,6 +17,7 @@
    window.CSRF_TOKEN = '{{ csrf_token() }}';
    window.JUDGE_TWEET_URL = '{{ url_for('main.relevance') }}';
    window.TOPICS_URL = '{{url_for('.user_eval_topics')}}';
+   window.STATE_URL = '{{ url_for('.eval_topic_json', rts_id=eval_topic.rts_id) }}'
 
    window.judge();
  </script>

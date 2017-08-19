@@ -265,20 +265,10 @@ function judgeTweet(tweet_id, rts_id, topic_id, judgment, selection_args, collec
                     selection_args,
                 }),
             },
+        ).then(
+            response => dispatch(receiveState()),
+            error => console.log('An error occured', error)
         )
-            .then(
-                response => response.json(),
-                error => console.log('An error occured', error)
-            )
-            .then(
-                json => {
-                    if (json.empty) {
-                        dispatch(receiveTask(window.TWEET_TASK_URL))
-                    } else {
-                        dispatch(receiveTweetsAndJudgments(json))
-                    }
-                }
-            )
     }
 }
 
@@ -435,7 +425,7 @@ function receiveState() {
         ).then(
             response => response.json(),
             error => console.log('Ann error occured', error),
-        ).then(json =>dispatch(receiveBackend(json)))
+        ).then(json => dispatch(receiveTweetsAndJudgments(json)))
     }
 }
 
@@ -1243,5 +1233,5 @@ window.devTweets = () => {
         document.getElementById('tweets')
     )
 
-    store.dispatch(receiveTask(window.TWEET_TASK_URL))
+    store.dispatch(receiveTask(window.STATE_URL))
 }
