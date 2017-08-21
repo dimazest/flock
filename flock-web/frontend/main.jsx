@@ -425,7 +425,15 @@ function receiveState() {
         ).then(
             response => response.json(),
             error => console.log('Ann error occured', error),
-        ).then(json => dispatch(receiveTweetsAndJudgments(json)))
+        ).then(
+            json => {
+                if (window.JUDGE_TWEET_URL) {
+                    dispatch(receiveTweetsAndJudgments(json))
+                } else {
+                    dispatch(receiveBackend(json))
+                }
+            }
+        )
     }
 }
 
