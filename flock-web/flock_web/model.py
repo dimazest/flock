@@ -155,6 +155,7 @@ class EvalTopic(Base):
             'title': self.title,
             'description': getattr(self, 'description', 'SOME DESCRIPTION'),
             'narrative': getattr(self, 'narrative', 'SOME NARRATIVE'),
+            'collection': self.topic.collection,
         }
 
     def tweets_to_dict(self, tweets):
