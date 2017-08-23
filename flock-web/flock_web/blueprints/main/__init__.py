@@ -353,6 +353,20 @@ def eval_relevance(eval_topic_rts_id, judgment, collection, tweet_id, from_dev):
     )
 
     db.session.execute(insert_stmt)
+
+    if judgment is None or judgment < 1:
+        assignemt = db.session.query(
+            fw_model.EvalClusterAssignment
+        ).get(
+            (
+                eval_topic_rts_id,
+                collection,
+                tweet_id,
+            )
+        )
+        if assignemt:
+            db.session.delete(assignemt)
+
     db.session.flush()
 
     eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=eval_topic_rts_id, collection=collection).one()

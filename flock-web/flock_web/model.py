@@ -155,7 +155,7 @@ class EvalTopic(Base):
             'title': self.title,
             'description': getattr(self, 'description', 'SOME DESCRIPTION'),
             'narrative': getattr(self, 'narrative', 'SOME NARRATIVE'),
-            'collection': self.topic.collection,
+            'collection': self.collection,
         }
 
     def tweets_to_dict(self, tweets):
@@ -231,7 +231,12 @@ class EvalClusterAssignment(Base):
     )
 
     eval_cluster_rts_id = sa.Column(sa.Integer)
-    eval_cluster = sa.orm.relationship('EvalCluster', backref='assignments', cascade='all, delete-orphan', single_parent=True)
+    eval_cluster = sa.orm.relationship(
+        'EvalCluster',
+        backref=sa.orm.backref(
+            'assignments', cascade='all, delete-orphan', single_parent=True,
+        )
+    )
 
 
 class TopicQuery(Base):
