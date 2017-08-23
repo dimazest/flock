@@ -12,6 +12,7 @@
  window.TOPICS_URL = '{{ url_for('.user_eval_topics') }}';
  window.SWAP_CLUSTERS_URL = '{{ url_for('.swap_clusters', eval_topic_rts_id=eval_topic.rts_id) }}';
  window.STATE_URL = '{{ url_for('.cluster_eval_topic_json', rts_id=eval_topic.rts_id) }}'
+ window.JUDGE_TWEET_URL = '{{ url_for('main.relevance') }}';
 
  window.cluster();
 </script>

@@ -267,10 +267,13 @@ function judgeTweet(tweet_id, rts_id, topic_id, judgment, selection_args, collec
             },
         ).then(
             response => {
+
                 if (window.TWEET_TASK_URL !== undefined) {
                     dispatch(receiveTask(window.TWEET_TASK_URL))
-                } else {
+                else if (window.STATE_URL !== undefined) {
                     dispatch(receiveState())
+                } else {
+                    dispatch(receiveBackend())
                 }
             },
             error => console.log('An error occured', error)
@@ -433,10 +436,10 @@ function receiveState() {
             error => console.log('Ann error occured', error),
         ).then(
             json => {
-                if (window.JUDGE_TWEET_URL) {
-                    dispatch(receiveTweetsAndJudgments(json))
-                } else {
+                if (window.CLUSTER_URL) {
                     dispatch(receiveBackend(json))
+                } else {
+                    dispatch(receiveTweetsAndJudgments(json))
                 }
             }
         )
@@ -453,7 +456,7 @@ let TopicInfo= ({ topic, onUpdateClick, full=true}) => (
         <div className="row">
             <h1 className="col">Evaluation topic {topic.title}</h1>
             <div className="col-2" style={{minWidth: "164px"}}
->
+            >
                 <button
                     type="button"
                     className="btn btn-outline-warning w-100 my-2 my-sm-0"
@@ -493,7 +496,9 @@ let TopicInfo= ({ topic, onUpdateClick, full=true}) => (
 )
 TopicInfo = connect(
     state => ({topic: state.backend.topic}),
-    dispatch => ({onUpdateClick: () => {dispatch(receiveState())}})
+    dispatch => ({onUpdateClick: () => {
+        dispatch(receiveState())
+    }})
 )(TopicInfo)
 
 let AddCluster = ({tweets, visibleClusterID, newClusterName, dispatch }) => {
@@ -704,13 +709,23 @@ ClusterList = connect(
 import TweetEmbed from './tweet-embed'
 /* import TweetEmbed from 'react-tweet-embed'*/
 
-const ClusteredTweet = ({ tweet, onAssignClick, active }) => (
+const ClusteredTweet = ({ tweet, onAssignClick, active, onJudgmentClick }) => (
     <div className="row" key={tweet.id}>
         <div className="col-1" style={{margin: '10px'}}>
             <button className={"btn " +  (active ? "btn-primary " : "btn-outline-primary ")} style={{height: '100%'}} onClick={onAssignClick}>Assign</button>
         </div>
-        <div className="col ml-1">
+        <div className="col ml-1"  style={{maxWidth: '540px'}}>
             <TweetEmbed{...tweet} />
+        </div>
+        <div className="col-1" style={{margin: '10px'}}>
+            <div className="btn-group-vertical" style={{height: "100%"}}>
+                <button className="btn btn-outline-danger" style={{height: '50%'}} onClick={() => onJudgmentClick(0)}>
+                    <i className="fa fa-thumbs-o-down" aria-hidden="true"></i>
+                </button>
+                <button className="btn btn-outline-warning" style={{height: '50%'}} onClick={() => onJudgmentClick('missing')}>
+                    Missing
+                </button>
+            </div>
         </div>
     </div>
 )
@@ -718,9 +733,10 @@ ClusteredTweet.propTypes = {
     tweet: PropTypes.object.isRequired,
     onAssignClick: PropTypes.func,
     active: PropTypes.bool,
+    onJudgmentClick: PropTypes.func,
 }
 
-let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID=null, activeTweetID=null, tweetsShown, showMore }) => {
+let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID=null, activeTweetID=null, tweetsShown, showMore, onJudgmentClick, topic }) => {
 
     const tweetsForCluster = tweetCluster(tweets, visibleClusterID)
 
@@ -741,6 +757,7 @@ let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID
                 tweet={tweet}
                 onAssignClick={() => onAssignClick(tweet.id, activeClusterID)}
                 active={tweet.id === activeTweetID}
+                onJudgmentClick={judgment => onJudgmentClick(tweet.id, topic.rts_id, topic.topic_id, judgment, topic.collection)}
             />
         ))}
         loadMore={showMore}
@@ -750,6 +767,7 @@ let TweetList = ({ tweets, onAssignClick, visibleClusterID=null, activeClusterID
 
 }
 TweetList.propTypes = {
+    topic: PropTypes.object.isRequired,
     tweets: PropTypes.objectOf(PropTypes.array),
     onAssignClick: PropTypes.func.isRequired,
     visibleClusterID: PropTypes.number,
@@ -757,11 +775,13 @@ TweetList.propTypes = {
     activeTweetID: PropTypes.string,
     tweetsShown: PropTypes.number,
     showMore: PropTypes.func,
+    onJudgmentClick: PropTypes.func,
 }
 
 TweetList = connect(
     state => (
         {
+            topic: state.backend.topic,
             tweets: state.backend.tweets,
             visibleClusterID: state.frontend.visibleClusterID,
             activeClusterID: state.frontend.activeClusterID,
@@ -773,6 +793,7 @@ TweetList = connect(
         {
             onAssignClick: (tweet_id, activeClusterID) => {dispatch(assignTweet(tweet_id, activeClusterID))},
             showMore: (() => {dispatch(showMoreTweets())}),
+            onJudgmentClick: (tweet_id, rts_id, topic_id, judgment, collection) => {dispatch(judgeTweet(tweet_id, rts_id, topic_id, judgment, null, collection))},
         }
     ),
 )(TweetList)
