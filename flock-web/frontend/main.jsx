@@ -266,7 +266,13 @@ function judgeTweet(tweet_id, rts_id, topic_id, judgment, selection_args, collec
                 }),
             },
         ).then(
-            response => dispatch(receiveState()),
+            response => {
+                if (window.TWEET_TASK_URL !== undefined) {
+                    dispatch(receiveTask(window.TWEET_TASK_URL))
+                } else {
+                    dispatch(receiveState())
+                }
+            },
             error => console.log('An error occured', error)
         )
     }
@@ -1044,13 +1050,14 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, selection_ar
         <strong>All tweets are judged.</strong> <a className="alert-link" href={window.TOPICS_URL}>Show the topic list.</a>
     </div>
 
+    let tweet_requested_message = null;
     if (tweetsRequested) {
-        return <div className="alert alert-info">
+        tweet_requested_message = <div className="alert alert-info">
             <strong>Loading tweets...</strong>
         </div>
     }
 
-    if (!filteredTweets.length) {
+    if (!filteredTweets.length && !tweetsRequested) {
         let message = ""
         let type = "warning"
 
@@ -1085,7 +1092,8 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, selection_ar
     const done = !unjudgedTweets.length
 
     return <div>
-        {done && doneMessage}
+        {tweet_requested_message && !tweets.length && tweet_requested_message}
+        {!tweet_requested_message && done && doneMessage}
         <InfiniteScroll
             children={filteredTweets.slice(0, tweetsShown).map(tweet => (
                 <JudgedTweet
