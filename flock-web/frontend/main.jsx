@@ -270,6 +270,7 @@ function judgeTweet(tweet_id, rts_id, topic_id, judgment, selection_args, collec
 
                 if (window.TWEET_TASK_URL !== undefined) {
                     dispatch(receiveTask(window.TWEET_TASK_URL))
+                }
                 else if (window.STATE_URL !== undefined) {
                     dispatch(receiveState())
                 } else {
