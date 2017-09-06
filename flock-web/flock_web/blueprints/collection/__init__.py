@@ -527,11 +527,14 @@ def qrelsfile():
             )
         )
         for j in judgments:
-            judgment = j.judgment if j.judgment is not None else ''
+            judgment = j.judgment if j.judgment is not None else '-1'
             if j.missing:
                 judgment = -2
 
-            yield '{j.eval_topic_rts_id} Q0 {j.tweet_id} {judgment}'.format(j=j, judgment=judgment)
+            yield (
+                '{j.eval_topic_rts_id} Q0 {j.tweet_id} {judgment} {origin} {j.crowd_relevant} {j.crowd_not_relevant}'
+                .format(j=j, judgment=judgment, origin='pool' if not j.from_dev else 'search')
+            )
 
     return Response('\n'.join(records()), 200, mimetype='text/text')
 
