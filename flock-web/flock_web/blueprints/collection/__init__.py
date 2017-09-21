@@ -562,6 +562,6 @@ def glosees():
         )
 
         for c in clusters:
-            yield '{c.eval_topic_rts_id}\t{c.rts_id}\t{c.gloss}'.format(c=c)
+            yield '{c.eval_topic_rts_id}\t{c.rts_id}\t{c.gloss}'.format(c=c).replace('\n', ' ')
 
     return Response('\n'.join(records()), 200, mimetype='text/text')
