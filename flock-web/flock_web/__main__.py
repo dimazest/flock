@@ -15,11 +15,10 @@ import flock_web.model as fw_model
 
 
 logger = logging.getLogger(__name__)
-
+click_log.basic_config(logger)
 
 @click.group()
-@click_log.simple_verbosity_option()
-@click_log.init('flock-web')
+@click_log.simple_verbosity_option(logger=logger)
 def cli():
     pass
 
