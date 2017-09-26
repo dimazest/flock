@@ -72,6 +72,9 @@ Generate Javascript frontend
 
 # Install yarn and npm
 conda install yarn
+
+cd flock-web
+
 # Install webpack
 npm install webpack
 
@@ -92,6 +95,11 @@ bin/circusctl
 (circusctl) start flock-web  # Start flock-web, the main backend process
 
 # You are ready to open http://localhost:8080, but insert data first.
+# If you want to access the web backend from a remote machine, you will
+# either need to:
+#
+# * open port 8080 (or rather set up a rverse proxy)
+# * ssh -L8080:localhost:8080 $HOST
 ```
 
 Insert the data
