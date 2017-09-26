@@ -24,6 +24,13 @@ conda install psycopg2 pyzmq psutil gensim numpy scikit-learn scipy
 
 # Bootstrap and initially deploy the project
 python bootstrap-buildout.py
+
+# You should have these envinroment variables set. They should be Twitter
+# credentials.
+# export ACCESS_TOKEN="..."
+# export ACCESS_TOKEN_SECRET="..."
+# export CONSUMER_KEY="..."
+# export CONSUMER_SECRET="..."
 bin/buildout
 ```
 
@@ -56,8 +63,48 @@ Init the DB
 
 bin/flock initdb
 bin/flock-web initdb
+```
 
+Generate Javascript frontend
+```bash
+# In a separate tab
+. ~/miniconda3/bin/activate flock-udel
 
+# Install yarn and npm
+conda install yarn
+# Install webpack
+npm install webpack
+
+# Create a bundle.js
+node_modules/webpack/bin/webpack.js
+
+# During development, watch for the changes, so the .js files are regenerated
+node_modules/webpack/bin/webpack.js -w
+```
+
+Start the backend
+```bash
+# In a separate tab, start the circus deamon. It will take care of running processes
+bin/circusd parts/etc/circus.ini
+
+# In another separate tab, start circusctl, a client to circusd
+bin/circusctl
+(circusctl) start flock-web  # Start flock-web, the main backend process
+
+# You are ready to open http://localhost:5000
+```
+
+Insert the data
+```bash
+# Create a folder to track inserted pools
+mkdir rts/17/pools-inserted
+
+# Process the qurels file
+# It will create a user with firstname 'Dmitrijs' and lastname 'hi'.
+bin/python src/produce/produce rts/17/qrels-sorted.inserted
+
+# Insert topic metadata
+bin/python src/produce/produce rts/17/topics.json.inserted
 ```
 
 # Copyright notice
@@ -66,4 +113,3 @@ Government Legal
 
 This software was produced by NIST, an agency of the U.S. government, and by statute is not subject to copyright in the United States.
 Recipients of this software assume all responsibilities associated with its operation, modification and maintenance.
-~/miniconda3/bin/conda create -n flock-udel python=3.6
