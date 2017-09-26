@@ -91,7 +91,7 @@ bin/circusd parts/etc/circus.ini
 bin/circusctl
 (circusctl) start flock-web  # Start flock-web, the main backend process
 
-# You are ready to open http://localhost:5000
+# You are ready to open http://localhost:8080, but insert data first.
 ```
 
 Insert the data
@@ -106,6 +106,8 @@ bin/python src/produce/produce rts/17/qrels-sorted.inserted
 # Insert topic metadata
 bin/python src/produce/produce rts/17/topics.json.inserted
 ```
+
+Now you are ready to open http://localhost:8080, after logging in (Dmitrijs, hi), you should be redirected to http://localhost:8080/c/RTS17/eval/topics
 
 # Copyright notice
 
