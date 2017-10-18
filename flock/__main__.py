@@ -21,6 +21,7 @@ except ImportError:
     compat.register()
 
 logger = logging.getLogger(__name__)
+click_log.basic_config(logger)
 
 
 tables = [table for name, table in model.metadata.tables.items() if name not in ('tweet_representative', 'filtered_tweets', 'feature_scores', 'feature_counts')]
@@ -41,8 +42,7 @@ def create_session(ctx, param, value):
 
 
 @click.group()
-@click_log.simple_verbosity_option()
-@click_log.init('flock')
+@click_log.simple_verbosity_option(logger=logger)
 def cli():
     pass
 
