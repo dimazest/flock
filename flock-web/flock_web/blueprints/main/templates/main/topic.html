@@ -8,7 +8,7 @@
 
   <div class="row justify-content-md-center">
     <div class="col col-5">
-
+      {#
       <h1>Topic</h1>
 
       <form method="POST" action="{{ url_for('.topic_post') }}">
@@ -73,15 +73,15 @@
           <button class="btn btn-lg btn-primary" type="submit">Submit</button>
         </div>
       </form>
-
+      #}
       <h2>Queries</h2>
 
       {{ m.render_topic_queries_table([topic], show_topics=False, current_app=current_app) }}
-
+      {#
       <h2>Tweets</h2>
 
       {{ rm.render_tweets(tweets, show_images=True, show_alert=False) }}
-
+      #}
     </div>
   </div>
 

@@ -60,7 +60,7 @@ body {
 blockquote.twitter-tweet {
     display: inline-block;
     padding-bottom: 10px;
-    max-width: 468px;
+    max-width: 500px;
     border: none;
 }
 
@@ -87,8 +87,8 @@ iframe.twitter-tweet-rendered {
 }
 
 div.custom-tweet {
-    margin: 0 !important;
-
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 blockquote.twitter-tweet-error {
@@ -96,9 +96,10 @@ blockquote.twitter-tweet-error {
     padding: 0;
 }
 
-
 .tweet-outer {
     border: none;
+    max-width: 500px;
+    min-height: 150;
 }
 
 .tweet-outer-meta {

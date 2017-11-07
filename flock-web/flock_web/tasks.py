@@ -174,7 +174,7 @@ def cluster_selection(self, selection_args):
                     list(tokens),
                     int(size)
                 ),
-        )
+            )
 
     result = sorted(result, key=lambda i: (len(i[0]), i[1]), reverse=True)
 

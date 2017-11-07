@@ -110,7 +110,7 @@ class Tweet(Base):
 
 
 class Story(Base):
-    __tablename__ ='story'
+    __tablename__ = 'story'
     __table_args__ = (
         sa.UniqueConstraint('story_id', 'collection'),
     )

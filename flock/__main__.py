@@ -9,7 +9,6 @@ from poultry import readline_dir
 
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql as pg
-from sqlalchemy.exc import ProgrammingError
 
 from . import model
 
@@ -22,6 +21,7 @@ except ImportError:
     compat.register()
 
 logger = logging.getLogger(__name__)
+click_log.basic_config(logger)
 
 
 tables = [table for name, table in model.metadata.tables.items() if name not in ('tweet_representative', 'filtered_tweets', 'feature_scores', 'feature_counts')]
@@ -42,8 +42,7 @@ def create_session(ctx, param, value):
 
 
 @click.group()
-@click_log.simple_verbosity_option()
-@click_log.init('flock')
+@click_log.simple_verbosity_option(logger=logger)
 def cli():
     pass
 
@@ -88,7 +87,7 @@ def export(clusters, source):
     result = '\n\n'.join(
         template.format(
             source=s,
-            conditions = ' or '.join("'{} ' in ttext".format(u) for u in users)
+            conditions=' or '.join("'{} ' in ttext".format(u) for u in users)
         )
         for s, users in clusters.items() if not source or s in source
     )
@@ -110,12 +109,15 @@ def insert(source, session, clusters, collection, extract_retweets, language):
     rows = []
 
     stmt = pg.insert(model.Tweet.__table__)
-    stmt = stmt.on_conflict_do_update(
+    stmt = stmt.on_conflict_do_nothing(
         index_elements=['tweet_id', 'collection'],
-        set_={
-            'features': stmt.excluded.features,
-        }
     )
+    # stmt = stmt.on_conflict_do_update(
+    #     index_elements=['tweet_id', 'collection'],
+    #     set_={
+    #         'features': stmt.excluded.features,
+    #     }
+    # )
 
     tweets = readline_dir(source, extract_retweets=extract_retweets)
     if language:
@@ -205,7 +207,6 @@ def query_user_ids(poultry_config, clusters):
 def find_near_matches(session, collection, index_size, probability_index_near_match):
     from simhash import Simhash, SimhashIndex
     logging.getLogger().setLevel(logging.CRITICAL)
-
 
     tweet_id_simhash_value = session.execute(
         sa.select([model.Tweet.tweet_id, model.Tweet.features['filter','simhash']])

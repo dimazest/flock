@@ -85,7 +85,6 @@ def restricted_url(endpoint=None, include=None, exclude=None, **single_args):
             args.setlist(k, [v for v in args.getlist(k) if v != to_exclude])
 
     other_args = {}
-    collection = g.collection if hasattr(g, 'collection') else None
     for k, v in single_args.items():
         if k in ('collection', 'task_id'):
             other_args[k] = v
@@ -164,7 +163,7 @@ def create_app(config_file, return_celery=False):
 
     @app.before_request
     def track_user():
-        if  not current_user.is_authenticated or not request.endpoint or request.endpoint.startswith(
+        if not current_user.is_authenticated or not request.endpoint or request.endpoint.startswith(
                 (
                     '_debug_toolbar', 'collection.task_result', 'static', 'main.user',
                     'collection.cluster_status',
@@ -175,7 +174,9 @@ def create_app(config_file, return_celery=False):
         request_form = dict(request.form.lists())
 
         if request.endpoint == 'main.relevance':
-            request_form['selection_args'] = [json.loads(arg) for arg in request_form['selection_args']]
+            data = request.get_json()
+            if 'selection_args' in data:
+                request_form['selection_args'] = data['selection_args']
 
         if 'csrf_token' in request_form:
             del request_form['csrf_token']

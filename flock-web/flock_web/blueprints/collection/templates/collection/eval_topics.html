@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% import "collection/macro.html" as m %}
+
+{% block title %} Evaluation Topics {% endblock %}
+
+{% block content %}
+
+  <h1>Evaluation topics ({{ user_eval_topics.count() }})</h1>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Total</th>
+        <th>Judged</th>
+        <th>Relevant</th>
+        <th>Clustered</th>
+        <th>Queries</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for eval_topic in user_eval_topics %}
+        <tr>
+          <td>{{ eval_topic.rts_id }}</td>
+          <td>{{ eval_topic.title }}</td>
+          {% set total_count = eval_topic.tweet_count() %}
+          <td>{{ total_count }}</td>
+          {% set judged_count = eval_topic.tweet_count(judged_only=True) %}
+          <td>
+            <a
+              href="{{ url_for('.eval_topic', rts_id=eval_topic.rts_id) }}"
+              class="btn {{ "btn-secondary" if total_count == judged_count else "btn-danger"}}"
+              >
+              {{ judged_count }}
+            </a>
+          </td>
+          {% set relevant_count = eval_topic.relevant_count() %}
+          <td>{{ relevant_count }}</td>
+          {% set clustered_count = eval_topic.clustered_count() %}
+          <td>
+            <a
+              href="{{ url_for('.cluster_eval_topic', rts_id=eval_topic.rts_id) }}"
+              class="btn {{ "btn-secondary" if relevant_count == clustered_count else "btn-danger"}}"
+              >
+              {{ clustered_count }}
+            </a>
+          </td>
+          <td>
+            {% if eval_topic.topic %}
+            <a
+              href="{{ url_for('main.topic', topic_id=eval_topic.topic.id) }}"
+              class="btn btn-secondary"
+              >
+              Queries
+            </a>
+            {% endif %}
+          </td>
+          {# <td>{{ eval_topic.clustered_count() }}</td> #}
+        </tr>
+      {%- endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

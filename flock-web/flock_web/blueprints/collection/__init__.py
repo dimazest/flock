@@ -1,19 +1,15 @@
 import json
 
-from flask import render_template, Blueprint, request, redirect, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context, current_app, flash
+from flask import render_template, Blueprint, request, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context, flash
 import flask_login
 
-from sqlalchemy import func, select, Table, Column, Integer, String, sql
-from sqlalchemy.sql.expression import text, and_, or_, not_, join, column
+import sqlalchemy as sa
 from sqlalchemy.orm.exc import NoResultFound
-from paginate_sqlalchemy import SqlalchemySelectPage, SqlalchemyOrmPage
-import crosstab
-
-from celery.execute import send_task
+from sqlalchemy.dialects import postgresql
 
 from flock import model
-from flock_web.app import db, url_for_other_page
-import flock_web.queries  as q
+from flock_web.app import db
+import flock_web.queries as q
 import flock_web.model as fw_model
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -60,7 +56,6 @@ def pull_collection(endpoint, values):
     if g.cluster:
         assert g.clustered_selection_id is not None
 
-
     topic_id = request.args.get('topic', None, type=int)
     if topic_id is not None:
         g.topic = db.session.query(fw_model.Topic).get(topic_id)
@@ -95,12 +90,10 @@ def index():
 
     return render_template(
         'collection/index.html',
-        endpoint='.index',
         collection=g.collection,
         stories=stories,
         selected_story=story,
         tweets=tweets,
-        current_app=current_app,
     )
 
 
@@ -113,8 +106,8 @@ def tweets():
 
         return (redirect(url_for('.index')))
 
-    page_num = request.args.get('_page', 1, type=int)
-    items_per_page = request.args.get('_items_per_page', 100, type=int)
+    # page_num = request.args.get('_page', 1, type=int)
+    # items_per_page = request.args.get('_items_per_page', 100, type=int)
 
     tweet_task, tweet_count = (
         g.celery.send_task(
@@ -128,16 +121,9 @@ def tweets():
                 'clustered_selection_id': g.clustered_selection_id,
                 'count': count,
             },
-           queue=f'tweets_{g.query_type}',
+            queue=f'tweets_{g.query_type}',
         ) for count in (False, True)
     )
-
-    # page = SqlalchemyOrmPage(
-    #     tweets,
-    #     page=page_num,
-    #     items_per_page=items_per_page,
-    #     url_maker=url_for_other_page,
-    # )
 
     if g.clustered_selection_id:
         clusters = q.build_cluster_query(g.clustered_selection_id)
@@ -175,23 +161,14 @@ def tweets():
             'collection/tweets.html',
             tweet_task=tweet_task,
             tweet_count=tweet_count,
-            # page=page,
             stats=stat_tasks,
-            query=g.query,
             query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
             filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
             selection_args=json.dumps(g.selection_args),
             selection_for_topic_args=json.dumps(selection_for_topic_args),
             topics=flask_login.current_user.topics,
-            selected_filter=g.filter,
             clusters=clusters,
-            selected_cluster=g.cluster,
-            collection=g.collection,
-            show_images=g.show_images,
-            endpoint='.tweets',
-            selected_topic=g.topic,
             # relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
-            current_app=current_app,
         ),
     )
     response.headers['X-Accel-Buffering'] = 'no'
@@ -227,107 +204,6 @@ def tweets_json():
             ) + '\r\n'
 
     return Response(stream_with_context(generate()), mimetype='text/plain')
-
-
-@bp_collection.route('/tweets/<feature_name>')
-@flask_login.login_required
-def features(feature_name):
-    other_feature = request.args.get('_other', None)
-    unstack = request.args.get('_unstack', None) if other_feature is not None else None
-    other_feature_values = None
-
-    page_num = int(request.args.get('_page', 1))
-    items_per_page = int(request.args.get('_items_per_page', 100))
-
-    feature_select = stats_for_feature(feature_name, g.feature_filter_args)
-
-    page = SqlalchemySelectPage(
-        db.session, feature_select,
-        page=page_num, items_per_page=items_per_page,
-        url_maker=url_for_other_page,
-    )
-    items = page.items
-
-    if other_feature is not None:
-        feature_column = sql.literal_column('feature', String)
-        other_feature_column = sql.literal_column('other_feature', String)
-        stmt = (
-            select(
-                [feature_column, other_feature_column, func.count()]
-            )
-            .select_from(
-                text(
-                    'tweet, '
-                    'jsonb_array_elements_text(tweet.features->:feature) as feature, '
-                    'jsonb_array_elements_text(tweet.features->:other_feature) as other_feature'
-                ).bindparams(feature=feature_name, other_feature=other_feature)
-            ).where(
-                and_(
-                    sql.literal_column('collection') == g.collection,
-                    feature_column.in_(
-                        feature_select
-                        .with_only_columns(['feature'])
-                        .offset((page_num - 1) * items_per_page)
-                        .limit(items_per_page)
-                    )
-                )
-            )
-            .group_by(feature_column, other_feature_column)
-        )
-
-        items = db.session.execute(stmt.order_by(func.count().desc()))
-
-    if unstack:
-        other_feature_values_select = (
-            select([other_feature_column.distinct()])
-            .select_from(stmt.alias())
-        )
-        other_feature_values = [
-            v for v, in
-            db.session.execute(other_feature_values_select.order_by(other_feature_column))
-        ]
-
-        from sqlalchemy import MetaData
-        ret_types = Table(
-            '_t_', MetaData(),
-            Column('feature', String),
-            extend_existing=True,
-            *[Column(v, Integer) for v in other_feature_values]
-        )
-
-        row_total = crosstab.row_total(
-            [ret_types.c[v] for v in other_feature_values]
-        ).label('total')
-
-        stmt = (
-            select(
-                [
-                    '*', row_total,
-                ]
-            )
-            .select_from(
-                crosstab.crosstab(
-                    stmt,
-                    ret_types,
-                    categories=other_feature_values_select,
-                )
-            )
-            .order_by(
-                row_total.desc(),
-                ret_types.c.feature,
-            )
-        )
-
-        items = db.session.execute(stmt)
-
-    return render_template(
-        'collection/features.html',
-        feature_name=feature_name,
-        other_feature_name=other_feature,
-        other_feature_values=other_feature_values,
-        page=page,
-        items=items,
-    )
 
 
 @bp_collection.route('/cluster', methods=['POST'])
@@ -413,6 +289,42 @@ def task_result(task_id):
                     show_images=g.show_images,
                     relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
                 )
+
+                result['backendState'] = {}
+
+                if g.topic:
+                    result['backendState']['topic'] = {
+                        'title': '',
+                        'description': '',
+                        'narrative': '',
+                        'rts_id': g.topic.eval_topic.rts_id if g.topic.eval_topic else None,
+                        'topic_id': g.topic.id,
+                    }
+
+                    judgments = {
+                        str(j.tweet_id): {
+                            'assessor': j.judgment if not j.missing else 'missing',
+                            'crowd_relevant': j.crowd_relevant,
+                            'crowd_not_relevant': j.crowd_not_relevant,
+                        }
+                        for j in g.topic.eval_topic.judgments
+                    }
+                else:
+                    judgments = {}
+
+                result['backendState']['tweets'] = [
+                    {
+                        'created_at': t['created_at'],
+                        'id': str(t['tweet_id']),
+                        'screen_name': t['features']['repr']['user__screen_name'],
+                        'user_name': t['features']['repr']['user__name'],
+                        'text': t['features']['repr']['text'],
+                    }
+                    for t in task.result['data'] if str(t['tweet_id']) not in judgments
+                ]
+
+                result['backendState']['judgments'] = {}
+
         elif task.result.get('task_name') == 'flock_web.tasks.stats_for_feature':
             render_stats = get_template_attribute('collection/macro.html', 'render_stats')
 
@@ -470,3 +382,186 @@ def task_result(task_id):
         )
 
     return jsonify(result)
+
+
+@bp_collection.route('/eval/topics')
+@flask_login.login_required
+def user_eval_topics():
+
+    user_eval_topics = db.session.query(fw_model.EvalTopic).filter_by(user=flask_login.current_user, collection=g.collection)
+
+    return render_template(
+        'collection/eval_topics.html',
+        user_eval_topics=user_eval_topics,
+    )
+
+
+@bp_collection.route('/eval/topics/<rts_id>')
+@flask_login.login_required
+def eval_topic(rts_id):
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=rts_id, collection=g.collection).one()
+
+    return render_template(
+        'collection/eval_topic.html',
+        eval_topic=eval_topic,
+        state=eval_topic.judge_state(),
+    )
+
+
+@bp_collection.route('/eval/topics/<rts_id>.json')
+@flask_login.login_required
+def eval_topic_json(rts_id):
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=rts_id, collection=g.collection).one()
+
+    return jsonify(eval_topic.judge_state())
+
+
+@bp_collection.route('/eval/topics/<rts_id>/cluster', methods=['GET', 'POST', 'DELETE', 'PUT'])
+@flask_login.login_required
+def cluster_eval_topic(rts_id):
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=rts_id, collection=g.collection).one()
+
+    extra_state = {}
+
+    if request.method == 'GET':
+            return render_template(
+                'collection/eval_topic_cluster.html',
+                state=eval_topic.state(),
+                eval_topic=eval_topic,
+            )
+
+    request_json = request.get_json()
+
+    eval_cluster = None
+    if request.method == 'POST':
+        eval_cluster = fw_model.EvalCluster(
+            gloss=request_json['gloss'],
+            eval_topic=eval_topic,
+        )
+
+        db.session.flush()
+        extra_state['newClusterID'] = eval_cluster.rts_id
+
+    if eval_cluster is None:
+        eval_cluster = db.session.query(fw_model.EvalCluster).get((rts_id, g.collection, request_json['clusterID']))
+
+    if request.method == 'DELETE':
+        for a in eval_cluster.assignments:
+            db.session.delete(a)
+        db.session.delete(eval_cluster)
+
+    if request.method == 'PUT':
+        eval_cluster.gloss = request_json['gloss']
+
+    db.session.commit()
+
+    state = eval_topic.state()
+    state.update(extra_state)
+
+    return jsonify(state)
+
+@bp_collection.route('/eval/topics/<rts_id>/cluster.json')
+@flask_login.login_required
+def cluster_eval_topic_json(rts_id):
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=rts_id, collection=g.collection).one()
+    return jsonify(eval_topic.state())
+
+@bp_collection.route('/eval/topics/<eval_topic_rts_id>/cluster/assign_tweet', methods=['POST'])
+@flask_login.login_required
+def assign_tweet_to_eval_cluster(eval_topic_rts_id):
+    assignment = request.get_json()
+
+    t = fw_model.EvalClusterAssignment.__table__
+    insert_stmt = postgresql.insert(t).values(
+        eval_topic_rts_id=eval_topic_rts_id,
+        eval_topic_collection=g.collection,
+        tweet_id=int(assignment['tweet_id']),
+        eval_cluster_rts_id=assignment['cluster_id'],
+    )
+    insert_stmt = insert_stmt.on_conflict_do_update(
+        constraint=t.primary_key,
+        set_={'eval_cluster_rts_id': insert_stmt.excluded.eval_cluster_rts_id},
+    )
+
+    db.session.execute(insert_stmt)
+    db.session.commit()
+
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=eval_topic_rts_id, collection=g.collection).one()
+    state = eval_topic.state()
+
+    return jsonify(state)
+
+
+@bp_collection.route('/eval/topics/<eval_topic_rts_id>/cluster/swap_clusters', methods=['PUT'])
+@flask_login.login_required
+def swap_clusters(eval_topic_rts_id):
+    data = request.get_json()
+
+    cluster1 = db.session.query(fw_model.EvalCluster).get((eval_topic_rts_id, g.collection, data['clusterID1']))
+    cluster2 = db.session.query(fw_model.EvalCluster).get((eval_topic_rts_id, g.collection, data['clusterID2']))
+
+    cluster1.position, cluster2.position = cluster2.position, cluster1.position
+
+    db.session.commit()
+
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=eval_topic_rts_id, collection=g.collection).one()
+    return jsonify(eval_topic.state())
+
+
+@bp_collection.route('/eval/qrelsfile')
+def qrelsfile():
+    def records():
+        judgments = (
+            db.session.query(fw_model.EvalRelevanceJudgment)
+            .filter_by(collection=g.collection)
+            .filter(
+                sa.or_(
+                    fw_model.EvalRelevanceJudgment.judgment != None,
+                    fw_model.EvalRelevanceJudgment.missing == True,
+                )
+            )
+            .order_by(
+                fw_model.EvalRelevanceJudgment.eval_topic_rts_id,
+                fw_model.EvalRelevanceJudgment.position,
+                fw_model.EvalRelevanceJudgment.tweet_id,
+            )
+        )
+        for j in judgments:
+            judgment = j.judgment if j.judgment is not None else '-1'
+            if j.missing:
+                judgment = -2
+
+            yield (
+                '{j.eval_topic_rts_id} Q0 {j.tweet_id} {judgment} {origin} {j.crowd_relevant} {j.crowd_not_relevant}'
+                .format(j=j, judgment=judgment, origin='pool' if not j.from_dev else 'search')
+            )
+
+    return Response('\n'.join(records()), 200, mimetype='text/text')
+
+
+@bp_collection.route('/eval/clusters')
+def clusters():
+    def records():
+        assignments = (
+            db.session.query(fw_model.EvalClusterAssignment)
+            .filter_by(eval_topic_collection=g.collection)
+        )
+
+        for a in assignments:
+            yield '{a.eval_topic_rts_id} {a.eval_cluster_rts_id} {a.tweet_id}'.format(a=a)
+
+    return Response('\n'.join(records()), 200, mimetype='text/text')
+
+
+@bp_collection.route('/eval/glosses')
+def glosees():
+    def records():
+        clusters = (
+            db.session.query(fw_model.EvalCluster)
+            .filter_by(eval_topic_collection=g.collection)
+        )
+
+        for c in clusters:
+            yield '{c.eval_topic_rts_id}\t{c.rts_id}\t{c.gloss}'.format(c=c).replace('\n', ' ')
+
+    return Response('\n'.join(records()), 200, mimetype='text/text')
