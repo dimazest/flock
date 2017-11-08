@@ -1,0 +1,249 @@
+{% extends "collection/base.html" %}
+{% import "collection/macro.html" as m %}
+
+{% block title %} {{ g.query }} | {{ config.get('collection:{}'.format(g.collection), {}).get('title', g.collection) }} {% endblock %}
+
+
+{% block content %}
+
+  <div class="row">
+
+    <div class="col-xl-4 col-md-6 bg-faded sidebar bd-links">
+
+      {% if g.topic %}
+        <div class="alert alert-info" role="alert">
+          <strong>Topic: </strong> <a href="{{url_for('main.topic', topic_id=g.topic.id)}}" class="alert-link">"{{ g.topic.title }}"</a>.
+        </div>
+      {% endif %}
+
+      <div id="tweet_count"></div>
+
+      <form class="sidebar-element" action="{{ url_for('.tweets') }}" method="get">
+        <div class="row" id="sidebar-search-box">
+          <div class="col-10">
+            <input type="text" class="form-control" placeholder="Search" name="q" {% if g.query %} value="{{ g.query }}" {% endif %}>
+          </div>
+          <div class="col-2">
+            <button class="btn btn-outline-success my-2 my-sm-0 w-100" type="submit">Search</button>
+          </div>
+        </div>
+        {% for k, v in query_form_hidden_fields %}
+          <input type="hidden" name="{{ k }}" value="{{ v }}">
+        {% endfor %}
+      </form>
+
+      {% if g.topic.queries %}
+      <div class="card">
+        <h3 class="card-header">Queries</h3>
+        <div class="list-group">
+            {% for q in g.topic.queries %}
+             <a
+               class="list-group-item {{ 'active' if q.query == g.query else '' }}"
+               href="{{ url_for('collection.tweets', collection=g.collection, q=q.query, filter=q.filter, cluster=q.cluster, topic=g.topic.id, **q.filter_args_dict) }}"
+             >{{ q.query }}</a>
+            </li>
+            {% endfor %}
+        </div>
+      </div>
+
+      {% endif %}
+
+      <div id="screen_names_stats"></div>
+      <div id="hashtags_stats"></div>
+      <div id="user_mentions_stats"></div>
+
+      <div id="clusters">
+        <p>
+          <div id='clustering_progress_container' class="progress" style="display: none;">
+            <div id='clustering_progress' class="progress-bar" role="progressbar"></div>
+          </div>
+          <button id="start-clustering-task" class="btn btn-outline-success w-100">Cluster</button>
+        </p>
+      </div>
+
+    </div>
+
+    <main class="col-xl-8 offset-xl-4">
+      <div id="tweets">
+        <h1>Loading...</h1>
+      </div>
+    </main>
+
+  </div>
+
+{% endblock content %}
+
+{% block navbar_extra %}
+
+  <form class="form-inline" action="{{ url_for('.tweets') }}" method="get">
+
+    <div class="form-check mb-2 mr-5 mb-sm-0">
+      <label class="form-check-hide-images">
+        <input class="form-check-input" type="checkbox" name="show_images" {% if g.show_images %}checked{% endif %} onchange="this.form.submit()">
+        <span class="navbar-text">Show images</span>
+      </label>
+    </div>
+
+    <div class="input-group mb-2 mb-sm-0 mr-5">
+      <label class="mr-sm-2 navbar-text" for="inlineFilterSelect">Filtering</label>
+      <select name="filter" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFilterSelect" onchange="this.form.submit()">
+        {% for filter_value, filter_option in [('none', 'Disabled'), ('pmi', 'Enabled')] %}
+          <option value="{{ filter_value }}" {% if filter_value == g.filter %}selected{% endif %}>{{ filter_option }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    {% for k, v in filter_form_hidden_fields %}
+      <input type="hidden" name="{{ k }}" value="{{ v }}">
+    {% endfor %}
+  </form>
+
+  <form class="form-inline" action="{{ url_for('main.topic_post') }}" method="post" >
+
+    <label class="mr-sm-2 navbar-text" for="inlineTopicSelect">Topic</label>
+    <select name="topic_id" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineTopicSelect" onchange="this.form.submit()">
+      <option value="__none__" {% if not topic %}selected{% endif %}></option>
+      <option value="-1" style="font-weight: bold;">New ({{ g.query }})</option>
+      {% for topic in topics %}
+        <option value="{{ topic.id }}" {% if topic.id == g.topic.id %}selected{% endif %}>{{ topic.title }}</option>
+      {% endfor %}
+    </select>
+
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input type="hidden" name="selection_args" value="{{  selection_for_topic_args }}">
+    <input type="hidden" name="return_to_collection" value="{{ g.collection }}">
+
+  </form>
+
+  {% block navbar_extra_collection %}
+  {% endblock navbar_extra_collection %}
+
+  {% endblock navbar_extra %}
+
+  {% block extra_scripts %}
+  <script>
+   function start_clustering_task() {
+       $.post({
+           url: '{{ url_for('.cluster') }}',
+           data: {
+               selection_args: JSON.stringify({{ selection_args|safe }}),
+               from_url: '{{ restricted_url('.tweets')|safe }}',
+               csrf_token: '{{ csrf_token() }}',
+           },
+           success: function(data, status, request) {
+               var status_url = request.getResponseHeader('Location');
+               status_url = status_url + '?' + window.location.search.slice(1);
+
+               update_progress(status_url);
+           },
+           error: function() {
+               console.log('Unexpected error');
+           }
+       });
+   }
+
+   function update_progress(status_url){
+       $.getJSON(status_url, function(data){
+           $('#clustering_progress_container').show();
+           $('#start-clustering-task').hide();
+
+           if (data['state'] == 'PROGRESS') {
+               var progress = data['info']['current'] / data['info']['total'] * 100;
+               $('#clustering_progress').attr('style', 'width:' + progress + '%;');
+               $('#clustering_progress').html(data['info']['status']);
+           }
+           else if (data['state'] == 'SUCCESS') {
+               $('#clustering_progress_container').hide();
+               $('#clusters').html(data['html'])
+
+               return;
+           } else if (data['state'] == 'FAILURE') {
+               alert('Clustering error.')
+               return;
+           }
+           setTimeout(function(){update_progress(status_url);}, 2000);
+       });
+   }
+
+   function reset_tabindex(times=10){
+       $('*').attr('tabindex', -1);
+       $('.btn-group[data-toggle=buttons] .btn').attr('tabindex', 0)
+
+       if (times > 0) {
+           setTimeout(function(){reset_tabindex(times - 1)}, 500);
+       }
+   }
+
+   function get_task(destination, url, request_data, load_tweets, delay=300){
+       $.get({
+           url: url,
+           data: request_data,
+           success: function(data, status, request){
+               if (data['state'] == 'SUCCESS'){
+                   $(destination).html(data['html']);
+                   if (load_tweets && (typeof twttr !== 'undefined')) {
+                       twttr.widgets.load();
+                   }
+               } else {
+                   setTimeout(function(){get_task(destination, url, request_data, load_tweets, delay*1.2)}, delay);
+               }
+           }
+       });
+   }
+
+   $(document).ready(function() {
+       $('#start-clustering-task').click(start_clustering_task);
+
+       {# reset_tabindex(); #}
+
+       {#
+       get_task(
+           '#tweets',
+           '{{ url_for('.task_result', task_id=tweet_task.id) }}',
+           {show_images: '{{ 'on' if g.show_images else '' }}', topic: '{{ g.topic.id or ''}}'},
+           true
+       );
+       #}
+
+       {% for f_name, task in stats %}
+       get_task(
+           '#{{ f_name }}_stats',
+           '{{ restricted_url('.task_result', task_id=task.id)|safe }}',
+           {},
+           false
+       );
+       {% endfor %}
+       get_task(
+           '#tweet_count',
+           '{{ url_for('.task_result', task_id=tweet_count.id) }}',
+           {},
+           false
+       )
+
+       $('.btn-group[data-toggle=buttons] .btn').keydown(function(e) {
+           if (e.which == 13 || e.which == 32) {
+               $(this).click()
+           }
+       });
+   });
+
+   paceOptions = {
+       elements: {
+           selectors: ['#tweet_count p', '#screen_names_stats div', '#hashtags_stats div', '#user_mentions_stats div', 'iframe.twitter-tweet-rendered,#tweets .alert']
+       }
+   };
+  </script>
+
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <script src="{{ url_for('static', filename='bundle.js') }}"></script>
+  <script>
+    window.TWEET_TASK_URL = '{{ url_for('.task_result', task_id=tweet_task.id, topic=g.topic.id if g.topic else None) }}';
+
+    window.JUDGE_TWEET_URL = '{{ url_for('main.relevance') }}';
+    window.CSRF_TOKEN = '{{ csrf_token() }}';
+    window.SELECTION_ARGS = {{ selection_for_topic_args|safe }};
+    window.COLLECTION = '{{ g.collection }}';
+
+    window.devTweets();
+  </script>
+  {% endblock extra_scripts %}

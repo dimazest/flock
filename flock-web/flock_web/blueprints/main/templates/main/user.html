@@ -14,12 +14,14 @@
             <tr>
               <th>#</th>
               <th>Timestamp</th>
+              <th>URL</th>
               <th>User</th>
               <th>Endpoint</th>
               <th>Collection</th>
               <th>View arguments</th>
               <th>Request arguments</th>
               <th>Request form</th>
+              <th>Headers</th>
             </tr>
           </thead>
           <tbody>
@@ -27,12 +29,14 @@
               <tr>
                 <td>{{ loop.index }}</td>
                 <td>{{ action.timestamp.isoformat() }}</td>
+                <td>{{ action.url or '' }}</td>
                 <td>{{ action.user_id }}</td>
-                <td>{{ action.endpoint}}</td>
+                <td>{{ action.endpoint }}</td>
                 <td>{{ action.collection or '' }}</td>
                 <td><pre>{{ action.view_args|tojson(indent=2) }}</pre></td>
                 <td><pre>{{ action.request_args|tojson(indent=2) }}</pre></td>
                 <td><pre>{{ action.request_form|tojson(indent=2) }}</pre></td>
+                <td><pre>{{ action.headers or {}|tojson(indent=2) }}</pre></td>
               </tr>
             {% endfor %}
           </tbody>

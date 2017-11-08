@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% import "main/macro.html" as m %}
-{% import "root/macro.html" as rm %}
+{% import "collection/macro.html" as rm %}
 
 {% block title %} {{ form.title.data }} {% endblock %}
 
@@ -8,7 +8,7 @@
 
   <div class="row justify-content-md-center">
     <div class="col col-5">
-
+      {#
       <h1>Topic</h1>
 
       <form method="POST" action="{{ url_for('.topic_post') }}">
@@ -47,6 +47,16 @@
           </div>
         </div>
         <div class="form-group row">
+          {{ form.familiarity.label(class="col-2 col-form-label") }}
+          <div class="col-10 form-check form-check-inline">
+            {% for subfield in form.familiarity %}
+              <label class="form-check-label">
+                {{ subfield(class_="form-check-input") }} {{ subfield.label }}
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="form-group row">
           {{ form.inspiration.label(class="col-2 col-form-label") }}
           <div class="col-10">
             {{ form.inspiration(size=200, class_="form-control", placeholder="Own interest, Google search (provide a URL) or one of the stories.") }}
@@ -63,15 +73,15 @@
           <button class="btn btn-lg btn-primary" type="submit">Submit</button>
         </div>
       </form>
-
+      #}
       <h2>Queries</h2>
 
       {{ m.render_topic_queries_table([topic], show_topics=False, current_app=current_app) }}
-
+      {#
       <h2>Tweets</h2>
 
       {{ rm.render_tweets(tweets, show_images=True, show_alert=False) }}
-
+      #}
     </div>
   </div>
 

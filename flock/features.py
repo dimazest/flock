@@ -107,6 +107,7 @@ def filter_features(features_tweets):
             'token_without_entities_count': len(row['features']['tokenizer']['tokens_without_entities']),
             'simhash': Simhash(row['features']['tokenizer']['tokens_without_entities']).value,
             'is_retweet': bool(tweet.parsed.get('retweeted_status', False)),
+            'source': tweet.parsed['source'],
             **{
                 '{}_count'.format(entity): len(tweet.parsed['entities'][entity]) for entity in ('hashtags', 'urls', 'user_mentions')
             }

@@ -5,6 +5,10 @@ from urllib.parse import urlparse, urljoin
 from flask import render_template, Blueprint, redirect, url_for, flash, session, abort, request, render_template_string, jsonify, current_app
 import flask_login
 
+from flask_wtf import FlaskForm
+import wtforms as wtf
+from wtforms import validators
+
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql as pg
 
@@ -12,6 +16,7 @@ from flock import model
 
 from flock_web.app import db
 from flock_web import model as fw_model
+from flock_web.model import User
 
 
 bp_main = Blueprint(
@@ -25,16 +30,7 @@ bp_main = Blueprint(
 @flask_login.login_required
 def welcome():
 
-    # # size = func.count()
-    # collections = db.session.query(
-    #     model.Tweet.collection,
-    #     # size,
-    #     # func.min(model.Tweet.created_at),
-    #     # func.max(model.Tweet.created_at),
-    # ).group_by(model.Tweet.collection).order_by(
-    #     model.Tweet.collection,
-    #     # size.desc()
-    # )
+    return redirect(url_for('collection.user_eval_topics', collection='RTS17'))
 
     collections = ((c,) for c in current_app.config['COLLECTIONS'])
 
@@ -43,11 +39,6 @@ def welcome():
         collections=collections,
         current_app=current_app,
     )
-
-from flask_wtf import FlaskForm
-import wtforms as wtf
-from wtforms import validators
-from flock_web.model import User
 
 
 class LoginForm(FlaskForm):
@@ -106,7 +97,20 @@ class TopicForm(FlaskForm):
     description = wtf.TextAreaField('Description')
     narrative = wtf.TextAreaField('Narrative')
 
-    difficulty = wtf.RadioField('How easy was it to develop this topic?', choices=[('easy', 'Easy'), ('moderate', 'Moderate'), ('difficult', 'Difficult')])
+    difficulty = wtf.RadioField(
+        'How easy was it to develop this topic?',
+        [validators.Optional()],
+        choices=[('easy', 'Easy'), ('moderate', 'Moderate'), ('difficult', 'Difficult')],
+    )
+    familiarity = wtf.RadioField(
+        'How familiar are you with the topic?',
+        [validators.Optional()],
+        choices=[
+            ('VIN', 'Familiar, I was checking a specific piece of information.'),
+            ('CIN', 'Familiar, but I was interested in gaining new knowledge about the topic.'),
+            ('MIN', 'Unfamiliar, the search was in more or less unknown knowledge area.'),
+        ],
+    )
     inspiration = wtf.StringField('What was the inspiration for this topic?')
     notes = wtf.TextAreaField('General comment.')
 
@@ -129,7 +133,7 @@ def topic(topic_id=None):
         if topic_id is None:
             collection = request.form['return_to_collection']
             query = fw_model.TopicQuery(**selection_args)
-            redirect_to = url_for('root.tweets', collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, **query.filter_args_dict)
+            redirect_to = url_for('collection.tweets', collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, **query.filter_args_dict)
 
             return redirect(redirect_to)
 
@@ -148,6 +152,7 @@ def topic(topic_id=None):
 
                 topic.questionnaire.answer = {
                     'difficulty': form.difficulty.data,
+                    'familiarity': form.familiarity.data,
                     'inspiration': form.inspiration.data,
                     'notes': form.notes.data,
                 }
@@ -168,7 +173,7 @@ def topic(topic_id=None):
 
             if 'return_to_collection' in request.form:
                 collection = request.form['return_to_collection']
-                redirect_to = url_for('root.tweets', topic=topic.id, collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, **query.filter_args_dict)
+                redirect_to = url_for('collection.tweets', topic=topic.id, collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, **query.filter_args_dict)
 
             new_query_created = True
 
@@ -227,6 +232,7 @@ def topic(topic_id=None):
         tweets=tweets,
 
         difficulty=topic.questionnaire.answer.get('difficulty') if topic.questionnaire is not None else None,
+        familiarity=topic.questionnaire.answer.get('familiarity') if topic.questionnaire is not None else None,
         inspiration=topic.questionnaire.answer.get('inspiration')  if topic.questionnaire is not None else None,
         notes=topic.questionnaire.answer.get('notes')  if topic.questionnaire is not None else None,
     )
@@ -267,34 +273,104 @@ def topics_json():
 @flask_login.login_required
 def relevance():
     # XXX: this clearly needs validation.
+    data = request.get_json()
 
-    topic_id = request.form.get('topic_id', type=int)
-    tweet_id = request.form.get('tweet_id', type=int)
-    judgment = request.form.get('judgment', type=int)
+    tweet_id = int(data.get('tweet_id'))
+    judgment = data.get('judgment')
 
-    result = dict(request.form)
+    topic_id = data.get('topic_id')
+    if topic_id is not None:
+        selection_args = data.get('selection_args')
+        if selection_args:
+            query = db.session.query(fw_model.TopicQuery).filter_by(topic_id=topic_id, **selection_args).first()
+            if query is None:
+                query = fw_model.TopicQuery(topic_id=topic_id, **selection_args)
+                db.session.add(query)
+                db.session.flush()
 
-    selection_args = json.loads(request.form['selection_args']) if 'selection_args' in request.form else None
-    query = db.session.query(fw_model.TopicQuery).filter_by(topic_id=topic_id, **selection_args).first()
-    if query is None:
-        query = fw_model.TopicQuery(topic_id=topic_id, **selection_args)
-        db.session.add(query)
-        db.session.flush()
+        stmt = pg.insert(fw_model.RelevanceJudgment.__table__)
+        stmt = stmt.on_conflict_do_update(
+            index_elements=['topic_id', 'tweet_id'],
+            set_={
+                'judgment': stmt.excluded.judgment,
+            },
+        )
 
-        result['new_query_id'] = query.id
+        dev_judgment = {
+            None: 0,
+            'missing': 0,
+            0: -1,
+        }.get(judgment, judgment)
 
-    stmt = pg.insert(fw_model.RelevanceJudgment.__table__)
-    stmt = stmt.on_conflict_do_update(
-        index_elements=['topic_id', 'tweet_id'],
-        set_={
-            'judgment': stmt.excluded.judgment,
-        },
-    )
+        db.session.execute(
+            stmt.values(
+                topic_id=topic_id,
+                tweet_id=tweet_id,
+                judgment=dev_judgment,
+            )
+        )
 
-    db.session.execute(stmt, [{'topic_id': topic_id, 'tweet_id': tweet_id, 'judgment': judgment}])
+    if data['rts_id']:
+        result = eval_relevance(
+            data['rts_id'],
+            judgment,
+            data['collection'],
+            tweet_id,
+            from_dev=True,
+        )
+
+    if topic_id is not None:
+        result = {'empty': True}
+
     db.session.commit()
 
     return jsonify(result)
+
+
+def eval_relevance(eval_topic_rts_id, judgment, collection, tweet_id, from_dev):
+    if judgment == 'missing':
+        judgment = None
+        missing = True
+    else:
+        judgment = judgment if judgment is not None else None
+        missing = False
+
+    t = fw_model.EvalRelevanceJudgment.__table__
+    insert_stmt = pg.insert(t).values(
+        eval_topic_rts_id=eval_topic_rts_id,
+        collection=collection,
+        tweet_id=tweet_id,
+        judgment=judgment,
+        missing=missing,
+        from_dev=from_dev,
+    )
+    insert_stmt = insert_stmt.on_conflict_do_update(
+        constraint=t.primary_key,
+        set_={
+            'judgment': insert_stmt.excluded.judgment,
+            'missing': insert_stmt.excluded.missing,
+        },
+    )
+
+    db.session.execute(insert_stmt)
+
+    if judgment is None or judgment < 1:
+        assignemt = db.session.query(
+            fw_model.EvalClusterAssignment
+        ).get(
+            (
+                eval_topic_rts_id,
+                collection,
+                tweet_id,
+            )
+        )
+        if assignemt:
+            db.session.delete(assignemt)
+
+    db.session.flush()
+
+    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=eval_topic_rts_id, collection=collection).one()
+    return eval_topic.judge_state()
 
 
 @bp_main.route('/user')
@@ -304,4 +380,3 @@ def user():
         'main/user.html',
         actions=db.session.query(fw_model.UserAction).filter_by(user=flask_login.current_user).order_by(fw_model.UserAction.timestamp)
     )
-

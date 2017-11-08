@@ -23,7 +23,8 @@ class Expander:
     @classmethod
     def from_file(cls, path):
         config = ConfigParser()
-        config.read(path)
+        with open(path) as f:
+            config.read_file(f)
 
         return cls(config)
 

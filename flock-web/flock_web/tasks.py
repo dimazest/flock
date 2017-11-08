@@ -79,7 +79,7 @@ def cluster_selection(self, selection_args):
     filter_ = selection_args.pop('filter', None)
 
     update_state(2, 7, status='Querying the database...')
-    tweets = q.build_tweet_query(possibly_limit=False, filter_=filter_, **selection_args)
+    tweets = q.build_tweet_query(possibly_limit=False, filter_=filter_, **selection_args).limit(400_000)
 
     def tokens(tweets):
         for tweet in tweets:
@@ -94,19 +94,29 @@ def cluster_selection(self, selection_args):
 
     number_of_tweets = len(token_stream['tweet_id'].drop_duplicates())
 
-    if number_of_tweets > 400_000:
+    if number_of_tweets > 300_000:
         min_token_freq = 200
-        min_trending_score = 3
+        min_trending_score = 2
+        dbscan_min_samples = 3
+        min_cluster_size = 2
+    if number_of_tweets > 200_000:
+        min_token_freq = 100
+        min_trending_score = 2
         dbscan_min_samples = 3
         min_cluster_size = 2
     if number_of_tweets > 100_000:
-        min_token_freq = 100
-        min_trending_score = 3
-        dbscan_min_samples = 3
+        min_token_freq = 40
+        min_trending_score = 1.5
+        dbscan_min_samples = 2
         min_cluster_size = 2
+    if number_of_tweets > 10_000:
+        min_token_freq=10,
+        min_trending_score=1.5
+        dbscan_min_samples=2
+        min_cluster_size=2
     else:
-        min_token_freq=30,
-        min_trending_score=3
+        min_token_freq=3,
+        min_trending_score=1.5
         dbscan_min_samples=2
         min_cluster_size=2
 
@@ -133,6 +143,12 @@ def cluster_selection(self, selection_args):
     trending_token_tweet_matrix = tweet_token_matrix[trending_words.index].T
     trending_token_tweet_matrix = trending_token_tweet_matrix.loc[:, (trending_token_tweet_matrix.max(axis='rows') > 0).values]
 
+    if not len(trending_token_tweet_matrix):
+        return {
+            'data': [],
+            'task_name': self.name,
+        }
+
     update_state(6, 7, status='Trending word similarity...')
     trending_words_pairwise_distances = metrics.pairwise.pairwise_distances(trending_token_tweet_matrix.values, metric='cosine')
 
@@ -158,7 +174,7 @@ def cluster_selection(self, selection_args):
                     list(tokens),
                     int(size)
                 ),
-        )
+            )
 
     result = sorted(result, key=lambda i: (len(i[0]), i[1]), reverse=True)
 
@@ -174,7 +190,7 @@ def stats_for_feature(self, feature_name, feature_alias, active_features, **quer
     return {
         'data': db.session.query(
             q.stats_for_feature_query(feature_name=feature_name, **query_kwargs).limit(12).alias()
-        ).all(),
+        ).without_no_load_balance_comment().all(),
         'task_name': self.name,
         'feature_name': feature_name,
         'feature_alias': feature_alias,

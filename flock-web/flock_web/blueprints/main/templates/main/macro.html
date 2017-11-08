@@ -35,7 +35,7 @@
             <td><pre class="mb-0 filter-args">{{ query.filter_args_dict|tojson }}</pre></td>
             {% for collection in config.COLLECTIONS %}
               <td>
-                <a href="{{ url_for('root.tweets', collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, topic=topic.id, **query.filter_args_dict) }}">Show</a>
+                <a href="{{ url_for('collection.tweets', collection=collection, q=query.query, filter=query.filter, cluster=query.cluster, topic=topic.id, **query.filter_args_dict) }}">Show</a>
               </td>
             {% endfor %}
           </tr>

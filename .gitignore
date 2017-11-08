@@ -1,3 +1,11 @@
+old/
+*.inserted
+*.found
+*.initialized
+*.#
+
+yarn.lock
+
 # Buildout
 .mr.developer.cfg
 .installed.cfg
@@ -9,7 +17,7 @@ src/
 
 .pypy/
 
-flock.egg-info/
+*.egg-info/
 flock-conf/flock_conf.egg-info/
 flock-web/flock_web.egg-info/
 
@@ -24,6 +32,11 @@ tweets/select
 tweets/filter
 tweets/hydrate
 tweets/db
+.stories_*
+.tweets_*
+
+views/*.created
+views/*.refreshed
 
 # Juupyter
 .ipynb_checkpoints/
@@ -33,3 +46,5 @@ __pycache__/
 TAGS
 .projectile
 *.DS_Store
+
+node_modules

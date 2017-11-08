@@ -12,6 +12,10 @@ from  (
       select tweet.collection, 'user_mentions' as feature_name, feature_value, count(*) count
       from tweet, jsonb_array_elements_text(features->'user_mentions') feature_value
       group by collection, feature_value
+      union
+      select tweet.collection, 'languages' as feature_name, feature_value, count(*) count
+      from tweet, jsonb_array_elements_text(features->'languages') feature_value
+      group by collection, feature_value
 ) as s
 order by count desc
 with no data;

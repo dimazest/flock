@@ -24,7 +24,7 @@ def build_feature_filter(filter_args):
 def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=True, story=None, cluster=None, clustered_selection_id=None, count=False):
     feature_filter_args = build_feature_filter(filter_args)
 
-    tweets = db.session.query(model.Tweet)
+    tweets = db.session.query(model.Tweet).without_no_load_balance_comment()
 
     if filter_ == 'none':
         tweets = (
@@ -43,8 +43,8 @@ def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=Tr
     tweets = (
         tweets
         .filter(*feature_filter_args)
-        .filter(model.Tweet.features['filter', 'is_retweet'].astext == 'false' )
-        # # .filter(model.Tweet.representative == None)
+        # .filter(model.Tweet.features['filter', 'is_retweet'].astext == 'false')
+        # .filter(model.Tweet.representative == None)
     )
 
     if query:
@@ -74,8 +74,8 @@ def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=Tr
 
     tweets = tweets.order_by(model.Tweet.created_at, model.Tweet.tweet_id)
 
-    if possibly_limit and story is None:
-        tweets = tweets.limit(100)
+    # if possibly_limit and story is None:
+    #     tweets = tweets.limit(100)
 
     return tweets
 
@@ -90,16 +90,27 @@ def build_cluster_query(clustered_selection_id):
             .order_by(model.tweet_cluster.c.label)
             .alias()
         )
-    )
+    ).without_no_load_balance_comment()
 
 
 def stats_for_feature_query(feature_name, query, collection, filter_, clustered_selection_id, cluster, filter_args):
     feature_filter_args = build_feature_filter(filter_args)
 
+    extracted_features = {
+        'screen_names': (model.screen_names, 'screen_name'),
+        'hashtags': (model.hashtags, 'hashtag'),
+        'user_mentions': (model.user_mentions, 'user_mention'),
+    }
+
     if feature_filter_args or query:
-        feature = text(
-            'select collection, tweet_id, feature_value from tweet, jsonb_array_elements_text(tweet.features->:feature) as feature_value'
-        ).columns(column('collection'), column('tweet_id'), column('feature_value')).bindparams(feature=feature_name).alias()
+
+        if feature_name in extracted_features:
+            table, feature_column = extracted_features[feature_name]
+            feature = select([table.c.collection, table.c.tweet_id, table.c[feature_column].label('feature_value')]).alias()
+        else:
+            feature = text(
+                'select collection, tweet_id, feature_value from tweet, jsonb_array_elements_text(tweet.features->:feature) as feature_value'
+            ).columns(column('collection'), column('tweet_id'), column('feature_value')).bindparams(feature=feature_name).alias()
 
         feature = (
             select([feature.c.feature_value, func.count().label('count')])
