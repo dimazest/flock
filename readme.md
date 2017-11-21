@@ -65,26 +65,6 @@ bin/flock initdb
 bin/flock-web initdb
 ```
 
-Generate Javascript frontend
-```bash
-# In a separate tab
-. ~/miniconda3/bin/activate flock-udel
-
-# Install yarn and npm
-conda install yarn
-
-cd flock-web
-
-# Install webpack
-npm install webpack
-
-# Create a bundle.js
-node_modules/webpack/bin/webpack.js
-
-# During development, watch for the changes, so the .js files are regenerated
-node_modules/webpack/bin/webpack.js -w
-```
-
 Start the backend
 ```bash
 # In a separate tab, start the circus deamon. It will take care of running processes
@@ -108,14 +88,14 @@ Insert the data
 mkdir rts/17/pools-inserted
 
 # Process the qurels file
-# It will create a user with firstname 'Dmitrijs' and lastname 'hi'.
+# It will create a user with firstname 'RTS' and lastname 'hi'.
 bin/python src/produce/produce rts/17/qrels-sorted.inserted
 
 # Insert topic metadata
 bin/python src/produce/produce rts/17/topics.json.inserted
 ```
 
-Now you are ready to open http://localhost:8080, after logging in (Dmitrijs, hi), you should be redirected to http://localhost:8080/c/RTS17/eval/topics
+Now you are ready to open http://localhost:8080, after logging in ('RTS', 'hi'), you should be redirected to http://localhost:8080/c/RTS17/eval/topics
 
 # Copyright notice
 
