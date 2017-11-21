@@ -65,7 +65,7 @@ def basic_features(tweets, user_labels, with_text=False):
             )
 
         features['repr'] = {
-            'text': tweet.parsed['text'],
+            'text': tweet.text,
             'user__name': tweet.parsed['user']['screen_name'],
             'user__screen_name': tweet.parsed['user']['screen_name'],
             'lang': tweet.parsed.get('lang', None),
@@ -73,7 +73,7 @@ def basic_features(tweets, user_labels, with_text=False):
 
         row = {
             'tweet_id': tweet.id,
-            'text': tweet.parsed['text'],
+            'text': tweet.text,
             'features': features,
             'created_at': tweet.created_at,
         }
@@ -89,7 +89,7 @@ def tokenizer_features(features_tweets):
 
     for row, tweet in features_tweets:
         row['features']['tokenizer'] = {
-            'tokens': tokenizeRawTweetText(tweet.parsed['text'].lower()),
+            'tokens': tokenizeRawTweetText(tweet.text.lower()),
             'tokens_without_entities': tokenizeRawTweetText(tweet.text_without_entities.lower()),
         }
 

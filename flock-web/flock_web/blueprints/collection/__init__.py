@@ -307,7 +307,7 @@ def task_result(task_id):
                             'crowd_relevant': j.crowd_relevant,
                             'crowd_not_relevant': j.crowd_not_relevant,
                         }
-                        for j in g.topic.eval_topic.judgments
+                        for j in (g.topic.eval_topic.judgments if g.topic.eval_topic else [])
                     }
                 else:
                     judgments = {}

@@ -109,15 +109,16 @@ def insert(source, session, clusters, collection, extract_retweets, language):
     rows = []
 
     stmt = pg.insert(model.Tweet.__table__)
-    stmt = stmt.on_conflict_do_nothing(
+    #stmt = stmt.on_conflict_do_nothing(
+    #    index_elements=['tweet_id', 'collection'],
+    #)
+    stmt = stmt.on_conflict_do_update(
         index_elements=['tweet_id', 'collection'],
+        set_={
+            'features': stmt.excluded.features,
+            'text': stmt.excluded.text,
+        }
     )
-    # stmt = stmt.on_conflict_do_update(
-    #     index_elements=['tweet_id', 'collection'],
-    #     set_={
-    #         'features': stmt.excluded.features,
-    #     }
-    # )
 
     tweets = readline_dir(source, extract_retweets=extract_retweets)
     if language:
