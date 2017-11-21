@@ -221,7 +221,14 @@ def insert_eval_crowd_relevance_judgements(session, collection, qrels_file):
 @click.option('--collection')
 @click.option('--cluster_glosses_file', type=click.File())
 def insert_eval_cluster_glosses(session, collection, cluster_glosses_file):
-    stmt = sa.insert(fw_model.EvalCluster.__table__)
+    stmt = postgresql.insert(fw_model.EvalCluster.__table__)
+    stmt = stmt.on_conflict_do_update(
+        constraint=fw_model.EvalCluster.__table__.primary_key,
+        set_={
+            'gloss': stmt.excluded.gloss,
+        },
+    )
+
 
     for line in cluster_glosses_file:
         eval_topic_rts_id, rts_id, gloss = line.split(maxsplit=2)
@@ -244,8 +251,14 @@ def insert_eval_cluster_glosses(session, collection, cluster_glosses_file):
 @click.option('--collection')
 @click.option('--clusters_file', type=click.File())
 def insert_eval_clusters(session, collection, clusters_file):
-    stmt = sa.insert(fw_model.EvalClusterAssignment.__table__)
-
+    stmt = postgresql.insert(fw_model.EvalClusterAssignment.__table__)
+    stmt = stmt.on_conflict_do_update(
+        constraint=fw_model.EvalClusterAssignment.__table__.primary_key,
+        set_={
+            'tweet_id': stmt.excluded.tweet_id,
+            #'eval_cluster_rts_id': stmt.excluded.eval_cluster_rts_id,
+        },
+    )
     for line in clusters_file:
         eval_topic_rts_id, eval_cluster_rts_id, tweet_id = line.split()
 
