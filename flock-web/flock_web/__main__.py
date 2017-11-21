@@ -50,6 +50,12 @@ def initdb(session):
 @click.option('--collection')
 def insert_eval_topics(session, assr_topic_file, collection):
 
+    stmt = postgresql.insert(fw_model.EvalTopic.__table__)
+    stmt = stmt.on_conflict_do_update(
+        constraint=fw_model.EvalTopic.__table__.primary_key,
+        set_={'user_id': stmt.excluded.user_id}
+    )
+
     for line in assr_topic_file:
         rts_topic_id, assessor_user_name = line.split()
 
@@ -69,12 +75,12 @@ def insert_eval_topics(session, assr_topic_file, collection):
             session.flush()
             logger.warning('A new user %s is created.', assessor_user_name)
 
-        session.add(
-            fw_model.EvalTopic(
+        session.execute(
+            stmt.values(
                 rts_id=rts_topic_id,
                 collection=collection,
                 title=rts_topic_id,
-                user=assessor,
+                user_id=assessor.id,
             )
         )
 
