@@ -20,7 +20,7 @@ def basic_features(tweets, user_labels, with_text=False):
         features['user_mentions'] = sorted(
             chain.from_iterable(
                 user_labels.get(mention['id'], [mention['screen_name']])
-                for mention in tweet.parsed['entities']['user_mentions']
+                for mention in tweet.parsed.get('entities', {}).get('user_mentions', [])
             )
         )
 
@@ -30,11 +30,11 @@ def basic_features(tweets, user_labels, with_text=False):
                 'screen_name': mention['screen_name'],
                 'tracked': mention['id'] in user_labels,
             }
-            for mention in tweet.parsed['entities']['user_mentions']
+            for mention in tweet.parsed.get('entities', {}).get('user_mentions', [])
         ]
 
         features['urls'] = [
-            url['expanded_url'] for url in tweet.parsed['entities']['urls']
+            url['expanded_url'] for url in tweet.parsed.get('entities', {}).get('urls', [])
         ]
 
         features['hostnames'] = [
@@ -43,7 +43,7 @@ def basic_features(tweets, user_labels, with_text=False):
 
         features['hashtags'] = sorted(
             ht['text'].lower()
-            for ht in tweet.parsed['entities']['hashtags']
+            for ht in tweet.parsed.get('entities', {}).get('hashtags', [])
         )
 
         if 'lang' in tweet.parsed:
@@ -63,13 +63,6 @@ def basic_features(tweets, user_labels, with_text=False):
             features['in_reply_to_screen_names'] = sorted(
                 user_labels.get(in_reply_to_user_id, [tweet.parsed['in_reply_to_screen_name']])
             )
-
-        features['repr'] = {
-            'text': tweet.text,
-            'user__name': tweet.parsed['user']['screen_name'],
-            'user__screen_name': tweet.parsed['user']['screen_name'],
-            'lang': tweet.parsed.get('lang', None),
-        }
 
         row = {
             'tweet_id': tweet.id,
@@ -109,7 +102,7 @@ def filter_features(features_tweets):
             'is_retweet': bool(tweet.parsed.get('retweeted_status', False)),
             'source': tweet.parsed['source'],
             **{
-                '{}_count'.format(entity): len(tweet.parsed['entities'][entity]) for entity in ('hashtags', 'urls', 'user_mentions')
+                '{}_count'.format(entity): len(tweet.parsed.get('entities', {}).get(entity, [])) for entity in ('hashtags', 'urls', 'user_mentions')
             }
         }
 

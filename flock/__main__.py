@@ -124,11 +124,9 @@ def insert(source, session, clusters, collection, extract_retweets, language):
     if language:
         tweets = (t for t in tweets if t.parsed.get('lang', language) == language)
     rows_tweets = (
-        features.doc2vec_features(
-            features.filter_features(
-                features.tokenizer_features(
-                    features.basic_features(tweets, user_labels)
-                )
+        features.filter_features(
+            features.tokenizer_features(
+                features.basic_features(tweets, user_labels)
             )
         )
     )
