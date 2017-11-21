@@ -387,12 +387,28 @@ def task_result(task_id):
 @bp_collection.route('/eval/topics')
 @flask_login.login_required
 def user_eval_topics():
-
     user_eval_topics = db.session.query(fw_model.EvalTopic).filter_by(user=flask_login.current_user, collection=g.collection)
 
     return render_template(
         'collection/eval_topics.html',
         user_eval_topics=user_eval_topics,
+    )
+
+@bp_collection.route('/eval/topics.json')
+def eval_topics_json():
+    eval_topics = db.session.query(fw_model.EvalTopic).filter_by(collection=g.collection).order_by(fw_model.EvalTopic.rts_id)
+
+    return jsonify(
+        [
+            {
+                'narrative': t.narrative,
+                'title': t.title,
+                'topid': t.rts_id,
+                'description': t.description,
+                'queries': [q.query for q in t.topic.queries] if t.topic else []
+            }
+            for t in eval_topics
+       ]
     )
 
 
