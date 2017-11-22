@@ -1,0 +1,87 @@
+[
+  {
+    "description": null, 
+    "narrative": null, 
+    "queries": [
+      "Snow", 
+      "putenis", 
+      "winter", 
+      "\u0437\u0438\u043c\u043d\u0438\u0435", 
+      "\u0421\u043d\u0435\u0433", 
+      "\u043c\u0435\u0442\u0435\u043b\u044c", 
+      "Sniegs", 
+      "ziema", 
+      "\u0437\u0438\u043c\u0430"
+    ], 
+    "title": "Snow", 
+    "topid": "LV001"
+  }, 
+  {
+    "description": null, 
+    "narrative": null, 
+    "queries": [
+      "\u0425\u0440\u043e\u043d\u0438\u043a\u0438 \u041c\u0435\u043b\u0430\u043d\u0438", 
+      "Mel\u0101nijas hronika", 
+      "The Chronicles of Melanie"
+    ], 
+    "title": "Mel\u0101nijas hronika", 
+    "topid": "LV002"
+  }, 
+  {
+    "description": null, 
+    "narrative": null, 
+    "queries": [
+      "Refugees", 
+      "\u0411\u0435\u0436\u0435\u043d\u0446\u044b", 
+      "B\u0113g\u013ci"
+    ], 
+    "title": "Refugees", 
+    "topid": "LV003"
+  }, 
+  {
+    "description": null, 
+    "narrative": null, 
+    "queries": [
+      "Dv\u0113se\u013cu putenis"
+    ], 
+    "title": "Dv\u0113se\u013cu putenis", 
+    "topid": "LV004"
+  }, 
+  {
+    "description": null, 
+    "narrative": null, 
+    "queries": [
+      "\u043a\u0445\u043b", 
+      "\u0414\u0438\u043d\u0430\u043c\u043e", 
+      "Hokejs", 
+      "\u0425\u043e\u043a\u043a\u0435\u0439", 
+      "Dinamo", 
+      "Hockey", 
+      "KHL"
+    ], 
+    "title": "Hockey", 
+    "topid": "LV005"
+  }, 
+  {
+    "description": null, 
+    "narrative": null, 
+    "queries": [
+      "Christmas", 
+      "Ziemassv\u0113tki", 
+      "\u0420\u043e\u0436\u0434\u0435\u0441\u0442\u0432\u043e"
+    ], 
+    "title": "Christmas", 
+    "topid": "LV006"
+  }, 
+  {
+    "description": null, 
+    "narrative": null, 
+    "queries": [
+      "Jaungads", 
+      "\u041d\u043e\u0432\u044b\u0439 \u0433\u043e\u0434", 
+      "New Year"
+    ], 
+    "title": "New Year", 
+    "topid": "LV007"
+  }
+]
