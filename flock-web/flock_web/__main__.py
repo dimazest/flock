@@ -149,7 +149,15 @@ def insert_eval_topics_json(session, topic_file, collection):
         if queries:
             session.execute(
                stmt_insert_query,
-               [{'query': q, 'topic_id': topic_id }for q in queries]
+               [
+                   {
+                       'query': q,
+                       'topic_id': topic_id,
+                       'filter': 'none',
+                       'filter_args': [],
+                   }
+                   for q in queries
+               ]
             )
 
 
