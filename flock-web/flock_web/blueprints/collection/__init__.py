@@ -283,12 +283,12 @@ def task_result(task_id):
             else:
                 render_tweets = get_template_attribute('collection/macro.html', 'render_tweets')
 
-                result['html'] = render_tweets(
-                    topic=g.topic,
-                    tweets=task.result['data'],
-                    show_images=g.show_images,
-                    relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
-                )
+                #result['html'] = render_tweets(
+                #    topic=g.topic,
+                #    tweets=task.result['data'],
+                #    show_images=g.show_images,
+                #    relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
+                #)
 
                 result['backendState'] = {}
 
@@ -316,9 +316,9 @@ def task_result(task_id):
                     {
                         'created_at': t['created_at'],
                         'id': str(t['tweet_id']),
-                        'screen_name': t['features']['repr']['user__screen_name'],
-                        'user_name': t['features']['repr']['user__name'],
-                        'text': t['features']['repr']['text'],
+                        #'screen_name': t['features']['repr']['user__screen_name'],
+                        #'user_name': t['features']['repr']['user__name'],
+                        #'text': t['features']['repr']['text'],
                     }
                     for t in task.result['data'] if str(t['tweet_id']) not in judgments
                 ]
@@ -387,11 +387,34 @@ def task_result(task_id):
 @bp_collection.route('/eval/topics')
 @flask_login.login_required
 def user_eval_topics():
-    user_eval_topics = db.session.query(fw_model.EvalTopic).filter_by(user=flask_login.current_user, collection=g.collection)
-
+    t = fw_model.EvalTopic.__table__
+    j = fw_model.EvalRelevanceJudgment.__table__
+    a = fw_model.EvalClusterAssignment.__table__
+    topic = fw_model.Topic.__table__
+    topic_info = db.session.execute(
+        sa.select(
+            [
+                t.c.rts_id, t.c.title,
+                sa.func.count(j.c.tweet_id),
+                sa.func.count(sa.func.nullif(sa.or_(j.c.judgment != None, j.c.missing), False)),
+                sa.func.count(sa.func.nullif(j.c.judgment > 0, False)),
+                sa.func.count(a.c.tweet_id),
+                topic.c.id,
+            ]
+        )
+        .select_from(
+            t
+            .join(j, isouter=True)
+            .join(a, sa.and_(a.c.eval_topic_rts_id == j.c.eval_topic_rts_id, a.c.eval_topic_collection == j.c.collection, a.c.tweet_id == j.c.tweet_id), isouter=True)
+            .join(topic, isouter=True)
+        )
+        .where(t.c.collection == g.collection)
+        .where(t.c.user_id == flask_login.current_user.id)
+        .group_by(t.c.rts_id, t.c.title, topic.c.id)
+    )
     return render_template(
         'collection/eval_topics.html',
-        user_eval_topics=user_eval_topics,
+        topic_info=list(topic_info),
     )
 
 @bp_collection.route('/eval/topics.json')
