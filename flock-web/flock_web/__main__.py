@@ -8,7 +8,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 from flock.__main__ import create_session
-from flock.model import metadata
+from flock import model
 
 from flock_web.app import create_app
 import flock_web.model as fw_model
@@ -33,7 +33,7 @@ def runserver(filename):
 @cli.command()
 @click.option('--session', default='postgresql:///twitter', callback=create_session)
 def initdb(session):
-    metadata.create_all(
+    model.metadata.create_all(
         tables=[
             o.__table__ for o in [
                 fw_model.User, fw_model.Topic, fw_model.TopicQuery, fw_model.RelevanceJudgment, fw_model.TaskResult, fw_model.UserAction,
@@ -56,6 +56,21 @@ def insert_eval_topics(session, assr_topic_file, collection):
         set_={'user_id': stmt.excluded.user_id}
     )
 
+    stmt_insert_topic = postgresql.insert(fw_model.Topic.__table__)
+    stmt_insert_topic = stmt_insert_topic.on_conflict_do_update(
+        index_elements=['eval_topic_rts_id', 'eval_topic_collection'],
+        set_={'user_id': stmt_insert_topic.excluded.user_id},
+    )
+
+    stmt_insert_user = postgresql.insert(fw_model.User.__table__)
+    stmt_insert_user = stmt_insert_user.on_conflict_do_update(
+        index_elements=['first_name', 'last_name'],
+        set_={
+            'first_name': stmt_insert_user.excluded.first_name,
+            'last_name': stmt_insert_user.excluded.last_name,
+        },
+    )
+
     for line in assr_topic_file:
         rts_topic_id, assessor_user_name = line.split()
 
@@ -66,21 +81,31 @@ def insert_eval_topics(session, assr_topic_file, collection):
         else:
             rts_topic_id = f'RTS{rts_topic_id}'
 
-        assessor = session.query(fw_model.User).filter_by(first_name=assessor_user_name).one_or_none()
-
-        if assessor is None:
-            assessor = fw_model.User(first_name=assessor_user_name, last_name='hi')
-            session.add(assessor)
-
-            session.flush()
-            logger.warning('A new user %s is created.', assessor_user_name)
+        user_id = session.execute(
+            stmt_insert_user
+            .values(
+                first_name=assessor_user_name,
+                last_name='hi',
+            )
+            .returning(fw_model.User.id)
+        ).scalar()
 
         session.execute(
             stmt.values(
                 rts_id=rts_topic_id,
                 collection=collection,
                 title=rts_topic_id,
-                user_id=assessor.id,
+                user_id=user_id,
+            )
+        )
+
+        session.execute(
+            stmt_insert_topic
+            .values(
+                title=rts_topic_id,
+                eval_topic_rts_id=rts_topic_id,
+                eval_topic_collection=collection,
+                user_id=user_id,
             )
         )
 
@@ -94,6 +119,8 @@ def insert_eval_topics(session, assr_topic_file, collection):
 def insert_eval_topics_json(session, topic_file, collection):
     table = fw_model.EvalTopic.__table__
     stmt = sa.update(table)
+
+    stmt_insert_query = postgresql.insert(fw_model.TopicQuery.__table__).on_conflict_do_nothing()
 
     topics = json.load(topic_file)
     for topic in topics:
@@ -111,6 +138,28 @@ def insert_eval_topics_json(session, topic_file, collection):
                 narrative=topic['narrative'],
             )
         )
+
+        topic_id = session.execute(
+            sa.select([fw_model.Topic.id])
+            .where(fw_model.Topic.eval_topic_rts_id==topic['topid'])
+            .where(fw_model.Topic.eval_topic_collection==collection)
+        ).scalar()
+
+        queries = topic.get('queries', [])
+        if queries:
+            session.execute(
+               stmt_insert_query,
+               [
+                   {
+                       'query': q,
+                       'topic_id': topic_id,
+                       'filter': 'none',
+                       'filter_args': [],
+                   }
+                   for q in queries
+               ]
+            )
+
 
     session.commit()
 
