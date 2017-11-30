@@ -27,7 +27,8 @@ def cli():
 @click.option('--extract-retweets', is_flag=True)
 @click.option('--keep-retweets', is_flag=True)
 @click.option('--qrels-file', type=click.File())
-def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, qrels_file):
+@click.option('--negative-distance-threshold', default=0.8)
+def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, qrels_file, negative_distance_threshold):
     topics = json.load(topic_file)
     topics = [topics[-22], topics[2]]
 
@@ -75,9 +76,8 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
             positive, negative = feedback[topic['topid']]
 
             distance_to_positive = min(collection.distance(tweet.text, positive).flatten())
-            distance_to_negative = min(collection.distance(tweet.text, negative).flatten()) if negative else 0.85
-
-            score = distance_to_positive / distance_to_negative
+            distance_to_negative = min(collection.distance(tweet.text, negative).flatten()) if negative else negative_distance_threshold
+            score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
 
             retrieve = score < 1
             if retrieve:
@@ -97,4 +97,6 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
                 retrieve,
                 len(positive),
                 len(negative),
+                tweet.created_at,
+                sep=',',
             )
