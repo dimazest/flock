@@ -25,20 +25,41 @@ def cli():
 @click.option('--keep-spam', is_flag=True)
 @click.option('--language', default='en')
 @click.option('--extract-retweets', is_flag=True)
-def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file):
+@click.option('--keep-retweets', is_flag=True)
+@click.option('--qrels-file', type=click.File())
+def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, qrels_file):
     topics = json.load(topic_file)
     topics = [topics[-22], topics[2]]
 
+    qrels = {}
+    for line in qrels_file:
+        rts_id, _, tweet_id, judgment = line.split()
+        tweet_id = int(tweet_id)
+        judgment = int(judgment)
+
+        if judgment >= 0:
+            qrels[rts_id, tweet_id] = judgment
+
     tweets = readline_dir(source, extract_retweets=extract_retweets)
     if language:
-        tweets = (t for t in tweets if t.parsed.get('lang', language) == language and (keep_spam or not t.is_spam))
+        tweets = (
+            t for t in tweets
+            if t.parsed.get('lang', language) == language
+            and (keep_spam or not t.is_spam)
+            and (keep_retweets or not t.parsed.get('retweeted_status'))
+        )
 
     feature_extractor = CharacterNGramExtractor(length=ngram_length)
     collection = Collection(feature_extractor)
 
-    queries = [t['title'] for t in topics]
-    for q in queries:
-        collection.append(q)
+    feedback = {}
+    queries = []
+    for topic in topics:
+        query = topic['title']
+
+        queries.append(query)
+        collection.append(query)
+        feedback[topic['topid']] = [query], []
 
     seen_tweets = set()
     for tweet in tweets:
@@ -48,11 +69,32 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
 
         collection.append(tweet.text)
 
-        distances = collection.distance(tweet.text, queries, metric='cosine').flatten()
-        for topic, distance in zip(topics, distances):
+        distances_to_queries = collection.distance(tweet.text, queries, metric='cosine').flatten()
+        for topic, distance_to_query in zip(topics, distances_to_queries):
+
+            positive, negative = feedback[topic['topid']]
+
+            distance_to_positive = min(collection.distance(tweet.text, positive).flatten())
+            distance_to_negative = min(collection.distance(tweet.text, negative).flatten()) if negative else 0.85
+
+            score = distance_to_positive / distance_to_negative
+
+            retrieve = score < 1
+            if retrieve:
+                relevant = qrels.get((topic['topid'], tweet.id))
+                if relevant is not None:
+                    (positive if relevant else negative).append(tweet.text)
+            else:
+                relevant = None
+
             print(
                 topic['topid'],
-                'Q0',
                 tweet.id,
-                distance,
+                distance_to_query,
+                distance_to_positive,
+                distance_to_negative,
+                score,
+                retrieve,
+                len(positive),
+                len(negative),
             )
