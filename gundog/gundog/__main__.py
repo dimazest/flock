@@ -75,8 +75,8 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
 
             positive, negative = feedback[topic['topid']]
 
-            distance_to_positive = min(collection.distance(tweet.text, positive).flatten())
-            distance_to_negative = min(collection.distance(tweet.text, negative).flatten()) if negative else negative_distance_threshold
+            distance_to_positive = collection.distance(tweet.text, positive).min()
+            distance_to_negative = collection.distance(tweet.text, negative).min() if negative else negative_distance_threshold
             score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
 
             retrieve = score < 1
