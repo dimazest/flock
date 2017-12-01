@@ -1,12 +1,13 @@
 import logging
 import json
+import multiprocessing as mp
 
 import click
 import click_log
 
 from poultry import readline_dir
 
-from .core import CharacterNGramExtractor, Collection
+from . import core
 
 logger = logging.getLogger(__name__)
 click_log.basic_config(logger)
@@ -18,19 +19,29 @@ def cli():
     pass
 
 
+def printer(q):
+    while True:
+        item = q.get()
+
+        if item is None:
+            break
+
+        print(*item, sep=',')
+
+
 @cli.command()
 @click.option('--source', default=None, help='Tweet source.')
 @click.option('--topic-file', type=click.File(), default='topics.json')
 @click.option('--ngram-length', default=3)
 @click.option('--keep-spam', is_flag=True)
-@click.option('--language', default='en')
+@click.option('--language', default=None, type=str)
 @click.option('--extract-retweets', is_flag=True)
 @click.option('--keep-retweets', is_flag=True)
 @click.option('--qrels-file', type=click.File())
 @click.option('--negative-distance-threshold', default=0.8)
 def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, qrels_file, negative_distance_threshold):
     topics = json.load(topic_file)
-    topics = [topics[-22], topics[2]]
+    #topics = [topics[-22], topics[2]]
 
     qrels = {}
     for line in qrels_file:
@@ -39,64 +50,58 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
         judgment = int(judgment)
 
         if judgment >= 0:
-            qrels[rts_id, tweet_id] = judgment
+            qrels.setdefault(rts_id, {})[tweet_id] = judgment
 
     tweets = readline_dir(source, extract_retweets=extract_retweets)
     if language:
         tweets = (
             t for t in tweets
-            if t.parsed.get('lang', language) == language
+            if (language is not None or t.parsed.get('lang', language) == language)
             and (keep_spam or not t.is_spam)
             and (keep_retweets or not t.parsed.get('retweeted_status'))
         )
 
-    feature_extractor = CharacterNGramExtractor(length=ngram_length)
-    collection = Collection(feature_extractor)
+    printer_q = mp.Queue(maxsize=1000)
+    printer_p = mp.Process(target=printer, args=(printer_q,))
+    printer_p.start()
 
-    feedback = {}
-    queries = []
+    workers = []
     for topic in topics:
-        query = topic['title']
 
-        queries.append(query)
-        collection.append(query)
-        feedback[topic['topid']] = [query], []
-
-    seen_tweets = set()
-    for tweet in tweets:
-        if tweet.id in seen_tweets:
+        feedback = qrels.get(topic['topid'])
+        if feedback is None:
+            logger.warn('Topic %s is not found in qrels.', topic['topid'])
             continue
-        seen_tweets.add(tweet.id)
 
-        collection.append(tweet.text)
+        in_q = mp.Queue(maxsize=1000)
+        worker = mp.Process(
+            target=core.point,
+            kwargs=dict(
+                in_q=in_q,
+                out_q=printer_q,
+                topic=topic,
+                feedback=feedback,
+                negative_distance_threshold=negative_distance_threshold,
+                ngram_length=ngram_length,
+            ),
+        )
+        worker.start()
 
-        distances_to_queries = collection.distance(tweet.text, queries, metric='cosine').flatten()
-        for topic, distance_to_query in zip(topics, distances_to_queries):
+        workers.append((topic['topid'], in_q, worker))
 
-            positive, negative = feedback[topic['topid']]
+    for tweet in tweets:
+        for _, in_q, _ in workers:
+            in_q.put((tweet.text, tweet.id, tweet.created_at))
+    else:
+        for _, in_q, w in workers:
+            in_q.put(None)
+            in_q.close()
+            in_q.join_thread()
 
-            distance_to_positive = collection.distance(tweet.text, positive).min()
-            distance_to_negative = collection.distance(tweet.text, negative).min() if negative else negative_distance_threshold
-            score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
+            w.join()
 
-            retrieve = score < 1
-            if retrieve:
-                relevant = qrels.get((topic['topid'], tweet.id))
-                if relevant is not None:
-                    (positive if relevant else negative).append(tweet.text)
-            else:
-                relevant = None
+    printer_q.put(None)
+    printer_q.close()
+    printer_q.join_thread()
 
-            print(
-                topic['topid'],
-                tweet.id,
-                distance_to_query,
-                distance_to_positive,
-                distance_to_negative,
-                score,
-                retrieve,
-                len(positive),
-                len(negative),
-                tweet.created_at,
-                sep=',',
-            )
+    printer_p.join()

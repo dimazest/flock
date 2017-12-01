@@ -1,6 +1,8 @@
 import string
+
 from itertools import chain
 from collections import deque
+
 import numpy as np
 
 from sklearn.metrics.pairwise import pairwise_distances
@@ -64,4 +66,55 @@ class Collection:
             list(map(self.__getitem__, one)),
             list(map(self.__getitem__, another)),
             metric=metric,
+        )
+
+
+def point(in_q, out_q, topic, feedback, negative_distance_threshold, ngram_length):
+
+    feature_extractor = CharacterNGramExtractor(length=ngram_length)
+    collection = Collection(feature_extractor)
+
+    query = topic['title']
+    collection.append(query)
+
+    positive, negative = [query], []
+
+    while True:
+        task = in_q.get()
+
+        if task is None:
+            #out_q.put((None, topic['topid']))
+            break
+
+        tweet_text, tweet_id, tweet_created_at = task
+
+        collection.append(tweet_text)
+
+        distance_to_query = np.asscalar(collection.distance(tweet_text, query, metric='cosine'))
+        distance_to_positive = collection.distance(tweet_text, positive).min()
+        distance_to_negative = collection.distance(tweet_text, negative).min() if negative else negative_distance_threshold
+
+        score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
+
+        retrieve = score < 1
+        if retrieve:
+            relevant = feedback.get(tweet_id)
+            if relevant is not None:
+                (positive if relevant else negative).append(tweet_text)
+        else:
+            relevant = None
+
+        out_q.put(
+            (
+                topic['topid'],
+                tweet_id,
+                distance_to_query,
+                distance_to_positive,
+                distance_to_negative,
+                score,
+                retrieve,
+                len(positive),
+                len(negative),
+                tweet_created_at,
+            )
         )
