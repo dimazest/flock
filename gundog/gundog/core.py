@@ -37,7 +37,7 @@ class Collection:
 
     def __init__(self, feature_extractor):
         self.feature_extractor = feature_extractor
-        self.df = np.zeros(len(feature_extractor.feature_map) ** feature_extractor.length)
+        self.df = np.zeros(len(feature_extractor.feature_map) ** feature_extractor.length, dtype=np.uint64)
 
     def append(self, text):
         features = self.feature_extractor(text)
