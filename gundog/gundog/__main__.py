@@ -1,11 +1,10 @@
 import logging
 import json
+import sys
 import multiprocessing as mp
 
 import click
 import click_log
-
-from poultry import readline_dir
 
 from . import core
 
@@ -54,16 +53,19 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
             judged_tweets.add(tweet_id)
             qrels[rts_id, tweet_id] = judgment
 
-    tweets = readline_dir(source, extract_retweets=extract_retweets)
-    if language:
-        tweets = (
-            t for t in tweets
-            if t.id in judged_tweets or (
-                    (language is not None or t.parsed.get('lang', language) == language)
-                    and (keep_spam or not t.is_spam)
-                    and (keep_retweets or not t.parsed.get('retweeted_status'))
-                )
+    #tweets = readline_dir(source, extract_retweets=extract_retweets)
+    tweets = map(json.loads, sys.stdin)
+
+    tweets = (
+        t for t in tweets
+        if 'id' in t and (
+            t['id'] in judged_tweets or (
+                (language is not None or t.get('lang', language) == language)
+                #and (keep_spam or not t.is_spam)
+                and (keep_retweets or not t.get('retweeted_status'))
+            )
         )
+    )
 
     printer_q = mp.Queue(maxsize=100)
     printer_p = mp.Process(target=printer, args=(printer_q,))
@@ -96,7 +98,7 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
     try:
         for tweet in tweets:
             for _, in_q, _ in workers:
-                in_q.put((tweet.text, tweet.id, tweet.created_at))
+                in_q.put((tweet.get('long_text') or tweet['text'], tweet['id'], tweet['created_at']))
     finally:
         for _, in_q, w in workers:
             in_q.put(None)

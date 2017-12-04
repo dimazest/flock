@@ -27,7 +27,6 @@ setup(
     install_requires=[
         'click',
         'click-log',
-        'poultry',
         'numpy',
     ],
     entry_points={
