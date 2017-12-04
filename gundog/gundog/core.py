@@ -2,7 +2,6 @@ import string
 
 from itertools import chain
 from collections import deque
-from random import randint
 
 import numpy as np
 
@@ -94,8 +93,11 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
         batch = in_q.get()
 
         if batch is None:
-            break
 
+            if out_batch:
+                out_q.put(out_batch)
+
+            break
 
         for tweet_text, tweet_id, tweet_created_at in batch:
 
@@ -135,10 +137,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
                     )
                 )
 
-            if len(out_batch) > randint(100, 200):
-                out_q.put(out_batch)
-                out_batch = []
 
-
-    if out_batch:
-        out_q.put(out_baatch)
+                if len(out_batch) > 100:
+                    out_q.put(out_batch)
+                    out_batch = []
