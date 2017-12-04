@@ -135,7 +135,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
                     )
                 )
 
-            if len(out_batch) > randint(5000, 20000):
+            if len(out_batch) > randint(100, 200):
                 out_q.put(out_batch)
                 out_batch = []
 
