@@ -2,6 +2,7 @@ import string
 
 from itertools import chain
 from collections import deque
+from random import randint
 
 import numpy as np
 
@@ -88,6 +89,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
 
         feedback.append((topic['topid'], [query], []))
 
+    out_batch = []
     while True:
         batch = in_q.get()
 
@@ -96,7 +98,6 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
 
 
         for tweet_text, tweet_id, tweet_created_at in batch:
-            out_batch = []
 
             collection.append(tweet_text)
 
@@ -134,4 +135,10 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
                     )
                 )
 
-            out_q.put(out_batch)
+            if len(out_batch) > randint(5000, 20000):
+                out_q.put(out_batch)
+                out_batch = []
+
+
+    if out_batch:
+        out_q.put(out_baatch)
