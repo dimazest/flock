@@ -69,52 +69,57 @@ class Collection:
         )
 
 
-def point(in_q, out_q, topic, feedback, negative_distance_threshold, ngram_length):
+def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length):
 
     feature_extractor = CharacterNGramExtractor(length=ngram_length)
     collection = Collection(feature_extractor)
 
-    query = topic['title']
-    collection.append(query)
+    queries = []
+    feedback = []
+    for topic in topics:
+        query = topic['title']
+        queries.append(query)
+        collection.append(query)
 
-    positive, negative = [query], []
+        feedback.append((topic['topid'], [query], []))
 
     while True:
         task = in_q.get()
 
         if task is None:
-            #out_q.put((None, topic['topid']))
             break
 
         tweet_text, tweet_id, tweet_created_at = task
 
         collection.append(tweet_text)
 
-        distance_to_query = np.asscalar(collection.distance(tweet_text, query, metric='cosine'))
-        distance_to_positive = collection.distance(tweet_text, positive).min()
-        distance_to_negative = collection.distance(tweet_text, negative).min() if negative else negative_distance_threshold
+        distance_to_queries = collection.distance(tweet_text, queries, metric='cosine').flatten()
+        for (topid, positive, negative), distance_to_query in zip(feedback, distance_to_queries):
 
-        score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
+            distance_to_positive = collection.distance(tweet_text, positive).min()
+            distance_to_negative = collection.distance(tweet_text, negative).min() if negative else negative_distance_threshold
 
-        retrieve = score < 1
-        if retrieve:
-            relevant = feedback.get(tweet_id)
-            if relevant is not None:
-                (positive if relevant else negative).append(tweet_text)
-        else:
-            relevant = None
+            score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
 
-        out_q.put(
-            (
-                topic['topid'],
-                tweet_id,
-                distance_to_query,
-                distance_to_positive,
-                distance_to_negative,
-                score,
-                retrieve,
-                len(positive),
-                len(negative),
-                tweet_created_at,
+            retrieve = score < 1
+            if retrieve:
+                relevant = qrels.get((topid, tweet_id))
+                if relevant is not None:
+                    (positive if relevant else negative).append(tweet_text)
+            else:
+                relevant = None
+
+            out_q.put(
+                (
+                    topid,
+                    tweet_id,
+                    distance_to_query,
+                    distance_to_positive,
+                    distance_to_negative,
+                    score,
+                    retrieve,
+                    len(positive),
+                    len(negative),
+                    tweet_created_at,
+                )
             )
-        )

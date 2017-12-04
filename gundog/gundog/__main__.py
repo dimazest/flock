@@ -50,7 +50,7 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
         judgment = int(judgment)
 
         if judgment >= 0:
-            qrels.setdefault(rts_id, {})[tweet_id] = judgment
+            qrels[rts_id, tweet_id] = judgment
 
     tweets = readline_dir(source, extract_retweets=extract_retweets)
     if language:
@@ -61,26 +61,26 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
             and (keep_retweets or not t.parsed.get('retweeted_status'))
         )
 
-    printer_q = mp.Queue(maxsize=1000)
+    printer_q = mp.Queue(maxsize=100)
     printer_p = mp.Process(target=printer, args=(printer_q,))
     printer_p.start()
 
+    workers_num = max(mp.cpu_count() - 2, 1)
+    topics_by_worker = {}
+    for i, topic in enumerate(topics):
+        topics_by_worker.setdefault((i % workers_num), []).append(topic)
+
     workers = []
-    for topic in topics:
+    for topics in topics_by_worker.values():
 
-        feedback = qrels.get(topic['topid'])
-        if feedback is None:
-            logger.warn('Topic %s is not found in qrels.', topic['topid'])
-            continue
-
-        in_q = mp.Queue(maxsize=1000)
+        in_q = mp.Queue(maxsize=100)
         worker = mp.Process(
             target=core.point,
             kwargs=dict(
                 in_q=in_q,
                 out_q=printer_q,
-                topic=topic,
-                feedback=feedback,
+                topics=topics,
+                qrels=qrels,
                 negative_distance_threshold=negative_distance_threshold,
                 ngram_length=ngram_length,
             ),
@@ -89,10 +89,11 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
 
         workers.append((topic['topid'], in_q, worker))
 
-    for tweet in tweets:
-        for _, in_q, _ in workers:
-            in_q.put((tweet.text, tweet.id, tweet.created_at))
-    else:
+    try:
+        for tweet in tweets:
+            for _, in_q, _ in workers:
+                in_q.put((tweet.text, tweet.id, tweet.created_at))
+    finally:
         for _, in_q, w in workers:
             in_q.put(None)
             in_q.close()
@@ -100,8 +101,8 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
 
             w.join()
 
-    printer_q.put(None)
-    printer_q.close()
-    printer_q.join_thread()
+        printer_q.put(None)
+        printer_q.close()
+        printer_q.join_thread()
 
-    printer_p.join()
+        printer_p.join()
