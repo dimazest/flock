@@ -43,6 +43,7 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
     topics = json.load(topic_file)
     #topics = [topics[-22], topics[2]]
 
+    judged_tweets = set()
     qrels = {}
     for line in qrels_file:
         rts_id, _, tweet_id, judgment = line.split()
@@ -50,15 +51,18 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
         judgment = int(judgment)
 
         if judgment >= 0:
+            judged_tweets.add(tweet_id)
             qrels[rts_id, tweet_id] = judgment
 
     tweets = readline_dir(source, extract_retweets=extract_retweets)
     if language:
         tweets = (
             t for t in tweets
-            if (language is not None or t.parsed.get('lang', language) == language)
-            and (keep_spam or not t.is_spam)
-            and (keep_retweets or not t.parsed.get('retweeted_status'))
+            if t.id in judged_tweets or (
+                    (language is not None or t.parsed.get('lang', language) == language)
+                    and (keep_spam or not t.is_spam)
+                    and (keep_retweets or not t.parsed.get('retweeted_status'))
+                )
         )
 
     printer_q = mp.Queue(maxsize=100)
