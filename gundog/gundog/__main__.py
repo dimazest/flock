@@ -67,7 +67,7 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
         )
     )
 
-    printer_q = mp.Queue(maxsize=100)
+    printer_q = mp.Queue(maxsize=1)
     printer_p = mp.Process(target=printer, args=(printer_q,))
     printer_p.start()
 
@@ -79,7 +79,7 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
     workers = []
     for topics in topics_by_worker.values():
 
-        in_q = mp.Queue(maxsize=100)
+        in_q = mp.Queue(maxsize=1)
         worker = mp.Process(
             target=core.point,
             kwargs=dict(
