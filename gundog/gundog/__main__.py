@@ -43,6 +43,8 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
     topics = json.load(topic_file)
     #topics = [topics[-22], topics[2]]
 
+    assert keep_spam
+
     judged_tweets = set()
     qrels = {}
     for line in qrels_file:
