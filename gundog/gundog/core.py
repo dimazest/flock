@@ -69,7 +69,7 @@ class Collection:
 def distances(a, bs, metric='cosine'):
     result = np.empty_like(bs, dtype=float)
     for i, b in enumerate(bs):
-        result[i] = (a @ b) / (np.sqrt(a @ a) * np.sqrt(b @ b))
+        result[i] = 1 - (a @ b) / (np.sqrt(a @ a) * np.sqrt(b @ b))
 
     return result
 
@@ -110,7 +110,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
                 distance_to_negative = collection.distance(tweet_text, negative).min() if negative else negative_distance_threshold
 
                 if distance_to_negative > 0:
-                    score = min(distance_to_positive / min(distance_to_negative, negative_distance_threshold), 2)
+                    score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
                 else:
                     score = 2
 
