@@ -1,6 +1,7 @@
 import logging
 import json
 import sys
+import random
 import multiprocessing as mp
 
 import click
@@ -39,7 +40,8 @@ def printer(q):
 @click.option('--keep-retweets', is_flag=True)
 @click.option('--qrels-file', type=click.File())
 @click.option('--negative-distance-threshold', default=0.8)
-def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, qrels_file, negative_distance_threshold):
+@click.option('--sample', default=1.0)
+def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, qrels_file, negative_distance_threshold, sample):
     topics = json.load(topic_file)
     #topics = [topics[-22], topics[2]]
 
@@ -65,6 +67,7 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
                 (t.get('lang', language) == language)
                 and (keep_spam or not t.is_spam)
                 and (keep_retweets or not t.get('retweeted_status'))
+                and (random.random() < sample)
             )
         )
     )
