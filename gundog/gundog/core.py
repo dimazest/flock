@@ -5,8 +5,6 @@ from collections import deque
 
 import numpy as np
 
-from sklearn.metrics.pairwise import pairwise_distances
-
 
 class CharacterNGramExtractor:
 
@@ -56,17 +54,22 @@ class Collection:
         result[features] = 1 / np.log(self.df[features] + 1)
         return result
 
-    def distance(self, one, another, metric='cosine'):
-        if isinstance(one, str):
-            one = [one]
-        if isinstance(another, str):
-            another = [another]
+    def distance(self, one, others, metric='cosine'):
+        if isinstance(others, str):
+            others = [others]
 
-        return pairwise_distances(
-            list(map(self.__getitem__, one)),
-            list(map(self.__getitem__, another)),
+        return distances(
+            self[one],
+            list(map(self.__getitem__, others)),
             metric=metric,
         )
+
+def distances(a, bs, metric='cosine'):
+    result = np.empty_like(bs, dtype=float)
+    for i, b in enumerate(bs):
+        result[i] = (a @ b) / (np.sqrt(a @ a) * np.sqrt(b @ b))
+
+    return result
 
 
 def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length):
@@ -99,7 +102,10 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
             distance_to_positive = collection.distance(tweet_text, positive).min()
             distance_to_negative = collection.distance(tweet_text, negative).min() if negative else negative_distance_threshold
 
-            score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
+            if distance_to_negative > 0:
+                score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
+            else:
+                score = 2
 
             retrieve = score < 1
             if retrieve:
