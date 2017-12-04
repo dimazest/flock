@@ -93,7 +93,9 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
         if batch is None:
             break
 
+
         for tweet_text, tweet_id, tweet_created_at in batch:
+            out_batch = []
 
             collection.append(tweet_text)
 
@@ -116,7 +118,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
                 else:
                     relevant = None
 
-                out_q.put(
+                out_batch.append(
                     (
                         topid,
                         tweet_id,
@@ -130,3 +132,5 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
                         tweet_created_at,
                     )
                 )
+
+            out_q.put(out_batch)
