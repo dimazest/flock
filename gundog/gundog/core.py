@@ -13,6 +13,7 @@ class CharacterNGramExtractor:
         self.all_features.add('')
         self.feature_map = {f: i for i, f in enumerate(features, start=1)}
         self.feature_map[''] = 0
+        self.feature_map_len = len(self.feature_map)
 
         self.length = length
 
@@ -27,7 +28,7 @@ class CharacterNGramExtractor:
             window.append(current)
             reversed_window = tuple(reversed(window))
             for w in [reversed_window]:
-                yield sum(f * len(self.feature_map) ** i for i, f in enumerate(w))
+                yield sum(f * self.feature_map_len ** i for i, f in enumerate(w))
 
     def __call__(self, text):
         return np.fromiter(set(self.features(text)), int)
@@ -37,7 +38,7 @@ class Collection:
 
     def __init__(self, feature_extractor):
         self.feature_extractor = feature_extractor
-        self.df = np.zeros(len(feature_extractor.feature_map) ** feature_extractor.length, dtype=np.uint64)
+        self.df = np.zeros(feature_extractor.feature_map_len ** feature_extractor.length, dtype=np.uint64)
 
     def append(self, text):
         features = self.feature_extractor(text)
