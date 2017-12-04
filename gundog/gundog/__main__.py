@@ -53,14 +53,13 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
             judged_tweets.add(tweet_id)
             qrels[rts_id, tweet_id] = judgment
 
-    #tweets = readline_dir(source, extract_retweets=extract_retweets)
     tweets = map(json.loads, sys.stdin)
 
     tweets = (
         t for t in tweets
         if 'id' in t and (
             t['id'] in judged_tweets or (
-                (language is not None or t.get('lang', language) == language)
+                (t.get('lang', language) == language)
                 #and (keep_spam or not t.is_spam)
                 and (keep_retweets or not t.get('retweeted_status'))
             )
@@ -96,9 +95,22 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
         workers.append((topic['topid'], in_q, worker))
 
     try:
+        batch = []
         for tweet in tweets:
-            for _, in_q, _ in workers:
-                in_q.put((tweet.get('long_text') or tweet['text'], tweet['id'], tweet['created_at']))
+
+            task = tweet.get('long_text') or tweet['text'], tweet['id'], tweet['created_at']
+            batch.append(task)
+
+            if len(batch) > 100:
+                for _, in_q, _ in workers:
+                    in_q.put(batch)
+
+                batch = []
+        else:
+            if batch:
+                for _, in_q, _ in workers:
+                    in_q.put(batch)
+
     finally:
         for _, in_q, w in workers:
             in_q.put(None)

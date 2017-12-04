@@ -64,6 +64,7 @@ class Collection:
             metric=metric,
         )
 
+
 def distances(a, bs, metric='cosine'):
     result = np.empty_like(bs, dtype=float)
     for i, b in enumerate(bs):
@@ -87,45 +88,45 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
         feedback.append((topic['topid'], [query], []))
 
     while True:
-        task = in_q.get()
+        batch = in_q.get()
 
-        if task is None:
+        if batch is None:
             break
 
-        tweet_text, tweet_id, tweet_created_at = task
+        for tweet_text, tweet_id, tweet_created_at in batch:
 
-        collection.append(tweet_text)
+            collection.append(tweet_text)
 
-        distance_to_queries = collection.distance(tweet_text, queries, metric='cosine').flatten()
-        for (topid, positive, negative), distance_to_query in zip(feedback, distance_to_queries):
+            distance_to_queries = collection.distance(tweet_text, queries, metric='cosine').flatten()
+            for (topid, positive, negative), distance_to_query in zip(feedback, distance_to_queries):
 
-            distance_to_positive = collection.distance(tweet_text, positive).min()
-            distance_to_negative = collection.distance(tweet_text, negative).min() if negative else negative_distance_threshold
+                distance_to_positive = collection.distance(tweet_text, positive).min()
+                distance_to_negative = collection.distance(tweet_text, negative).min() if negative else negative_distance_threshold
 
-            if distance_to_negative > 0:
-                score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
-            else:
-                score = 2
+                if distance_to_negative > 0:
+                    score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
+                else:
+                    score = 2
 
-            retrieve = score < 1
-            if retrieve:
-                relevant = qrels.get((topid, tweet_id))
-                if relevant is not None:
-                    (positive if relevant else negative).append(tweet_text)
-            else:
-                relevant = None
+                retrieve = score < 1
+                if retrieve:
+                    relevant = qrels.get((topid, tweet_id))
+                    if relevant is not None:
+                        (positive if relevant else negative).append(tweet_text)
+                else:
+                    relevant = None
 
-            out_q.put(
-                (
-                    topid,
-                    tweet_id,
-                    distance_to_query,
-                    distance_to_positive,
-                    distance_to_negative,
-                    score,
-                    retrieve,
-                    len(positive),
-                    len(negative),
-                    tweet_created_at,
+                out_q.put(
+                    (
+                        topid,
+                        tweet_id,
+                        distance_to_query,
+                        distance_to_positive,
+                        distance_to_negative,
+                        score,
+                        retrieve,
+                        len(positive),
+                        len(negative),
+                        tweet_created_at,
+                    )
                 )
-            )
