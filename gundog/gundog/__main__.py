@@ -31,6 +31,14 @@ def printer(q):
             print(*item, sep=',')
 
 
+def parse_tweet_json():
+    for line in sys.stdin:
+        try:
+            yield json.loads(line)
+        except json.JSONDecodeError:
+            pass
+
+
 @cli.command()
 @click.option('--source', default=None, help='Tweet source.')
 @click.option('--topic-file', type=click.File(), default='topics.json')
@@ -60,10 +68,8 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
             judged_tweets.add(tweet_id)
             qrels[rts_id, tweet_id] = judgment
 
-    tweets = map(json.loads, (line for line in sys.stdin if line.strip()))
-
     tweets = (
-        t for t in tweets
+        t for t in parse_tweet_json()
         if 'id' in t and (
             t['id'] in judged_tweets or (
                 (t.get('lang', language) == language)
