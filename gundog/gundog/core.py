@@ -109,7 +109,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
                 distance_to_positive = collection.distance(tweet_text, positive).min()
                 distance_to_negative = collection.distance(tweet_text, negative).min() if negative else negative_distance_threshold
 
-                if distance_to_negative > 0:
+                if distance_to_negative > 0.01:
                     score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
                 else:
                     score = 2

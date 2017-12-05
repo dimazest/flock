@@ -42,8 +42,9 @@ def printer(q):
 @click.option('--negative-distance-threshold', default=0.8)
 @click.option('--sample', default=1.0)
 def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, qrels_file, negative_distance_threshold, sample):
+    random.seed(30)
+
     topics = json.load(topic_file)
-    #topics = [topics[-22], topics[2]]
 
     assert keep_spam
 
@@ -58,7 +59,7 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
             judged_tweets.add(tweet_id)
             qrels[rts_id, tweet_id] = judgment
 
-    tweets = map(json.loads, sys.stdin)
+    tweets = map(json.loads, (line for line in sys.stdin if line.strip()))
 
     tweets = (
         t for t in tweets
