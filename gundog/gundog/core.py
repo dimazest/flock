@@ -67,7 +67,7 @@ class Collection:
 
 
 def distances(a, bs, metric='cosine'):
-    result = np.empty_like(bs, dtype=float)
+    result = np.empty(len(bs), dtype=float)
     for i, b in enumerate(bs):
         result[i] = 1 - (a @ b) / (np.sqrt(a @ a) * np.sqrt(b @ b))
 
@@ -79,14 +79,12 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
     feature_extractor = CharacterNGramExtractor(length=ngram_length)
     collection = Collection(feature_extractor)
 
-    queries = []
     feedback = []
     for topic in topics:
         query = topic['title']
-        queries.append(query)
         collection.append(query)
 
-        feedback.append((topic['topid'], [query], []))
+        feedback.append((query, topic['topid'], [query], []))
 
     out_batch = []
     while True:
@@ -103,16 +101,14 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
 
             collection.append(tweet_text)
 
-            distance_to_queries = collection.distance(tweet_text, queries, metric='cosine').flatten()
-            for (topid, positive, negative), distance_to_query in zip(feedback, distance_to_queries):
+            for query, topid, positive, negative in feedback:
+
+                distance_to_query = np.asscalar(collection.distance(tweet_text, query))
 
                 distance_to_positive = collection.distance(tweet_text, positive).min()
-                distance_to_negative = collection.distance(tweet_text, negative).min() if negative else negative_distance_threshold
+                distance_to_negative = collection.distance(tweet_text, negative).min() if negative else 1
 
-                if distance_to_negative > 0.01:
-                    score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
-                else:
-                    score = 2
+                score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
 
                 retrieve = score < 1
                 if retrieve:
