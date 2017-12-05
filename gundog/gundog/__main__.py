@@ -3,6 +3,7 @@ import json
 import sys
 import random
 import multiprocessing as mp
+import datetime as dt
 
 import click
 import click_log
@@ -105,7 +106,7 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
         batch = []
         for tweet in tweets:
 
-            task = tweet.get('long_text') or tweet['text'], tweet['id'], tweet['created_at']
+            task = tweet.get('long_text') or tweet['text'], tweet['id'], dt.datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y').isoformat()
             batch.append(task)
 
             if len(batch) > 1000:
