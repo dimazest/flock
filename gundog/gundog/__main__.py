@@ -30,6 +30,8 @@ def printer(q):
         for item in batch:
             print(*item, sep=',')
 
+        sys.out.flush()
+
 
 def parse_tweet_json():
     for line in sys.stdin:
