@@ -150,7 +150,15 @@ def prepare_feedback(feedback_file, mode):
     feedback = {}
 
     for line in feedback_file:
-        topic, user, tweet_id, judgment, timestamp = line.split()
+
+        values = line.split()
+
+        if len(values) == 5:
+            topic, user, tweet_id, judgment, timestamp = values
+        else:
+            topic, user, tweet_id, judgment = values
+            timestamp = 0
+
         tweet_id = int(tweet_id)
         judgment = int(judgment)
         timestamp = int(timestamp)
