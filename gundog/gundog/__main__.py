@@ -33,8 +33,11 @@ def printer(q):
         sys.stdout.flush()
 
 
-def parse_tweet_json():
+def parse_tweet_json(sample=1):
     for line in sys.stdin:
+        if random.random() > sample:
+            continue
+
         try:
             yield json.loads(line)
         except json.JSONDecodeError:
@@ -72,13 +75,12 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
             qrels[rts_id, tweet_id] = 1 <= judgment <= 2
 
     tweets = (
-        t for t in parse_tweet_json()
+        t for t in parse_tweet_json(sample=sample)
         if 'id' in t and (
             t['id'] in judged_tweets or (
                 (t.get('lang', language) == language)
                 and (keep_spam or not t.is_spam)
                 and (keep_retweets or not t.get('retweeted_status'))
-                and (random.random() < sample)
             )
         )
     )
