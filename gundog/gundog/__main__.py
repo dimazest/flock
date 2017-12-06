@@ -49,10 +49,10 @@ def parse_tweet_json():
 @click.option('--language', default=None, type=str)
 @click.option('--extract-retweets', is_flag=True)
 @click.option('--keep-retweets', is_flag=True)
-@click.option('--qrels-file', type=click.File())
+@click.option('--feedback-file', type=click.File())
 @click.option('--negative-distance-threshold', default=0.8)
 @click.option('--sample', default=1.0)
-def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, qrels_file, negative_distance_threshold, sample):
+def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, feedback_file, negative_distance_threshold, sample):
     random.seed(30)
 
     topics = json.load(topic_file)
@@ -61,14 +61,15 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
 
     judged_tweets = set()
     qrels = {}
-    for line in qrels_file:
-        rts_id, _, tweet_id, judgment = line.split()
+    for line in feedback_file:
+        rts_id, _, tweet_id, judgment, timestamp = line.split()
         tweet_id = int(tweet_id)
         judgment = int(judgment)
+        timestamp = int(timestamp)
 
         if judgment >= 0:
             judged_tweets.add(tweet_id)
-            qrels[rts_id, tweet_id] = judgment
+            qrels[rts_id, tweet_id] = 1 <= judgment <= 2
 
     tweets = (
         t for t in parse_tweet_json()
@@ -139,3 +140,42 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
         printer_q.join_thread()
 
         printer_p.join()
+
+@cli.command('prepare-feedback')
+@click.option('--feedback-file', type=click.File())
+@click.option('--mode', type=click.Choice(['majority', 'some', 'all']))
+def prepare_feedback(feedback_file, mode):
+    feedback = {}
+
+    for line in feedback_file:
+        topic, user, tweet_id, judgment, timestamp = line.split()
+        tweet_id = int(tweet_id)
+        judgment = int(judgment)
+        timestamp = int(timestamp)
+
+        feedback.setdefault(topic, {}).setdefault(tweet_id, []).append((user, judgment, timestamp))
+
+    for topic, topic_data in feedback.items():
+        for tweet_id, judgments  in topic_data.items():
+
+            relevant = 0
+            non_relevant = 0
+            for _, j, _ in judgments:
+                if j == 0:
+                    non_relevant += 1
+                elif 1 <= j <= 2:
+                    relevant += 1
+
+            if not relevant and not non_relevant:
+                continue
+
+            judgment = None
+            if mode == 'majority' and relevant != non_relevant:
+                judgment = 1 if relevant > non_relevant else 0
+            elif mode == 'all':
+                judgment = 1 if not non_relevant else 0
+            elif mode == 'some':
+                judgment = 1 if relevant else 0
+
+            if judgment is not None:
+                print(topic, mode, tweet_id, judgment, 0)
