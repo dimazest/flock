@@ -115,10 +115,9 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
             task = tweet.get('long_text') or tweet['text'], tweet['id'], dt.datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y').isoformat()
             batch.append(task)
 
-            if len(batch) > 1000:
+            if len(batch) > 100:
                 for _, in_q, _ in workers:
                     in_q.put(batch)
-
                 batch = []
         else:
             if batch:

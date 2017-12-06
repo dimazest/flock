@@ -103,6 +103,10 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
 
             for query, topid, positive, negative in feedback:
 
+                qrels_relevance = qrels.get((topid, tweet_id))
+                if qrels_relevance is None:
+                    continue
+
                 distance_to_query = np.asscalar(collection.distance(tweet_text, query))
 
                 distance_to_positive = collection.distance(tweet_text, positive).min()
@@ -112,11 +116,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
 
                 retrieve = score < 1
                 if retrieve:
-                    relevant = qrels.get((topid, tweet_id))
-                    if relevant is not None:
-                        (positive if relevant else negative).append(tweet_text)
-                else:
-                    relevant = None
+                    (positive if qrels_relevance else negative).append(tweet_text)
 
                 out_batch.append(
                     (
