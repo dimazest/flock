@@ -18,20 +18,25 @@ class CharacterNGramExtractor:
         self.length = length
 
     def features(self, text):
-        text = text.lower()
+        text = list(text.lower()) + [''] * (self.length - 1)
 
-        features = filter(None, (self.feature_map.get(f) for f in text))
-        features = chain(features, [0] * (self.length - 1))
+        window = np.zeros(self.length)
+        result = np.zeros(len(text), dtype=np.int_)
+        for i, char in enumerate(text):
+            feature = self.feature_map.get(char)
 
-        window = deque([0] * (self.length - 1), self.length)
-        for current in features:
-            window.append(current)
-            reversed_window = tuple(reversed(window))
-            for w in [reversed_window]:
-                yield sum(f * self.feature_map_len ** i for i, f in enumerate(w))
+            if feature is None:
+                continue
+
+            window = np.roll(window, 1)
+            window[0] = feature
+
+            result[i] = sum(f * self.feature_map_len ** i for i, f in enumerate(window))
+
+        return result
 
     def __call__(self, text):
-        return np.fromiter(set(self.features(text)), int)
+        return np.unique(self.features(text))
 
 
 class Collection:
@@ -56,11 +61,14 @@ class Collection:
         return result
 
     def distance(self, one, others, metric='cosine'):
+        if isinstance(one, str):
+            one = self[one]
+
         if isinstance(others, str):
             others = [others]
 
         return distances(
-            self[one],
+            one,
             list(map(self.__getitem__, others)),
             metric=metric,
         )
@@ -80,11 +88,13 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
     collection = Collection(feature_extractor)
 
     feedback = []
+    retrieved_counts = {}
     for topic in topics:
         query = topic['title']
         collection.append(query)
 
         feedback.append((query, topic['topid'], [query], []))
+        retrieved_counts[topic['topid']] = 0
 
     out_batch = []
     while True:
@@ -99,41 +109,46 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
 
         for tweet_text, tweet_id, tweet_created_at in batch:
 
-            collection.append(tweet_text)
+            tweet_features = collection.append(tweet_text)
 
             for query, topid, positive, negative in feedback:
 
-                qrels_relevance = qrels.get((topid, tweet_id))
-                if qrels_relevance is None:
-                    continue
+                #distance_to_query = np.asscalar(collection.distance(tweet_features, query))
 
-                distance_to_query = np.asscalar(collection.distance(tweet_text, query))
+                distances_to_positive = collection.distance(tweet_features, positive)
+                distance_to_query = distances_to_positive[0]
+                distance_to_positive = distances_to_positive.min()
 
-                distance_to_positive = collection.distance(tweet_text, positive).min()
-                distance_to_negative = collection.distance(tweet_text, negative).min() if negative else 1
+                distance_to_negative = collection.distance(tweet_features, negative).min() if negative else 1
 
                 score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
 
                 retrieve = score < 1
                 if retrieve:
-                    (positive if qrels_relevance else negative).append(tweet_text)
+                    retrieved_counts[topid] += 1
 
-                out_batch.append(
-                    (
-                        topid,
-                        tweet_id,
-                        distance_to_query,
-                        distance_to_positive,
-                        distance_to_negative,
-                        score,
-                        retrieve,
-                        len(positive),
-                        len(negative),
-                        tweet_created_at,
+                qrels_relevance = qrels.get((topid, tweet_id))
+                if qrels_relevance is not None:
+                    if retrieve:
+                        (positive if qrels_relevance else negative).append(tweet_text)
+
+                    out_batch.append(
+                        (
+                            topid,
+                            tweet_id,
+                            distance_to_query,
+                            distance_to_positive,
+                            distance_to_negative,
+                            score,
+                            retrieve,
+                            len(positive),
+                            len(negative),
+                            tweet_created_at,
+                            retrieved_counts[topid],
+                        )
                     )
-                )
 
-
-                if len(out_batch) > 100:
+                if len(out_batch) > 1:
                     out_q.put(out_batch)
                     out_batch = []
+
