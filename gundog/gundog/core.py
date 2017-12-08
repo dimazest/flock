@@ -107,22 +107,19 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
                 distance_to_query = distances_to_positive[0]
                 distance_to_positive = distances_to_positive.min()
 
-                qrels_relevance = qrels.get((topid, tweet_id))
-                if qrels_relevance is None and distance_to_positive > negative_distance_threshold:
-                    continue
-
                 distance_to_negative = collection.distance(tweet_features, negative).min() if negative else 1
 
                 score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
 
+                qrels_relevance = qrels.get((topid, tweet_id))
                 retrieve = score < 1
                 if retrieve:
                     retrieved_counts[topid] += 1
 
-                if qrels_relevance is not None:
-                    if retrieve:
+                    if qrels_relevance is not None:
                         (positive if qrels_relevance else negative).append(tweet_features)
 
+                if retrieve or qrels_relevance is not None:
                     out_batch.append(
                         (
                             topid,
@@ -132,6 +129,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
                             distance_to_negative,
                             score,
                             retrieve,
+                            qrels_relevance,
                             len(positive),
                             len(negative),
                             tweet_created_at,
