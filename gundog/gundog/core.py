@@ -49,7 +49,7 @@ class Collection:
         features = self.feature_extractor(text)
         self.df[features] += 1
 
-        return self._idf(features)
+        return features
 
     def __getitem__(self, key):
         features = self.feature_extractor(key)
@@ -61,17 +61,7 @@ class Collection:
         return result
 
     def distance(self, one, others, metric='cosine'):
-        if isinstance(one, str):
-            one = self[one]
-
-        if isinstance(others, str):
-            others = [others]
-
-        return distances(
-            one,
-            list(map(self.__getitem__, others)),
-            metric=metric,
-        )
+        return distances(self._idf(one), [self._idf(o) for o in others], metric=metric)
 
 
 def distances(a, bs, metric='cosine'):
@@ -91,9 +81,9 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
     retrieved_counts = {}
     for topic in topics:
         query = topic['title']
-        collection.append(query)
+        query_features  = collection.append(query)
 
-        feedback.append((query, topic['topid'], [query], []))
+        feedback.append((query, topic['topid'], [query_features], []))
         retrieved_counts[topic['topid']] = 0
 
     out_batch = []
@@ -131,7 +121,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
 
                 if qrels_relevance is not None:
                     if retrieve:
-                        (positive if qrels_relevance else negative).append(tweet_text)
+                        (positive if qrels_relevance else negative).append(tweet_features)
 
                     out_batch.append(
                         (
