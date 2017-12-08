@@ -1,10 +1,5 @@
 import string
-
-from itertools import chain
-from collections import deque
-
-import numpy as np
-
+import math
 
 class CharacterNGramExtractor:
 
@@ -20,34 +15,34 @@ class CharacterNGramExtractor:
     def features(self, text):
         text = list(text.lower()) + [''] * (self.length - 1)
 
-        window = np.zeros(self.length)
-        result = np.zeros(len(text), dtype=np.int_)
+        window = (0, ) * self.length
+        result = [0] * len(text)
         for i, char in enumerate(text):
             feature = self.feature_map.get(char)
 
             if feature is None:
                 continue
 
-            window = np.roll(window, 1)
-            window[0] = feature
+            window = feature, *window[:-1]
 
             result[i] = sum(f * self.feature_map_len ** i for i, f in enumerate(window))
 
         return result
 
     def __call__(self, text):
-        return np.unique(self.features(text))
+        return set(self.features(text))
 
 
 class Collection:
 
     def __init__(self, feature_extractor):
         self.feature_extractor = feature_extractor
-        self.df = np.zeros(feature_extractor.feature_map_len ** feature_extractor.length, dtype=np.uint64)
+        self.df = [0] * feature_extractor.feature_map_len ** feature_extractor.length
 
     def append(self, text):
         features = self.feature_extractor(text)
-        self.df[features] += 1
+        for feature in features:
+            self.df[feature] += 1
 
         return features
 
@@ -56,18 +51,24 @@ class Collection:
         return self._idf(features)
 
     def _idf(self, features):
-        result = np.zeros(self.df.shape[0])
-        result[features] = 1 / np.log(self.df[features] + 1)
+        result = [0] * len(self.df)
+        for feature in features:
+            result[feature] = 1 / math.log(self.df[feature] + 1)
         return result
 
     def distance(self, one, others, metric='cosine'):
         return distances(self._idf(one), [self._idf(o) for o in others], metric=metric)
 
 
+def dot(A, B):
+    assert len(A) == len(B)
+    return sum(a * b for a, b in zip(A, B))
+
+
 def distances(a, bs, metric='cosine'):
-    result = np.empty(len(bs), dtype=float)
+    result = [0.0] * len(bs)
     for i, b in enumerate(bs):
-        result[i] = 1 - (a @ b) / (np.sqrt(a @ a) * np.sqrt(b @ b))
+        result[i] = 1 - (dot(a, b)) / (math.sqrt(dot(a, a)) * math.sqrt(dot(b, b)))
 
     return result
 
@@ -105,9 +106,9 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
 
                 distances_to_positive = collection.distance(tweet_features, positive)
                 distance_to_query = distances_to_positive[0]
-                distance_to_positive = distances_to_positive.min()
+                distance_to_positive = min(distances_to_positive)
 
-                distance_to_negative = collection.distance(tweet_features, negative).min() if negative else 1
+                distance_to_negative = min(collection.distance(tweet_features, negative)) if negative else 1
 
                 score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
 
