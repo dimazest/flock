@@ -55,10 +55,14 @@ def parse_tweet_json(sample=1):
 @click.option('--feedback-file', type=click.File())
 @click.option('--negative-distance-threshold', default=0.8)
 @click.option('--sample', default=1.0)
-def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, feedback_file, negative_distance_threshold, sample):
+@click.option('--topic-filter', type=click.File())
+@click.option('--workers', '-j', default=max(mp.cpu_count() - 2, 1), envvar='GUNDOG_WORKERS')
+def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, feedback_file, negative_distance_threshold, sample, topic_filter, workers):
     random.seed(30)
 
-    topics = json.load(topic_file)
+    topic_filter = set(l.strip() for l in topic_filter)
+
+    topics = [t for t in json.load(topic_file) if t['topid'] in topic_filter]
 
     assert keep_spam
 
@@ -89,7 +93,7 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
     printer_p = mp.Process(target=printer, args=(printer_q,))
     printer_p.start()
 
-    workers_num = max(mp.cpu_count() - 2, 1)
+    workers_num = max(workers, 1)
     topics_by_worker = {}
     for i, topic in enumerate(topics):
         topics_by_worker.setdefault((i % workers_num), []).append(topic)
@@ -120,7 +124,7 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
             task = tweet.get('long_text') or tweet['text'], tweet['id'], dt.datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y').isoformat()
             batch.append(task)
 
-            if len(batch) > 100:
+            if len(batch) > 1000:
                 for _, in_q, _ in workers:
                     in_q.put(batch)
                 batch = []

@@ -113,11 +113,13 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
 
             for query, topid, positive, negative in feedback:
 
-                #distance_to_query = np.asscalar(collection.distance(tweet_features, query))
-
                 distances_to_positive = collection.distance(tweet_features, positive)
                 distance_to_query = distances_to_positive[0]
                 distance_to_positive = distances_to_positive.min()
+
+                qrels_relevance = qrels.get((topid, tweet_id))
+                if qrels_relevance is None and distance_to_positive > negative_distance_threshold:
+                    continue
 
                 distance_to_negative = collection.distance(tweet_features, negative).min() if negative else 1
 
@@ -127,7 +129,6 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
                 if retrieve:
                     retrieved_counts[topid] += 1
 
-                qrels_relevance = qrels.get((topid, tweet_id))
                 if qrels_relevance is not None:
                     if retrieve:
                         (positive if qrels_relevance else negative).append(tweet_text)
