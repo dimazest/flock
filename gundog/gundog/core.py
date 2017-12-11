@@ -57,7 +57,7 @@ class Collection:
 
     def _idf(self, features):
         result = np.zeros(self.df.shape[0])
-        result[features] = 1 / np.log(self.df[features] + 1)
+        result[features] = 1 / np.log1p(self.df[features])
         return result
 
     def distance(self, one, others, metric='cosine'):
@@ -65,9 +65,12 @@ class Collection:
 
 
 def distances(a, bs, metric='cosine'):
-    result = np.empty(len(bs), dtype=float)
+    result = np.ones(len(bs), dtype=float)
+    sqrt_a_a = np.sqrt(a @ a)
     for i, b in enumerate(bs):
-        result[i] = 1 - (a @ b) / (np.sqrt(a @ a) * np.sqrt(b @ b))
+        a_b = a @ b
+        if a_b > 0:
+            result[i] -= a_b / (sqrt_a_a * np.sqrt(b @ b))
 
     return result
 
