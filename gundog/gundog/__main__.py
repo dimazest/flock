@@ -57,14 +57,24 @@ def parse_tweet_json(sample=1):
 @click.option('--sample', default=1.0)
 @click.option('--topic-filter', type=click.File())
 @click.option('--workers', '-j', default=max(mp.cpu_count() - 2, 1), envvar='GUNDOG_WORKERS')
-def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, feedback_file, negative_distance_threshold, sample, topic_filter, workers):
+@click.option('--pattern-file', type=click.File())
+def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, feedback_file, negative_distance_threshold, sample, topic_filter, workers, pattern_file):
     random.seed(30)
 
-    topic_filter = set(l.strip() for l in topic_filter)
+    assert keep_spam
 
+    topic_filter = set(l.strip() for l in topic_filter)
     topics = [t for t in json.load(topic_file) if t['topid'] in topic_filter]
 
-    assert keep_spam
+    pattern = {} if pattern_file is not None else None
+    if pattern is not None:
+        for line in pattern_file:
+            rts_id, _, _, _, _, _, retrieve, qrels_relevance, _, _, _, position = line.split(',')
+            retrieve = retrieve == 'True'
+            position = int(position)
+
+            if retrieve and qrels_relevance != 'None':
+                pattern.setdefault(rts_id, set()).add(position)
 
     judged_tweets = set()
     qrels = {}
@@ -111,6 +121,7 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
                 qrels=qrels,
                 negative_distance_threshold=negative_distance_threshold,
                 ngram_length=ngram_length,
+                pattern=pattern,
             ),
         )
         worker.start()

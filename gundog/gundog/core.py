@@ -1,9 +1,13 @@
 import string
+import logging
 
 from itertools import chain
 from collections import deque
 
 import numpy as np
+
+
+logger = logging.getLogger(__name__)
 
 
 class CharacterNGramExtractor:
@@ -51,17 +55,19 @@ class Collection:
 
         return features
 
-    def __getitem__(self, key):
-        features = self.feature_extractor(key)
-        return self._idf(features)
-
     def _idf(self, features):
-        result = np.zeros(self.df.shape[0])
-        result[features] = 1 / np.log1p(self.df[features])
+        result = 1 / np.log1p(self.df[features])
         return result
 
     def distance(self, one, others, metric='cosine'):
-        return distances(self._idf(one), [self._idf(o) for o in others], metric=metric)
+        features = np.unique(np.concatenate((one, *others)))
+        idf = self._idf(features)
+
+        zeros = np.zeros_like(idf)
+        one_idf = np.choose(np.isin(features, one), [zeros, idf])
+        other_idfs = [np.choose(np.isin(features, other), [zeros, idf]) for other in others]
+
+        return distances(one_idf, other_idfs, metric=metric)
 
 
 def distances(a, bs, metric='cosine'):
@@ -75,7 +81,7 @@ def distances(a, bs, metric='cosine'):
     return result
 
 
-def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length):
+def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length, pattern):
 
     feature_extractor = CharacterNGramExtractor(length=ngram_length)
     collection = Collection(feature_extractor)
@@ -116,13 +122,18 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
 
                 qrels_relevance = qrels.get((topid, tweet_id))
                 retrieve = score < 1
+
+                in_pattern = pattern is None or retrieved_counts[topid] in pattern.get(topid, set())
                 if retrieve:
                     retrieved_counts[topid] += 1
 
-                    if qrels_relevance is not None:
+                    if qrels_relevance is not None and in_pattern:
                         (positive if qrels_relevance else negative).append(tweet_features)
 
-                if retrieve or qrels_relevance is not None:
+                    if pattern is not None and in_pattern and qrels_relevance is None:
+                        logger.warn('Missing judgment #%s for topic %s, tweet %s.', retrieved_counts[topid], topid, tweet_id)
+
+                if retrieve or qrels_relevance is not None or in_pattern:
                     out_batch.append(
                         (
                             topid,
@@ -140,7 +151,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length)
                         )
                     )
 
-                if len(out_batch) > 1:
+                if len(out_batch) > 100:
                     out_q.put(out_batch)
                     out_batch = []
 
