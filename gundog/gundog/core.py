@@ -133,7 +133,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length,
                     if pattern is not None and in_pattern and qrels_relevance is None:
                         logger.warn('Missing judgment #%s for topic %s, tweet %s.', retrieved_counts[topid], topid, tweet_id)
 
-                if retrieve or qrels_relevance is not None or in_pattern:
+                if retrieve or qrels_relevance is not None or (pattern is not None and in_pattern):
                     out_batch.append(
                         (
                             topid,
