@@ -151,7 +151,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length,
                         )
                     )
 
-                if len(out_batch) > 100:
+                if len(out_batch) > 1:
                     out_q.put(out_batch)
                     out_batch = []
 
