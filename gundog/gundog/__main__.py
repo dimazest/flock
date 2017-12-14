@@ -2,6 +2,7 @@ import logging
 import json
 import sys
 import random
+import asyncio
 import multiprocessing as mp
 import datetime as dt
 
@@ -204,3 +205,82 @@ def prepare_feedback(feedback_file, mode):
 
             if judgment is not None:
                 print(topic, mode, tweet_id, judgment, 0)
+
+
+class Server:
+
+    def __init__(self, queue):
+        self.queue = queue
+
+    async def handle(self, reader, writer):
+        result_queue = asyncio.Queue()
+
+        while True:
+            data = await reader.readline()
+            message = data.decode().strip()
+
+            if message == '':
+                break
+
+            await self.queue.put(
+                (result_queue, message)
+            )
+
+            result = await result_queue.get()
+
+            writer.write(result.encode() + b'\n')
+            await writer.drain()
+
+        writer.close()
+
+
+def _consume(task):
+    print(f'Q: {task}')
+    result = input('Your reply: ')
+    return result
+
+
+async def consume(queue):
+    loop = asyncio.get_event_loop()
+
+    while True:
+        task = await queue.get()
+
+        if task is None:
+            break
+
+        result_queue, message = task
+
+        print(f'Consumed {message} from {result_queue}, {id(result_queue)}')
+
+        result = await loop.run_in_executor(None, _consume, message)
+        await result_queue.put(result)
+
+
+@cli.command()
+@click.option('--host', default='localhost')
+@click.option('--port', default=10999)
+def hunter(host, port):
+
+    loop = asyncio.get_event_loop()
+    task_queue = asyncio.Queue(loop=loop)
+    factory = asyncio.start_server(Server(task_queue).handle, host, port, loop=loop)
+
+    server = loop.run_until_complete(factory)
+    consumer = loop.run_until_complete(consume(task_queue))
+
+    try:
+        loop.run_forever()
+    except KeyboardInterrupt:
+        pass
+
+    server.close()
+    loop.run_until_complete(
+        asyncio.gather(
+            server.wait_closed(),
+            consumer.closed(),
+            task_queue.join(),
+        )
+    )
+    loop.close()
+
