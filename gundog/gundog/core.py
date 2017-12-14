@@ -88,12 +88,17 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length,
 
     feedback = []
     retrieved_counts = {}
+    position_in_pattern = {}
+    last_missing_position = {}
     for topic in topics:
         query = topic['title']
         query_features  = collection.append(query)
 
-        feedback.append((query, topic['topid'], [query_features], []))
-        retrieved_counts[topic['topid']] = 0
+        topid = topic['topid']
+        feedback.append((query, topid, [query_features], []))
+        retrieved_counts[topid] = 0
+        position_in_pattern[topid] = 0
+        last_missing_position[topid] = 0
 
     out_batch = []
     while True:
@@ -123,17 +128,24 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length,
                 qrels_relevance = qrels.get((topid, tweet_id))
                 retrieve = score < 1
 
-                in_pattern = pattern is None or retrieved_counts[topid] in pattern.get(topid, set())
+                in_pattern = pattern is None or retrieved_counts[topid] + 1 in pattern.get(topid, set())
                 if retrieve:
                     retrieved_counts[topid] += 1
 
                     if qrels_relevance is not None and in_pattern:
                         (positive if qrels_relevance else negative).append(tweet_features)
 
-                    if pattern is not None and in_pattern and qrels_relevance is None:
-                        logger.warn('Missing judgment #%s for topic %s, tweet %s.', retrieved_counts[topid], topid, tweet_id)
+                    if pattern is not None and in_pattern:
+                        position_in_pattern[topid] += 1
+                        if qrels_relevance is None:
+                            last_missing_position[topid] += 1
+                            logger.warn(
+                                'Missing judgment #%s (%s/%s in a pattern of %s) for topic %s, tweet %s.',
+                                retrieved_counts[topid], last_missing_position[topid], position_in_pattern[topid], len(pattern[topid]), topid, tweet_id)
+                        else:
+                            logger.debug('Provided feedback for topic %s, tweet %s', topid, tweet_id)
 
-                if retrieve or qrels_relevance is not None or (pattern is not None and in_pattern):
+                if retrieve or qrels_relevance is not None:
                     out_batch.append(
                         (
                             topid,
