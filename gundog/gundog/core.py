@@ -1,10 +1,12 @@
 import string
 import logging
+import json
 
 from itertools import chain
 from collections import deque
 
 import numpy as np
+import zmq
 
 
 logger = logging.getLogger(__name__)
@@ -81,6 +83,31 @@ def distances(a, bs, metric='cosine'):
     return result
 
 
+class HunterClient:
+    def __init__(self, address, topics_by_id):
+        self.context = zmq.Context()
+        self.socket = self.context.socket(zmq.REQ)
+        self.socket.connect(address)
+
+        self.topics_by_id = topics_by_id
+
+    def get(self, topid, tweet_id, tweet_text, retrieve, in_pattern, score, distance_to_query):
+
+        if not (in_pattern and retrieve):
+            return
+
+        data = {
+            'topic': self.topics_by_id[topid],
+            'tweet': {'id': tweet_id, 'text': tweet_text},
+            'score': {'score': score, 'distance_to_query': distance_to_query},
+        }
+
+        self.socket.send_json(data)
+        result = self.socket.recv_json()
+
+        return result['relevance']
+
+
 def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length, pattern):
 
     feature_extractor = CharacterNGramExtractor(length=ngram_length)
@@ -90,15 +117,24 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length,
     retrieved_counts = {}
     position_in_pattern = {}
     last_missing_position = {}
+    topics_by_id = {}
     for topic in topics:
         query = topic['title']
         query_features  = collection.append(query)
 
         topid = topic['topid']
+        topics_by_id[topid] = topic
         feedback.append((query, topid, [query_features], []))
         retrieved_counts[topid] = 0
         position_in_pattern[topid] = 0
         last_missing_position[topid] = 0
+
+    if isinstance(qrels, str):
+        address = qrels
+        get_qrels = HunterClient(address, topics_by_id).get
+    else:
+        def get_qrels(topid, tweet_id, *args, **kwargs):
+            return qrels.get((topid, tweet_id))
 
     out_batch = []
     while True:
@@ -125,10 +161,11 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length,
 
                 score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
 
-                qrels_relevance = qrels.get((topid, tweet_id))
                 retrieve = score < 1
 
                 in_pattern = pattern is None or retrieved_counts[topid] + 1 in pattern.get(topid, set())
+                qrels_relevance = get_qrels(topid=topid, tweet_id=tweet_id, tweet_text=tweet_text, retrieve=retrieve, in_pattern=in_pattern, score=score, distance_to_query=distance_to_query)
+
                 if retrieve:
                     retrieved_counts[topid] += 1
 
@@ -166,4 +203,3 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length,
                 if len(out_batch) > 1:
                     out_q.put(out_batch)
                     out_batch = []
-

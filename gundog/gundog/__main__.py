@@ -2,12 +2,13 @@ import logging
 import json
 import sys
 import random
-import asyncio
 import multiprocessing as mp
 import datetime as dt
 
 import click
 import click_log
+
+import zmq
 
 from . import core
 
@@ -53,7 +54,7 @@ def parse_tweet_json(sample=1):
 @click.option('--language', default=None, type=str)
 @click.option('--extract-retweets', is_flag=True)
 @click.option('--keep-retweets', is_flag=True)
-@click.option('--feedback-file', type=click.File())
+@click.option('--feedback-file')
 @click.option('--negative-distance-threshold', default=0.8)
 @click.option('--sample', default=1.0)
 @click.option('--topic-filter', type=click.File())
@@ -77,22 +78,24 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
             if retrieve and qrels_relevance != 'None':
                 pattern.setdefault(rts_id, set()).add(position)
 
-    judged_tweets = set()
-    qrels = {}
-    for line in feedback_file:
-        rts_id, _, tweet_id, judgment, timestamp = line.split()
-        tweet_id = int(tweet_id)
-        judgment = int(judgment)
-        timestamp = int(timestamp)
+    if '://' in feedback_file:
+        qrels = feedback_file
+    else:
+        with open(feedback_file) as f:
+            qrels = {}
+            for line in f:
+                rts_id, _, tweet_id, judgment, timestamp = line.split()
+                tweet_id = int(tweet_id)
+                judgment = int(judgment)
+                timestamp = int(timestamp)
 
-        if judgment >= 0:
-            judged_tweets.add(tweet_id)
-            qrels[rts_id, tweet_id] = 1 <= judgment <= 2
+                if judgment >= 0:
+                    qrels[rts_id, tweet_id] = 1 <= judgment <= 2
 
     tweets = (
         t for t in parse_tweet_json(sample=sample)
         if 'id' in t and (
-            t['id'] in judged_tweets or (
+            (
                 (t.get('lang', language) == language)
                 and (keep_spam or not t.is_spam)
                 and (keep_retweets or not t.get('retweeted_status'))
@@ -207,80 +210,58 @@ def prepare_feedback(feedback_file, mode):
                 print(topic, mode, tweet_id, judgment, 0)
 
 
-class Server:
+@cli.command()
+@click.option('--address', default='ipc://gundog')
+@click.option('--qrels-file', type=click.File('r+'))
+def hunter(address, qrels_file):
 
-    def __init__(self, queue):
-        self.queue = queue
+    qrels = {}
+    for line in qrels_file:
+        topid, _, tweet_id, relevance = line.split()
+        tweet_id = int(tweet_id)
+        relevance = int(relevance)
 
-    async def handle(self, reader, writer):
-        result_queue = asyncio.Queue()
+        qrels[topid, tweet_id] = relevance
 
-        while True:
-            data = await reader.readline()
-            message = data.decode().strip()
-
-            if message == '':
-                break
-
-            await self.queue.put(
-                (result_queue, message)
-            )
-
-            result = await result_queue.get()
-
-            writer.write(result.encode() + b'\n')
-            await writer.drain()
-
-        writer.close()
-
-
-def _consume(task):
-    print(f'Q: {task}')
-    result = input('Your reply: ')
-    return result
-
-
-async def consume(queue):
-    loop = asyncio.get_event_loop()
+    context = zmq.Context()
+    socket = context.socket(zmq.REP)
+    socket.bind(address)
 
     while True:
-        task = await queue.get()
+        message = socket.recv_json()
 
-        if task is None:
-            break
+        topic = message['topic']
+        tweet = message['tweet']
 
-        result_queue, message = task
+        topid = topic['topid']
+        tweet_id = tweet['id']
 
-        print(f'Consumed {message} from {result_queue}, {id(result_queue)}')
+        score = message['score']['score']
+        distance_to_query = message['score']['distance_to_query']
 
-        result = await loop.run_in_executor(None, _consume, message)
-        await result_queue.put(result)
-
-
-@cli.command()
-@click.option('--host', default='localhost')
-@click.option('--port', default=10999)
-def hunter(host, port):
-
-    loop = asyncio.get_event_loop()
-    task_queue = asyncio.Queue(loop=loop)
-    factory = asyncio.start_server(Server(task_queue).handle, host, port, loop=loop)
-
-    server = loop.run_until_complete(factory)
-    consumer = loop.run_until_complete(consume(task_queue))
-
-    try:
-        loop.run_forever()
-    except KeyboardInterrupt:
-        pass
-
-    server.close()
-    loop.run_until_complete(
-        asyncio.gather(
-            server.wait_closed(),
-            consumer.closed(),
-            task_queue.join(),
+        print(
+            f'{topic["narrative"]}',
+            f'{topic["description"]}',
+            '',
+            f'{topid}: {topic["title"]}',
+            f'({distance_to_query:.3f}, {score:.3f}) {tweet["text"]}',
+            sep='\n'
         )
-    )
-    loop.close()
 
+        relevance = qrels.get((topic['topid'], tweet['id']))
+        if relevance is None:
+            relevance = input('Your reply: ').lower() not in ('', ' ', '0', 'f', 'n')
+            qrels[topid, tweet_id] = relevance
+
+            print(topid, 'Q0', tweet_id, 1 if relevance else 0, file=qrels_file)
+            qrels_file.flush()
+        else:
+            print('Your recorded reply: {}'.format(relevance))
+
+        result = {
+            'topid': topic['topid'],
+            'tweet_id': tweet['id'],
+            'relevance': bool(relevance),
+        }
+
+        socket.send_json(result)
