@@ -1,6 +1,7 @@
 import logging
 import json
 import itertools
+import datetime
 
 import click
 import click_log
@@ -102,7 +103,8 @@ def export(clusters, source):
 @click.option('--collection', default='default')
 @click.option('--extract-retweets', is_flag=True)
 @click.option('--language', default=None)
-def insert(source, session, clusters, collection, extract_retweets, language):
+@click.option('--hydrated', is_flag=True)
+def insert(source, session, clusters, collection, extract_retweets, language, hydrated):
     from . import features
 
     user_labels = clusters.user_labels()
@@ -117,8 +119,11 @@ def insert(source, session, clusters, collection, extract_retweets, language):
         set_={
             'features': stmt.excluded.features,
             'text': stmt.excluded.text,
+            **({'hydrated_at': stmt.excluded.hydrated_at} if hydrated else {})
         }
     )
+
+    hydrated_at = datetime.datetime.now(datetime.timezone.utc) if hydrated else None	
 
     tweets = readline_dir(source, extract_retweets=extract_retweets)
     if language:
@@ -136,6 +141,9 @@ def insert(source, session, clusters, collection, extract_retweets, language):
 
     for i, (row, tweet) in enumerate(rows_tweets, start=1):
         row['collection'] = collection
+
+        if hydrated:
+            row['hydrated_at'] = hydrated_at
 
         rows.append(row)
 

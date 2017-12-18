@@ -92,6 +92,7 @@ class Tweet(Base):
     features = sa.Column(pg.JSONB)
 
     created_at = sa.Column(sa.DateTime, nullable=False, index=True)
+    hydrated_at = sa.Column(sa.DateTime(timezone=True), nullable=True)
 
     representative = sa.orm.relationship(
         'Tweet',
