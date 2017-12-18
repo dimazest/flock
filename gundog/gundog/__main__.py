@@ -60,7 +60,8 @@ def parse_tweet_json(sample=1):
 @click.option('--topic-filter', type=click.File())
 @click.option('--workers', '-j', default=max(mp.cpu_count() - 2, 1), envvar='GUNDOG_WORKERS')
 @click.option('--pattern-file', type=click.File())
-def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, feedback_file, negative_distance_threshold, sample, topic_filter, workers, pattern_file):
+@click.option('--pattern-mode', type=click.Choice(['exact', 'amount']), default='exact')
+def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, feedback_file, negative_distance_threshold, sample, topic_filter, workers, pattern_file, pattern_mode):
     random.seed(30)
 
     assert keep_spam
@@ -126,6 +127,7 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
                 negative_distance_threshold=negative_distance_threshold,
                 ngram_length=ngram_length,
                 pattern=pattern,
+                pattern_mode=pattern_mode,
             ),
         )
         worker.start()
