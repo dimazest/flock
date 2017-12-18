@@ -28,6 +28,7 @@ setup(
         'click',
         'click-log',
         'numpy',
+        'pyzmq',
     ],
     entry_points={
         'console_scripts': [
