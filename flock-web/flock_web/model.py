@@ -130,7 +130,7 @@ class EvalTopic(Base):
         return state
 
     def judge_state(self):
-        tweet_by_id = self.tweet_by_id(query_tweets=False)
+        tweet_by_id = self.tweet_by_id(query_tweets=True)
 
         state = {
             'tweets': self.tweets_to_dict(tweet_by_id.values()),
@@ -162,9 +162,7 @@ class EvalTopic(Base):
             return [
                 {
                     'id': str(t.tweet_id),
-                    'text': t.features['repr']['text'],
-                    'screen_name': t.features['repr']['user__screen_name'],
-                    'user_name': t.features['repr']['user__name'],
+                    'text': t.text,
                     'created_at': t.created_at,
                 }
                 for t in tweets
