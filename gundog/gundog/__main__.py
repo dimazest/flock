@@ -166,9 +166,16 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
 
 @cli.command('prepare-feedback')
 @click.option('--feedback-file', type=click.File())
+@click.option('--complete-file', type=click.File())
 @click.option('--mode', type=click.Choice(['majority', 'some', 'all']))
-def prepare_feedback(feedback_file, mode):
+def prepare_feedback(feedback_file, mode, complete_file):
     feedback = {}
+
+    tweet_ids = set()
+    for line in complete_file:
+        topic, _, tweet_id = line.split()[:3]
+        tweet_id = int(tweet_id)
+        tweet_ids.add((topic, tweet_id))
 
     for line in feedback_file:
 
@@ -184,7 +191,8 @@ def prepare_feedback(feedback_file, mode):
         judgment = int(judgment)
         timestamp = int(timestamp)
 
-        feedback.setdefault(topic, {}).setdefault(tweet_id, []).append((user, judgment, timestamp))
+        if (topic, tweet_id) in tweet_ids:
+            feedback.setdefault(topic, {}).setdefault(tweet_id, []).append((user, judgment, timestamp))
 
     for topic, topic_data in feedback.items():
         for tweet_id, judgments  in topic_data.items():
