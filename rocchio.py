@@ -38,7 +38,7 @@ def read_point(fname, prefix='eval/RTS17/gundog/point/'):
         header=None,
         parse_dates=['Time'],
         low_memory=False,
-    )#.dropna()
+    )
 
     point.sort_values(by=['Time', 'tweet_id', 'Topic'], inplace=True)
 
@@ -61,35 +61,36 @@ def plot_feedback(point, title=None, ax=None):
         point[['Positive', 'Negative']]
         .unstack('Topic', fill_value=0)
         .cummax()
-        .groupby(axis='columns', level=0).mean()
+        .groupby(axis='columns', level=0).sum()
         .reset_index('tweet_id', drop=True).plot(title=title, ax=ax)
     )
 
 
 def evaluate(point, qrels, query_threshold=0.8):
-    evaluation = point[['Distance to query', 'Score', 'retrieve']].reset_index('Time', drop=True)
+    evaluation = point[['Distance to query', 'Score', 'retrieve']].reset_index('Time', drop=False)
 
     evaluation['retrieve_query'] = evaluation['Distance to query'] < query_threshold
-    evaluation['relevant'] = qrels[evaluation.index] > 0
 
-    __ = {
-        (True, True, True): 'Correct',
-        (True, True, False): 'Wrong',
-        (False, False, True): 'Wrong',
-        (False, False, False): 'Correct',        
-
-        (True, False, True): 'ScoreTN',
-        (True, False, False): 'ScoreFN',
-        (False, True, True): 'ScoreTP',
-        (False, True, False): 'ScoreFP',
-    }
-
-    evaluation['Evaluation'] = evaluation.apply(
-        lambda r: __.get(tuple(r.loc[['retrieve_query', 'retrieve', 'relevant']].values)),
-        axis='columns',
-    )
+    qrels_evalueation = qrels[evaluation.index]
+    mask = qrels_evalueation.isna().values
+    evaluation['relevant'] = qrels_evalueation > 0
+    evaluation.loc[mask, 'relevant'] = None
     
-    evaluation.reset_index('Topic', inplace=True)
+    q = evaluation['retrieve_query']
+    r = evaluation['retrieve']
+    P = evaluation['relevant'].notna()
+    R = evaluation['relevant'] == 1
+    evaluation.loc[P & (~q & ~r & ~R), 'Evaluation'] = 'TN'
+    evaluation.loc[P & (q & r & R), 'Evaluation'] = 'TP'
+    evaluation.loc[P & (~q & ~r & R), 'Evaluation'] = 'FN'
+    evaluation.loc[P & (q & r & ~R), 'Evaluation'] = 'FP'
+    
+    evaluation.loc[P & (~q & r & ~R), 'Evaluation'] = 'ScoreFP'
+    evaluation.loc[P & (q & ~r & R), 'Evaluation'] = 'ScoreFN'
+    evaluation.loc[P & (~q & r & R), 'Evaluation'] = 'ScoreTP'
+    evaluation.loc[P & (q & ~r & ~R), 'Evaluation'] = 'ScoreTN'
+    
+    evaluation.loc[~P, 'Evaluation'] = 'Not evaluated'
     
     return evaluation
 
@@ -106,22 +107,24 @@ def plot_evaluation(evaluation, topics=None):
     #         'RTS212', 'RTS48', # FINA, Panera Bread
         ]
     return sns.lmplot(
-        data=evaluation,
+        data=evaluation.reset_index('Topic'),
         x='Distance to query', y='Score',
         hue='Evaluation',
         hue_order=[
-            'Correct', 'Wrong',
+            'TP', 'TN',
+            'FP', 'FN',
             'ScoreTP', 'ScoreFP', # LR
             'ScoreTN', 'ScoreFN', # UL
         ],
         markers=[
             '.', '.',
+            '.', '.',
             '+', '+',
             'x', 'x',
         ],
         palette = {
-            'Correct': 'tab:green', 'Wrong': 'tab:red',
-            'Relevant': 'tab:green', 'Non-relevant': 'tab:red',
+            'TP': 'tab:green', 'FP': 'tab:red',
+            'TN': 'tab:green', 'FN': 'tab:red',
             'ScoreTP': 'tab:green', 'ScoreFP': 'tab:red', # LR
             'ScoreTN': 'tab:green', 'ScoreFN': 'tab:red', # UL
         },
@@ -133,3 +136,24 @@ def plot_evaluation(evaluation, topics=None):
         sharey=True,
         fit_reg=False,
     )
+
+def evaluation_over_time(evaluation, title=None, logy=True, ax=None):
+    _ = evaluation[['Time', 'Evaluation']]
+
+    _ = _.groupby('Evaluation').apply(lambda g: g.resample('1h', on='Time').size())
+    _ = _.unstack('Evaluation', fill_value=0)
+
+#     _.set_index('Time', inplace=True)
+
+#     _ = _['Evaluation']
+
+#     _ = _.groupby(level='Time').apply(lambda g: g.value_counts())
+#     _ = _.groupby(level=1).resample('1h', level='Time').sum().unstack(0, fill_value=0).fillna(0)
+
+#     #     _ = _.unstack(1, fill_value=0).resample('1h').sum().fillna(0)
+    
+    _ = _.cumsum()
+
+#     _.plot(logy=logy, title=title, ax=ax, sharey=True, sharex=True)
+    
+    return _
