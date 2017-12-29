@@ -23,7 +23,7 @@ def read_qrels(fname, name):
     return qrels
 
 
-def read_point(fname, prefix='eval/RTS17/gundog/point/'):
+def read_point(fname, prefix='eval/RTS17/gundog/point/', point_default=None):
     point = pd.read_csv(
         prefix+fname,
         names=[
@@ -53,6 +53,15 @@ def read_point(fname, prefix='eval/RTS17/gundog/point/'):
     
     point['Score'].clip(lower=0, upper=2, inplace=True)
 
+    if point_default is not None:
+        point = point.append(
+            point_default[~point_default.index.isin(point.index)],
+            verify_integrity=True,
+        )
+ 
+        point.sort_index(inplace=True)
+
+    
     return point
 
 
@@ -62,6 +71,7 @@ def plot_feedback(point, title=None, ax=None):
         .unstack('Topic', fill_value=0)
         .cummax()
         .groupby(axis='columns', level=0).sum()
+#         .cummax()
         .reset_index('tweet_id', drop=True).plot(title=title, ax=ax)
     )
 
