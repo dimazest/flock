@@ -35,7 +35,28 @@ def printer(q):
         sys.stdout.flush()
 
 
-def parse_tweet_json(sample=1):
+def is_spam(tweet, spam_filter):
+    if spam_filter is None or spam_filter == 'none':
+        return True
+    else:
+        assert spam_filter == 'basic'
+
+        tokens = tweet.get('long_text') or tweet['text'].split()
+
+        entities = tweet.get('entities', {})
+        hashtags = entities.get('hashtags', [])
+        user_mentions = entities.get('user_mentions', [])
+        urls = entities.get('urls', [])
+
+        return (
+            len(tokens) < 10 and
+            len(hashtags) > 3 and
+            len(user_mentions) > 2 and
+            len(urls) > 1
+        )
+
+
+def parse_tweet_json(sample=1, spam_filter=None):
     for line in sys.stdin:
         if random.random() > sample:
             continue
@@ -50,7 +71,7 @@ def parse_tweet_json(sample=1):
 @click.option('--source', default=None, help='Tweet source.')
 @click.option('--topic-file', type=click.File(), default='topics.json')
 @click.option('--ngram-length', default=3)
-@click.option('--keep-spam', is_flag=True)
+@click.option('--spam-filter', type=str)
 @click.option('--language', default=None, type=str)
 @click.option('--extract-retweets', is_flag=True)
 @click.option('--keep-retweets', is_flag=True)
@@ -61,10 +82,8 @@ def parse_tweet_json(sample=1):
 @click.option('--workers', '-j', default=max(mp.cpu_count() - 2, 1), envvar='GUNDOG_WORKERS')
 @click.option('--pattern-file', type=click.File())
 @click.option('--pattern-mode', type=click.Choice(['exact', 'amount']), default='exact')
-def point(source, extract_retweets, language, ngram_length, keep_spam, topic_file, keep_retweets, feedback_file, negative_distance_threshold, sample, topic_filter, workers, pattern_file, pattern_mode):
+def point(source, extract_retweets, language, ngram_length, spam_filter, topic_file, keep_retweets, feedback_file, negative_distance_threshold, sample, topic_filter, workers, pattern_file, pattern_mode):
     random.seed(30)
-
-    assert keep_spam
 
     topic_filter = set(l.strip() for l in topic_filter)
     topics = [t for t in json.load(topic_file) if t['topid'] in topic_filter]
@@ -94,11 +113,10 @@ def point(source, extract_retweets, language, ngram_length, keep_spam, topic_fil
                     qrels[rts_id, tweet_id] = 1 <= judgment <= 2
 
     tweets = (
-        t for t in parse_tweet_json(sample=sample)
+        t for t in parse_tweet_json(sample=sample, spam_filter=spam_filter)
         if 'id' in t and (
             (
                 (t.get('lang', language) == language)
-                and (keep_spam or not t.is_spam)
                 and (keep_retweets or not t.get('retweeted_status'))
             )
         )
