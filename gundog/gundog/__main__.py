@@ -186,7 +186,8 @@ def point(source, extract_retweets, language, ngram_length, spam_filter, topic_f
 @click.option('--feedback-file', type=click.File())
 @click.option('--complete-file', type=click.File())
 @click.option('--mode', type=click.Choice(['majority', 'some', 'all']))
-def prepare_feedback(feedback_file, mode, complete_file):
+@click.option('--equivalence-file', type=click.File())
+def prepare_feedback(feedback_file, mode, complete_file, equivalence_file):
     feedback = {}
 
     tweet_ids = set()
@@ -195,8 +196,19 @@ def prepare_feedback(feedback_file, mode, complete_file):
         tweet_id = int(tweet_id)
         tweet_ids.add((topic, tweet_id))
 
-    for line in feedback_file:
 
+    tweet_cluster = {}
+    cluster_tweet = {}
+    if equivalence_file is not None:
+        for line in equivalence_file:
+            topic, cluster, tweet_id = line.split()
+            tweet_id = int(tweet_id)
+
+            tweet_cluster[topic, tweet_id] = cluster
+            cluster_tweet.setdefault(cluster, []).append(tweet_id)
+
+    cluster_judgments = {}
+    for line in feedback_file:
         values = line.split()
 
         if len(values) == 5:
@@ -212,11 +224,23 @@ def prepare_feedback(feedback_file, mode, complete_file):
         if (topic, tweet_id) in tweet_ids:
             feedback.setdefault(topic, {}).setdefault(tweet_id, []).append((user, judgment, timestamp))
 
+            cluster = tweet_cluster.get((topic, tweet_id))
+            if cluster is not None:
+                cluster_judgments.setdefault(cluster, []).append((user, judgment, timestamp))
+
+                for t in cluster_tweet[cluster]:
+                    feedback[topic].setdefault(t, [])
+
     for topic, topic_data in feedback.items():
         for tweet_id, judgments  in topic_data.items():
 
             relevant = 0
             non_relevant = 0
+
+            cluster = tweet_cluster.get((topic, tweet_id))
+            if cluster is not None:
+                judgments = cluster_judgments[cluster]
+
             for _, j, _ in judgments:
                 if j == 0:
                     non_relevant += 1
