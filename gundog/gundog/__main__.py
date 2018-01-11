@@ -41,7 +41,12 @@ def is_spam(tweet, spam_filter):
     else:
         assert spam_filter == 'basic'
 
-        tokens = tweet.get('long_text') or tweet['text'].split()
+        text = tweet.get('long_text') or tweet.get('text')
+
+        if text is None or len(text) < 30:
+            return False
+
+        tokens = text.split()
 
         entities = tweet.get('entities', {})
         hashtags = entities.get('hashtags', [])
