@@ -37,7 +37,7 @@ def printer(q):
 
 def is_spam(tweet, spam_filter):
     if spam_filter is None or spam_filter == 'none':
-        return True
+        return False
     else:
         assert spam_filter == 'basic'
 
@@ -58,13 +58,20 @@ def is_spam(tweet, spam_filter):
 
 def parse_tweet_json(sample=1, spam_filter=None):
     for line in sys.stdin:
+        try:
+            tweet = json.loads(line)
+        except json.JSONDecodeError:
+            pass
+        else:
+
         if random.random() > sample:
             continue
 
-        try:
-            yield json.loads(line)
-        except json.JSONDecodeError:
-            pass
+        if is_spam(tweet, spam_filter=spam_filter):
+            continue
+
+        yield tweet
+
 
 
 @cli.command()
