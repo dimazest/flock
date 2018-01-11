@@ -64,13 +64,13 @@ def parse_tweet_json(sample=1, spam_filter=None):
             pass
         else:
 
-        if random.random() > sample:
-            continue
+            if random.random() > sample:
+                continue
 
-        if is_spam(tweet, spam_filter=spam_filter):
-            continue
+            if is_spam(tweet, spam_filter=spam_filter):
+                continue
 
-        yield tweet
+            yield tweet
 
 
 
