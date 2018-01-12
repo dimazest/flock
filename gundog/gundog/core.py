@@ -124,7 +124,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length,
 
         topid = topic['topid']
         topics_by_id[topid] = topic
-        feedback.append((query, topid, [query_features], []))
+        feedback.append((query, topid, [query_features], [], [], []))
         retrieved_counts[topid] = 0
         position_in_pattern[topid] = 0
         last_missing_position[topid] = 0
@@ -151,13 +151,14 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length,
 
             tweet_features = collection.append(tweet_text)
 
-            for query, topid, positive, negative in feedback:
+            for query, topid, positive, positive_tweet_ids, negative, negative_tweet_ids in feedback:
 
                 distances_to_positive = collection.distance(tweet_features, positive)
                 distance_to_query = distances_to_positive[0]
                 distance_to_positive = distances_to_positive.min()
 
-                distance_to_negative = collection.distance(tweet_features, negative).min() if negative else 1
+                distances_to_negative = collection.distance(tweet_features, negative) if negative else []
+                distance_to_negative = distances_to_negative.min() if negative else 1
 
                 score = distance_to_positive / min(distance_to_negative, negative_distance_threshold)
 
@@ -179,6 +180,7 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length,
 
                     if qrels_relevance is not None and in_pattern:
                         (positive if qrels_relevance else negative).append(tweet_features)
+                        (positive_tweet_ids if qrels_relevance else negative_tweet_ids).append(tweet_id)
 
                     if pattern is not None and in_pattern:
                         position_in_pattern[topid] += 1
@@ -192,18 +194,20 @@ def point(in_q, out_q, topics, qrels, negative_distance_threshold, ngram_length,
                 if retrieve or qrels_relevance is not None:
                     out_batch.append(
                         (
-                            topid,
-                            tweet_id,
-                            distance_to_query,
-                            distance_to_positive,
-                            distance_to_negative,
-                            score,
-                            retrieve,
-                            qrels_relevance,
-                            len(positive),
-                            len(negative),
-                            tweet_created_at,
-                            retrieved_counts[topid],
+                            ('topid', topid),
+                            ('tweet_id', tweet_id),
+                            ('distance_to_query', distance_to_query),
+                            ('distance_to_positive', distance_to_positive),
+                            ('distance_to_negative', distance_to_negative),
+                            ('score', score),
+                            ('retrieve', bool(retrieve)),
+                            ('qrels_relevance', qrels_relevance),
+                            ('len_positive', len(positive)),
+                            ('len_negative', len(negative)),
+                            ('tweet_created_at', tweet_created_at),
+                            ('retrieved_counts', retrieved_counts[topid]),
+                            ('positive_ids_distances', list(zip(positive_tweet_ids, distances_to_positive[1:]))),
+                            ('negative_ids_distances', list(zip(negative_tweet_ids, distances_to_negative))),
                         )
                     )
 
