@@ -22,7 +22,11 @@ def cli():
     pass
 
 
-def printer(q):
+def printer(q, format_=None):
+    to_print = {
+        'topid', 'tweet_id', 'distance_to_query', 'distance_to_positive', 'distance_to_negative', 'score', 'retrieve', 'qrels_relevance',
+        'len_positive', 'len_negative', 'tweet_created_at', 'retrieved_counts',
+    }
     while True:
         batch = q.get()
 
@@ -30,7 +34,10 @@ def printer(q):
             break
 
         for item in batch:
-            print(*item, sep=',')
+            if format_ == 'jsonl':
+                print(json.dumps(dict(item)))
+            else:
+                print(*(k for k, v in item if k in to_print), sep=',')
 
         sys.stdout.flush()
 
@@ -94,7 +101,8 @@ def parse_tweet_json(sample=1, spam_filter=None):
 @click.option('--workers', '-j', default=max(mp.cpu_count() - 2, 1), envvar='GUNDOG_WORKERS')
 @click.option('--pattern-file', type=click.File())
 @click.option('--pattern-mode', type=click.Choice(['exact', 'amount']), default='exact')
-def point(source, extract_retweets, language, ngram_length, spam_filter, topic_file, keep_retweets, feedback_file, negative_distance_threshold, sample, topic_filter, workers, pattern_file, pattern_mode):
+@click.option('--output-format', type=click.Choice(['csv', 'jsonl']), default='jsonl')
+def point(source, extract_retweets, language, ngram_length, spam_filter, topic_file, keep_retweets, feedback_file, negative_distance_threshold, sample, topic_filter, workers, pattern_file, pattern_mode, output_format):
     random.seed(30)
 
     topic_filter = set(l.strip() for l in topic_filter)
@@ -135,7 +143,7 @@ def point(source, extract_retweets, language, ngram_length, spam_filter, topic_f
     )
 
     printer_q = mp.Queue(maxsize=1)
-    printer_p = mp.Process(target=printer, args=(printer_q,))
+    printer_p = mp.Process(target=printer, args=(printer_q, output_format))
     printer_p.start()
 
     workers_num = max(workers, 1)
