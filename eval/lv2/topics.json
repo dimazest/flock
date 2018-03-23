@@ -3,6 +3,10 @@
     "description": null, 
     "narrative": null, 
     "queries": [
+      "\u0437\u0438\u043c", 
+      "\u0441\u043d\u0435\u0436\u043d\u044b\u0439", 
+      "ziema or ziemas or ziemai or ziemu or ziem\u0101 or ziem\u0101m or ziem\u0101s", 
+      "\u0437\u0438\u043c\u0430 or \u0437\u0438\u043c\u044b or \u0437\u0438\u043c\u0435 or \u0437\u0438\u043c\u043e\u0439 or \u0437\u0438\u043c\u044b or \u0437\u0438\u043c or \u0437\u0438\u043c\u0430\u043c or \u0437\u0438\u043c\u0430\u043c\u0438 or \u0437\u0438\u043c\u0430\u0445", 
       "Snow", 
       "putenis", 
       "winter", 
@@ -22,7 +26,9 @@
     "queries": [
       "\u0425\u0440\u043e\u043d\u0438\u043a\u0438 \u041c\u0435\u043b\u0430\u043d\u0438", 
       "Mel\u0101nijas hronika", 
-      "The Chronicles of Melanie"
+      "The Chronicles of Melanie", 
+      "Mel\u0101nij hronik", 
+      "\u0425\u0440\u043e\u043d\u0438\u043a \u041c\u0435\u043b\u0430\u043d"
     ], 
     "title": "Mel\u0101nijas hronika", 
     "topid": "LV002"
@@ -31,9 +37,22 @@
     "description": null, 
     "narrative": null, 
     "queries": [
+      "Patv\u0113rums", 
+      "\u0423\u0431\u0435\u0436\u0438\u0449\u0435", 
+      "@PatverumsDM", 
+      "Migr\u0101cija", 
+      "masveida", 
+      "migranti", 
+      "P\u0113teris Gr\u016bbe", 
+      "integr\u0113ties", 
+      "(Sandra Zalcmane) or Zalcmane", 
+      "(P\u0113teris Gr\u016bbe) or Gr\u016bbe", 
       "Refugees", 
       "\u0411\u0435\u0436\u0435\u043d\u0446\u044b", 
-      "B\u0113g\u013ci"
+      "B\u0113g\u013ci", 
+      "b\u0113g\u013c", 
+      "\u0411\u0435\u0436\u0435\u043d", 
+      "migra"
     ], 
     "title": "Refugees", 
     "topid": "LV003"
@@ -42,7 +61,10 @@
     "description": null, 
     "narrative": null, 
     "queries": [
-      "Dv\u0113se\u013cu putenis"
+      "dveseluputenis", 
+      "Dv\u0113se\u013cu pute\u0146", 
+      "Dv\u0113se\u013cu putenis", 
+      "Dv\u0113se pute"
     ], 
     "title": "Dv\u0113se\u013cu putenis", 
     "topid": "LV004"
@@ -51,6 +73,10 @@
     "description": null, 
     "narrative": null, 
     "queries": [
+      "LHL", 
+      "IIHF", 
+      "lhf_lv", 
+      "LHF", 
       "\u043a\u0445\u043b", 
       "\u0414\u0438\u043d\u0430\u043c\u043e", 
       "Hokejs", 
@@ -66,6 +92,11 @@
     "description": null, 
     "narrative": null, 
     "queries": [
+      "Advente", 
+      "\u0410\u0434\u0432\u0435\u043d\u0442", 
+      "ziema", 
+      "Ziemassv\u0113tk", 
+      "\u0420\u043e\u0436\u0434\u0435\u0441\u0442\u0432", 
       "Christmas", 
       "Ziemassv\u0113tki", 
       "\u0420\u043e\u0436\u0434\u0435\u0441\u0442\u0432\u043e"
@@ -77,11 +108,71 @@
     "description": null, 
     "narrative": null, 
     "queries": [
+      "Jaunais gads", 
+      "Jauno gadu", 
+      "Jaun gad", 
+      "\u041d\u043e\u0432 \u0433\u043e\u0434", 
       "Jaungads", 
       "\u041d\u043e\u0432\u044b\u0439 \u0433\u043e\u0434", 
       "New Year"
     ], 
     "title": "New Year", 
     "topid": "LV007"
+  }, 
+  {
+    "description": null, 
+    "narrative": null, 
+    "queries": [
+      "Kamani\u0146u", 
+      "olimpiskaj\u0101s sp\u0113l\u0113s", 
+      "\u041e\u043b\u0438\u043c\u043f\u0438\u0439\u0441\u043a\u0438\u0435 \u0438\u0433\u0440\u044b", 
+      "\u041f\u0445\u0435\u043d\u0447\u0445\u0430\u043d", 
+      "olimpi", 
+      "\u043e\u043b\u0438\u043c\u043f", 
+      "\u0434\u043e\u043f\u0438\u043d\u0433", 
+      "Phjon\u010dhana", 
+      "LatvijaKorej\u0101 ", 
+      "Aparjods", 
+      "Bendika", 
+      "Vasi\u013cjevs", 
+      "Pu\u0137\u012btis", 
+      "LatvijaKoreja", 
+      "Phjon\u010dhan", 
+      "LTVKOREJ"
+    ], 
+    "title": "Olympics", 
+    "topid": "LV008"
+  }, 
+  {
+    "description": null, 
+    "narrative": null, 
+    "queries": [
+      "Brexit", 
+      "Breksits or Breksitam or Breksitu or Breksita", 
+      "\u0411\u0440\u0435\u043a\u0437\u0438\u0442", 
+      "\u0411\u0440\u0435\u043a\u0441\u0438\u0442", 
+      "\u0411\u0440\u0438\u0442\u0430\u043d\u0438\u044f", 
+      "Lielbrit\u0101nija", 
+      "\u0410\u043d\u0433\u043b\u0438\u044f", 
+      "\u0412\u0435\u043b\u0438\u043a\u043e\u0431\u0440\u0438\u0442\u0430\u043d\u0438\u044f", 
+      "izst\u0101\u0161an\u0101s", 
+      "\u0432\u044b\u0445\u043e\u0434", 
+      "\u043f\u0435\u0440\u0435\u0433\u043e\u0432\u043e\u0440\u044b", 
+      "\u0415\u0432\u0440\u043e\u0441\u043e\u044e\u0437", 
+      "\u0411\u043e\u0440\u0438\u0441 \u0414\u0436\u043e\u043d\u0441\u043e\u043d", 
+      "\u041c\u044d\u0439", 
+      "\u0422\u0435\u0440\u0435\u0437\u0430 \u041c\u044d\u0439", 
+      "Meja", 
+      "Ter\u0113za Meja", 
+      "sarunas", 
+      "izst\u0101\u0161anos", 
+      "\u0432\u044b\u0445\u043e\u0434\u0435", 
+      "\u0412\u044b\u0445\u043e\u0434 \u0412\u0435\u043b\u0438\u043a\u043e\u0431\u0440\u0438\u0442\u0430\u043d\u0438\u0438", 
+      "Lielbrit\u0101nija es", 
+      "Zieme\u013c\u012brij", 
+      "Eiropas Savien\u012bba"
+    ], 
+    "title": "Brexit", 
+    "topid": "LV009"
   }
 ]
