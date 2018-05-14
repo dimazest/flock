@@ -1,5 +1,6 @@
+import sqlalchemy as sa
 from sqlalchemy.sql.expression import text, and_, or_, not_, join, column, select, func
-from sqlalchemy_searchable import search, parse_search_query
+from sqlalchemy_searchable import search, search_manager
 
 from flock import model
 from .app import db
@@ -11,12 +12,12 @@ def build_feature_filter(filter_args):
     positive_include = [(k, [v for v in vs if not v.startswith('-')]) for k, vs, in filter_args]
     positive_include = [(k, v) for k, vs in positive_include if vs for v in vs]
     if positive_include:
-        feature_filter_args.append(or_(*(model.Tweet.features.contains({k: [v]}) for k, v in positive_include)))
+        feature_filter_args.append(or_(*(model.Tweet.features[k].has_key(v) for k, v in positive_include)))
 
     negative_include = [(k, [v[1:] for v in vs if v.startswith('-')]) for k, vs, in filter_args]
     negative_include = [(k, v) for k, vs in negative_include if vs for v in vs]
     if negative_include:
-        feature_filter_args.append(and_(*(not_(model.Tweet.features.contains({k: [v]})) for k, v in negative_include)))
+        feature_filter_args.append(and_(*(not_(model.Tweet.features[k].has_key(v)) for k, v in negative_include)))
 
     return feature_filter_args
 
@@ -121,9 +122,7 @@ def stats_for_feature_query(feature_name, query, collection, filter_, clustered_
                     feature.c.tweet_id == model.Tweet.tweet_id,
                     model.Tweet.features['filter', 'is_retweet'].astext == 'false',
                     (
-                        text(
-                            "tweet.search_vector @@ to_tsquery('pg_catalog.english', :search_vector)"
-                        ).bindparams(search_vector=parse_search_query(query))
+                         model.Tweet.search_vector.op('@@')(sa.func.tsq_parse(search_manager.options['regconfig'], query))
                         if query else True
                     ),
                     *(

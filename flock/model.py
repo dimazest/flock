@@ -10,7 +10,7 @@ metadata = sa.MetaData()
 Base = declarative_base(metadata=metadata)
 
 
-sqlalchemy_searchable.make_searchable()
+sqlalchemy_searchable.make_searchable(metadata)
 
 
 tweet_representative = sa.Table(
