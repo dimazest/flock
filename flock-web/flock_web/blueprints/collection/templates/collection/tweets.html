@@ -77,27 +77,6 @@
 
   <form class="form-inline" action="{{ url_for('.tweets') }}" method="get">
 
-    <div class="form-check mb-2 mr-5 mb-sm-0">
-      <label class="form-check-hide-images">
-        <input class="form-check-input" type="checkbox" name="show_images" {% if g.show_images %}checked{% endif %} onchange="this.form.submit()">
-        <span class="navbar-text">Show images</span>
-      </label>
-    </div>
-
-    <div class="input-group mb-2 mb-sm-0 mr-5">
-      <label class="mr-sm-2 navbar-text" for="inlineFilterSelect">Filtering</label>
-      <select name="filter" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFilterSelect" onchange="this.form.submit()">
-        {% for filter_value, filter_option in [('none', 'Disabled'), ('pmi', 'Enabled')] %}
-          <option value="{{ filter_value }}" {% if filter_value == g.filter %}selected{% endif %}>{{ filter_option }}</option>
-        {% endfor %}
-      </select>
-    </div>
-
-    {% for k, v in filter_form_hidden_fields %}
-      <input type="hidden" name="{{ k }}" value="{{ v }}">
-    {% endfor %}
-  </form>
-
   <form class="form-inline" action="{{ url_for('main.topic_post') }}" method="post" >
 
     <label class="mr-sm-2 navbar-text" for="inlineTopicSelect">Topic</label>

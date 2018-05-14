@@ -22,27 +22,14 @@ def build_feature_filter(filter_args):
     return feature_filter_args
 
 
-def build_tweet_query(collection, query, filter_, filter_args, possibly_limit=True, story=None, cluster=None, clustered_selection_id=None, count=False):
+def build_tweet_query(collection, query, filter_args, possibly_limit=True, story=None, cluster=None, clustered_selection_id=None, count=False):
     feature_filter_args = build_feature_filter(filter_args)
 
     tweets = db.session.query(model.Tweet).without_no_load_balance_comment()
 
-    if filter_ == 'none':
-        tweets = (
-            tweets
-            .filter(model.Tweet.collection == collection)
-        )
-    else:
-        tweets = (
-            tweets
-            .select_from(model.filtered_tweets)
-            .join(model.Tweet)
-            .filter(model.Tweet.collection == collection)
-            .filter(model.filtered_tweets.c.collection == collection)
-        )
-
     tweets = (
         tweets
+        .filter(model.Tweet.collection == collection)
         .filter(*feature_filter_args)
         # .filter(model.Tweet.features['filter', 'is_retweet'].astext == 'false')
         # .filter(model.Tweet.representative == None)
@@ -94,7 +81,7 @@ def build_cluster_query(clustered_selection_id):
     ).without_no_load_balance_comment()
 
 
-def stats_for_feature_query(feature_name, query, collection, filter_, clustered_selection_id, cluster, filter_args):
+def stats_for_feature_query(feature_name, query, collection, clustered_selection_id, cluster, filter_args):
     feature_filter_args = build_feature_filter(filter_args)
 
     extracted_features = {
@@ -127,13 +114,6 @@ def stats_for_feature_query(feature_name, query, collection, filter_, clustered_
                     ),
                     *(
                         [
-                            model.Tweet.tweet_id == model.filtered_tweets.c.tweet_id,
-                            model.Tweet.collection == model.filtered_tweets.c.collection,
-                        ]
-                        if filter_ != 'none' else []
-                    ),
-                    *(
-                        [
                             model.Tweet.tweet_id == model.tweet_cluster.c.tweet_id,
                             model.Tweet.collection == model.tweet_cluster.c.collection,
                             model.tweet_cluster.c._clustered_selection_id == clustered_selection_id,
@@ -145,16 +125,12 @@ def stats_for_feature_query(feature_name, query, collection, filter_, clustered_
                 )
             )
             .group_by(feature.c.feature_value)
-            .alias()
         )
 
         feature = feature.alias()
 
     else:
-        if filter_ == 'none':
-            count_table = model.feature_counts
-        else:
-            count_table = model.feature_scores
+        count_table = model.feature_counts
 
         feature = (
             select([count_table.c.collection, count_table.c.feature_value, count_table.c.count])

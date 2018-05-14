@@ -33,7 +33,6 @@ def pull_collection(endpoint, values):
 
     g.query = request.args.get('q')
     g.query_type = 'multiword' if g.query is not None and ' ' in g.query else 'singleword'
-    g.filter = request.args.get('filter', 'pmi')
     g.show_images = request.args.get('show_images') == 'on'
 
     g.filter_args = sorted(
@@ -45,7 +44,6 @@ def pull_collection(endpoint, values):
     g.selection_args = {
         'collection': g.collection,
         'query': g.query,
-        'filter': g.filter,
         'filter_args': g.filter_args,
     }
 
@@ -115,7 +113,6 @@ def tweets():
             kwargs={
                 'collection': g.collection,
                 'query': g.query,
-                'filter_': g.filter,
                 'filter_args': g.filter_args,
                 'cluster': g.cluster,
                 'clustered_selection_id': g.clustered_selection_id,
@@ -146,7 +143,6 @@ def tweets():
                     'filter_args': g.filter_args,
                     'query': g.query,
                     'collection': g.collection,
-                    'filter_': g.filter,
                     'clustered_selection_id': g.clustered_selection_id,
                     'cluster': g.cluster,
                 },
@@ -180,7 +176,6 @@ def tweets_json():
     tweets = q.build_tweet_query(
         collection=g.collection,
         query=g.query,
-        filter_=g.filter,
         filter_args=g.filter_args,
         possibly_limit=False,
         cluster=g.cluster,
