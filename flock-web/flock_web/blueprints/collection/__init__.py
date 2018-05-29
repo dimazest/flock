@@ -1,6 +1,4 @@
-import json
-
-from flask import render_template, Blueprint, request, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context, flash
+from flask import render_template, Blueprint, request, url_for, g, redirect, jsonify, get_template_attribute, Response, stream_with_context, flash, json
 import flask_login
 
 import sqlalchemy as sa
@@ -31,28 +29,21 @@ def add_collection(endpoint, values):
 def pull_collection(endpoint, values):
     g.collection = values.pop('collection')
 
-    g.query = request.args.get('q')
-    g.query_type = 'multiword' if g.query is not None and ' ' in g.query else 'singleword'
-    g.show_images = request.args.get('show_images') == 'on'
-
     g.filter_args = sorted(
         (k, sorted(vs))
         for k, vs in request.args.lists()
-        if not k.startswith('_') and k not in ('q', 'filter', 'show_images', 'cluster', 'topic')
+        if not k.startswith('_') and k not in ('q', 'topic')
     )
 
     g.selection_args = {
         'collection': g.collection,
-        'query': g.query,
         'filter_args': g.filter_args,
+        'query': request.args.get('q'),
+        **json.loads(request.args.get('selection_args', '{}'))
     }
 
-    clustered_selection = db.session.query(model.ClusteredSelection).filter_by(celery_status='completed', **g.selection_args).one_or_none()
-    g.clustered_selection_id = None if clustered_selection is None else clustered_selection._id
-
-    g.cluster = request.args.get('cluster')
-    if g.cluster:
-        assert g.clustered_selection_id is not None
+    g.query = g.selection_args.get('query')
+    g.query_type = 'multiword' if g.query is not None and ' ' in g.query else 'singleword'
 
     topic_id = request.args.get('topic', None, type=int)
     if topic_id is not None:
@@ -65,33 +56,9 @@ def pull_collection(endpoint, values):
 @flask_login.login_required
 def index():
 
-    _story_id = request.args.get('story', type=int)
-    story = None
-    if _story_id is not None:
-        story = db.session.query(model.Story).get(int(_story_id))
-
-    stories = (
-        db.session.query(model.Story)
-        .filter(model.Story.collection == g.collection)
-        .all()
-    )
-
-    if story is not None:
-        tweets = (
-            db.session.query(model.Tweet)
-            .join(model.tweet_story)
-            .filter(model.tweet_story.c._story_id == story._id)
-            .order_by(model.tweet_story.c.rank)
-        )
-    else:
-        tweets = []
-
     return render_template(
         'collection/index.html',
         collection=g.collection,
-        stories=stories,
-        selected_story=story,
-        tweets=tweets,
     )
 
 
@@ -114,21 +81,13 @@ def tweets():
                 'collection': g.collection,
                 'query': g.query,
                 'filter_args': g.filter_args,
-                'cluster': g.cluster,
-                'clustered_selection_id': g.clustered_selection_id,
                 'count': count,
             },
             queue=f'tweets_{g.query_type}',
         ) for count in (False, True)
     )
 
-    if g.clustered_selection_id:
-        clusters = q.build_cluster_query(g.clustered_selection_id)
-
-    else:
-        clusters = None
-
-    selection_for_topic_args = {'cluster': g.cluster, **g.selection_args}
+    selection_for_topic_args = {**g.selection_args}
     del selection_for_topic_args['collection']
 
     stat_tasks = [
@@ -143,8 +102,6 @@ def tweets():
                     'filter_args': g.filter_args,
                     'query': g.query,
                     'collection': g.collection,
-                    'clustered_selection_id': g.clustered_selection_id,
-                    'cluster': g.cluster,
                 },
                 queue=f'stats_for_feature_{g.query_type}',
             ),
@@ -158,12 +115,11 @@ def tweets():
             tweet_task=tweet_task,
             tweet_count=tweet_count,
             stats=stat_tasks,
-            query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('q', 'cluster', 'story')),
-            filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k not in ('filter', 'show_images')),
+            query_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_') and k != 'q'),
+            filter_form_hidden_fields=((k, v) for k, v in request.args.items(multi=True) if not k.startswith('_')),
             selection_args=json.dumps(g.selection_args),
             selection_for_topic_args=json.dumps(selection_for_topic_args),
             topics=flask_login.current_user.topics,
-            clusters=clusters,
             # relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
         ),
     )
@@ -179,7 +135,6 @@ def tweets_json():
         filter_args=g.filter_args,
         possibly_limit=False,
         cluster=g.cluster,
-        clustered_selection_id=g.clustered_selection_id,
     ).all()
 
     vectorizer = TfidfVectorizer(binary=True)
@@ -244,17 +199,12 @@ def cluster_status(task_id):
 
     cluster_html_snippet = None
     if task.state == 'SUCCESS':
-        try:
-            clustered_selection = db.session.query(model.ClusteredSelection).filter_by(celery_id=task_id).one()
-        except NoResultFound:
-            pass
-        else:
-            clusters = q.build_cluster_query(clustered_selection._id)
+        clusters = q.build_cluster_query(clustered_selection._id)
 
-            cluster_html_snippet = render_template(
-                'collection/cluster_snippet.html',
-                clusters=clusters,
-            )
+        cluster_html_snippet = render_template(
+            'collection/cluster_snippet.html',
+            clusters=clusters,
+        )
 
     response['cluster_html_snippet'] = cluster_html_snippet
 
@@ -276,15 +226,6 @@ def task_result(task_id):
                 render_tweet_count = get_template_attribute('collection/macro.html', 'render_tweet_count')
                 result['html'] = render_tweet_count(task.result['data'])
             else:
-                render_tweets = get_template_attribute('collection/macro.html', 'render_tweets')
-
-                #result['html'] = render_tweets(
-                #    topic=g.topic,
-                #    tweets=task.result['data'],
-                #    show_images=g.show_images,
-                #    relevance_judgments={j.tweet_id: j.judgment for j in g.topic.judgments} if g.topic is not None else {},
-                #)
-
                 result['backendState'] = {}
 
                 if g.topic:
@@ -298,11 +239,15 @@ def task_result(task_id):
 
                     judgments = {
                         str(j.tweet_id): {
-                            'assessor': j.judgment if not j.missing else 'missing',
-                            'crowd_relevant': j.crowd_relevant,
-                            'crowd_not_relevant': j.crowd_not_relevant,
+                            'assessor': 'missing' if hasattr(j, 'missing') and j.missing else j.judgment,
+                            **(
+                                {
+                                    'crowd_relevant': getattr(j, 'crowd_relevant', 0),
+                                    'crowd_not_relevant': getattr(j, 'crowd_not_relevant', 0),
+                                } if hasattr(j, 'crowd_relevant') else {}
+                            )
                         }
-                        for j in (g.topic.eval_topic.judgments if g.topic.eval_topic else [])
+                        for j in (g.topic.eval_topic.judgments if g.topic.eval_topic else g.topic.judgments)
                     }
                 else:
                     judgments = {}
@@ -315,10 +260,10 @@ def task_result(task_id):
                         #'user_name': t['features']['repr']['user__name'],
                         #'text': t['features']['repr']['text'],
                     }
-                    for t in task.result['data'] if str(t['tweet_id']) not in judgments
+                    for t in task.result['data'] if str(t['tweet_id'])
                 ]
 
-                result['backendState']['judgments'] = {}
+                result['backendState']['judgments'] = judgments
 
         elif task.result.get('task_name') == 'flock_web.tasks.stats_for_feature':
             render_stats = get_template_attribute('collection/macro.html', 'render_stats')

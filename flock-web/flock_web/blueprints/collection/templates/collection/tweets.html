@@ -75,8 +75,6 @@
 
 {% block navbar_extra %}
 
-  <form class="form-inline" action="{{ url_for('.tweets') }}" method="get">
-
   <form class="form-inline" action="{{ url_for('main.topic_post') }}" method="post" >
 
     <label class="mr-sm-2 navbar-text" for="inlineTopicSelect">Topic</label>
@@ -172,17 +170,6 @@
 
    $(document).ready(function() {
        $('#start-clustering-task').click(start_clustering_task);
-
-       {# reset_tabindex(); #}
-
-       {#
-       get_task(
-           '#tweets',
-           '{{ url_for('.task_result', task_id=tweet_task.id) }}',
-           {show_images: '{{ 'on' if g.show_images else '' }}', topic: '{{ g.topic.id or ''}}'},
-           true
-       );
-       #}
 
        {% for f_name, task in stats %}
        get_task(

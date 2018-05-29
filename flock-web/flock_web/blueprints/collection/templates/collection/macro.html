@@ -14,15 +14,15 @@
             <div class="card custom-tweet">
               <div class="card-block">
                 <header>
-                  <p class="twitter-user-name">{{ tweet.features.repr.user__name }}</p>
-                  <small class="text-muted">@{{ tweet.features.repr.user__screen_name }}</small>
+                  <p class="twitter-user-name">{{ tweet.features.user_info.screen_name }}</p>
+                  <small class="text-muted">@{{ tweet.features.user_info.screen_name }}</small>
                 </header>
                 <blockquote class="card-blockquote">
-                  <p dir="ltr" lang="{{ tweet.features.repr.lang }}" class="card-text">
-                    {{ tweet.features.repr.text }}
+                  <p dir="ltr" class="card-text">
+                    {{ tweet.text }}
                   </p>
                   <small>
-                    <a href="https://twitter.com/{{ tweet.features.repr.user__screen_name }}/status/{{ tweet.tweet_id }}">{{ tweet.created_at }}</a>
+                    <a href="https://twitter.com/{{ tweet.features.user_info.screen_name }}/status/{{ tweet.tweet_id }}">{{ tweet.created_at }}</a>
                   </small>
                 </blockquote>
               </div>

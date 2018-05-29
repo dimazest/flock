@@ -62,8 +62,8 @@ def build_tweet_query(collection, query, filter_args, possibly_limit=True, story
 
     tweets = tweets.order_by(model.Tweet.created_at, model.Tweet.tweet_id)
 
-    # if possibly_limit and story is None:
-    #     tweets = tweets.limit(100)
+    if possibly_limit and story is None:
+        tweets = tweets.limit(1000)
 
     return tweets
 
@@ -81,7 +81,7 @@ def build_cluster_query(clustered_selection_id):
     ).without_no_load_balance_comment()
 
 
-def stats_for_feature_query(feature_name, query, collection, clustered_selection_id, cluster, filter_args):
+def stats_for_feature_query(feature_name, query, collection, filter_args):
     feature_filter_args = build_feature_filter(filter_args)
 
     extracted_features = {
@@ -111,15 +111,6 @@ def stats_for_feature_query(feature_name, query, collection, clustered_selection
                     (
                          model.Tweet.search_vector.op('@@')(sa.func.tsq_parse(search_manager.options['regconfig'], query))
                         if query else True
-                    ),
-                    *(
-                        [
-                            model.Tweet.tweet_id == model.tweet_cluster.c.tweet_id,
-                            model.Tweet.collection == model.tweet_cluster.c.collection,
-                            model.tweet_cluster.c._clustered_selection_id == clustered_selection_id,
-                            model.tweet_cluster.c.label == cluster,
-                        ]
-                        if cluster else []
                     ),
                     *feature_filter_args
                 )

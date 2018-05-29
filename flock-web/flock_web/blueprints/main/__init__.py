@@ -30,7 +30,7 @@ bp_main = Blueprint(
 @flask_login.login_required
 def welcome():
 
-    return redirect(url_for('collection.user_eval_topics', collection='RTS17'))
+    #return redirect(url_for('collection.user_eval_topics', collection='RTS17'))
 
     collections = ((c,) for c in current_app.config['COLLECTIONS'])
 
@@ -297,9 +297,8 @@ def relevance():
         )
 
         dev_judgment = {
-            None: 0,
-            'missing': 0,
-            0: -1,
+            None: -11,
+            'missing': -10,
         }.get(judgment, judgment)
 
         db.session.execute(

@@ -76,10 +76,8 @@ def cluster_selection(self, selection_args):
 
     update_state(1, 7, status='Started...')
 
-    filter_ = selection_args.pop('filter', None)
-
     update_state(2, 7, status='Querying the database...')
-    tweets = q.build_tweet_query(possibly_limit=False, filter_=filter_, **selection_args).limit(400_000)
+    tweets = q.build_tweet_query(possibly_limit=False, **selection_args).limit(200_000)
 
     def tokens(tweets):
         for tweet in tweets:
