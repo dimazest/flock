@@ -8,7 +8,6 @@ from celery import Celery
 from flask import Flask, request, url_for, g
 
 from flask_sqlalchemy import SQLAlchemy, get_debug_queries, BaseQuery
-from flask_cache import Cache
 from flask_iniconfig import INIConfig
 from flask_humanize import Humanize
 from flask_debugtoolbar import DebugToolbarExtension
@@ -48,7 +47,6 @@ class PrefixedQuery(BaseQuery):
         return context
 
 
-cache = Cache()
 db = SQLAlchemy(metadata=metadata, query_class=PrefixedQuery)
 ini_config = INIConfig()
 humanise = Humanize()
@@ -134,7 +132,6 @@ def create_app(config_file, return_celery=False):
 
     app.config['WTF_CSRF_TIME_LIMIT'] = int(app.config['WTF_CSRF_TIME_LIMIT'])
 
-    cache.init_app(app)
     db.init_app(app)
     sa.orm.configure_mappers()
     humanise.init_app(app)

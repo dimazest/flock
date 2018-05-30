@@ -280,7 +280,7 @@ class RelevanceJudgment(Base):
         primary_key=True,
     )
 
-    judgment = sa.Column(sa.Integer, nullable=False)
+    judgment = sa.Column(sa.Integer)
 
 
 class TaskResult(Base):

@@ -15633,7 +15633,9 @@ function tweetJudgeApp() {
 
 var JudgmentButtons = function JudgmentButtons(_ref7) {
     var judgment = _ref7.judgment,
-        onJudgmentClick = _ref7.onJudgmentClick;
+        onJudgmentClick = _ref7.onJudgmentClick,
+        _ref7$showMissingButt = _ref7.showMissingButton,
+        showMissingButton = _ref7$showMissingButt === undefined ? true : _ref7$showMissingButt;
 
     if (!judgment) {
         judgment = {
@@ -15705,7 +15707,7 @@ var JudgmentButtons = function JudgmentButtons(_ref7) {
                 }, title: 'Not relevant' },
             _react2.default.createElement('i', { className: 'fa fa-thumbs-o-down', 'aria-hidden': 'true' })
         ),
-        _react2.default.createElement(
+        showMissingButton && _react2.default.createElement(
             'button',
             { className: 'btn btn-' + (judgment.assessor == 'missing' ? "" : "outline-") + 'warning', onClick: function onClick() {
                     return onJudgmentClick('missing');
@@ -15718,14 +15720,16 @@ var JudgmentButtons = function JudgmentButtons(_ref7) {
 var JudgedTweet = function JudgedTweet(_ref8) {
     var tweet = _ref8.tweet,
         judgment = _ref8.judgment,
-        _onJudgmentClick2 = _ref8.onJudgmentClick;
+        _onJudgmentClick2 = _ref8.onJudgmentClick,
+        _ref8$showMissingButt = _ref8.showMissingButton,
+        showMissingButton = _ref8$showMissingButt === undefined ? true : _ref8$showMissingButt;
     return _react2.default.createElement(
         'div',
         { className: 'card tweet-outer' },
         _react2.default.createElement(_tweetEmbed2.default, tweet),
         _react2.default.createElement(JudgmentButtons, { judgment: judgment, onJudgmentClick: function onJudgmentClick(judgment) {
                 return _onJudgmentClick2(tweet.id, judgment);
-            } })
+            }, showMissingButton: showMissingButton })
     );
 };
 
@@ -15783,7 +15787,9 @@ var TweetJudgmentList = function TweetJudgmentList(_ref10) {
         reverseTweets = _ref10.reverseTweets,
         topic = _ref10.topic,
         collection = _ref10.collection,
-        tweetsRequested = _ref10.tweetsRequested;
+        tweetsRequested = _ref10.tweetsRequested,
+        _ref10$showMissingBut = _ref10.showMissingButton,
+        showMissingButton = _ref10$showMissingBut === undefined ? true : _ref10$showMissingBut;
 
     var filteredTweets = tweets.filter(function (tweet) {
         return tweetFilter === 'all' || judgments[tweet.id].assessor === tweetFilter;
@@ -15881,7 +15887,8 @@ var TweetJudgmentList = function TweetJudgmentList(_ref10) {
                     judgment: judgments[tweet.id],
                     onJudgmentClick: function onJudgmentClick(tweet_id, judgment) {
                         return _onJudgmentClick3(tweet_id, topic.rts_id, topic.topic_id, judgment, selection_args, collection);
-                    }
+                    },
+                    showMissingButton: showMissingButton
                 });
             }),
             loadMore: showMore,
@@ -16018,7 +16025,7 @@ function devJudgeApp() {
 }
 
 var DevJudgeApp = function DevJudgeApp() {
-    return _react2.default.createElement(TweetJudgmentList, null);
+    return _react2.default.createElement(TweetJudgmentList, { showMissingButton: false });
 };
 
 window.devTweets = function () {

@@ -1003,7 +1003,7 @@ function tweetJudgeApp(state={}, action) {
     }
 }
 
-const JudgmentButtons = ({judgment, onJudgmentClick}) => {
+const JudgmentButtons = ({judgment, onJudgmentClick, showMissingButton=true}) => {
     if (!judgment) {
         judgment = {
             assessor: null,
@@ -1032,14 +1032,17 @@ const JudgmentButtons = ({judgment, onJudgmentClick}) => {
         <button className={`btn btn-${(judgment.assessor == 0) ? "" : "outline-"}danger`}  onClick={() => onJudgmentClick(0)} title="Not relevant">
             <i className="fa fa-thumbs-o-down" aria-hidden="true"></i>
         </button>
-        <button className={`btn btn-${(judgment.assessor == 'missing') ? "" : "outline-"}warning`}  onClick={() => onJudgmentClick('missing')} title="Missing">Missing</button>
+        {
+          showMissingButton &&
+          <button className={`btn btn-${(judgment.assessor == 'missing') ? "" : "outline-"}warning`}  onClick={() => onJudgmentClick('missing')} title="Missing">Missing</button>
+        }
     </div>
 }
 
-const JudgedTweet = ({tweet, judgment, onJudgmentClick}) => (
+const JudgedTweet = ({tweet, judgment, onJudgmentClick, showMissingButton=true}) => (
     <div className="card tweet-outer">
         <TweetEmbed{...tweet} />
-        <JudgmentButtons judgment={judgment} onJudgmentClick={judgment => onJudgmentClick(tweet.id, judgment)} />
+        <JudgmentButtons judgment={judgment} onJudgmentClick={judgment => onJudgmentClick(tweet.id, judgment)} showMissingButton={showMissingButton} />
     </div>
 )
 
@@ -1061,7 +1064,10 @@ TweetFilter = connect(
     }),
 )(TweetFilter)
 
-let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, selection_args, onJudgmentClick, tweetFilter, reverseTweets, topic, collection, tweetsRequested}) => {
+let TweetJudgmentList = ({
+  tweets, tweetsShown, showMore, judgments, selection_args, onJudgmentClick, tweetFilter,
+  reverseTweets, topic, collection, tweetsRequested, showMissingButton=true
+}) => {
     let filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id].assessor === tweetFilter))
 
     if (reverseTweets) {
@@ -1120,9 +1126,10 @@ let TweetJudgmentList = ({tweets, tweetsShown, showMore, judgments, selection_ar
             children={filteredTweets.slice(0, tweetsShown).map(tweet => (
                 <JudgedTweet
                     key={tweet.id}
-                        tweet={tweet}
-                        judgment={judgments[tweet.id]}
-                        onJudgmentClick={(tweet_id, judgment) => onJudgmentClick(tweet_id, topic.rts_id, topic.topic_id, judgment, selection_args, collection)}
+                    tweet={tweet}
+                    judgment={judgments[tweet.id]}
+                    onJudgmentClick={(tweet_id, judgment) => onJudgmentClick(tweet_id, topic.rts_id, topic.topic_id, judgment, selection_args, collection)}
+                    showMissingButton={showMissingButton}
                 />
             ))}
             loadMore={showMore}
@@ -1261,7 +1268,7 @@ function devJudgeApp(state={}, action) {
 }
 
 const DevJudgeApp = () => (
-    <TweetJudgmentList />
+    <TweetJudgmentList showMissingButton={false} />
 )
 
 window.devTweets = () => {

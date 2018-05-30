@@ -297,8 +297,7 @@ def relevance():
         )
 
         dev_judgment = {
-            None: -11,
-            'missing': -10,
+            'missing': None,
         }.get(judgment, judgment)
 
         db.session.execute(

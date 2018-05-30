@@ -34,7 +34,6 @@ setup(
         'flock-conf',
         'flask',
         'Flask-SQLAlchemy',
-        'Flask-Cache',
         'flask-iniconfig',
         'Flask-Humanize',
         'flask-debugtoolbar',
