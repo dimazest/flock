@@ -1039,10 +1039,12 @@ const JudgmentButtons = ({judgment, onJudgmentClick, showMissingButton=true}) =>
     </div>
 }
 
-const JudgedTweet = ({tweet, judgment, onJudgmentClick, showMissingButton=true}) => (
+const JudgedTweet = ({tweet, judgment, onJudgmentClick, showMissingButton=true, showJudgmentButton=true}) => (
     <div className="card tweet-outer">
         <TweetEmbed{...tweet} />
-        <JudgmentButtons judgment={judgment} onJudgmentClick={judgment => onJudgmentClick(tweet.id, judgment)} showMissingButton={showMissingButton} />
+        {showJudgmentButton &&
+            <JudgmentButtons judgment={judgment} onJudgmentClick={judgment => onJudgmentClick(tweet.id, judgment)} showMissingButton={showMissingButton} />
+        }
     </div>
 )
 
@@ -1068,7 +1070,7 @@ let TweetJudgmentList = ({
   tweets, tweetsShown, showMore, judgments, selection_args, onJudgmentClick, tweetFilter,
   reverseTweets, topic, collection, tweetsRequested, showMissingButton=true
 }) => {
-    let filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || judgments[tweet.id].assessor === tweetFilter))
+    let filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || (judgments[tweet.id] || {assessor: null}).assessor === tweetFilter))
 
     if (reverseTweets) {
         filteredTweets = filteredTweets.reverse()
@@ -1130,6 +1132,7 @@ let TweetJudgmentList = ({
                     judgment={judgments[tweet.id]}
                     onJudgmentClick={(tweet_id, judgment) => onJudgmentClick(tweet_id, topic.rts_id, topic.topic_id, judgment, selection_args, collection)}
                     showMissingButton={showMissingButton}
+                    showJudgmentButton={topic.topic_id || false}
                 />
             ))}
             loadMore={showMore}
@@ -1267,9 +1270,24 @@ function devJudgeApp(state={}, action) {
     }
 }
 
-const DevJudgeApp = () => (
-    <TweetJudgmentList showMissingButton={false} />
+let DevJudgeApp = ({topic_id}) => (
+    <div>
+    {topic_id &&
+      <div className="container mb-5">
+        <div className="row">
+          <div className="col-3"><h2>Tweet Filter</h2></div>
+          <div className="col-9"><TweetFilter showMissingButton={false} /></div>
+        </div>
+      </div>
+    }
+      <TweetJudgmentList showMissingButton={false} />
+    </div>
 )
+DevJudgeApp = connect(
+    state => ({
+        topic_id: state.backend.topic.topic_id
+    })
+)(DevJudgeApp)
 
 window.devTweets = () => {
     window.initialState = {
@@ -1278,6 +1296,7 @@ window.devTweets = () => {
             judgments: {},
             selection_args: window.SELECTION_ARGS,
             collection: window.COLLECTION,
+            topic: {},
         },
         frontend: {
             tweetsShown: 0,

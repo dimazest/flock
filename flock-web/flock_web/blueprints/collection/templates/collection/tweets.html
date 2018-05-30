@@ -36,7 +36,7 @@
       <div class="card">
         <h3 class="card-header">Queries</h3>
         <div class="list-group">
-            {% for q in g.topic.queries %}
+            {% for q in g.topic.queries|unique(attribute='query') %}
              <a
                class="list-group-item {{ 'active' if q.query == g.query else '' }}"
                href="{{ url_for('collection.tweets', collection=g.collection, q=q.query, filter=q.filter, cluster=q.cluster, topic=g.topic.id, **q.filter_args_dict) }}"

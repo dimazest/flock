@@ -168,6 +168,8 @@ def topic(topic_id=None):
         redirect_to = url_for('.topic', topic_id=topic.id)
 
         if 'selection_args' in request.form:
+            # TODO: This check is not enought, when a query is entered and then a topic is chosen,
+            # a new query is created, independently whether it already exists or not.
             query = fw_model.TopicQuery(**selection_args)
             topic.queries.append(query)
 
