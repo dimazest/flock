@@ -15727,7 +15727,7 @@ var JudgedTweet = function JudgedTweet(_ref8) {
         showJudgmentButton = _ref8$showJudgmentBut === undefined ? true : _ref8$showJudgmentBut;
     return _react2.default.createElement(
         'div',
-        { className: 'card tweet-outer' },
+        { className: 'card tweet-outer', style: { minHeight: "100px" } },
         _react2.default.createElement(_tweetEmbed2.default, tweet),
         showJudgmentButton && _react2.default.createElement(JudgmentButtons, { judgment: judgment, onJudgmentClick: function onJudgmentClick(judgment) {
                 return _onJudgmentClick2(tweet.id, judgment);
@@ -15789,9 +15789,7 @@ var TweetJudgmentList = function TweetJudgmentList(_ref10) {
         reverseTweets = _ref10.reverseTweets,
         topic = _ref10.topic,
         collection = _ref10.collection,
-        tweetsRequested = _ref10.tweetsRequested,
-        _ref10$showMissingBut = _ref10.showMissingButton,
-        showMissingButton = _ref10$showMissingBut === undefined ? true : _ref10$showMissingBut;
+        tweetsRequested = _ref10.tweetsRequested;
 
     var filteredTweets = tweets.filter(function (tweet) {
         return tweetFilter === 'all' || (judgments[tweet.id] || { assessor: null }).assessor === tweetFilter;
@@ -15890,7 +15888,7 @@ var TweetJudgmentList = function TweetJudgmentList(_ref10) {
                     onJudgmentClick: function onJudgmentClick(tweet_id, judgment) {
                         return _onJudgmentClick3(tweet_id, topic.rts_id, topic.topic_id, judgment, selection_args, collection);
                     },
-                    showMissingButton: showMissingButton,
+                    showMissingButton: topic.rts_id || false,
                     showJudgmentButton: topic.topic_id || false
                 });
             }),
@@ -16028,11 +16026,11 @@ function devJudgeApp() {
 }
 
 var DevJudgeApp = function DevJudgeApp(_ref11) {
-    var topic_id = _ref11.topic_id;
+    var topic = _ref11.topic;
     return _react2.default.createElement(
         'div',
         null,
-        topic_id && _react2.default.createElement(
+        topic.topic_id && _react2.default.createElement(
             'div',
             { className: 'container mb-5' },
             _react2.default.createElement(
@@ -16050,16 +16048,16 @@ var DevJudgeApp = function DevJudgeApp(_ref11) {
                 _react2.default.createElement(
                     'div',
                     { className: 'col-9' },
-                    _react2.default.createElement(TweetFilter, { showMissingButton: false })
+                    _react2.default.createElement(TweetFilter, { showMissingButton: topic.rts_id })
                 )
             )
         ),
-        _react2.default.createElement(TweetJudgmentList, { showMissingButton: false })
+        _react2.default.createElement(TweetJudgmentList, null)
     );
 };
 DevJudgeApp = (0, _reactRedux.connect)(function (state) {
     return {
-        topic_id: state.backend.topic.topic_id
+        topic: state.backend.topic
     };
 })(DevJudgeApp);
 

@@ -1040,7 +1040,7 @@ const JudgmentButtons = ({judgment, onJudgmentClick, showMissingButton=true}) =>
 }
 
 const JudgedTweet = ({tweet, judgment, onJudgmentClick, showMissingButton=true, showJudgmentButton=true}) => (
-    <div className="card tweet-outer">
+    <div className="card tweet-outer" style={{minHeight: "100px"}}>
         <TweetEmbed{...tweet} />
         {showJudgmentButton &&
             <JudgmentButtons judgment={judgment} onJudgmentClick={judgment => onJudgmentClick(tweet.id, judgment)} showMissingButton={showMissingButton} />
@@ -1068,7 +1068,7 @@ TweetFilter = connect(
 
 let TweetJudgmentList = ({
   tweets, tweetsShown, showMore, judgments, selection_args, onJudgmentClick, tweetFilter,
-  reverseTweets, topic, collection, tweetsRequested, showMissingButton=true
+  reverseTweets, topic, collection, tweetsRequested
 }) => {
     let filteredTweets = tweets.filter(tweet => (tweetFilter === 'all' || (judgments[tweet.id] || {assessor: null}).assessor === tweetFilter))
 
@@ -1131,7 +1131,7 @@ let TweetJudgmentList = ({
                     tweet={tweet}
                     judgment={judgments[tweet.id]}
                     onJudgmentClick={(tweet_id, judgment) => onJudgmentClick(tweet_id, topic.rts_id, topic.topic_id, judgment, selection_args, collection)}
-                    showMissingButton={showMissingButton}
+                    showMissingButton={topic.rts_id || false}
                     showJudgmentButton={topic.topic_id || false}
                 />
             ))}
@@ -1270,22 +1270,22 @@ function devJudgeApp(state={}, action) {
     }
 }
 
-let DevJudgeApp = ({topic_id}) => (
+let DevJudgeApp = ({topic}) => (
     <div>
-    {topic_id &&
+    {topic.topic_id &&
       <div className="container mb-5">
         <div className="row">
           <div className="col-3"><h2>Tweet Filter</h2></div>
-          <div className="col-9"><TweetFilter showMissingButton={false} /></div>
+          <div className="col-9"><TweetFilter showMissingButton={topic.rts_id} /></div>
         </div>
       </div>
     }
-      <TweetJudgmentList showMissingButton={false} />
+      <TweetJudgmentList />
     </div>
 )
 DevJudgeApp = connect(
     state => ({
-        topic_id: state.backend.topic.topic_id
+        topic: state.backend.topic
     })
 )(DevJudgeApp)
 
