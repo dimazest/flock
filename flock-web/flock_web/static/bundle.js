@@ -14695,14 +14695,20 @@ function filterTweets(judgment) {
 
 var REQUEST_JUDGE_TWEET = 'REQUEST_JUDGE_TWEET';
 function requestJudgeTweet(tweet_id, rts_id, topic_id, judgment) {
-    console.log('Judge tweet ' + tweet_id + ' ' + rts_id + ' ' + topic_id + ': ' + judgment);
-
     return {
         type: REQUEST_JUDGE_TWEET,
         tweet_id: tweet_id,
         rts_id: rts_id,
         topic_id: topic_id,
         judgment: judgment
+    };
+}
+
+var UPDATE_JUDGMENTS = 'UPDATE_JUDGMENTS';
+function updateJudgments(judgments) {
+    return {
+        type: UPDATE_JUDGMENTS,
+        judgments: judgments
     };
 }
 
@@ -14726,8 +14732,13 @@ function judgeTweet(tweet_id, rts_id, topic_id, judgment, selection_args, collec
                 selection_args: selection_args
             })
         }).then(function (response) {
-
-            if (window.TWEET_TASK_URL !== undefined) {
+            return response.json();
+        }, function (error) {
+            return console.log('An error occured', error);
+        }).then(function (json) {
+            if (json.judgments !== undefined) {
+                dispatch(updateJudgments(json.judgments));
+            } else if (window.TWEET_TASK_URL !== undefined) {
                 dispatch(receiveTask(window.TWEET_TASK_URL));
             } else if (window.STATE_URL !== undefined) {
                 dispatch(receiveState());
@@ -16017,6 +16028,14 @@ function devJudgeApp() {
                 return _extends({}, state, {
                     frontend: _extends({}, state.frontend, {
                         tweetsRequested: true
+                    })
+                });
+            }
+        case UPDATE_JUDGMENTS:
+            {
+                return _extends({}, state, {
+                    backend: _extends({}, state.backend, {
+                        judgments: _extends({}, state.backend.judgments, action.judgments)
                     })
                 });
             }

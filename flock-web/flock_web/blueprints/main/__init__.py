@@ -320,7 +320,10 @@ def relevance():
         )
 
     if topic_id is not None:
-        result = {'empty': True}
+        result = {
+            'judgments': {tweet_id: {'assessor': dev_judgment}},
+            'topic_id': topic_id,
+        }
 
     db.session.commit()
 

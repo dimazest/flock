@@ -231,15 +231,21 @@ function filterTweets(judgment) {
 }
 
 const REQUEST_JUDGE_TWEET = 'REQUEST_JUDGE_TWEET'
-function requestJudgeTweet(tweet_id, rts_id, topic_id, judgment){
-    console.log(`Judge tweet ${tweet_id} ${rts_id} ${topic_id}: ${judgment}`)
-
+function requestJudgeTweet(tweet_id, rts_id, topic_id, judgment) {
     return {
         type: REQUEST_JUDGE_TWEET,
         tweet_id,
         rts_id,
         topic_id,
         judgment,
+    }
+}
+
+const UPDATE_JUDGMENTS = 'UPDATE_JUDGMENTS'
+function updateJudgments(judgments) {
+    return {
+      type: UPDATE_JUDGMENTS,
+      judgments
     }
 }
 
@@ -266,9 +272,14 @@ function judgeTweet(tweet_id, rts_id, topic_id, judgment, selection_args, collec
                 }),
             },
         ).then(
-            response => {
-
-                if (window.TWEET_TASK_URL !== undefined) {
+              response => response.json(),
+              error => console.log('An error occured', error)
+        ).then(
+            json => {
+                if (json.judgments !== undefined) {
+                    dispatch(updateJudgments(json.judgments))
+                }
+                else if (window.TWEET_TASK_URL !== undefined) {
                     dispatch(receiveTask(window.TWEET_TASK_URL))
                 }
                 else if (window.STATE_URL !== undefined) {
@@ -1264,6 +1275,18 @@ function devJudgeApp(state={}, action) {
                     tweetsRequested: true,
                 }
             }
+        }
+        case UPDATE_JUDGMENTS: {
+          return {
+            ...state,
+            backend: {
+              ...state.backend,
+              judgments: {
+                ...state.backend.judgments,
+                ...action.judgments
+              }
+            }
+          }
         }
         default:
             return state
