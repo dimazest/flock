@@ -48,3 +48,5 @@ TAGS
 *.DS_Store
 
 node_modules
+
+secrets.cfg
