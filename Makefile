@@ -1,8 +1,8 @@
 PRODUCE = bin/python src/produce/produce
 POULTRY = bin/poultry
 TWARC = bin/twarc
-TWEET_SORT = /Users/Shared/dnm11/tweet-sort/target/appassembler/bin/sort-pool
-ELASTIC_INDEX = /Users/Shared/dnm11/tweet-sort/target/appassembler/bin/elastic-index
+TWEET_SORT = /scratch/dnm11/tweet-sort/target/appassembler/bin/sort-pool
+ELASTIC_INDEX = /scratch/dnm11/tweet-sort/target/appassembler/bin/elastic-index
 
 UBLOG_15_APRIL = tweets/hydrate/2015-04-04.through.2014-04-10
 UBLOG_15_APRIL_EN = ${UBLOG_15_APRIL}_EN
@@ -45,23 +45,23 @@ rts/16/qrels-sorted: $(patsubst rts/16/pools/%,rts/16/pools-sorted/%,$(wildcard 
 
 # 1. Get the pool tweets
 
-tweets/hydrate/RTS17/%.gz: rts/17/pools/%
+tweets/hydrate/RTS18/%.gz: eval/RTS18/pools/%
 	cat $< | cut -d ' ' -f 5 | ${TWARC} hydrate - | gzip > $@
 
-rts17-tweets: $(patsubst rts/17/pools/%,tweets/hydrate/RTS17/%.gz,$(wildcard rts/17/pools/*))
+rts18-tweets: $(patsubst eval/RTS18/pools/%,tweets/hydrate/RTS18/%.gz,$(wildcard eval/RTS18/pools/*))
 
 # 2. Index them in Elastic
 
-elastic-index-%: tweets/hydrate/RTS17/%.gz
+elastic-index-%: tweets/hydrate/RTS18/%.gz
 	${ELASTIC_INDEX} -i 129.6.101.99 $<
 
-elastic-index: $(patsubst rts/17/pools/%,elastic-index-%,$(wildcard rts/17/pools/*))
+elastic-index: $(patsubst eval/RTS18/pools/%,elastic-index-%,$(wildcard eval/RTS18/pools/*))
 
 # 3. Sort
 
-rts/17/pools-sorted/%: rts/17/pools/%
+eval/RTS18/pools-sorted/%: eval/RTS18/pools/%
 	${TWEET_SORT} $< |  tac > $@
 
-rts/17/qrels-sorted: $(patsubst rts/17/pools/%,rts/17/pools-sorted/%,$(wildcard rts/17/pools/*))
-	cat rts/17/pools-sorted/* > $@
+eval/RTS18/qrels-sorted: $(patsubst eval/RTS18/pools/%,eval/RTS18/pools-sorted/%,$(wildcard eval/RTS18/pools/*))
+	cat eval/RTS18/pools-sorted/* > $@
 
