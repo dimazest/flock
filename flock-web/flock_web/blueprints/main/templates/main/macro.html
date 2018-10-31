@@ -18,8 +18,8 @@
           <tr>
             <th scope="row" class="pl-3" colspan="{{ config.COLLECTIONS|count + 4}}">
               <h3>
-                <span class="badge badge-success">{{ topic.judgment_count(1) }}</span>
-                <span class="badge badge-danger">{{ topic.judgment_count(-1) }}</span>
+                <span class="badge badge-success">{{ topic.judgment_count(1) +  topic.judgment_count(2)}}</span>
+                <span class="badge badge-danger">{{ topic.judgment_count(0) + topic.judgment_count(-1) }}</span>
                 <a href="{{ url_for('.topic', topic_id=topic.id)  }}">{{ topic.title }}</a>
               </h3>
             </th>

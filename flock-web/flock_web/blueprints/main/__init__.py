@@ -259,8 +259,8 @@ def topics_json():
                 ('title', topic.title),
                 ('description', topic.description),
                 ('narrative', topic.narrative),
-                ('relevant_count', topic.judgment_count(1)),
-                ('irrelevant_count', topic.judgment_count(-1)),
+                ('relevant_count', topic.judgment_count(1) + topic.judgment_count(2)),
+                ('irrelevant_count', topic.judgment_count(0) + topic.judgment_count(-1)),
                 ('queries', len(topic.queries)),
                 ('user', {'first_name': topic.user.first_name, 'last_name': topic.user.last_name}),
             ]

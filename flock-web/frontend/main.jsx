@@ -1009,6 +1009,18 @@ function tweetJudgeApp(state={}, action) {
                 }
             }
         }
+        case UPDATE_JUDGMENTS: {
+             return {
+            ...state,
+            backend: {
+              ...state.backend,
+              judgments: {
+                ...state.backend.judgments,
+                ...action.judgments
+              }
+            }
+          }
+        }
         default:
             return state
     }
@@ -1027,19 +1039,9 @@ const JudgmentButtons = ({judgment, onJudgmentClick, showMissingButton=true}) =>
         <button className={`btn btn-${(judgment.assessor > 0) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(1)} title="Relevant">
             <i className="fa fa-thumbs-o-up" aria-hidden="true"></i>
         </button>
-        {(judgment.crowd_relevant !== undefined || judgment.crowd_not_relevant !== undefined) &&
-            <button className={`btn btn-${(judgment.crowd_relevant > 0) ? "" : "outline-"}success`} onClick={() => onJudgmentClick(1)} title="Crowd relevant">
-                <sup>{judgment.crowd_relevant}</sup>⁄<sub>{judgment.crowd_relevant + judgment.crowd_not_relevant}</sub>
-            </button>
-        }
         <button className={`btn btn-${(judgment.assessor === null) ? "" : "outline-"}primary`}  onClick={() => onJudgmentClick(null)} title="Not judged">
             Not judged
         </button>
-        {(judgment.crowd_relevant !== undefined || judgment.crowd_not_relevant !== undefined) &&
-            <button className={`btn btn-${(judgment.crowd_not_relevant > 0) ? "" : "outline-"}danger`} onClick={() => onJudgmentClick(0)} title="Crowd not relevant">
-                <sup>{judgment.crowd_not_relevant}</sup>⁄<sub>{judgment.crowd_relevant + judgment.crowd_not_relevant}</sub>
-            </button>
-        }
         <button className={`btn btn-${(judgment.assessor == 0) ? "" : "outline-"}danger`}  onClick={() => onJudgmentClick(0)} title="Not relevant">
             <i className="fa fa-thumbs-o-down" aria-hidden="true"></i>
         </button>
