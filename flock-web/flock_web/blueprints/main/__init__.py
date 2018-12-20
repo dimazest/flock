@@ -317,6 +317,7 @@ def relevance():
             data['collection'],
             tweet_id,
             from_dev=True,
+            return_judge_state=False,
         )
 
     if topic_id is not None:
@@ -330,7 +331,7 @@ def relevance():
     return jsonify(result)
 
 
-def eval_relevance(eval_topic_rts_id, judgment, collection, tweet_id, from_dev):
+def eval_relevance(eval_topic_rts_id, judgment, collection, tweet_id, from_dev, return_judge_state=True):
     if judgment == 'missing':
         judgment = None
         missing = True
@@ -372,8 +373,9 @@ def eval_relevance(eval_topic_rts_id, judgment, collection, tweet_id, from_dev):
 
     db.session.flush()
 
-    eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=eval_topic_rts_id, collection=collection).one()
-    return eval_topic.judge_state()
+    if return_judge_state:
+        eval_topic = db.session.query(fw_model.EvalTopic).filter_by(rts_id=eval_topic_rts_id, collection=collection).one()
+        return eval_topic.judge_state()
 
 
 @bp_main.route('/user')
